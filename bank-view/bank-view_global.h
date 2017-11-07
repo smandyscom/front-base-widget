@@ -1,0 +1,12 @@
+#ifndef BANKVIEW_GLOBAL_H
+#define BANKVIEW_GLOBAL_H
+
+#include <QtCore/qglobal.h>
+
+#if defined(BANKVIEW_LIBRARY)
+#  define BANKVIEWSHARED_EXPORT Q_DECL_EXPORT
+#else
+#  define BANKVIEWSHARED_EXPORT Q_DECL_IMPORT
+#endif
+
+#endif // BANKVIEW_GLOBAL_H
