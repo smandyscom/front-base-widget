@@ -40,3 +40,5 @@ else:unix: LIBS += -L$$OUT_PWD/../../bank-view/ -lbank-view
 
 INCLUDEPATH += $$PWD/../../bank-view
 DEPENDPATH += $$PWD/../../bank-view
+
+

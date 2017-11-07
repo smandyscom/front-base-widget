@@ -19,7 +19,8 @@ ptpzrn_viewer::ptpzrn_viewer(QWidget *parent) :
 
     //connect database
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("C:\\Users\\jlai10\\Github\\front-base-widget\\base.db");
+    //db.setDatabaseName("C:\\Users\\jlai10\\Github\\front-base-widget\\base.db");
+       db.setDatabaseName("/Users/Apple/Github/front-base-widget/base.db");
     bool isOK = db.open();
 
     QString pt = QDir::currentPath();
