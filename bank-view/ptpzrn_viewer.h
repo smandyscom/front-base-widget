@@ -20,13 +20,14 @@ public:
     ~ptpzrn_viewer();
 
 private slots:
-    void submitClicked();
-
-    void on_pushButton_clicked();
+    void filterOutRegion();
+    void filterOutAxis();
+    void on_buttonSubmit_clicked();
 
 private:
     Ui::ptpzrn_viewer *ui;
-    QSqlRelationalTableModel* model;
+    QSqlRelationalTableModel* modelBank;
+    QSqlTableModel* modelAxis;
 };
 
 #endif // PTPZRN_VIEWER_H

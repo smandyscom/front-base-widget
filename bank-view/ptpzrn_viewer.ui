@@ -15,17 +15,17 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QPushButton" name="pushButton">
+    <widget class="QPushButton" name="buttonSubmit">
      <property name="text">
       <string>Submit</string>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QComboBox" name="comboBox_2"/>
+    <widget class="QComboBox" name="comboBoxRegion"/>
    </item>
    <item>
-    <widget class="QComboBox" name="comboBox"/>
+    <widget class="QComboBox" name="comboBoxAxisId"/>
    </item>
    <item>
     <widget class="QTableView" name="tableView"/>
