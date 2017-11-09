@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += widgets sql
+QT       += widgets sql serialbus
 
 #QT       -= gui
 
@@ -26,12 +26,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         bankview.cpp \
-    ptpzrn_viewer.cpp
+    ptpzrn_viewer.cpp \
+    manualpanel.cpp
 
 HEADERS += \
         bankview.h \
         bank-view_global.h \ 
-    ptpzrn_viewer.h
+    ptpzrn_viewer.h \
+    manualpanel.h
 
 unix {
     target.path = /usr/lib
@@ -39,4 +41,5 @@ unix {
 }
 
 FORMS += \
-    ptpzrn_viewer.ui
+    ptpzrn_viewer.ui \
+    manualpanel.ui
