@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-
+#include <QComboBox>
 namespace Ui {
 class MainWindow;
 }
@@ -17,6 +17,14 @@ public:
 
 private:
     Ui::MainWindow *ui;
+};
+
+
+template<class T>
+class EnumComboBox : public QComboBox
+{
+public:
+    EnumComboBox(QWidget *parent = nullptr);
 };
 
 #endif // MAINWINDOW_H

@@ -27,13 +27,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         bankview.cpp \
     ptpzrn_viewer.cpp \
-    manualpanel.cpp
+    manualpanel.cpp \
+    modbussetupwidget.cpp \
+    enumdelegate.cpp
 
 HEADERS += \
         bankview.h \
         bank-view_global.h \ 
     ptpzrn_viewer.h \
-    manualpanel.h
+    manualpanel.h \
+    modbussetupwidget.h \
+    enumdelegate.h
 
 unix {
     target.path = /usr/lib
@@ -42,4 +46,5 @@ unix {
 
 FORMS += \
     ptpzrn_viewer.ui \
-    manualpanel.ui
+    manualpanel.ui \
+    modbussetupwidget.ui
