@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += widgets sql serialbus
+QT       += widgets sql serialbus serialport
 
 #QT       -= gui
 

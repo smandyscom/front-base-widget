@@ -4,6 +4,8 @@
 #include <modbussetupwidget.h>
 //#include <enumcombobox.h>
 #include <QMetaEnum>
+#include <QMetaObject>
+#include <QItemEditorFactory>
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -13,9 +15,45 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ModbusSetupWidget* msw = new ModbusSetupWidget(ui->widgetModbus);
 
+    //![1]
+
+    QItemEditorFactory *factory = new QItemEditorFactory;
+
+    QItemEditorCreatorBase *editor =
+        new QStandardItemEditorCreator<EnumComboBox<QModbusDevice::ConnectionParameter>>();
+
+    int id = qRegisterMetaType<QModbusDevice::ConnectionParameter>(); //run-time register , nessary
+    id = QMetaType::type("QModbusDevice::ConnectionParameter");
+    QString qs(QMetaType::typeName(id));
+    id = QMetaType::type(qs.toLocal8Bit().data());
+
+
+    factory->registerEditor(id, editor);
+
+    //QItemEditorFactory::setDefaultFactory(factory);
+    //![1]
+
     QMetaEnum qme = QMetaEnum::fromType<QModbusDevice::ConnectionParameter>();
     EnumComboBox<QModbusDevice::ConnectionParameter>* ew = new EnumComboBox<QModbusDevice::ConnectionParameter>(ui->widgetComboBox);
         EnumComboBox<QModbusDevice::Error>* ew2 = new EnumComboBox<QModbusDevice::Error>(ui->widgetComboBox2);
+
+
+     //![2]
+     //!
+     //!Test if works
+     //!
+        //setting table initialization
+        QMetaEnum parameterMetaEnum = QMetaEnum::fromType<QModbusDevice::ConnectionParameter>();
+     model=   new QStandardItemModel(parameterMetaEnum.keyCount(),2,this);
+
+            for (int i=0;i<parameterMetaEnum.keyCount();i++)
+                model->setData(model->index(i,0),QString(parameterMetaEnum.key(i))); //set name
+
+            model->setData(model->index(0,1),QVariant::fromValue(QModbusDevice::SerialBaudRateParameter));
+
+            ui->tableView->setModel(model);
+     //![2]
+
 }
 
 MainWindow::~MainWindow()

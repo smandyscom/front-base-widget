@@ -3,9 +3,13 @@
 
 #include <QMainWindow>
 #include <QComboBox>
+#include <QModbusDevice>
+
+#include <QStandardItemModel>
 namespace Ui {
 class MainWindow;
 }
+ //Q_DECLARE_METATYPE(QModbusDevice::ConnectionParameter)
 
 class MainWindow : public QMainWindow
 {
@@ -15,8 +19,10 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+
 private:
     Ui::MainWindow *ui;
+    QStandardItemModel* model;
 };
 
 
