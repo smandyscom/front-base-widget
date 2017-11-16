@@ -6,6 +6,9 @@
 #include <QMetaEnum>
 #include <QMetaObject>
 #include <QItemEditorFactory>
+
+
+#include <QDebug>
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -19,8 +22,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QItemEditorFactory *factory = new QItemEditorFactory;
 
-    QItemEditorCreatorBase *editor =
-        new QStandardItemEditorCreator<EnumComboBox<QModbusDevice::ConnectionParameter>>();
+//    QItemEditorCreatorBase *editor =
+//        new QStandardItemEditorCreator<EnumComboBox<QModbusDevice::ConnectionParameter>>();
+        QItemEditorCreatorBase *editor =
+            new QStandardItemEditorCreator<EnumComboBox2>();
+
 
     int id = qRegisterMetaType<QModbusDevice::ConnectionParameter>(); //run-time register , nessary
     id = QMetaType::type("QModbusDevice::ConnectionParameter");
@@ -30,7 +36,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     factory->registerEditor(id, editor);
 
-    //QItemEditorFactory::setDefaultFactory(factory);
+    QItemEditorFactory::setDefaultFactory(factory);
     //![1]
 
     QMetaEnum qme = QMetaEnum::fromType<QModbusDevice::ConnectionParameter>();
@@ -54,6 +60,12 @@ MainWindow::MainWindow(QWidget *parent) :
             ui->tableView->setModel(model);
      //![2]
 
+     //![3]
+     QVariant var = 1;
+     QModbusDevice::ConnectionParameter par = var.value<QModbusDevice::ConnectionParameter>();
+     par = static_cast<QModbusDevice::ConnectionParameter>(2);
+
+     //![3]
 }
 
 MainWindow::~MainWindow()
@@ -72,4 +84,9 @@ EnumComboBox<T>::EnumComboBox(QWidget *parent ):QComboBox(parent){
 
     for(int i=0;i<target.keyCount();i++)
         insertItem(i,QString(target.key(i)),target.value(i));
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    qDebug() << model->data(model->index(0,1)).typeName();
 }

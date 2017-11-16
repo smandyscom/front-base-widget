@@ -9,39 +9,46 @@
 
 
 template<typename T>
-class EnumComboBox : public QComboBox
+class EnumComboBoxTemplate : public QComboBox
 {
-    Q_PROPERTY(QVariant value READ readValue WRITE setValue USER true)
 public:
-    QVariant readValue() const
+    T readValue() const
     {
-        return currentData();
+        return currentData().value();
     }
-    void setValue(QVariant value)
+    void setValue(T value)
     {
-        setCurrentIndex(findData(value));
+        setCurrentIndex(findData(QVariant::fromValue(value)));
     }
 
-    EnumComboBox<T>(QWidget *parent = nullptr) : QComboBox(parent)
+    EnumComboBoxTemplate<T>(QWidget *parent = nullptr) : QComboBox(parent)
     {
         //object:
         // 1. load all items from the definition of enum , including its key/value
         // 2. when user selected specific item
-
-
         QMetaEnum target = QMetaEnum::fromType<T>();
 
         for(int i=0;i<target.keyCount();i++){
-            //T var = target.value(i);
-            //var.setValue(target.value(i));
             insertItem(i
                        ,QString(target.key(i))
-                       ,qvariant_cast<T>(target.value(i)));
+                       ,QVariant::fromValue(static_cast<T>(target.value(i))));
         }
-
-
     }
 
 };
+
+//class EnumComboBoxDynamic : public QComboBox
+//{
+//    Q_PROPERTY(QVariant value READ readValue WRITE setValue USER true)
+//    Q_OBJECT
+//public:
+//    QVariant readValue() const;
+//    void setValue(QVariant value);
+//    EnumComboBoxDynamic(QMetaEnum target,QWidget *parent);
+//    //virtual ~name() {}
+//protected:
+//    QVariant __seed; // stored the enum object
+//};
+
 
 #endif // ENUMCOMBOBOX_H

@@ -54,8 +54,6 @@ public:
     ~manualPanel();
 
 private slots:
-    void on_pushButton_clicked();
-
     void on_buttonConnect_clicked();
 
 private:

@@ -23,6 +23,9 @@ public:
     explicit ModbusSetupWidget(QWidget *parent = 0);
     ~ModbusSetupWidget();
 
+private slots:
+    void on_buttonConnect_clicked();
+
 private:
     Ui::ModbusSetupWidget *ui;
 
