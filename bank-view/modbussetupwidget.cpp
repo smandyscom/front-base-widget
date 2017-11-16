@@ -3,6 +3,10 @@
 #include <QMetaEnum>
 #include <QUrl>
 #include <QtSerialPort/QSerialPort>
+#include <QItemEditorFactory>
+
+#include <utilities.h>
+
 
 ModbusSetupWidget::ModbusSetupWidget(QWidget *parent) :
     QWidget(parent),
@@ -29,9 +33,26 @@ ModbusSetupWidget::ModbusSetupWidget(QWidget *parent) :
     settingModel->setData(settingModel->index(4,1),QVariant::fromValue(QSerialPort::OneStop));
     settingModel->setData(settingModel->index(5,1),QVariant(QString("127.0.0.1")));
     settingModel->setData(settingModel->index(6,1),502);
-    settingModel->setData(settingModel->index(7,1),QVariant(QUrl("127.0.0.1:502")),Qt::DecorationRole);
+    //settingModel->setData(settingModel->index(7,1),QVariant(QUrl("127.0.0.1:502")),Qt::DecorationRole);
     //![0]
 
+
+    //![1]
+    //! QItemEditorFactory registration
+    //!
+    QList<QPair<int,QItemEditorCreatorBase*>> lp;
+    lp << utilities::generateEnumComboBoxEditor<QSerialPort::Parity>()
+       << utilities::generateEnumComboBoxEditor<QSerialPort::BaudRate>()
+       << utilities::generateEnumComboBoxEditor<QSerialPort::DataBits>()
+       << utilities::generateEnumComboBoxEditor<QSerialPort::StopBits>();
+
+    QPair<int,QItemEditorCreatorBase*> var;
+    QItemEditorFactory* factory = new QItemEditorFactory();
+    foreach (var, lp)
+        factory->registerEditor(var.first,var.second);
+//        const_cast<QItemEditorFactory*>(QItemEditorFactory::defaultFactory())->registerEditor(var.first,var.second);
+    QItemEditorFactory::setDefaultFactory(factory);
+    //![1]
 
 
     ui->tableView->setModel(settingModel);

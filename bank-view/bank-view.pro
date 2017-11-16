@@ -29,7 +29,8 @@ SOURCES += \
     ptpzrn_viewer.cpp \
     manualpanel.cpp \
     modbussetupwidget.cpp \
-    enumdelegate.cpp
+    enumcombobox.cpp \
+    utilities.cpp
 
 HEADERS += \
         bankview.h \
@@ -37,7 +38,8 @@ HEADERS += \
     ptpzrn_viewer.h \
     manualpanel.h \
     modbussetupwidget.h \
-    enumdelegate.h
+    enumcombobox.h \
+    utilities.h
 
 unix {
     target.path = /usr/lib

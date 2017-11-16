@@ -5,6 +5,7 @@
 #include <QModbusDevice>
 #include <QStandardItemModel>
 #include <bank-view_global.h>
+
 namespace Ui {
 class ModbusSetupWidget;
 }
