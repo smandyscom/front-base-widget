@@ -36,7 +36,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     factory->registerEditor(id, editor);
 
-    QItemEditorFactory::setDefaultFactory(factory);
+    //QItemEditorFactory::setDefaultFactory(factory);
     //![1]
 
     QMetaEnum qme = QMetaEnum::fromType<QModbusDevice::ConnectionParameter>();

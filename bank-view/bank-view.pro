@@ -31,7 +31,8 @@ SOURCES += \
     modbussetupwidget.cpp \
     utilities.cpp \
     enumcomboboxdynamic.cpp \
-    modbussetupitemdelegate.cpp
+    modbussetupitemdelegate.cpp \
+    enumcomboboxgeneric.cpp
 
 HEADERS += \
         bankview.h \
@@ -43,7 +44,8 @@ HEADERS += \
     utilities.h \
     enumcomboboxdynamic.h \
     enumitemdelegate.h \
-    modbussetupitemdelegate.h
+    modbussetupitemdelegate.h \
+    enumcomboboxgeneric.h
 
 unix {
     target.path = /usr/lib

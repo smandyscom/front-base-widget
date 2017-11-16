@@ -51,7 +51,7 @@ ModbusSetupWidget::ModbusSetupWidget(QWidget *parent) :
     foreach (var, lp)
         factory->registerEditor(var.first,var.second);
 //        const_cast<QItemEditorFactory*>(QItemEditorFactory::defaultFactory())->registerEditor(var.first,var.second);
-    //QItemEditorFactory::setDefaultFactory(factory);
+    QItemEditorFactory::setDefaultFactory(factory);
     //![1]
 
 

@@ -5,7 +5,7 @@
 #include <QPair>
 #include <QItemEditorCreatorBase>
 #include <enumcombobox.h>
-
+#include <enumcomboboxgeneric.h>
 class utilities
 {
 public:
@@ -16,7 +16,8 @@ public:
     {
         //warning , allocating new item editor every time , would cause leakage
         //better to use internal hash table instead
-        return QPair<int,QItemEditorCreatorBase*>(qRegisterMetaType<T>(),new QStandardItemEditorCreator<EnumComboBoxTemplate<T>>());
+        //return QPair<int,QItemEditorCreatorBase*>(qRegisterMetaType<T>(),new QStandardItemEditorCreator<EnumComboBoxTemplate<T>>());
+        return QPair<int,QItemEditorCreatorBase*>(qRegisterMetaType<T>(),new QStandardItemEditorCreator<EnumComboBoxGenericTemplate<T>>());
     }
 };
 
