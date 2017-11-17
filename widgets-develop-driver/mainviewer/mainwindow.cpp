@@ -7,7 +7,7 @@
 #include <QMetaObject>
 #include <QItemEditorFactory>
 
-
+#include <QModbusTcpServer>
 #include <QDebug>
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -72,6 +72,10 @@ MainWindow::MainWindow(QWidget *parent) :
      qDebug() << QVariant("QModbusDevice::SerialBaudRateParameter").value<QModbusDevice::ConnectionParameter>();
      qDebug() << QVariant("QModbusDevice::SerialDataBitsParameter").value<QModbusDevice::ConnectionParameter>();
      qDebug() << QVariant("QModbusDevice::NetworkAddressParameter").value<QModbusDevice::ConnectionParameter>();
+     qDebug() << QVariant("NetworkAddressParameter").value<QModbusDevice::ConnectionParameter>();
+
+     QModbusDevice* qmd =  new QModbusTcpServer(this);
+     qmd->setConnectionParameter(QModbusDevice::SerialPortNameParameter,"COM1");
      //![3]
 }
 

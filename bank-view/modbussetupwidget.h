@@ -28,19 +28,19 @@ public:
     ~ModbusSetupWidget();
 
 private slots:
-    void on_buttonConnect_clicked();
-
     void onStateChanged(QModbusDevice::State state);
     void onErrorOccured(QModbusDevice::Error error);
     void onSelectionChanged();
+
+    void deviceDisconnect();
+    void deviceConnect();
 private:
     Ui::ModbusSetupWidget *ui; 
 
     QModbusDevice* __device;//abstrct device , instance would decided by current setting
     QStandardItemModel* settingModel;
 
-    void deviceDisconnect( QModbusDevice* device );
-    void deviceConnect( QModbusDevice* device);
+
 
     EnumComboBoxGenericTemplate<DeviceKinds>* deviceSelection;
     QMap<DeviceKinds,QModbusDevice*> deviceTorrent; //used to store diffrent kind of modbus device listed in DeviceKinds
