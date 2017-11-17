@@ -45,6 +45,20 @@ struct zrnBlock{
   qint32 speedCreep;
 };
 
+
+//TODO
+//a pivot to transform from/to different types
+class ptpBlockObject : public QObject
+{
+    Q_OBJECT
+public:
+    ptpBlockObject() {}
+    virtual ~ptpBlockObject() {}
+
+    QModbusDataUnit dataUnit(void) const; //prepare the data unit
+    //generate model record
+};
+
 class BANKVIEWSHARED_EXPORT manualPanel : public QWidget
 {
     Q_OBJECT
