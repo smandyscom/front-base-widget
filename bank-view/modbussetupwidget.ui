@@ -7,13 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>589</width>
-    <height>429</height>
+    <height>476</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QTableView" name="tableView">
+  <widget class="QTableView" name="tableViewConnectionParameters">
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -53,7 +53,7 @@
    <property name="geometry">
     <rect>
      <x>310</x>
-     <y>150</y>
+     <y>140</y>
      <width>121</width>
      <height>21</height>
     </rect>
@@ -69,9 +69,19 @@
    <property name="geometry">
     <rect>
      <x>0</x>
-     <y>280</y>
+     <y>380</y>
      <width>491</width>
      <height>91</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QTableView" name="tableViewServerMap">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>180</y>
+     <width>256</width>
+     <height>192</height>
     </rect>
    </property>
   </widget>
