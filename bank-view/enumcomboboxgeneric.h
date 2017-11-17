@@ -3,6 +3,8 @@
 
 #include <QComboBox>
 #include <QMetaEnum>
+
+//with user property add-on
 class EnumComboBoxGeneric : public QComboBox
 {
     Q_OBJECT
@@ -24,6 +26,8 @@ signals:
 public slots:
 };
 
+
+//manage different type of enum
 template<typename T>
 class EnumComboBoxGenericTemplate : public EnumComboBoxGeneric
 {

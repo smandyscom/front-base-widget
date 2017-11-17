@@ -5,6 +5,7 @@
 #include <QModbusDevice>
 #include <QStandardItemModel>
 #include <bank-view_global.h>
+#include <enumcomboboxgeneric.h>
 
 namespace Ui {
 class ModbusSetupWidget;
@@ -15,10 +16,13 @@ class BANKVIEWSHARED_EXPORT ModbusSetupWidget : public QWidget
     Q_OBJECT
 
 public:
-    enum test{
-      A
+    enum DeviceKinds{
+      MASTER_CLIENT_RTUSERIAL,
+      MASTER_CLIENT_TCP,
+      SLAVE_SERVER_RTUSERIAL,
+      SLAVE_SERVER_TCP
     };
-    Q_ENUM(test)
+    Q_ENUM(DeviceKinds)
 
     explicit ModbusSetupWidget(QWidget *parent = 0);
     ~ModbusSetupWidget();
@@ -27,12 +31,13 @@ private slots:
     void on_buttonConnect_clicked();
 
 private:
-    Ui::ModbusSetupWidget *ui;
-
-    //abstrct device , instance would decided by current setting
-    QModbusDevice* __device;
-
+    Ui::ModbusSetupWidget *ui; 
+    QModbusDevice* __device;//abstrct device , instance would decided by current setting
     QStandardItemModel* settingModel;
+    EnumComboBoxGenericTemplate<DeviceKinds>* deviceSelection;
+
+
+    QMap<DeviceKinds,QModbusDevice*> deviceTorrent; //used to store diffrent kind of modbus device listed in DeviceKinds
 };
 
 #endif // MODBUSSETUPWIDGET_H

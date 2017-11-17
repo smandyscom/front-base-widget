@@ -30,9 +30,7 @@ SOURCES += \
     manualpanel.cpp \
     modbussetupwidget.cpp \
     utilities.cpp \
-    enumcomboboxdynamic.cpp \
-    modbussetupitemdelegate.cpp \
-    enumcomboboxgeneric.cpp
+    enumcomboboxdynamic.cpp
 
 HEADERS += \
         bankview.h \
@@ -40,11 +38,8 @@ HEADERS += \
     ptpzrn_viewer.h \
     manualpanel.h \
     modbussetupwidget.h \
-    enumcombobox.h \
     utilities.h \
     enumcomboboxdynamic.h \
-    enumitemdelegate.h \
-    modbussetupitemdelegate.h \
     enumcomboboxgeneric.h
 
 unix {

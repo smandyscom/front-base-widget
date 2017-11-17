@@ -8,6 +8,11 @@
 #include <utilities.h>
 #include <QDebug>
 
+#include <QModbusTcpClient>
+#include <QModbusTcpServer>
+#include <QModbusRtuSerialMaster>
+#include <QModbusRtuSerialSlave>
+
 ModbusSetupWidget::ModbusSetupWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ModbusSetupWidget)
@@ -33,7 +38,9 @@ ModbusSetupWidget::ModbusSetupWidget(QWidget *parent) :
     settingModel->setData(settingModel->index(4,1),QVariant::fromValue(QSerialPort::OneStop));
     settingModel->setData(settingModel->index(5,1),QVariant(QString("127.0.0.1")));
     settingModel->setData(settingModel->index(6,1),502);
-    //settingModel->setData(settingModel->index(7,1),QVariant(QUrl("127.0.0.1:502")),Qt::DecorationRole);
+
+    settingModel->setHeaderData(0,Qt::Horizontal,QVariant("Name"));
+    settingModel->setHeaderData(1,Qt::Horizontal,QVariant("Value"));
     //![0]
 
 
@@ -50,10 +57,20 @@ ModbusSetupWidget::ModbusSetupWidget(QWidget *parent) :
     QItemEditorFactory* factory = new QItemEditorFactory();
     foreach (var, lp)
         factory->registerEditor(var.first,var.second);
-//        const_cast<QItemEditorFactory*>(QItemEditorFactory::defaultFactory())->registerEditor(var.first,var.second);
     QItemEditorFactory::setDefaultFactory(factory);
     //![1]
 
+
+    //![2]
+    //! Prepare different kind of modbus device
+    //! Issue instance and store into qmap
+    //!
+    deviceTorrent.insert(DeviceKinds::MASTER_CLIENT_TCP,new QModbusTcpClient(this));
+    deviceTorrent.insert(DeviceKinds::SLAVE_SERVER_TCP,new QModbusTcpClient(this));
+    deviceTorrent.insert(DeviceKinds::MASTER_CLIENT_RTUSERIAL,new QModbusRtuSerialMaster(this));
+    deviceTorrent.insert(DeviceKinds::SLAVE_SERVER_RTUSERIAL,new QModbusRtuSerialSlave(this));
+
+    deviceSelection = new EnumComboBoxGenericTemplate<DeviceKinds>(ui->widgetMode);
 
     ui->tableView->setModel(settingModel);
 

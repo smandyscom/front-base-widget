@@ -36,14 +36,30 @@
     <string>Connect</string>
    </property>
   </widget>
-  <widget class="QComboBox" name="comboBoxMode">
+  <widget class="QWidget" name="widgetMode" native="true">
    <property name="geometry">
     <rect>
-     <x>300</x>
+     <x>310</x>
      <y>50</y>
-     <width>69</width>
-     <height>22</height>
+     <width>120</width>
+     <height>80</height>
     </rect>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="spinBoxSlaveAddress">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>150</y>
+     <width>121</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="buttonSymbols">
+    <enum>QAbstractSpinBox::UpDownArrows</enum>
+   </property>
+   <property name="value">
+    <number>1</number>
    </property>
   </widget>
  </widget>
