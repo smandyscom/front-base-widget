@@ -65,6 +65,13 @@ MainWindow::MainWindow(QWidget *parent) :
      QModbusDevice::ConnectionParameter par = var.value<QModbusDevice::ConnectionParameter>();
      par = static_cast<QModbusDevice::ConnectionParameter>(2);
 
+     var = QVariant::fromValue(QModbusDevice::ConnectedState);
+     QString a = QVariant::fromValue(QModbusDevice::ConnectedState).value<QString>();
+     //qDebug() << a;
+     //qDebug() << QVariant(5).value<QModbusDevice::ConnectionParameter>();
+     qDebug() << QVariant("QModbusDevice::SerialBaudRateParameter").value<QModbusDevice::ConnectionParameter>();
+     qDebug() << QVariant("QModbusDevice::SerialDataBitsParameter").value<QModbusDevice::ConnectionParameter>();
+     qDebug() << QVariant("QModbusDevice::NetworkAddressParameter").value<QModbusDevice::ConnectionParameter>();
      //![3]
 }
 

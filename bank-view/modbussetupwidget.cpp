@@ -39,7 +39,7 @@ ModbusSetupWidget::ModbusSetupWidget(QWidget *parent) :
     settingModel->setData(settingModel->index(5,1),QVariant(QString("127.0.0.1")));
     settingModel->setData(settingModel->index(6,1),502);
 
-    settingModel->setHeaderData(0,Qt::Horizontal,QVariant("Name"));
+    settingModel->setHeaderData(0,Qt::Horizontal,QVariant("Key"));
     settingModel->setHeaderData(1,Qt::Horizontal,QVariant("Value"));
     //![0]
 
@@ -84,4 +84,69 @@ ModbusSetupWidget::~ModbusSetupWidget()
 void ModbusSetupWidget::on_buttonConnect_clicked()
 {
     qDebug() << settingModel->data(settingModel->index(1,1)).typeName();
+
+    //inject the settings , and connect
+}
+
+
+void ModbusSetupWidget::onStateChanged(QModbusDevice::State state)
+{
+    ui->textBrowserScreen->append(QVariant::fromValue(state).value<QString>());
+
+    switch (state) {
+    case QModbusDevice::UnconnectedState:
+        deviceSelection->setEnabled(true); //able to be set
+        ui->buttonConnect->setText(tr("Connect"));
+        ui->buttonConnect->setEnabled(true);
+        break;
+    case QModbusDevice::ConnectingState:
+        deviceSelection->setEnabled(false); //once connecting, cannat being setting
+        ui->buttonConnect->setText(tr("Connecting"));
+        ui->buttonConnect->setEnabled(false);
+        break;
+    case QModbusDevice::ConnectedState:
+        ui->buttonConnect->setText(tr("Disconnect"));
+        ui->buttonConnect->setEnabled(true);
+        break;
+    case QModbusDevice::ClosingState:
+        ui->buttonConnect->setText(tr("Disconnecting"));
+        ui->buttonConnect->setEnabled(false);
+    default:
+        break;
+    }
+
+
+}
+void ModbusSetupWidget::onErrorOccured(QModbusDevice::Error error)
+{
+    ui->textBrowserScreen->append(QVariant::fromValue(error).value<QString>());
+}
+
+void ModbusSetupWidget::deviceConnect(QModbusDevice *device)
+{
+    //input paramenters
+    foreach (KeyValuePair pair, utilities::model2KeyValuePairs(*static_cast<QAbstractItemModel*>(settingModel)))
+        device->setConnectionParameter(pair.first.value<QModbusDevice::ConnectionParameter>(),
+                                       pair.second);
+    device->connectDevice();
+}
+void ModbusSetupWidget::deviceDisconnect(QModbusDevice *device)
+{
+    device->disconnectDevice();
+}
+
+
+void ModbusSetupWidget::onSelectionChanged()
+{
+    //break old links
+    disconnect(__device,SIGNAL(stateChanged(QModbusDevice::State)),this,SLOT(onStateChanged(QModbusDevice::State)));
+    disconnect(__device,SIGNAL(errorOccurred(QModbusDevice::Error)),this,SLOT(onErrorOccured(QModbusDevice::Error)));
+
+    //replace link
+    __device = deviceTorrent[deviceSelection->readValue().value<DeviceKinds>()];
+
+    //link with ui controls
+    connect(__device,SIGNAL(stateChanged(QModbusDevice::State)),this,SLOT(onStateChanged(QModbusDevice::State)));
+    connect(__device,SIGNAL(errorOccurred(QModbusDevice::Error)),this,SLOT(onErrorOccured(QModbusDevice::Error)));
+
 }

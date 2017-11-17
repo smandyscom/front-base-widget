@@ -6,6 +6,10 @@
 #include <QItemEditorCreatorBase>
 #include <enumcomboboxgeneric.h>
 #include <QMetaEnum>
+#include <QAbstractItemModel>
+
+typedef QPair<QVariant,QVariant> KeyValuePair;
+typedef QList<KeyValuePair> KeyValueCollection;
 
 class utilities
 {
@@ -33,6 +37,8 @@ public:
 
         return output;
     }
+
+    static KeyValueCollection model2KeyValuePairs(const QAbstractItemModel &model);
 };
 
 #endif // UTILITIES_H
