@@ -31,9 +31,10 @@ SOURCES += \
     modbussetupwidget.cpp \
     utilities.cpp \
     enumcomboboxdynamic.cpp \
-    clusterheader.cpp \
     segmentmodbus.cpp \
-    serializedmodbusclient.cpp
+    serializedmodbusclient.cpp \
+    channel.cpp \
+    cluster.cpp
 
 HEADERS += \
         bankview.h \
@@ -44,9 +45,10 @@ HEADERS += \
     utilities.h \
     enumcomboboxdynamic.h \
     enumcomboboxgeneric.h \
-    clusterheader.h \
     segmentmodbus.h \
-    serializedmodbusclient.h
+    serializedmodbusclient.h \
+    channel.h \
+    cluster.h
 
 unix {
     target.path = /usr/lib

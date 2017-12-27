@@ -21,6 +21,11 @@ SegmentModbus::AccessMethod SegmentModbus::getMethod()
     return method;
 }
 
+void SegmentModbus::setMethod(AccessMethod method)
+{
+    this->method = method;
+}
+
 QModbusDataUnit SegmentModbus::getRequest()
 {
     return requestUnit;
