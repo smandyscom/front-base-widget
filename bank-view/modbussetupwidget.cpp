@@ -76,7 +76,7 @@ ModbusSetupWidget::ModbusSetupWidget(QWidget *parent) :
     __device = deviceTorrent[DeviceKinds::MASTER_CLIENT_TCP];
     deviceSelection->setValue(QVariant::fromValue(DeviceKinds::MASTER_CLIENT_TCP));
 
-    ui->tableView->setModel(settingModel);
+    ui->tableViewConnectionParameters->setModel(settingModel);
 
     //default action
     connect(ui->buttonAction,SIGNAL(clicked()),this,SLOT(deviceConnect()));
