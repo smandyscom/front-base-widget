@@ -23,12 +23,12 @@ public:
                            QObject *parent = nullptr);
 
     AccessMethod getMethod();
+    void setMethod(AccessMethod method);
     QModbusDataUnit getRequest();
 
 signals:
     //update target , mark down dirty if RB
     void update(QModbusDataUnit replyUnit); //connet QModbusReply.finished
-    void resend(); //when QModbusReply error occured?
 public slots:
     void replyfinished();
 
