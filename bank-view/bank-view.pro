@@ -25,19 +25,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        bankview.cpp \
     ptpzrn_viewer.cpp \
     manualpanel.cpp \
     modbussetupwidget.cpp \
     utilities.cpp \
     enumcomboboxdynamic.cpp \
-    segmentmodbus.cpp \
-    serializedmodbusclient.cpp \
-    channel.cpp \
-    cluster.cpp
+    modbuschannel.cpp \
+    modbuscluster.cpp \
+    modbussegment.cpp \
+    modbusserializedclient.cpp
 
 HEADERS += \
-        bankview.h \
         bank-view_global.h \ 
     ptpzrn_viewer.h \
     manualpanel.h \
@@ -45,10 +43,11 @@ HEADERS += \
     utilities.h \
     enumcomboboxdynamic.h \
     enumcomboboxgeneric.h \
-    segmentmodbus.h \
-    serializedmodbusclient.h \
-    channel.h \
-    cluster.h
+    baselayerdefinitions.h \
+    modbuschannel.h \
+    modbuscluster.h \
+    modbussegment.h \
+    modbusserializedclient.h
 
 unix {
     target.path = /usr/lib

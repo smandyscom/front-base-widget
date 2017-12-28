@@ -1,12 +1,12 @@
-#ifndef SEGMENTMODBUS_H
-#define SEGMENTMODBUS_H
+#ifndef MODBUSSEGMENT_H
+#define MODBUSSEGMENT_H
 
 #include <QObject>
 #include <QModbusDataUnit>
 
 
 //QObject is forbidden to copy/assign
-class SegmentModbus : public QObject
+class ModbusSegment : public QObject
 {
     Q_OBJECT
 public:
@@ -18,7 +18,7 @@ public:
     };
     Q_ENUM(AccessMethod)
 
-    explicit SegmentModbus(AccessMethod method,
+    explicit ModbusSegment(AccessMethod method,
                            QModbusDataUnit request,
                            QObject *parent = nullptr);
 

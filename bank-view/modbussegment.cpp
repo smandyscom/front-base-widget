@@ -1,7 +1,7 @@
-#include "segmentmodbus.h"
+#include "modbussegment.h"
 #include <QModbusReply>
 
-SegmentModbus::SegmentModbus(AccessMethod method,
+ModbusSegment::ModbusSegment(AccessMethod method,
                              QModbusDataUnit request,
                              QObject *parent) : QObject(parent)
 {
@@ -9,24 +9,24 @@ SegmentModbus::SegmentModbus(AccessMethod method,
     this->requestUnit = request;
 }
 
-void SegmentModbus::replyfinished()
+void ModbusSegment::replyfinished()
 {
      QModbusReply* reply=  qobject_cast<QModbusReply*>(sender());
      emit update(reply->result());
 }
 
 
-SegmentModbus::AccessMethod SegmentModbus::getMethod()
+ModbusSegment::AccessMethod ModbusSegment::getMethod()
 {
     return method;
 }
 
-void SegmentModbus::setMethod(AccessMethod method)
+void ModbusSegment::setMethod(AccessMethod method)
 {
     this->method = method;
 }
 
-QModbusDataUnit SegmentModbus::getRequest()
+QModbusDataUnit ModbusSegment::getRequest()
 {
     return requestUnit;
 }

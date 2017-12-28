@@ -1,29 +1,31 @@
-#include "serializedmodbusclient.h"
+#include "modbusserializedclient.h"
 
-SerializedModbusClient::SerializedModbusClient(QObject *parent) : QObject(parent)
+ModbusSerializedClient::ModbusSerializedClient(QModbusClient *driver, QObject *parent) : QObject(parent)
 {
     timer = new QTimer(this);
     connect(timer,SIGNAL(timeout()),this,SLOT(popRequest()));
     timer->start();
+
+    this->driver = driver;
 }
 
 
 //this function would be poll repeatly
-void SerializedModbusClient::popRequest()
+void ModbusSerializedClient::popRequest()
 {
-    SegmentModbus* request = queue.head();
+    ModbusSegment* request = requestQueue.head();
     if(request == nullptr)
         return; // nothing left in queue
 
     QModbusReply* reply;
 
     switch (request->getMethod()) {
-    case SegmentModbus::READ:
-        reply = gateway->sendReadRequest(request->getRequest(),serverAddress);
+    case ModbusSegment::READ:
+        reply = driver->sendReadRequest(request->getRequest(),serverAddress);
         break;
-    case SegmentModbus::WRITE:
+    case ModbusSegment::WRITE:
         break;
-    case SegmentModbus::READ_WRITE:
+    case ModbusSegment::READ_WRITE:
         //reserved
         break;
     default:
@@ -31,7 +33,7 @@ void SerializedModbusClient::popRequest()
     }
 
     //for reading , need to connect with request
-    if(request->getMethod()==SegmentModbus::READ){
+    if(request->getMethod()==ModbusSegment::READ){
         connect(reply,SIGNAL(finished()),request,SLOT(replyfinished())); //
     }
     //when finished , dequeue
@@ -40,7 +42,7 @@ void SerializedModbusClient::popRequest()
     connect(reply,&QModbusReply::finished,this,[this,reply](){
         switch (reply->error()) {
         case QModbusDevice::NoError:
-            queue.dequeue()->deleteLater(); //life ends as long as operation done
+            requestQueue.dequeue();
             break;
         default:
             break;
@@ -49,7 +51,7 @@ void SerializedModbusClient::popRequest()
     });
 }
 
-void SerializedModbusClient::pushRequest(SegmentModbus* request)
+void ModbusSerializedClient::pushRequest(ModbusSegment* request)
 {
-    queue.enqueue(request);
+    requestQueue.enqueue(request);
 }
