@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QModbusDataUnit>
+#include <modbussegment.h>
 
 //Cluster <-> object? define type as well?
 //define this atomic meomory segment
@@ -18,16 +19,16 @@ public:
     Q_DECLARE_FLAGS(Attributes,Attribute)
 
     explicit ModbusCluster(quint16* baseAddress,
-                     size_t size,
-                     size_t registerAddress /*base offset in modbus holding register*/,
-                     Attribute attribute,
-                     QObject *parent = nullptr);
+                           size_t size,
+                           size_t registerAddress /*base offset in modbus holding register*/,
+                           Attribute attribute,
+                           QObject *parent = nullptr);
 
     //!1
     //! Interface to upper layer
     void commit();
     void beginUpdate(); //return a callback?
-    const int readSize(){ return size;}
+    const int sizeOf(){ return size;}
 
 
 signals:
@@ -48,6 +49,6 @@ protected:
 
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(ClusterHeader::Attributes)
+Q_DECLARE_OPERATORS_FOR_FLAGS(ModbusCluster::Attributes)
 
 #endif // CLUSTERHEADER_H

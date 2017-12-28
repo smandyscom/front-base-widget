@@ -39,6 +39,8 @@ public:
     }
 
     static KeyValueCollection model2KeyValuePairs(const QAbstractItemModel &model);
+
+    static int sizeOf(QVariant value);
 };
 
 #endif // UTILITIES_H

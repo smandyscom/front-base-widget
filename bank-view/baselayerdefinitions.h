@@ -10,7 +10,7 @@
 
 namespace BaseLayer {
 
-struct ModbusDriverAddress : quint64{
+struct ModbusDriverAddress{
     quint32 reserved;
     quint8 channelAddress;
     quint8 registerType;
@@ -18,7 +18,7 @@ struct ModbusDriverAddress : quint64{
 };
 
 //other driver addressing mode
-struct DummyDriverAddress : quint64{
+struct DummyDriverAddress{
   quint64 reserved;
 };
 

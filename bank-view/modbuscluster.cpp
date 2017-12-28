@@ -1,25 +1,28 @@
 #include "modbuscluster.h"
 
 ModbusCluster::ModbusCluster(quint16* baseAddress,
-                 size_t size,
-                 size_t registerAddress /*base offset in modbus holding register*/,
-                 QObject *parent) : QObject(parent)
+                             size_t size,
+                             size_t registerAddress /*base offset in modbus holding register*/,
+                             Attribute attribute,
+                             QObject *parent) :
+    QObject(parent),
+    baseAddress(baseAddress),
+    size(size),
+    attribute(attribute)
 {
-    this->baseAddress = baseAddress;
-    this->size = size;
-    this->attribute = attribute;
     this->request=  new ModbusSegment(ModbusSegment::WRITE,
-                                      QModbusDataUnit(QModbusDataUnit::HoldingRegisters,offset,size));
+                                      QModbusDataUnit(QModbusDataUnit::HoldingRegisters,
+                                                      registerAddress,
+                                                      size));
 
 }
 
 
-const void ModbusCluster::beginUpdate()
+void ModbusCluster::beginUpdate()
 {
     //once has READ attribute
     if(attribute.testFlag(READ)){
         request->setMethod(ModbusSegment::READ);
-        requestGateway->pushRequest(request);
         connect(request,SIGNAL(beginUpdate(QModbusDataUnit)),this,SLOT(dataUpdated(QModbusDataUnit)));
     }
 
@@ -35,9 +38,7 @@ void ModbusCluster::commit()
         request->getRequest().setValue(i,baseAddress[i]);
 
     request->setMethod(ModbusSegment::WRITE);
-    requestGateway->pushRequest(request); //send write request
-
-    emit sendRequest(request);
+    emit sendRequest(request);//send write request
 }
 
 void ModbusCluster::dataUpdated(QModbusDataUnit reply)

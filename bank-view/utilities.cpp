@@ -1,5 +1,6 @@
 #include "utilities.h"
 
+
 utilities::utilities()
 {
 
@@ -15,4 +16,9 @@ KeyValueCollection utilities::model2KeyValuePairs(const QAbstractItemModel &mode
                                    model.data(model.index(i,1))));
 
     return output;
+}
+
+int utilities::sizeOf(QVariant value)
+{
+    return QMetaType::sizeOf(QMetaType::type(value.typeName()));
 }

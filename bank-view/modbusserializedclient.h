@@ -10,18 +10,18 @@
 
 
 //guarantee the request be handled in some sort of sequence
+//!
+//! \brief The ModbusSerializedClient class
+//! Make sure requests are processed in sequence
+//! Face to certain server address
 class ModbusSerializedClient : public QObject
 {
     Q_OBJECT
 public:
-    explicit ModbusSerializedClient(QModbusClient* driver = nullptr,QObject *parent = nullptr);
-    void pushRequest(ModbusSegment *request);
-
-    //!1 Configuration
-    //!
-    void setServerAddress(int serverAddress){this->serverAddress = serverAddress;}
-    void setDriver(QModbusClient* driver){this->driver=driver;}
-
+    explicit ModbusSerializedClient(QModbusClient* driver = nullptr,
+                                    int serverAddress=1,
+                                    QObject *parent = nullptr);
+    void pushRequest(const ModbusSegment *request);
 signals:
 
 public slots:
@@ -30,7 +30,7 @@ protected slots:
     void popRequest();
 protected:
 
-    QQueue<ModbusSegment*> requestQueue;
+    QQueue<const ModbusSegment*> requestQueue;
 
     int serverAddress;
     QModbusClient* driver; //should be initialed somewhere

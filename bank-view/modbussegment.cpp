@@ -16,7 +16,7 @@ void ModbusSegment::replyfinished()
 }
 
 
-ModbusSegment::AccessMethod ModbusSegment::getMethod()
+ModbusSegment::AccessMethod ModbusSegment::getMethod() const
 {
     return method;
 }
@@ -26,7 +26,7 @@ void ModbusSegment::setMethod(AccessMethod method)
     this->method = method;
 }
 
-QModbusDataUnit ModbusSegment::getRequest()
+QModbusDataUnit ModbusSegment::getRequest() const
 {
     return requestUnit;
 }

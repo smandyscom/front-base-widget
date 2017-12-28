@@ -22,9 +22,9 @@ public:
                            QModbusDataUnit request,
                            QObject *parent = nullptr);
 
-    AccessMethod getMethod();
+    ModbusSegment::AccessMethod getMethod() const;
     void setMethod(AccessMethod method);
-    QModbusDataUnit getRequest();
+    QModbusDataUnit getRequest() const;
 
 signals:
     //update target , mark down dirty if RB

@@ -17,13 +17,15 @@ class modbusChannel : public QObject
 {
     Q_OBJECT
 public:
-    explicit modbusChannel(QObject *parent = nullptr);
+    explicit modbusChannel(QModbusClient* driver=nullptr,
+                           int serverAddress=1,
+                           QObject *parent = nullptr);
 
     //!1
     //! Accessing interface
     void beginReadData(QVariant address); //raising asynchrous updating operation
     QVariant readData(QVariant address); // would not raise updating action
-    writeData(QVariant address,QVariant value);
+    void writeData(QVariant address,QVariant value);
 
     //!2
     //! Configuration (data map
@@ -43,7 +45,7 @@ public:
     //!4
     //! Tool function
     int queryCluster(QVariant address); //return cluster id
-
+    bool isInCluster(QVariant address,int clusterId){return queryCluster(address) == clusterId;}
 signals:
     void clusterUpdated(int clusterId);
 public slots:
@@ -55,13 +57,16 @@ public slots:
     //! \brief requestRaised
     //! \param request
     //!
-    void requestRaised(const ModbusSegment* request); //from cluster
+ protected slots:
+    void requestRaised(const ModbusSegment* request); //bridge cluster and gateway
 protected:
 
-    QMap<int,QVariant> dataMap;
+    quint16* toStartAddress(QVariant address);
+
+    QMap<QVariant,QVariant> dataMap; // address,value
 
     QList<ModbusCluster*> clusterCollection; //index as cluster id
-    quint16 memory[INT16_MAX];
+    quint16 memory[UINT16_MAX]; //65536
 
     ModbusSerializedClient* requestGateWay;
 };
