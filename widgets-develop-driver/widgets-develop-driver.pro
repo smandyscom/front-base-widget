@@ -2,7 +2,8 @@ TEMPLATE = subdirs
 
 SUBDIRS += \
     mainviewer \
-bank_viewer
+bank_viewer \
+    developer-console
 
 bank_viewer.subdir = ../bank-view
 

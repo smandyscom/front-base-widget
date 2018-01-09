@@ -9,34 +9,40 @@
 #include <modbusserializedclient.h>
 
 #include <baselayerdefinitions.h>
+using namespace BaseLayer;
 
 typedef QPair<ModbusCluster::Attribute,size_t> ModbusClusterConfiguration;
 
-//composite clusters
-class modbusChannel : public QObject
+
+
+//!
+//! \brief The ModbusChannel class
+//! event source?
+//! composite clusters
+class ModbusChannel : public QObject
 {
     Q_OBJECT
 public:
-    explicit modbusChannel(QModbusClient* driver=nullptr,
+    explicit ModbusChannel(QModbusClient* driver=nullptr,
                            int serverAddress=1,
                            QObject *parent = nullptr);
 
     //!1
     //! Accessing interface
-    void beginReadData(QVariant address); //raising asynchrous updating operation
-    QVariant readData(QVariant address); // would not raise updating action
-    void writeData(QVariant address,QVariant value);
+    void beginReadData(ModbusDriverAddress address); //raising asynchrous updating operation
+    QVariant readData(ModbusDriverAddress address); // would not raise updating action
+    void writeData(ModbusDriverAddress address,QVariant value);
 
     //!2
     //! Configuration (data map
-    template<typename T>  void registerBinding(QVariant address)
+    template<typename T>  void registerBinding(ModbusDriverAddress address)
     {
         //for those structure type
         int id = qRegisterMetaType<T>();
         T initialValue; //allocate initial value
         dataMap[address] = QVariant::fromValue(initialValue); //take into map
     }
-    int registerBinding(QList<QPair<QVariant,QVariant>> list); //address,value pair
+    int registerBinding(QList<QModbusBinding> list); //address,value pair
 
     //!3
     //! Configuration (clusters
@@ -44,10 +50,17 @@ public:
 
     //!4
     //! Tool function
-    int queryCluster(QVariant address); //return cluster id
-    bool isInCluster(QVariant address,int clusterId){return queryCluster(address) == clusterId;}
+    int queryCluster(ModbusDriverAddress address); //return cluster id
+    bool isInCluster(ModbusDriverAddress address,int clusterId){return queryCluster(address) == clusterId;}
 signals:
     void clusterUpdated(int clusterId);
+    //!
+    //! \brief updated controller should transform this signal into event if state machine is avialable
+    //! \param address
+    //! \param value
+    //!
+    void updated(AbstractAddress address,QVariant value);
+
 public slots:
 
     //! Source : cluster
@@ -61,9 +74,9 @@ public slots:
     void requestRaised(const ModbusSegment* request); //bridge cluster and gateway
 protected:
 
-    quint16* toStartAddress(QVariant address);
+    quint16* toStartAddress(ModbusDriverAddress address);
 
-    QMap<QVariant,QVariant> dataMap; // address,value
+    QMap<ModbusDriverAddress,QVariant> dataMap; // address,value
 
     QList<ModbusCluster*> clusterCollection; //index as cluster id
     quint16 memory[UINT16_MAX]; //65536

@@ -1,6 +1,8 @@
 #include "modbuschannel.h"
 #include <utilities.h>
-modbusChannel::modbusChannel(QModbusClient *driver, int serverAddress, QObject *parent) :
+#include <QCoreApplication>
+
+ModbusChannel::ModbusChannel(QModbusClient *driver, int serverAddress, QObject *parent) :
     QObject(parent)
 {
     if(driver != nullptr){
@@ -13,12 +15,12 @@ modbusChannel::modbusChannel(QModbusClient *driver, int serverAddress, QObject *
     }
 }
 
-void modbusChannel::beginReadData(QVariant address)
+void ModbusChannel::beginReadData(ModbusDriverAddress address)
 {
     clusterCollection[queryCluster(address)]->beginUpdate();
 }
 
-void modbusChannel::writeData(QVariant address, QVariant value)
+void ModbusChannel::writeData(ModbusDriverAddress address, QVariant value)
 {
     //fetch the data size
     memcpy(toStartAddress(address),
@@ -27,7 +29,7 @@ void modbusChannel::writeData(QVariant address, QVariant value)
     //
 }
 
-QVariant modbusChannel::readData(QVariant address)
+QVariant ModbusChannel::readData(ModbusDriverAddress address)
 {
     memcpy(dataMap[address].data(),
            toStartAddress(address),
@@ -36,7 +38,7 @@ QVariant modbusChannel::readData(QVariant address)
 }
 
 
-void modbusChannel::configureClusters(QList<ModbusClusterConfiguration> configureList)
+void ModbusChannel::configureClusters(QList<ModbusClusterConfiguration> configureList)
 {
     int startAddress = 0;
     for(int i=0;i<configureList.length();i++){
@@ -63,7 +65,7 @@ void modbusChannel::configureClusters(QList<ModbusClusterConfiguration> configur
     }
 }
 
-int modbusChannel::queryCluster(QVariant address)
+int ModbusChannel::queryCluster(ModbusDriverAddress address)
 {
     auto registerAddress = address.value<BaseLayer::ModbusDriverAddress>().registerAddress;
     for(int i=0;i<clusterCollection.length();i++){
@@ -74,19 +76,31 @@ int modbusChannel::queryCluster(QVariant address)
 
 }
 
-void modbusChannel::requestRaised(const ModbusSegment *request)
+void ModbusChannel::requestRaised(const ModbusSegment *request)
 {
     requestGateWay->pushRequest(request);
 }
 
-quint16* modbusChannel::toStartAddress(QVariant address)
+quint16* ModbusChannel::toStartAddress(ModbusDriverAddress address)
 {
-    return &memory[address.value<BaseLayer::ModbusDriverAddress>().registerAddress];
+    return &memory[address.registerAddress];
 }
 
-void modbusChannel::clusterUpdated()
+//!
+//! \brief ModbusChannel::clusterUpdated
+//! Dispatch events
+void ModbusChannel::clusterUpdated()
 {
     //findout which cluster updated
     auto cluster = qobject_cast<ModbusCluster*>(sender());
     emit clusterUpdated(clusterCollection.indexOf(cluster));
+
+    int clusterId = clusterCollection.indexOf(cluster);
+
+    foreach (QVariant &var, dataMap.keys()) {
+        if (isInCluster(var,clusterId)){
+            emit updated(var,readData((var)));
+        }
+    }
+
 }

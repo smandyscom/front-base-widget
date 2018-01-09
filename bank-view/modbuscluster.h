@@ -30,6 +30,7 @@ public:
     void beginUpdate(); //return a callback?
     const int sizeOf(){ return size;}
 
+    //! setIsPolling , determine whether this cluster is auto updating (polling
 
 signals:
     void updated(); // emit when reply fetched, report cluster id?
