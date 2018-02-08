@@ -5,7 +5,7 @@
 #include <QAbstractTransition>
 #include <QVariant>
 #include <QModbusDataUnit>
-
+#include <QEvent>
 //address-QVariant pair
 
 namespace BaseLayer {
@@ -25,16 +25,12 @@ public :
     //! \brief AbstractAddress
     //! \param source
     //! copy constructor
-    AbstractAddress(const AbstractAddress& source)
-    {
-        address = source.address;
-    }
+    AbstractAddress(const AbstractAddress& source):address(source.address){}
 
     virtual uint toBitwiseMask() const
     {
         return 0;
     }
-    uint readAddress() const {return address;}
     uint getAddress() const{return address;}
 
 protected :
@@ -43,11 +39,11 @@ protected :
 
 inline bool operator==(const AbstractAddress& lhp,const AbstractAddress& rhp)
 {
-    return lhp.readAddress() == rhp.readAddress();
+    return lhp.getAddress() == rhp.getAddress();
 }
 inline uint qHash(const AbstractAddress &key, uint seed)
 {
-    return key.readAddress();
+    return key.getAddress();
 }
 inline bool operator !=(const AbstractAddress& lhp,const AbstractAddress& rhp)
 {
@@ -63,12 +59,13 @@ protected:
     quint8* registerTypeBitIndex;//upper half byte: coil,input,holding , lower half bytpe: bit index
     quint16* registerAddress;
 public:
-    ModbusDriverAddress(uint address=0):AbstractAddress(address)
-    {
-        channelAddress = &reinterpret_cast<quint8*>(&this->address)[3]; //highest byte
-        registerTypeBitIndex = &reinterpret_cast<quint8*>(&this->address)[2];
-        registerAddress = &reinterpret_cast<quint16*>(&this->address)[0];
-    }
+    ModbusDriverAddress(uint address=0);
+    //!
+    //! \brief ModbusDriverAddress
+    //! \param address
+    //! copy constructor
+    ModbusDriverAddress(const ModbusDriverAddress& address);
+
     QModbusDataUnit::RegisterType getRegisterType() const{
         return QModbusDataUnit::RegisterType(*registerTypeBitIndex>>4);
     }
@@ -84,7 +81,7 @@ public:
 
     virtual uint toBitwiseMask() const
     {
-        return 0x0001 << (*registerAddress & 0x000f);
+        return 0x0001 << (*registerTypeBitIndex & 0x0f);
     }
 };
 
@@ -93,27 +90,27 @@ public:
 //! QVarariable had contended type info
 typedef QPair<AbstractAddress,QVariant> AddressValueBinding;
 
+
+//extern QEvent::Type updateEventTypeCode;// = QEvent::Type(QEvent::registerEventType());
 //!
 //! \brief The UpdateEvent struct
 //!
-struct UpdateEvent: public QEvent
+class UpdateEvent: public QEvent
 {
-    UpdateEvent(const AbstractAddress address,const QVariant value):
-        QEvent(UpdateEvent::typeCode),
-        address(address),
-        value(value){}
+public :
 
-    AbstractAddress address;
+    UpdateEvent(AbstractAddress* address,const QVariant value);
+
+    AbstractAddress* address;
     QVariant value;
 
-    static QEvent::Type typeCode;
+    ~UpdateEvent(){delete address;}
 };
 
-QEvent::Type UpdateEvent::typeCode = QEvent::Type(QEvent::registerEventType());
 
 //!
 //! \brief The ValueTransition class
-//!
+//! Offering the transition for state machine
 class ValueTransition : public QAbstractTransition
 {
 
@@ -127,43 +124,17 @@ public:
         VALUE_UPDATED
     };
 
-    ValueTransition(AbstractAddress address,Detection action,QObject *parent = nullptr):
-    __address(address),
-    __detection(action){}
+    ValueTransition(const AbstractAddress* address,Detection action,QObject *parent = nullptr):
+    address(address),
+    detection(action){}
+
 protected:
-    virtual bool eventTest(QEvent *event)
-    {
-        //casting to update event
-        if (event->type() != UpdateEvent::typeCode){
-            return false; //not update event
-        }
-
-        UpdateEvent* ue = static_cast<UpdateEvent*>(event);
-
-        if (ue->address != __address)
-            return false; //not cared address
-
-        switch (__detection) {
-        case BIT_STATE_ON:
-             return (ue->value.value<qint32>() & ue->address.toBitwiseMask()) > 0;
-            break;
-        case BIT_STATE_OFF:
-            return (ue->value.value<qint32>() & ue->address.toBitwiseMask()) == 0;
-            break;
-        case VALUE_UPDATED:
-            return true;
-            break;
-        default:
-            break;
-        }
-
-        return false;
-    }
-    virtual void onTransition(QEvent*){}
+    virtual bool eventTest(QEvent *event);
+    virtual void onTransition(QEvent*);
 
 
-    AbstractAddress __address;
-    Detection __detection;
+    const AbstractAddress* address;
+    Detection detection;
 };
 
 }

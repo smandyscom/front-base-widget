@@ -35,7 +35,8 @@ SOURCES += \
     modbussegment.cpp \
     modbusserializedclient.cpp \
     blockmanual.cpp \
-    blockmanualcontroller.cpp
+    blockmanualcontroller.cpp \
+    baselayerdefinitions.cpp
 
 HEADERS += \
         bank-view_global.h \ 
