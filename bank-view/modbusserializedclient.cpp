@@ -10,13 +10,13 @@ ModbusSerializedClient::ModbusSerializedClient(QModbusClient *driver, int server
     timer->start();
 }
 
-
-//this function would be poll repeatly
+//!
+//! \brief ModbusSerializedClient::popRequest
+//! this function would be poll repeatly
 void ModbusSerializedClient::popRequest()
 {
     const ModbusSegment* request = requestQueue.head();
     const ModbusSegment::AccessMethod method = request->getMethod();
-
 
     if(request == nullptr)
         return; // nothing left in queue

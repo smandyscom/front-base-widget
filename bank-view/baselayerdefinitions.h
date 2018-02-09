@@ -99,18 +99,18 @@ class UpdateEvent: public QEvent
 {
 public :
 
-    UpdateEvent(AbstractAddress* address,const QVariant value);
+    UpdateEvent(const AbstractAddress& address,const QVariant value);
 
-    AbstractAddress* address;
+    const uint address;
+    const uint bitMask;
     QVariant value;
-
-    ~UpdateEvent(){delete address;}
 };
 
 
 //!
 //! \brief The ValueTransition class
 //! Offering the transition for state machine
+//! Sort of message/event filter
 class ValueTransition : public QAbstractTransition
 {
 
@@ -124,8 +124,8 @@ public:
         VALUE_UPDATED
     };
 
-    ValueTransition(const AbstractAddress* address,Detection action,QObject *parent = nullptr):
-    address(address),
+    ValueTransition(const AbstractAddress& address,Detection action,QObject *parent = nullptr):
+    address(address.getAddress()),
     detection(action){}
 
 protected:
@@ -133,7 +133,7 @@ protected:
     virtual void onTransition(QEvent*);
 
 
-    const AbstractAddress* address;
+    const uint address;
     Detection detection;
 };
 

@@ -14,7 +14,7 @@ public:
     TestTask2();
 
     void doFake(){emit fake();}
-    void doEvent(){__machine->postEvent(new UpdateEvent(new ModbusDriverAddress(0x00150000),QVariant(0x00000020)));}
+    void doEvent(){__machine->postEvent(new UpdateEvent(ModbusDriverAddress(0x00150000),QVariant(0x00000020)));}
 signals:
     void fake();
 public slots:

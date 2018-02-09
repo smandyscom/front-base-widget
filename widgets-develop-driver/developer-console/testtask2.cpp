@@ -19,7 +19,7 @@ void TestTask2::run()
     connect(s1,&QState::entered,this,[]{qDebug() << "s1";});
     connect(s2,&QState::entered,this,[]{qDebug() << "s2";});
 
-    ModbusDriverAddress* mda = new ModbusDriverAddress(0x00150000); // bit index 5, 0x20
+    ModbusDriverAddress mda(0x00150000); // bit index 5, 0x20
     ValueTransition* vt = new ValueTransition(mda,ValueTransition::BIT_STATE_ON);
     ValueTransition* vt2 = new ValueTransition(mda,ValueTransition::BIT_STATE_ON);
 
@@ -33,12 +33,6 @@ void TestTask2::run()
 
     __machine->setInitialState(s1);
     __machine->start();
-
-//    __machine->postEvent(new UpdateEvent(mda,QVariant(0x00000010)));
-//     __machine->postEvent(new UpdateEvent(mda,QVariant(0x00000020)));
-//      __machine->postEvent(new UpdateEvent(mda,QVariant(0x00000040)));
-
-//      emit fake();
 }
 
 

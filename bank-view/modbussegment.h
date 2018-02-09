@@ -6,6 +6,9 @@
 
 
 //QObject is forbidden to copy/assign
+//!
+//! \brief The ModbusSegment class
+//!
 class ModbusSegment : public QObject
 {
     Q_OBJECT
