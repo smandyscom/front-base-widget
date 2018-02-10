@@ -20,12 +20,18 @@ SOURCES += main.cpp \
     test1.cpp \
     ../../bank-view/baselayerdefinitions.cpp \
     testtask2.cpp \
-    timersource.cpp
+    timersource.cpp \
+    ../../bank-view/modbussegment.cpp \
+    ../../bank-view/modbusserializedclient.cpp \
+    serializedclienttest.cpp
 
 HEADERS += \
     ../../bank-view/baselayerdefinitions.h \
     task.h \
     testtask2.h \
-    timersource.h
+    timersource.h \
+    ../../bank-view/modbussegment.h \
+    ../../bank-view/modbusserializedclient.h \
+    serializedclienttest.h
 
 INCLUDEPATH += ../../bank-view/

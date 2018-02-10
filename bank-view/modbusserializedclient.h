@@ -18,7 +18,7 @@ class ModbusSerializedClient : public QObject
 {
     Q_OBJECT
 public:
-    explicit ModbusSerializedClient(QModbusClient* driver = nullptr,
+    explicit ModbusSerializedClient(QModbusClient* driverReference = nullptr,
                                     int serverAddress=1,
                                     QObject *parent = nullptr);
     void pushRequest(const ModbusSegment *request);
@@ -33,7 +33,7 @@ protected:
     QQueue<const ModbusSegment*> requestQueue;
 
     int serverAddress;
-    QModbusClient* driver; //should be initialed somewhere
+    QModbusClient* driverReference; //should be initialed somewhere
 
     QTimer* timer; //driving consumer
 };

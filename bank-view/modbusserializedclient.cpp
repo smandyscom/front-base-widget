@@ -2,7 +2,7 @@
 
 ModbusSerializedClient::ModbusSerializedClient(QModbusClient *driver, int serverAddress, QObject *parent) :
     QObject(parent),
-    driver(driver),
+    driverReference(driver),
     serverAddress(serverAddress)
 {
     timer = new QTimer(this);
@@ -15,20 +15,23 @@ ModbusSerializedClient::ModbusSerializedClient(QModbusClient *driver, int server
 //! this function would be poll repeatly
 void ModbusSerializedClient::popRequest()
 {
+    if(requestQueue.isEmpty())
+        return;
+
     const ModbusSegment* request = requestQueue.head();
     const ModbusSegment::AccessMethod method = request->getMethod();
 
     if(request == nullptr)
         return; // nothing left in queue
 
-    QModbusReply* reply;
+    QModbusReply* reply = nullptr;
 
     switch (method) {
     case ModbusSegment::READ:
-        reply = driver->sendReadRequest(request->getRequest(),serverAddress);
+        reply = driverReference->sendReadRequest(request->requestUnit,serverAddress);
         break;
     case ModbusSegment::WRITE:
-        reply = driver->sendWriteRequest(request->getRequest(),serverAddress);
+        reply = driverReference->sendWriteRequest(request->requestUnit,serverAddress);
         break;
     case ModbusSegment::READ_WRITE:
         //reserved
@@ -37,13 +40,16 @@ void ModbusSerializedClient::popRequest()
         break;
     }
 
-    //for reading , need to connect with request
-    if(method==ModbusSegment::READ){
-        connect(reply,SIGNAL(finished()),request,SLOT(replyfinished())); //
-    }
-    //when finished , dequeue
-    //otherwise , would remained on queue
-    //when use lambda , do not use SIGNAL marco
+    //! pause timer
+    timer->stop();
+
+    //! Connect with request
+    connect(reply,SIGNAL(finished()),request,SLOT(replyfinished())); //
+
+    //!
+    //! when finished , dequeue
+    //! otherwise , would remained on queue
+    //! when use lambda , do not use SIGNAL marco
     connect(reply,&QModbusReply::finished,this,[this,reply](){
         switch (reply->error()) {
         case QModbusDevice::NoError:
@@ -53,6 +59,7 @@ void ModbusSerializedClient::popRequest()
             break;
         }
         reply->deleteLater();
+        timer->start();//restart
     });
 }
 

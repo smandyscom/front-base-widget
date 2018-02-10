@@ -25,8 +25,3 @@ void ModbusSegment::setMethod(AccessMethod method)
 {
     this->method = method;
 }
-
-QModbusDataUnit ModbusSegment::getRequest() const
-{
-    return requestUnit;
-}

@@ -27,8 +27,8 @@ public:
 
     ModbusSegment::AccessMethod getMethod() const;
     void setMethod(AccessMethod method);
-    QModbusDataUnit getRequest() const;
 
+    QModbusDataUnit requestUnit;
 signals:
     //update target , mark down dirty if RB
     void update(QModbusDataUnit replyUnit); //connet QModbusReply.finished
@@ -37,7 +37,7 @@ public slots:
 
 protected:
     AccessMethod method;
-    QModbusDataUnit requestUnit;
+
 
 };
 
