@@ -8,6 +8,7 @@ ModbusSerializedClient::ModbusSerializedClient(QModbusClient *driver, int server
     timer = new QTimer(this);
     connect(timer,SIGNAL(timeout()),this,SLOT(popRequest()));
     timer->start();
+    isProcessing = false;
 }
 
 //!
@@ -15,18 +16,17 @@ ModbusSerializedClient::ModbusSerializedClient(QModbusClient *driver, int server
 //! this function would be poll repeatly
 void ModbusSerializedClient::popRequest()
 {
-    if(requestQueue.isEmpty())
+    if(requestQueue.isEmpty() || isProcessing)
         return;
 
-    const ModbusSegment* request = requestQueue.head();
-    const ModbusSegment::AccessMethod method = request->getMethod();
+    request = const_cast<ModbusSegment*>(requestQueue.head());
 
     if(request == nullptr)
         return; // nothing left in queue
 
     QModbusReply* reply = nullptr;
 
-    switch (method) {
+    switch (request->getMethod()) {
     case ModbusSegment::READ:
         reply = driverReference->sendReadRequest(request->requestUnit,serverAddress);
         break;
@@ -40,10 +40,11 @@ void ModbusSerializedClient::popRequest()
         break;
     }
 
-    //! pause timer
-    timer->stop();
 
+    //!
     //! Connect with request
+    //!
+    isProcessing = true;
     connect(reply,SIGNAL(finished()),request,SLOT(replyfinished())); //
 
     //!
@@ -54,12 +55,13 @@ void ModbusSerializedClient::popRequest()
         switch (reply->error()) {
         case QModbusDevice::NoError:
             requestQueue.dequeue();
+            //request->replyfinished();//inform
+            reply->deleteLater();
             break;
         default:
             break;
-        }
-        reply->deleteLater();
-        timer->start();//restart
+        }  
+        isProcessing = false;
     });
 }
 

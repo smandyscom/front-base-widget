@@ -35,6 +35,12 @@ protected:
     int serverAddress;
     QModbusClient* driverReference; //should be initialed somewhere
 
+    ModbusSegment* request;
+    //!
+    //! \brief isProcessing
+    //! whether is processing request
+    bool isProcessing;
+
     QTimer* timer; //driving consumer
 };
 

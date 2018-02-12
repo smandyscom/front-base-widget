@@ -43,6 +43,9 @@ void SerializedClientTest::onDriverConnected(QModbusDevice::State state)
     readRequest = new ModbusSegment(ModbusSegment::READ,
                                     QModbusDataUnit(QModbusDataUnit::HoldingRegisters,1,1));
 
+    connect(readRequest,&ModbusSegment::update,this,&SerializedClientTest::onReadRequestUpdated);
+    connect(writeRequest,&ModbusSegment::update,this,&SerializedClientTest::onWriteRequestUpdated);
+
     //! client initialize
     client = new ModbusSerializedClient(driver);
     //! Fire
@@ -59,7 +62,7 @@ void SerializedClientTest::onReadRequestUpdated(QModbusDataUnit replyUnit)
    //! Readout value then feedback
    writeRequest->requestUnit.setValue(0,replyUnit.value(0));
    client->pushRequest(writeRequest);
-   qDebug() << QString("Read:%1").arg(replyUnit.value(0));
+   qDebug() << QString("Read:%1").arg(replyUnit.value(0),0,16);
 }
 
 //!
