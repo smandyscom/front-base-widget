@@ -4,6 +4,8 @@
 #include <testtask2.h>
 #include <timersource.h>
 #include <serializedclienttest.h>
+#include <modbusclustertest.h>
+
 
 extern void test1();
 extern void test2();
@@ -26,13 +28,15 @@ int main(int argc, char *argv[])
     Task* __task1 = new Task(test1,&a);
     __testTask = new TestTask2();
     timerSource* ts = new timerSource(test3,&a);
-    SerializedClientTest* serialTestTask = new SerializedClientTest();
+//    SerializedClientTest* serialTestTask = new SerializedClientTest();
+    ModbusClusterTest* modbusClusterTestTask  = new ModbusClusterTest();
 
 
     //QTimer::singleShot(0,__task1,SLOT(run()));
     //QTimer::singleShot(0,__testTask,SLOT(run()));
     //QTimer::singleShot(0,ts,SLOT(run()));
-    QTimer::singleShot(0,serialTestTask,SLOT(run()));
+    //QTimer::singleShot(0,serialTestTask,SLOT(run()));
+    QTimer::singleShot(0,modbusClusterTestTask,SLOT(run()));
 
     return a.exec();
 }

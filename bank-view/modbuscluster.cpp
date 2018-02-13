@@ -1,50 +1,50 @@
 #include "modbuscluster.h"
 
-ModbusCluster::ModbusCluster(quint16* baseAddress,
+ModbusCluster::ModbusCluster(quint16* innerBaseAddress,
                              size_t size,
-                             size_t registerAddress /*base offset in modbus holding register*/,
-                             Attribute attribute,
+                             size_t modBusStartAddress /*base offset in modbus holding register*/,
+                             Attributes attribute,
                              QObject *parent) :
     QObject(parent),
-    baseAddress(baseAddress),
+    innerBaseAddress(innerBaseAddress),
     size(size),
     attribute(attribute)
 {
     this->request=  new ModbusSegment(ModbusSegment::WRITE,
                                       QModbusDataUnit(QModbusDataUnit::HoldingRegisters,
-                                                      registerAddress,
+                                                      modBusStartAddress,
                                                       size));
 
 }
 
 
-void ModbusCluster::beginUpdate()
+void ModbusCluster::beginUpdateCluster()
 {
     //once has READ attribute
-    if(attribute.testFlag(READ)){
-        request->setMethod(ModbusSegment::READ);
-        connect(request,SIGNAL(beginUpdate(QModbusDataUnit)),this,SLOT(dataUpdated(QModbusDataUnit)));
-    }
+    if(!attribute.testFlag(READ))
+        return;
 
-    emit sendRequest(request);
+    request->setMethod(ModbusSegment::READ);
+    connect(request,&ModbusSegment::update,this,&ModbusCluster::onModbusReplyReceived);
+    emit sendModbusRequest(request);
 }
 
-void ModbusCluster::commit()
+void ModbusCluster::commitCluster()
 {
     if (!attribute.testFlag(WRITE))
             return ; // no write attribute , cannot perform writing
 
     for(int i=0;i<size;i++)
-        request->getRequest().setValue(i,baseAddress[i]);
+        request->requestUnit.setValue(i,innerBaseAddress[i]);
 
     request->setMethod(ModbusSegment::WRITE);
-    emit sendRequest(request);//send write request
+    emit sendModbusRequest(request);//send write request
 }
 
-void ModbusCluster::dataUpdated(QModbusDataUnit reply)
+void ModbusCluster::onModbusReplyReceived(QModbusDataUnit reply)
 {
     //update
-    memcpy(baseAddress,reply.values().data(),sizeof(quint16)*size);
-    disconnect(request,SIGNAL(beginUpdate(QModbusDataUnit)),this,SLOT(dataUpdated(QModbusDataUnit)));
-    emit updated();
+    memcpy(innerBaseAddress,reply.values().data(),sizeof(quint16)*size);
+    disconnect(request,&ModbusSegment::update,this,&ModbusCluster::onModbusReplyReceived);
+    emit clusterUpdated();
 }

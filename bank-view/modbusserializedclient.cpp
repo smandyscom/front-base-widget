@@ -19,13 +19,14 @@ void ModbusSerializedClient::popRequest()
     if(requestQueue.isEmpty() || isProcessing)
         return;
 
+    //!
+    //! Lock-up processor
+    //!
+    isProcessing = true;
+
     request = const_cast<ModbusSegment*>(requestQueue.head());
 
-    if(request == nullptr)
-        return; // nothing left in queue
-
     QModbusReply* reply = nullptr;
-
     switch (request->getMethod()) {
     case ModbusSegment::READ:
         reply = driverReference->sendReadRequest(request->requestUnit,serverAddress);
@@ -39,14 +40,6 @@ void ModbusSerializedClient::popRequest()
     default:
         break;
     }
-
-
-    //!
-    //! Connect with request
-    //!
-    isProcessing = true;
-    connect(reply,SIGNAL(finished()),request,SLOT(replyfinished())); //
-
     //!
     //! when finished , dequeue
     //! otherwise , would remained on queue
@@ -55,7 +48,7 @@ void ModbusSerializedClient::popRequest()
         switch (reply->error()) {
         case QModbusDevice::NoError:
             requestQueue.dequeue();
-            //request->replyfinished();//inform
+            emit request->update(reply->result());
             reply->deleteLater();
             break;
         default:

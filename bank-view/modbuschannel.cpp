@@ -17,7 +17,7 @@ ModbusChannel::ModbusChannel(QModbusClient *driver, int serverAddress, QObject *
 
 void ModbusChannel::beginReadData(ModbusDriverAddress address)
 {
-    clusterCollection[queryCluster(address)]->beginUpdate();
+    clusterCollection[queryCluster(address)]->beginUpdateContent();
 }
 
 void ModbusChannel::writeData(ModbusDriverAddress address, QVariant value)

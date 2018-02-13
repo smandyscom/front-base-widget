@@ -9,13 +9,6 @@ ModbusSegment::ModbusSegment(AccessMethod method,
     this->requestUnit = request;
 }
 
-void ModbusSegment::replyfinished()
-{
-     QModbusReply* reply=  qobject_cast<QModbusReply*>(sender());
-     emit update(reply->result());
-}
-
-
 ModbusSegment::AccessMethod ModbusSegment::getMethod() const
 {
     return method;

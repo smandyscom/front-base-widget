@@ -23,7 +23,9 @@ SOURCES += main.cpp \
     timersource.cpp \
     ../../bank-view/modbussegment.cpp \
     ../../bank-view/modbusserializedclient.cpp \
-    serializedclienttest.cpp
+    serializedclienttest.cpp \
+    ../../bank-view/modbuscluster.cpp \
+    modbusclustertest.cpp
 
 HEADERS += \
     ../../bank-view/baselayerdefinitions.h \
@@ -32,6 +34,8 @@ HEADERS += \
     timersource.h \
     ../../bank-view/modbussegment.h \
     ../../bank-view/modbusserializedclient.h \
-    serializedclienttest.h
+    serializedclienttest.h \
+    ../../bank-view/modbuscluster.h \
+    modbusclustertest.h
 
 INCLUDEPATH += ../../bank-view/

@@ -30,11 +30,7 @@ public:
 
     QModbusDataUnit requestUnit;
 signals:
-    //update target , mark down dirty if RB
     void update(QModbusDataUnit replyUnit); //connet QModbusReply.finished
-public slots:
-    void replyfinished();
-
 protected:
     AccessMethod method;
 
