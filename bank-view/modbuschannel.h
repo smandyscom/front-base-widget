@@ -4,16 +4,13 @@
 #include <QObject>
 #include <QList>
 #include <QPair>
-#include <modbuscluster.h>
 #include <QMap>
 #include <modbusserializedclient.h>
 
 #include <baselayerdefinitions.h>
 using namespace BaseLayer;
 
-typedef QPair<ModbusCluster::Attribute,size_t> ModbusClusterConfiguration;
-
-
+#define CHANNEL_NUM 16
 
 //!
 //! \brief The ModbusChannel class
@@ -21,17 +18,28 @@ typedef QPair<ModbusCluster::Attribute,size_t> ModbusClusterConfiguration;
 //! composite clusters
 class ModbusChannel : public QObject
 {
+
+
     Q_OBJECT
 public:
-    explicit ModbusChannel(QModbusClient* driver=nullptr,
-                           int serverAddress=1,
-                           QObject *parent = nullptr);
+    explicit ModbusChannel(QObject *parent = nullptr);
 
     //!1
     //! Accessing interface
-    void beginReadData(ModbusDriverAddress address); //raising asynchrous updating operation
-    QVariant readData(ModbusDriverAddress address); // would not raise updating action
-    void writeData(ModbusDriverAddress address,QVariant value);
+    //! raising asynchrous updating operation
+    void beginUpdate(ModbusDriverAddress address); //
+    //!
+    //! \brief readData
+    //! \param address
+    //! \return
+    //! synchrous function , direct return cached value
+    QVariant update(const ModbusDriverAddress &modbusAddress);
+    //!
+    //! \brief writeData
+    //! \param address
+    //! \param value
+    //! Fire and forget
+    void commit(ModbusDriverAddress address, const QVariant value);
 
     //!2
     //! Configuration (data map
@@ -44,44 +52,39 @@ public:
     }
     int registerBinding(QList<QModbusBinding> list); //address,value pair
 
-    //!3
-    //! Configuration (clusters
-    void configureClusters(QList<ModbusClusterConfiguration> configrationList);
-
-    //!4
-    //! Tool function
-    int queryCluster(ModbusDriverAddress address); //return cluster id
-    bool isInCluster(ModbusDriverAddress address,int clusterId){return queryCluster(address) == clusterId;}
 signals:
-    void clusterUpdated(int clusterId);
-    //!
-    //! \brief updated controller should transform this signal into event if state machine is avialable
-    //! \param address
-    //! \param value
-    //!
-    void updated(AbstractAddress address,QVariant value);
-
+    void raiseUpdateEvent(UpdateEvent* event);
 public slots:
 
-    //! Source : cluster
-    //! \brief clusterUpdated
-    void clusterUpdated();
-    //! Source : cluster
-    //! \brief requestRaised
-    //! \param request
-    //!
  protected slots:
-    void requestRaised(const ModbusSegment* request); //bridge cluster and gateway
+    //void requestRaised(const ModbusSegment* request); //bridge cluster and gateway
+    //!
+    //! \brief onReplyUpdated
+    //! \param result
+    //! Reply processor
+    void onUpdated(QModbusDataUnit result);
 protected:
+    //!
+    //! \brief dataMap
+    //! Build Address-Value pair , type info included in QVariant
+    QMap<ModbusDriverAddress,QVariant> dataMap;
 
-    quint16* toStartAddress(ModbusDriverAddress address);
 
-    QMap<ModbusDriverAddress,QVariant> dataMap; // address,value
 
-    QList<ModbusCluster*> clusterCollection; //index as cluster id
-    quint16 memory[UINT16_MAX]; //65536
+    QModbusDataUnit preparedReadRequest;
+    QModbusDataUnit preparedWriteRequest;
 
-    ModbusSerializedClient* requestGateWay;
+    QList<quint16*> channelCache; //65536
+    QList<ModbusSerializedClient*> channelGateWays;
+
+    quint16* toCacheAddress(const ModbusDriverAddress &modbusAddress);
+
+    //!
+    //! \brief writeData
+    //! \param modbusAddress
+    //! \param source
+    //! update both cache and variant
+    void writeData(ModbusDriverAddress modbusAddress, const void *source);
 };
 
 #endif // CHANNEL_H

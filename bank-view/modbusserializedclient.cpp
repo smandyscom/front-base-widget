@@ -6,7 +6,7 @@ ModbusSerializedClient::ModbusSerializedClient(QModbusClient *driver, int server
     serverAddress(serverAddress)
 {
     timer = new QTimer(this);
-    connect(timer,SIGNAL(timeout()),this,SLOT(popRequest()));
+    connect(timer,SIGNAL(timeout()),this,SLOT(onPopRequest()));
     timer->start();
     isProcessing = false;
 }
@@ -14,7 +14,7 @@ ModbusSerializedClient::ModbusSerializedClient(QModbusClient *driver, int server
 //!
 //! \brief ModbusSerializedClient::popRequest
 //! this function would be poll repeatly
-void ModbusSerializedClient::popRequest()
+void ModbusSerializedClient::onPopRequest()
 {
     if(requestQueue.isEmpty() || isProcessing)
         return;
@@ -24,17 +24,17 @@ void ModbusSerializedClient::popRequest()
     //!
     isProcessing = true;
 
-    request = const_cast<ModbusSegment*>(requestQueue.head());
+    //request = const_cast<ModbusRequest*>(requestQueue.head());
 
     QModbusReply* reply = nullptr;
-    switch (request->getMethod()) {
-    case ModbusSegment::READ:
-        reply = driverReference->sendReadRequest(request->requestUnit,serverAddress);
+    switch (requestQueue.head()->second) {
+    case READ:
+        reply = driverReference->sendReadRequest(requestQueue.head()->first,serverAddress);
         break;
-    case ModbusSegment::WRITE:
-        reply = driverReference->sendWriteRequest(request->requestUnit,serverAddress);
+    case WRITE:
+        reply = driverReference->sendWriteRequest(requestQueue.head()->first,serverAddress);
         break;
-    case ModbusSegment::READ_WRITE:
+    case READ_WRITE:
         //reserved
         break;
     default:
@@ -47,8 +47,10 @@ void ModbusSerializedClient::popRequest()
     connect(reply,&QModbusReply::finished,this,[this,reply](){
         switch (reply->error()) {
         case QModbusDevice::NoError:
+            if(requestQueue.head()->second == READ)
+                emit readRequestDone(reply->result());
+            //destroy
             requestQueue.dequeue();
-            emit request->update(reply->result());
             reply->deleteLater();
             break;
         default:
@@ -58,7 +60,7 @@ void ModbusSerializedClient::popRequest()
     });
 }
 
-void ModbusSerializedClient::pushRequest(const ModbusSegment* request)
+void ModbusSerializedClient::pushRequest(const ModbusRequest *request)
 {
     requestQueue.enqueue(request);
 }

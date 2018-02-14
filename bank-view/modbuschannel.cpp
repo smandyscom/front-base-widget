@@ -2,105 +2,92 @@
 #include <utilities.h>
 #include <QCoreApplication>
 
-ModbusChannel::ModbusChannel(QModbusClient *driver, int serverAddress, QObject *parent) :
+ModbusChannel::ModbusChannel(QObject *parent) :
     QObject(parent)
 {
-    if(driver != nullptr){
-        requestGateWay = new ModbusSerializedClient(driver,
-                                                    serverAddress,
-                                                    this);
-    }
-    else{
-        requestGateWay = nullptr; //no gateway, simulation only
-    }
+//    if(driver != nullptr){
+//        channelGateWays = new ModbusSerializedClient(driver,
+//                                                    serverAddress,
+//                                                    this);
+//    }
+//    else{
+//        channelGateWays = nullptr; //no gateway, simulation only
+//    }
+
+    preparedReadRequest.setRegisterType(QModbusDataUnit::HoldingRegisters);
+    preparedWriteRequest.setRegisterType(QModbusDataUnit::HoldingRegisters);
 }
 
-void ModbusChannel::beginReadData(ModbusDriverAddress address)
+void ModbusChannel::beginUpdate(ModbusDriverAddress address)
 {
-    clusterCollection[queryCluster(address)]->beginUpdateContent();
+    // From map query type of QVariant
+    // Get the object size , so that you can make right request
+    QVariant variant = dataMap[address];
+    size_t sizeInWord = (utilities::sizeOf(variant))/2; //size of in byte
+
+    preparedReadRequest.setStartAddress(address.getRegisterAddress());
+    preparedReadRequest.setValueCount(sizeInWord);
+    channelGateWays[address.getChannel()]->pushRequest(new ModbusSerializedClient::ModbusRequest(preparedReadRequest,ModbusSerializedClient::READ));
 }
 
-void ModbusChannel::writeData(ModbusDriverAddress address, QVariant value)
+void ModbusChannel::commit(ModbusDriverAddress address, const QVariant value)
 {
-    //fetch the data size
-    memcpy(toStartAddress(address),
-           value.data(),
-           utilities::sizeOf(value));
+    writeData(address,value.data());
     //
+    // From map query type of QVariant
+    // Get the object size , so that you can make right request
+    QVariant variant = dataMap[address];
+    size_t sizeInWord = (utilities::sizeOf(variant))/2; //size of in byte
+
+    preparedWriteRequest.setStartAddress(address.getRegisterAddress());
+    preparedWriteRequest.setValueCount(sizeInWord);
+    for(int i=0;i<sizeInWord;i++)
+        preparedWriteRequest.setValue(i,reinterpret_cast<quint16*>(value.data())[i]);
+    channelGateWays[address.getChannel()]->pushRequest(new ModbusSerializedClient::ModbusRequest(preparedWriteRequest,ModbusSerializedClient::WRITE));
 }
 
-QVariant ModbusChannel::readData(ModbusDriverAddress address)
+QVariant ModbusChannel::update(const ModbusDriverAddress& modbusAddress)
 {
-    memcpy(dataMap[address].data(),
-           toStartAddress(address),
-           utilities::sizeOf(dataMap[address]));
-    return dataMap[address];
+    return dataMap[modbusAddress];
 }
 
-
-void ModbusChannel::configureClusters(QList<ModbusClusterConfiguration> configureList)
+quint16* ModbusChannel::toCacheAddress(const ModbusDriverAddress& modbusAddress)
 {
-    int startAddress = 0;
-    for(int i=0;i<configureList.length();i++){
-        clusterCollection.append(new ModbusCluster(&memory[startAddress],
-                                                   configureList[i].second,
-                                                   startAddress,
-                                                   configureList[i].first,
-                                                   this));
-        startAddress+=configureList[i].second; //accumulate
-    }//for
-
-    //bridge them
-    foreach (ModbusCluster* cluster, clusterCollection) {
-        if(requestGateWay != nullptr){
-            connect(cluster,
-                    SIGNAL(sendRequest(const ModbusSegment*)),
-                    this,
-                    SLOT(requestRaised(const ModbusSegment*)));
-        }//gateway existed
-        connect(cluster,
-                SIGNAL(updated()),
-                this,
-                SLOT(clusterUpdated()));
-    }
-}
-
-int ModbusChannel::queryCluster(ModbusDriverAddress address)
-{
-    auto registerAddress = address.value<BaseLayer::ModbusDriverAddress>().registerAddress;
-    for(int i=0;i<clusterCollection.length();i++){
-        registerAddress -= clusterCollection[i]->sizeOf();
-        if(registerAddress <=0)
-            return i; //on the bound or inside
-    }
-
-}
-
-void ModbusChannel::requestRaised(const ModbusSegment *request)
-{
-    requestGateWay->pushRequest(request);
-}
-
-quint16* ModbusChannel::toStartAddress(ModbusDriverAddress address)
-{
-    return &memory[address.registerAddress];
+    return &(channelCache[modbusAddress.getChannel()])[modbusAddress.getRegisterAddress()];
 }
 
 //!
-//! \brief ModbusChannel::clusterUpdated
-//! Dispatch events
-void ModbusChannel::clusterUpdated()
+//! \brief ModbusChannel::onReplyUpdated
+//! \param result
+//!
+void ModbusChannel::onUpdated(QModbusDataUnit result)
 {
-    //findout which cluster updated
-    auto cluster = qobject_cast<ModbusCluster*>(sender());
-    emit clusterUpdated(clusterCollection.indexOf(cluster));
+   //identify which channel?
+   int channelIndex = channelGateWays.indexOf(qobject_cast<ModbusSerializedClient*>(sender()));
+   //recover the address
+   ModbusDriverAddress modbusAddress;
+   modbusAddress.setChannel(channelIndex);
+   modbusAddress.setRegisterAddress(result.startAddress());
+   //write
+   writeData(modbusAddress,result.values().data());
 
-    int clusterId = clusterCollection.indexOf(cluster);
+   emit raiseUpdateEvent(new UpdateEvent(modbusAddress,dataMap[modbusAddress]));
+}
 
-    foreach (QVariant &var, dataMap.keys()) {
-        if (isInCluster(var,clusterId)){
-            emit updated(var,readData((var)));
-        }
-    }
-
+//!
+//! \brief ModbusChannel::writeData
+//! \param modbusAddress
+//! \param source
+//!
+void ModbusChannel::writeData(ModbusDriverAddress modbusAddress, const void* source)
+{
+    //write into cache
+    memcpy(toCacheAddress(modbusAddress),
+           source,
+           utilities::sizeOf(dataMap[modbusAddress]));
+    //update variant
+    // anchor the variant reference to cache?? is that possible?
+    memcpy(dataMap[modbusAddress.getRegisterAddress()].data(),
+           toCacheAddress(modbusAddress),
+           utilities::sizeOf(dataMap[modbusAddress]));
 }

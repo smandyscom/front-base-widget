@@ -1,4 +1,5 @@
-QT -= gui
+QT += gui
+QT += widgets
 QT += serialbus
 
 CONFIG += c++11 console
@@ -21,21 +22,19 @@ SOURCES += main.cpp \
     ../../bank-view/baselayerdefinitions.cpp \
     testtask2.cpp \
     timersource.cpp \
-    ../../bank-view/modbussegment.cpp \
     ../../bank-view/modbusserializedclient.cpp \
     serializedclienttest.cpp \
-    ../../bank-view/modbuscluster.cpp \
-    modbusclustertest.cpp
+    modbusclustertest.cpp \
+    ../../bank-view/modbuschannel.cpp
 
 HEADERS += \
     ../../bank-view/baselayerdefinitions.h \
     task.h \
     testtask2.h \
     timersource.h \
-    ../../bank-view/modbussegment.h \
     ../../bank-view/modbusserializedclient.h \
     serializedclienttest.h \
-    ../../bank-view/modbuscluster.h \
-    modbusclustertest.h
+    modbusclustertest.h \
+    ../../bank-view/modbuschannel.h
 
 INCLUDEPATH += ../../bank-view/

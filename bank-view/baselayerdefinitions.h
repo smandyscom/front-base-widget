@@ -6,13 +6,15 @@
 #include <QVariant>
 #include <QModbusDataUnit>
 #include <QEvent>
-//address-QVariant pair
 
 namespace BaseLayer {
 
 #define WORD qint16
 #define LONG qint32
 #define BIT  bool
+
+
+
 
 //!
 //! \brief The AbstractAddress class
@@ -49,6 +51,13 @@ inline bool operator !=(const AbstractAddress& lhp,const AbstractAddress& rhp)
 {
     return !(lhp==rhp);
 }
+inline bool operator <(const AbstractAddress& lhp,const AbstractAddress& rhp)
+{
+    return lhp.getAddress()<rhp.getAddress();
+}
+
+
+
 //!
 //! \brief The ModbusDriverAddress struct
 //! 32Bits addressing mode
@@ -75,9 +84,11 @@ public:
     quint8 getBitIndex() const{return (*registerTypeBitIndex) & 0x0f;}
     void setBitIndex(quint8 index){*registerTypeBitIndex = (*registerTypeBitIndex & 0xf0) | (index & 0x0f);}
 
-    quint8 getChannelAddress() const {return *channelAddress;}
+    quint8 getChannel() const {return *channelAddress;}
     quint16 getRegisterAddress() const {return *registerAddress;}
 
+    void setChannel(quint8 __channelAddress){(*channelAddress) = __channelAddress;}
+    void setRegisterAddress(quint16 __registerAddress){(*registerAddress)=__registerAddress;}
 
     virtual uint toBitwiseMask() const
     {
@@ -137,7 +148,9 @@ protected:
     Detection detection;
 };
 
-}
+typedef QPair<ModbusDriverAddress,QVariant> QModbusBinding;
+
+}//namespace
 
 
 Q_DECLARE_METATYPE(BaseLayer::ModbusDriverAddress)

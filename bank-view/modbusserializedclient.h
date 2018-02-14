@@ -4,12 +4,13 @@
 #include <QObject>
 #include <QModbusClient>
 #include <QQueue>
-#include <modbussegment.h>
 
 #include <QTimer>
+#include <QPair>
 
 
-//guarantee the request be handled in some sort of sequence
+
+
 //!
 //! \brief The ModbusSerializedClient class
 //! Make sure requests are processed in sequence
@@ -18,24 +19,35 @@ class ModbusSerializedClient : public QObject
 {
     Q_OBJECT
 public:
+    enum AccessMethod
+    {
+        READ,
+        WRITE,
+        READ_WRITE,// reserved
+    };
+    Q_ENUM(AccessMethod)
+
+    typedef QPair<QModbusDataUnit,AccessMethod> ModbusRequest;
+
     explicit ModbusSerializedClient(QModbusClient* driverReference = nullptr,
                                     int serverAddress=1,
                                     QObject *parent = nullptr);
-    void pushRequest(const ModbusSegment *request);
+    void pushRequest(const ModbusRequest* request);
 signals:
-
-public slots:
-
+    //!
+    //! \brief readRequestDone
+    //! emitted when READ request had processed
+    void readRequestDone(const QModbusDataUnit);
 protected slots:
-    void popRequest();
+    void onPopRequest();
 protected:
 
-    QQueue<const ModbusSegment*> requestQueue;
+    QQueue<const ModbusRequest*> requestQueue;
 
     int serverAddress;
     QModbusClient* driverReference; //should be initialed somewhere
 
-    ModbusSegment* request;
+    //ModbusSegment* request;
     //!
     //! \brief isProcessing
     //! whether is processing request
@@ -43,5 +55,8 @@ protected:
 
     QTimer* timer; //driving consumer
 };
+
+
+
 
 #endif // SEQUENTIALMODBUSCLIENT_H
