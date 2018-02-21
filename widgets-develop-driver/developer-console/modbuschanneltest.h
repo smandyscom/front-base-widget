@@ -11,9 +11,11 @@
 #include <baselayerdefinitions.h>
 using namespace BaseLayer;
 
+#include <QModbusTcpClient>
+
 struct theObject
 {
-    WORD field1;
+    //WORD field1;
     LONG field2;//32bits
     LONG filed3;
 
@@ -30,7 +32,8 @@ public:
     enum addressTable
     {
         HEADER = 0x00000000,
-        BODY = 0x00010000,
+        BODY = 0x00000000,
+        LOOP = 0x00000004,
     };
     Q_ENUM(addressTable)
 
@@ -38,6 +41,15 @@ public:
 
 protected:
     ModbusChannel* channel;
+    ModbusSerializedClient *client;
+    QModbusTcpClient* driver;
+public slots:
+    virtual void run();
+    void onUpdated(UpdateEvent *);
+    void onCommited();
+    void onDriverConnected(QModbusDevice::State state);
+protected:
+    QVariant cachedValue;
 };
 
 #endif // MODBUSCHANNELTEST_H

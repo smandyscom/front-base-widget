@@ -23,7 +23,9 @@ class ModbusChannel : public QObject
 
     Q_OBJECT
 public:
-    explicit ModbusChannel(QObject *parent = nullptr);
+    explicit ModbusChannel(const ModbusSerializedClient* clientList[],
+                           const int channelCounts,
+                           QObject *parent = nullptr);
 
     //!1
     //! Accessing interface

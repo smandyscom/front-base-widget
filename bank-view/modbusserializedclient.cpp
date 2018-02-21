@@ -1,5 +1,5 @@
 #include "modbusserializedclient.h"
-
+#include <QDebug>
 ModbusSerializedClient::ModbusSerializedClient(QModbusClient *driver, int serverAddress, QObject *parent) :
     QObject(parent),
     driverReference(driver),
@@ -49,13 +49,17 @@ void ModbusSerializedClient::onPopRequest()
         case QModbusDevice::NoError:
             if(requestQueue.head()->second == READ)
                 emit readRequestDone(reply->result());
+            if(requestQueue.head()->second == WRITE)
+                emit writeRequestDone();
             //destroy
             requestQueue.dequeue();
             reply->deleteLater();
             break;
         default:
+            qDebug() << reply->errorString();
             break;
-        }  
+        }//switch
+
         isProcessing = false;
     });
 }

@@ -2,23 +2,15 @@
 #include <utilities.h>
 #include <QCoreApplication>
 
-ModbusChannel::ModbusChannel(QObject *parent) :
+ModbusChannel::ModbusChannel(const ModbusSerializedClient* channelList[], const int channelCounts, QObject *parent) :
     QObject(parent)
 {
-//    if(driver != nullptr){
-//        channelGateWays = new ModbusSerializedClient(driver,
-//                                                    serverAddress,
-//                                                    this);
-//    }
-//    else{
-//        channelGateWays = nullptr; //no gateway, simulation only
-//    }
-    for(int i=0;i<CHANNEL_NUM;i++)
+    for(int i=0;i<channelCounts;i++){
         channelCache.append(new quint16[USHRT_MAX]);
-
-    int sz = channelCache.size();
-    sz=channelGateWays.size();
-
+        channelGateWays.append(const_cast<ModbusSerializedClient*>(channelList[i]));
+        //
+        connect(channelList[i],&ModbusSerializedClient::readRequestDone,this,&ModbusChannel::onUpdated);
+    }
     preparedReadRequest.setRegisterType(QModbusDataUnit::HoldingRegisters);
     preparedWriteRequest.setRegisterType(QModbusDataUnit::HoldingRegisters);
 }
@@ -47,9 +39,11 @@ void ModbusChannel::commit(ModbusDriverAddress address, const QVariant value)
     size_t sizeInWord = (utilities::sizeOf(value))/2; //size of in byte
 
     preparedWriteRequest.setStartAddress(address.getRegisterAddress());
-    preparedWriteRequest.setValueCount(sizeInWord);
+    QVector<quint16> temp;
     for(int i=0;i<sizeInWord;i++)
-        preparedWriteRequest.setValue(i,reinterpret_cast<const quint16*>(value.data())[i]);
+        temp.append(reinterpret_cast<const quint16*>(value.data())[i]);
+
+    preparedWriteRequest.setValues(temp);
 
     //once no specific channel , do no action
     if(address.getChannel() >= channelGateWays.size() )

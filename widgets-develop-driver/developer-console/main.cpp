@@ -4,6 +4,7 @@
 #include <testtask2.h>
 #include <timersource.h>
 #include <modbuschanneltest.h>
+#include <signal.h>
 
 extern void test1();
 extern void test2();
@@ -16,10 +17,18 @@ void test3()
     __testTask->doEvent();
 }
 
+void signalHandler(int sig)
+{
+    while (1) {
+        ;
+    }
+}
+
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
+    signal(SIGSEGV,signalHandler);
 
 
     //
