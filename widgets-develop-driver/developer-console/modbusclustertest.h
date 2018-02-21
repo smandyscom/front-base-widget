@@ -1,7 +1,6 @@
 #ifndef MODBUSCLUSTERTEST_H
 #define MODBUSCLUSTERTEST_H
 #include <task.h>
-#include <modbuscluster.h>
 #include <modbusserializedclient.h>
 #include <QModbusTcpClient>
 #include <QStateMachine>

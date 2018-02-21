@@ -2,7 +2,6 @@
 #define SERIALIZEDCLIENTTEST_H
 
 #include <task.h>
-#include <modbussegment.h>
 #include <modbusserializedclient.h>
 #include <QModbusTcpClient>
 #include <QTimer>
