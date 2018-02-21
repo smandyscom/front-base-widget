@@ -36,7 +36,8 @@ SOURCES += \
     modbusserializedclient.cpp \
     blockmanual.cpp \
     blockmanualcontroller.cpp \
-    baselayerdefinitions.cpp
+    baselayerdefinitions.cpp \
+    controllermanualmode.cpp
 
 HEADERS += \
         bank-view_global.h \ 
@@ -51,8 +52,7 @@ HEADERS += \
     modbuscluster.h \
     modbussegment.h \
     modbusserializedclient.h \
-    blockmanual.h \
-    blockmanualcontroller.h
+    controllermanualmode.h
 
 unix {
     target.path = /usr/lib
