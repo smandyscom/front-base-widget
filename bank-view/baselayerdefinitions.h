@@ -113,7 +113,6 @@ public :
     UpdateEvent(const AbstractAddress& address,const QVariant value);
 
     const uint address;
-    const uint bitMask;
     QVariant value;
 };
 
@@ -135,8 +134,9 @@ public:
         VALUE_UPDATED
     };
 
-    ValueTransition(const AbstractAddress& address,Detection action,QObject *parent = nullptr):
+    ValueTransition(const AbstractAddress address,Detection action,QObject *parent = nullptr):
     address(address.getAddress()),
+    bitMask(address.toBitwiseMask()),
     detection(action){}
 
 protected:
@@ -145,6 +145,7 @@ protected:
 
 
     const uint address;
+    const uint bitMask;
     Detection detection;
 };
 

@@ -6,7 +6,6 @@ QEvent::Type updateEventTypeCode = QEvent::Type(QEvent::registerEventType());
 UpdateEvent::UpdateEvent(const AbstractAddress& address,const QVariant value):
     QEvent(updateEventTypeCode),
     address(address.getAddress()),
-    bitMask(address.toBitwiseMask()),
     value(value)
 {
     //!
@@ -26,10 +25,10 @@ bool ValueTransition::eventTest(QEvent *event)
 
     switch (detection) {
     case BIT_STATE_ON:
-         return (ue->value.value<qint32>() & ue->bitMask) > 0;
+         return (ue->value.value<qint32>() & bitMask) > 0;
         break;
     case BIT_STATE_OFF:
-        return (ue->value.value<qint32>() & ue->bitMask) == 0;
+        return (ue->value.value<qint32>() & bitMask) == 0;
         break;
     case VALUE_UPDATED:
         return true;

@@ -28,6 +28,8 @@ ModbusChannelTest::ModbusChannelTest()
     //int id = qMetaTypeId<theObject>();
 
     theObject ob = {1,2};
+    size_t sz0 = sizeof(theObject);
+    size_t sz555 = sizeof(alignmentObject);
     value.setValue(ob);
 
     theObject ob2 = value.value<theObject>();
@@ -46,7 +48,7 @@ ModbusChannelTest::ModbusChannelTest()
     qDebug() << sizeof(ulong);
     qDebug() << sizeof(WORD);
     qDebug() << sizeof(LONG);
-    size_t sz0 = sizeof(ob);
+
     size_t sz = utilities::sizeOf(value);
 
     //qDebug() << ob2.field1;
@@ -78,6 +80,12 @@ ModbusChannelTest::ModbusChannelTest()
 
     //
     cachedValue.setValue(ob2);
+    bool b = true;
+    quint16 h = 16;
+    cachedBool.setValue(b);
+    size_t szzz = utilities::sizeOf(cachedBool);
+    //cachedBool.setValue(h);
+    //szzz= utilities::sizeOf(cachedBool);
 }
 
 void ModbusChannelTest::run()
@@ -94,19 +102,27 @@ void ModbusChannelTest::onDriverConnected(QModbusDevice::State state)
 
     //
     connect(channel,&ModbusChannel::raiseUpdateEvent,this,&ModbusChannelTest::onUpdated);
-    connect(client,&ModbusSerializedClient::writeRequestDone,this,&ModbusChannelTest::onCommited);
 
-    channel->beginUpdate(ModbusDriverAddress(BODY),cachedValue);
+    //!
+    //channel->beginUpdate(ModbusDriverAddress(BODY),cachedValue);
+    channel->beginUpdate(ModbusDriverAddress(HEADER),cachedBool);
 }
 
-void ModbusChannelTest::onUpdated(UpdateEvent*)
+void ModbusChannelTest::onUpdated(UpdateEvent* event)
 {
-    channel->update(ModbusDriverAddress(BODY),cachedValue);
-    channel->commit(ModbusDriverAddress(LOOP),cachedValue);
-channel->beginUpdate(ModbusDriverAddress(BODY),cachedValue);
+    if(event->address == BODY){
+        channel->update(ModbusDriverAddress(BODY),cachedValue);
+        channel->commit(ModbusDriverAddress(LOOP),cachedValue);
+        channel->beginUpdate(ModbusDriverAddress(BODY),cachedValue);
+
+        //test cached bool
+    }
+    if(event->address == (HEADER & 0x0000ffff)){
+        channel->update(ModbusDriverAddress(HEADER),cachedBool);
+        //cachedBool.setValue(!cachedBool.value<bool>());
+        qDebug() << cachedBool.toString();
+        channel->commit(ModbusDriverAddress(LOOP_HEADER),cachedBool);
+        channel->beginUpdate(ModbusDriverAddress(HEADER),cachedBool);
+    }
 }
 
-void ModbusChannelTest::onCommited()
-{
-
-}

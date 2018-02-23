@@ -4,9 +4,14 @@
 #include <QObject>
 #include <QStateMachine>
 
+#include <baselayerdefinitions.h>
+using namespace BaseLayer;
+
+
 //!
 //! \brief The ControllerManualMode class
 //! The state machine about to control manual mode
+//! Inherit QStateMachine
 class ControllerManualMode : public QObject
 {
     Q_OBJECT
@@ -33,17 +38,38 @@ public:
     explicit ControllerManualMode(QObject *parent = nullptr);
 
 signals:
-
+    //!
+    //! \brief readWordIn
+    //! \param address
+    //! \param wordData
+    //!
+    void requireReadData(AbstractAddress address,const QVariant data);
+    //!
+    //! \brief writeData
+    //! \param address
+    //! \param data
+    //!
+    void requireWriteData(AbstractAddress address,const QVariant data);
 public slots:
 
     //onFocused , start monitoring
-
+    // light on HMI_ONLINE
+    //not on Focused , off HMI_ONLINE
+protected slots:
+    //!
+    //! \brief onStateEntered
+    //! Doing reading
+    void onStateEntered();
 protected:
     //!
     //! \brief trunsactionController
-    //!
+    //! Control the handshaking sequence
     QStateMachine* trunsactionController;
 
+    //!
+    //! \brief blockCache
+    //! Mind alignment problem
+    QVariant blockCache;
 };
 
 #endif // CONTROLLERMANUALMODE_H

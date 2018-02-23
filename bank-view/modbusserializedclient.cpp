@@ -40,6 +40,10 @@ void ModbusSerializedClient::onPopRequest()
     default:
         break;
     }
+
+    if(reply==nullptr)
+        return;
+
     //!
     //! when finished , dequeue
     //! otherwise , would remained on queue
@@ -47,10 +51,7 @@ void ModbusSerializedClient::onPopRequest()
     connect(reply,&QModbusReply::finished,this,[this,reply](){
         switch (reply->error()) {
         case QModbusDevice::NoError:
-            if(requestQueue.head()->second == READ)
-                emit readRequestDone(reply->result());
-            if(requestQueue.head()->second == WRITE)
-                emit writeRequestDone();
+            emit requestDone(reply->result());
             //destroy
             requestQueue.dequeue();
             reply->deleteLater();

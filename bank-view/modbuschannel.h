@@ -57,16 +57,20 @@ public:
 //    int registerBinding(QList<QModbusBinding> list); //address,value pair
 
 signals:
+    //!
+    //! \brief raiseUpdateEvent
+    //! \param event
+    //! The event source ready to connect with QStateMachine
     void raiseUpdateEvent(UpdateEvent* event);
-public slots:
 
- protected slots:
+protected slots:
     //void requestRaised(const ModbusSegment* request); //bridge cluster and gateway
     //!
     //! \brief onReplyUpdated
     //! \param result
     //! Reply processor
-    void onUpdated(QModbusDataUnit result);
+    void onRequestProcessed(QModbusDataUnit result);
+
 protected:
     //!
     //! \brief dataMap
@@ -94,6 +98,7 @@ protected:
     //! \param source
     //! update both cache and variant
     void writeData(ModbusDriverAddress modbusAddress, const void *source, size_t count);
+
 };
 
 #endif // CHANNEL_H

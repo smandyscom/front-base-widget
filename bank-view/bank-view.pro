@@ -34,8 +34,6 @@ SOURCES += \
     modbuscluster.cpp \
     modbussegment.cpp \
     modbusserializedclient.cpp \
-    blockmanual.cpp \
-    blockmanualcontroller.cpp \
     baselayerdefinitions.cpp \
     controllermanualmode.cpp
 

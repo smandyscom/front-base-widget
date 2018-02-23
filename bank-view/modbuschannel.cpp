@@ -9,7 +9,7 @@ ModbusChannel::ModbusChannel(const ModbusSerializedClient* channelList[], const 
         channelCache.append(new quint16[USHRT_MAX]);
         channelGateWays.append(const_cast<ModbusSerializedClient*>(channelList[i]));
         //
-        connect(channelList[i],&ModbusSerializedClient::readRequestDone,this,&ModbusChannel::onUpdated);
+        connect(channelList[i],&ModbusSerializedClient::requestDone,this,&ModbusChannel::onRequestProcessed);
     }
     preparedReadRequest.setRegisterType(QModbusDataUnit::HoldingRegisters);
     preparedWriteRequest.setRegisterType(QModbusDataUnit::HoldingRegisters);
@@ -21,6 +21,9 @@ void ModbusChannel::beginUpdate(ModbusDriverAddress address, const QVariant data
     // Get the object size , so that you can make right request
     size_t sizeInWord = (utilities::sizeOf(dataForm))/2; //size of in byte
 
+    if(sizeInWord == 0)
+        sizeInWord = 1; //prevent zero count
+
     preparedReadRequest.setStartAddress(address.getRegisterAddress());
     preparedReadRequest.setValueCount(sizeInWord);
 
@@ -30,18 +33,47 @@ void ModbusChannel::beginUpdate(ModbusDriverAddress address, const QVariant data
     channelGateWays[address.getChannel()]->pushRequest(new ModbusSerializedClient::ModbusRequest(preparedReadRequest,ModbusSerializedClient::READ));
 }
 
+//!
+//! \brief ModbusChannel::commit
+//! \param address
+//! \param value
+//! handling bit?
 void ModbusChannel::commit(ModbusDriverAddress address, const QVariant value)
 {
-    writeData(address,value.data(),utilities::sizeOf(value));
+    QVariant writeInData = value;
+
+
+    //!
+    //! Handling bit access request
+    switch(writeInData.type()){
+    case QVariant::Bool:
+    {
+        //make sure readout a word
+        quint16 temp=0;
+        writeInData.setValue(temp);
+
+        update(address,writeInData);
+        // handling signal bit
+        if(value.value<bool>())
+            //set
+            writeInData.setValue(writeInData.value<quint16>() | address.toBitwiseMask());
+        else
+            //unset
+            writeInData.setValue(writeInData.value<quint16>() & (~address.toBitwiseMask()));
+        break;
+    }
+    default:
+        break;
+    }
     //
     // From map query type of QVariant
     // Get the object size , so that you can make right request
-    size_t sizeInWord = (utilities::sizeOf(value))/2; //size of in byte
+    size_t sizeInWord = (utilities::sizeOf(writeInData))/2; //size of in byte
 
     preparedWriteRequest.setStartAddress(address.getRegisterAddress());
     QVector<quint16> temp;
     for(int i=0;i<sizeInWord;i++)
-        temp.append(reinterpret_cast<const quint16*>(value.data())[i]);
+        temp.append(reinterpret_cast<const quint16*>(writeInData.data())[i]);
 
     preparedWriteRequest.setValues(temp);
 
@@ -53,10 +85,25 @@ void ModbusChannel::commit(ModbusDriverAddress address, const QVariant value)
 
 void ModbusChannel::update(const ModbusDriverAddress modbusAddress, QVariant &fetchOut)
 {
-    //direct memory copy
-    memcpy(fetchOut.data(),
-           &((channelCache[modbusAddress.getChannel()])[modbusAddress.getRegisterAddress()]),
-            utilities::sizeOf(fetchOut));
+    //!
+    //! For bool type need specical handling
+    switch(fetchOut.type()){
+    case QVariant::Bool:
+    {
+        quint16 temp = (channelCache[modbusAddress.getChannel()])[modbusAddress.getRegisterAddress()];
+        if(temp & modbusAddress.toBitwiseMask())
+            fetchOut.setValue(true);
+        else
+            fetchOut.setValue(false);
+        break;
+    }
+    default:
+        //direct memory copy
+        memcpy(fetchOut.data(),
+               &((channelCache[modbusAddress.getChannel()])[modbusAddress.getRegisterAddress()]),
+                utilities::sizeOf(fetchOut));
+        break;
+    }
 }
 
 quint16* ModbusChannel::toCacheAddress(const ModbusDriverAddress modbusAddress)
@@ -68,7 +115,7 @@ quint16* ModbusChannel::toCacheAddress(const ModbusDriverAddress modbusAddress)
 //! \brief ModbusChannel::onReplyUpdated
 //! \param result
 //!
-void ModbusChannel::onUpdated(QModbusDataUnit result)
+void ModbusChannel::onRequestProcessed(QModbusDataUnit result)
 {
    //identify which channel?
    int channelIndex = channelGateWays.indexOf(qobject_cast<ModbusSerializedClient*>(sender()));
@@ -79,6 +126,9 @@ void ModbusChannel::onUpdated(QModbusDataUnit result)
    //write , size unit should be converting
    writeData(modbusAddress,result.values().data(),result.valueCount()*2);
 
+   //!
+   //! Value contains single word only
+   //! Bit mask would vanished here
    emit raiseUpdateEvent(new UpdateEvent(modbusAddress,QVariant(channelCache[modbusAddress.getChannel()][modbusAddress.getRegisterAddress()])));
 }
 
