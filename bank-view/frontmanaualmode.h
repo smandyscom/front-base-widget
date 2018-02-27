@@ -32,11 +32,12 @@ public slots:
     //! \param id
     //!
     void onAxisChanged(quint16 id);
-
+    void onFocusChanged(QWidget* old,QWidget* now);
 protected:
     GenericCommandBlock genericCommandBlock;
     ControllerManualMode* controller;
 
+    void setCommonParameters();
 private:
     Ui::FrontManaualMode *ui;
 };

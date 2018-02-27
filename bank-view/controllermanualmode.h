@@ -133,7 +133,8 @@ signals:
     //!
     //! \brief triggerOperation
     //! Linked to S1 transition condition
-    void triggerOperation();
+    void operationTriggered();
+    void operationPerformed();
 protected:
     //!
     //! \brief onMonitorBlockReply
