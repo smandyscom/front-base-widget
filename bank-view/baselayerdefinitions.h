@@ -9,8 +9,8 @@
 
 namespace BaseLayer {
 
-#define WORD qint16
-#define LONG qint32
+#define MODBUS_WORD qint16
+#define MODBUS_LONG qint32
 #define BIT  bool
 
 

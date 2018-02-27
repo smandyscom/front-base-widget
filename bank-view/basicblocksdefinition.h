@@ -7,7 +7,7 @@ using namespace BaseLayer;
 
 #define COMMAND_BLOCK_FULL_OCCUPATION 96
 
-enum BlockCommandType : WORD
+enum BlockCommandType : MODBUS_WORD
 {
     NOP=0,
     POS_I=1,
@@ -19,40 +19,56 @@ enum BlockCommandType : WORD
 
 struct AbstractCommandBlock
 {
-    WORD objectId;
+    MODBUS_WORD objectId;
     BlockCommandType commandType;
-    LONG speed;
-    LONG acceralation;
-    LONG deceralation;
-    LONG torqueLimit;
-    WORD controlWord;
+    MODBUS_LONG speed;
+    MODBUS_LONG acceralation;
+    MODBUS_LONG deceralation;
+    MODBUS_LONG torqueLimit;
+    MODBUS_WORD controlWord;
 };
 Q_DECLARE_METATYPE(AbstractCommandBlock)
 
 
 struct PosICommandBlock : AbstractCommandBlock
 {
-    LONG extendControlWord;
-    LONG coordinate;
+    MODBUS_LONG extendControlWord;
+    MODBUS_LONG coordinate;
+
+    void setAbsoluteMode(bool isAbsolute)
+    {
+        if(isAbsolute)
+            extendControlWord |= 0x01;
+        else
+            extendControlWord &= ~0x01;
+    }
 };
 Q_DECLARE_METATYPE(PosICommandBlock)
 
-enum ZretMethods : WORD
+enum ZretMethods : MODBUS_WORD
 {
     DEC1_C_PULSE=0,
 };
 struct ZretCommandBlock : AbstractCommandBlock
 {
-    WORD extendControlWord;
+    MODBUS_WORD extendControlWord;
     ZretMethods method;
-    LONG offset;
-    LONG speedCreep;
-    LONG speedAppoach;
+    MODBUS_LONG offset;
+    MODBUS_LONG speedCreep;
+    MODBUS_LONG speedAppoach;
+
+    void setDirection(bool isForward)
+    {
+        if(isForward)
+            extendControlWord |= 0x01;
+        else
+            extendControlWord &= ~0x01;
+    }
 };
 Q_DECLARE_METATYPE(ZretCommandBlock)
-struct FullCommandBlock
+struct GenericCommandBlock
 {
-    WORD reserved[COMMAND_BLOCK_FULL_OCCUPATION];
+    MODBUS_WORD reserved[COMMAND_BLOCK_FULL_OCCUPATION];
 };
 Q_DECLARE_METATYPE(FullCommandBlock)
 

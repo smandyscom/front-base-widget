@@ -15,9 +15,9 @@ using namespace BaseLayer;
 #pragma pack(1)
 struct theObject
 {
-    WORD field1;//2bytes
+    MODBUS_WORD field1;//2bytes
     //WORD field10;
-    LONG field2;//4bytes
+    MODBUS_LONG field2;//4bytes
     //LONG filed3;//4bytes
 
 //    theObject(WORD arg1,LONG arg2,LONG arg3):

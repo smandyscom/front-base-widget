@@ -46,8 +46,8 @@ ModbusChannelTest::ModbusChannelTest()
     qDebug() << sizeof(bool);
     qDebug() << sizeof(uint);
     qDebug() << sizeof(ulong);
-    qDebug() << sizeof(WORD);
-    qDebug() << sizeof(LONG);
+    qDebug() << sizeof(MODBUS_WORD);
+    qDebug() << sizeof(MODBUS_LONG);
 
     size_t sz = utilities::sizeOf(value);
 

@@ -49,7 +49,7 @@ public:
     //! \brief getInstance
     //! \return
     //! Singleton
-    //static ModbusChannel* getInstance();
+    static ModbusChannel* getInstance();
 
 signals:
     //!

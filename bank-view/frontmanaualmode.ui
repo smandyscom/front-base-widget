@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>882</width>
-    <height>439</height>
+    <height>411</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,9 +17,9 @@
    <property name="geometry">
     <rect>
      <x>340</x>
-     <y>230</y>
+     <y>250</y>
      <width>251</width>
-     <height>131</height>
+     <height>151</height>
     </rect>
    </property>
    <property name="title">
@@ -31,7 +31,7 @@
       <x>10</x>
       <y>20</y>
       <width>231</width>
-      <height>101</height>
+      <height>121</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout">
@@ -73,7 +73,7 @@
      <x>340</x>
      <y>100</y>
      <width>251</width>
-     <height>131</height>
+     <height>151</height>
     </rect>
    </property>
    <property name="title">
@@ -85,13 +85,10 @@
       <x>10</x>
       <y>20</y>
       <width>231</width>
-      <height>101</height>
+      <height>158</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_4">
-     <property name="sizeConstraint">
-      <enum>QLayout::SetFixedSize</enum>
-     </property>
      <item row="3" column="2">
       <widget class="QLabel" name="label_22">
        <property name="text">
@@ -108,6 +105,12 @@
      </item>
      <item row="4" column="1">
       <widget class="QPushButton" name="pushButtonPosition">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="text">
         <string>Go</string>
        </property>
@@ -145,9 +148,9 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>0</x>
-     <y>270</y>
+     <y>250</y>
      <width>331</width>
-     <height>161</height>
+     <height>151</height>
     </rect>
    </property>
    <property name="title">
@@ -159,7 +162,7 @@ p, li { white-space: pre-wrap; }
       <x>10</x>
       <y>20</y>
       <width>311</width>
-      <height>131</height>
+      <height>121</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
@@ -167,7 +170,11 @@ p, li { white-space: pre-wrap; }
       <enum>QLayout::SetFixedSize</enum>
      </property>
      <item row="1" column="1">
-      <widget class="QTextBrowser" name="textBrowserPositionFeedback"/>
+      <widget class="QTextBrowser" name="textBrowserPositionFeedback">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+      </widget>
      </item>
      <item row="0" column="0" alignment="Qt::AlignLeft">
       <widget class="QLabel" name="label">
@@ -177,10 +184,18 @@ p, li { white-space: pre-wrap; }
       </widget>
      </item>
      <item row="2" column="1">
-      <widget class="QTextBrowser" name="textBrowserSpeedFeedback"/>
+      <widget class="QTextBrowser" name="textBrowserSpeedFeedback">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+      </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QTextBrowser" name="textBrowserPositionReference"/>
+      <widget class="QTextBrowser" name="textBrowserPositionReference">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+      </widget>
      </item>
      <item row="0" column="2">
       <widget class="QLabel" name="label_13">
@@ -218,7 +233,11 @@ p, li { white-space: pre-wrap; }
       </widget>
      </item>
      <item row="3" column="1">
-      <widget class="QTextBrowser" name="textBrowserTorqueFeedback"/>
+      <widget class="QTextBrowser" name="textBrowserTorqueFeedback">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+      </widget>
      </item>
      <item row="3" column="2">
       <widget class="QLabel" name="label_16">
@@ -243,7 +262,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>100</y>
      <width>331</width>
-     <height>161</height>
+     <height>151</height>
     </rect>
    </property>
    <property name="title">
@@ -255,7 +274,7 @@ p, li { white-space: pre-wrap; }
       <x>10</x>
       <y>20</y>
       <width>311</width>
-      <height>131</height>
+      <height>121</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2">
@@ -319,7 +338,15 @@ p, li { white-space: pre-wrap; }
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QTextEdit" name="textEditSpeedReference"/>
+      <widget class="QTextEdit" name="textEditSpeedReference">
+       <property name="html">
+        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;123&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
      </item>
      <item row="1" column="1">
       <widget class="QTextEdit" name="textEditAcceralationTime"/>
@@ -339,7 +366,7 @@ p, li { white-space: pre-wrap; }
      <x>600</x>
      <y>100</y>
      <width>271</width>
-     <height>191</height>
+     <height>221</height>
     </rect>
    </property>
    <property name="title">
@@ -351,10 +378,13 @@ p, li { white-space: pre-wrap; }
       <x>10</x>
       <y>20</y>
       <width>251</width>
-      <height>161</height>
+      <height>191</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_3">
+     <item row="5" column="1">
+      <widget class="QTextEdit" name="textEditSpeedApproach"/>
+     </item>
      <item row="2" column="1">
       <widget class="QComboBox" name="comboBoxZrtMethod"/>
      </item>
@@ -369,6 +399,13 @@ p, li { white-space: pre-wrap; }
       <widget class="QRadioButton" name="radioBackward">
        <property name="text">
         <string>Backward</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0">
+      <widget class="QLabel" name="label_20">
+       <property name="text">
+        <string>Speed approach</string>
        </property>
       </widget>
      </item>
@@ -399,13 +436,10 @@ p, li { white-space: pre-wrap; }
        </property>
       </widget>
      </item>
-     <item row="5" column="1">
-      <widget class="QTextEdit" name="textEditSpeedApproach"/>
-     </item>
-     <item row="5" column="0">
-      <widget class="QLabel" name="label_20">
+     <item row="6" column="1">
+      <widget class="QPushButton" name="pushButtonZret">
        <property name="text">
-        <string>Speed approach</string>
+        <string>Go</string>
        </property>
       </widget>
      </item>
@@ -464,6 +498,19 @@ p, li { white-space: pre-wrap; }
     </layout>
    </widget>
   </widget>
+  <widget class="QPushButton" name="pushButtonStop">
+   <property name="geometry">
+    <rect>
+     <x>600</x>
+     <y>330</y>
+     <width>271</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Stop</string>
+   </property>
+  </widget>
   <zorder>groupBox</zorder>
   <zorder>groupBox_2</zorder>
   <zorder>label_4</zorder>
@@ -471,6 +518,7 @@ p, li { white-space: pre-wrap; }
   <zorder>groupBox_3</zorder>
   <zorder>groupBox_4</zorder>
   <zorder>groupBox_5</zorder>
+  <zorder>pushButtonStop</zorder>
  </widget>
  <resources/>
  <connections/>

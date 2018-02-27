@@ -13,27 +13,53 @@ using namespace BaseLayer;
 
 typedef quint16 CommitIndex ;
 
-enum CommitSelection : quint16
-{
-    AXIS = 0,
-    CYLINDER = 1,
-    COMMAND_BLOCK = 2,
-};
-enum CommitMode : quint16
-{
-    BLOCK_COMMAND=0,
-    DOWNLOAD = 15, //PLC<-HMI
-    UPLOAD = 16,   //PLC->HMI
-};
+
 struct CommitBlock
 {
+    enum CommitSelection : MODBUS_WORD
+    {
+        AXIS = 0,
+        CYLINDER = 1,
+        COMMAND_BLOCK = 2,
+    };
+    enum CommitMode : MODBUS_WORD
+    {
+        BLOCK_COMMAND=0,
+        DOWNLOAD = 15, //PLC<-HMI
+        UPLOAD = 16,   //PLC->HMI
+    };
     CommitMode mode;
     CommitSelection selection;
     CommitIndex index;
 };
 Q_DECLARE_METATYPE(CommitBlock)
-//Q_ENUM_NS(CommitContentDefinition)
-//Q_ENUM_NS(ExecutionMode)
+
+#define MONITOR_BLOCK_FULL_OCCUPATION 10
+struct GenericMonitorBlock
+{
+    MODBUS_WORD reserved[10];
+};
+struct AxisMonitorBlock
+{
+    //!
+    //! \brief positionCommand
+    //! in 0.001mm
+    MODBUS_LONG positionCommand;
+    //!
+    //! \brief positionFeedback
+    //! in 0.001mm
+    MODBUS_LONG positionFeedback;
+    //!
+    //! \brief speedFeedback
+    //! in 0.001mm/sec
+    MODBUS_LONG speedFeedback;
+    //!
+    //! \brief torqueFeedback
+    //! in 0.01%
+    MODBUS_LONG torqueFeedback;
+};
+Q_DECLARE_METATYPE(AxisMonitorBlock)
+Q_DECLARE_METATYPE(GenericMonitorBlock)
 
 //!
 //! \brief The ControllerManualMode class
@@ -76,7 +102,20 @@ public:
     //!
     //! \brief blockCache
     //! Mind alignment problem
-    QVariant dataBlockCache;
+
+    void setCommandBlock(QVariant commandBlock)
+    {
+        //Value copy (memcopy?
+        commandBlockCache = commandBlock;
+    }
+    QVariant readCommandBlock() const
+    {
+        return QVariant::fromValue(commandBlockCache);
+    }
+    QVariant readMonitorBlock() const
+    {
+        return QVariant::fromValue(monitorBlockCache);
+    }
 
 signals:
     //!
@@ -91,19 +130,20 @@ signals:
     //! \param data
     //!
     void requireWriteData(AbstractAddress address,const QVariant data);
-
+    //!
+    //! \brief triggerOperation
+    //! Linked to S1 transition condition
     void triggerOperation();
-public slots:
-
-    void onFocusEntered();
-    void onFocusExited();
-    //onFocused , start monitoring
-    // light on HMI_ONLINE
-    //not on Focused , off HMI_ONLINE
-
 protected:
+    //!
+    //! \brief onMonitorBlockReply
+    //! \param event
+    //! Looping
+    void onMonitorBlockReply(UpdateEvent* event);
 
-    FullCommandBlock dummyFcb;
+    GenericCommandBlock commandBlockCache;
+    GenericMonitorBlock monitorBlockCache;
+
     CommitBlock commitBlockCache;
 
     ModbusChannel* channel; //TODO
