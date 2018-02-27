@@ -45,16 +45,11 @@ public:
     void commit(ModbusDriverAddress address, const QVariant value);
 
 
-//    //!2
-//    //! Configuration (data map
-//    template<typename T>  void registerBinding(ModbusDriverAddress address)
-//    {
-//        //for those structure type
-//        int id = qRegisterMetaType<T>();
-//        T initialValue; //allocate initial value
-//        dataMap[address] = QVariant::fromValue(initialValue); //take into map
-//    }
-//    int registerBinding(QList<QModbusBinding> list); //address,value pair
+    //!
+    //! \brief getInstance
+    //! \return
+    //! Singleton
+    //static ModbusChannel* getInstance();
 
 signals:
     //!
@@ -98,6 +93,8 @@ protected:
     //! \param source
     //! update both cache and variant
     void writeData(ModbusDriverAddress modbusAddress, const void *source, size_t count);
+private:
+    static ModbusChannel* instance;
 
 };
 

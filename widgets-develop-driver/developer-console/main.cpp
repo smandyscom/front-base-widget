@@ -6,6 +6,10 @@
 #include <modbuschanneltest.h>
 #include <signal.h>
 
+#include <basicblocksdefinition.h>
+#include <QVariant>
+#include <utilities.h>
+
 extern void test1();
 extern void test2();
 
@@ -45,6 +49,24 @@ int main(int argc, char *argv[])
     //QTimer::singleShot(0,serialTestTask,SLOT(run()));
     //QTimer::singleShot(0,modbusClusterTestTask,SLOT(run()));
     ModbusChannelTest* mct = new ModbusChannelTest();
-    \
+
+    size_t sz = sizeof(AbstractCommandBlock);//22bytes
+    sz = sizeof(PosICommandBlock);//30bytes
+    sz = sizeof(ZretCommandBlock);//38bytes
+    AbstractCommandBlock acb = {0,NOP,0,0,0,0,0};
+    PosICommandBlock pcb;
+
+
+    QVariant box;
+    box.setValue(acb);
+    sz = sizeof(box);
+    sz = utilities::sizeOf(box);
+
+    box.setValue(pcb);
+    sz = sizeof(box);
+    sz = utilities::sizeOf(box);
+    box = QVariant::fromValue(acb);
+
+
     return a.exec();
 }

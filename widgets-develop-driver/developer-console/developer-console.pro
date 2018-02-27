@@ -35,6 +35,7 @@ HEADERS += \
     ../../bank-view/modbusserializedclient.h \
     serializedclienttest.h \
     ../../bank-view/modbuschannel.h \
-    ../../bank-view/utilities.h
+    ../../bank-view/utilities.h \
+    ../../bank-view/basicblocksdefinition.h
 
 INCLUDEPATH += ../../bank-view/

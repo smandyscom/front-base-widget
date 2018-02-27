@@ -35,7 +35,9 @@ SOURCES += \
     modbussegment.cpp \
     modbusserializedclient.cpp \
     baselayerdefinitions.cpp \
-    controllermanualmode.cpp
+    controllermanualmode.cpp \
+    basicblocksdefinition.cpp \
+    frontmanaualmode.cpp
 
 HEADERS += \
         bank-view_global.h \ 
@@ -50,7 +52,9 @@ HEADERS += \
     modbuscluster.h \
     modbussegment.h \
     modbusserializedclient.h \
-    controllermanualmode.h
+    controllermanualmode.h \
+    basicblocksdefinition.h \
+    frontmanaualmode.h
 
 unix {
     target.path = /usr/lib
@@ -60,4 +64,5 @@ unix {
 FORMS += \
     ptpzrn_viewer.ui \
     manualpanel.ui \
-    modbussetupwidget.ui
+    modbussetupwidget.ui \
+    frontmanaualmode.ui

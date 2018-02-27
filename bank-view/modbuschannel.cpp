@@ -144,3 +144,4 @@ void ModbusChannel::writeData(ModbusDriverAddress modbusAddress,const void* sour
            source,
            count);
 }
+

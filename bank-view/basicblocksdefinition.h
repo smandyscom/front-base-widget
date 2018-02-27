@@ -5,6 +5,8 @@ using namespace BaseLayer;
 
 #pragma pack(1)
 
+#define COMMAND_BLOCK_FULL_OCCUPATION 96
+
 enum BlockCommandType : WORD
 {
     NOP=0,
@@ -48,12 +50,12 @@ struct ZretCommandBlock : AbstractCommandBlock
     LONG speedAppoach;
 };
 Q_DECLARE_METATYPE(ZretCommandBlock)
-
-
-class basicBlocksDefinition
+struct FullCommandBlock
 {
-public:
-    basicBlocksDefinition();
+    WORD reserved[COMMAND_BLOCK_FULL_OCCUPATION];
 };
+Q_DECLARE_METATYPE(FullCommandBlock)
+
+
 
 #endif // BASICBLOCKSDEFINITION_H
