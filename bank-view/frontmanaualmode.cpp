@@ -15,13 +15,27 @@ FrontManaualMode::~FrontManaualMode()
     delete ui;
 }
 
+void FrontManaualMode::onButtonBankSetClick()
+{
+    auto button = qobject_cast<QPushButton*>(sender());
+    switch (button->objectName()) {
+    case ui->pushButtonCoordinateSet:
+
+        break;
+    case ui->pushButtonParameterSet:
+        break;
+    default:
+        break;
+    }
+}
+
 //!
 //! \brief FrontManaualMode::onButtonClick
 //! For
 //! 1. POSI
 //! 2. ZRET
 //! 3. STOP
-void FrontManaualMode::onButtonClick()
+void FrontManaualMode::onButtonOperationClick()
 {\
     auto button = qobject_cast<QPushButton*>(sender());
     setCommonParameters(); //

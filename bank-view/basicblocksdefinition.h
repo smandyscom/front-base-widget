@@ -66,11 +66,24 @@ struct ZretCommandBlock : AbstractCommandBlock
     }
 };
 Q_DECLARE_METATYPE(ZretCommandBlock)
+struct FeedCommandBlock : AbstractCommandBlock
+{
+    MODBUS_WORD extendControlWord;
+
+    void setDirection(bool isForward)
+    {
+        if(isForward)
+            extendControlWord |= 0x01;
+        else
+            extendControlWord &= ~0x01;
+    }
+};
+Q_DECLARE_METATYPE(FeedCommandBlock)
 struct GenericCommandBlock
 {
     MODBUS_WORD reserved[COMMAND_BLOCK_FULL_OCCUPATION];
 };
-Q_DECLARE_METATYPE(FullCommandBlock)
+Q_DECLARE_METATYPE(GenericCommandBlock)
 
 
 
