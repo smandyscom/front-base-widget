@@ -4,26 +4,12 @@
 #include <QObject>
 #include <controllermanualmode.h>
 #include <QAbstractTableModel>
-
+#include <junctionbankdatabase.h>
 //!
 //! \brief The ControllerBankManager class
 //! Offered the UI of SQL VIEW , which combined by two table (Name tags and Values
-class ControllerBankManager : public QAbstractTableModel
+class ControllerBankManager : public QObject
 {
-    enum FieldHeaders
-    {
-        HEADER_OBJECT_ID=0,
-        HEADER_COMMAND_TYPE=1,
-        HEADER_SPEED=2,
-        HEADER_ACCERALATION=3,
-        HEADER_DECERALATION=4,
-        HEADER_TORQUE_LIMIT=5,
-        HEADER_EXTEND_CONTROL_WORD=6,
-        HEADER_EXT1_COORD1_OFFSET=7,
-        HEADER_EXT2_COORD2_SPEED_CREEP=8,
-        HEADER_EXT3_COORD3_SPEED_APPROACH=9
-    };
-
     Q_OBJECT
 public:
     explicit ControllerBankManager(QObject *parent = nullptr);
@@ -42,6 +28,8 @@ private:
     int currentIndex;
     ExtendedCommandBlock genericCommandBlock;
     ControllerManualMode* controller;
+
+    QAbstractTableModel* __commandBankTable;
 };
 
 #endif // CONTROLLERBANKMANAGER_H
