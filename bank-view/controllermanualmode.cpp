@@ -24,7 +24,6 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
         s->addTransition(engagedPLCOff);
 
         connect(s,&QState::entered,this,[this](){
-            //!
             //! trigger read action
             emit requireReadData(AbstractAddress(STATUS_WORD),QVariant::fromValue(static_cast<MODBUS_WORD>(0)));
         });
@@ -38,16 +37,16 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
     connect(s1,&QState::exited,[this](){
         //!
         //! commit block if need
-        switch (commitBlockCache.mode) {
-        case DOWNLOAD:
+        switch (__commitBlock.mode) {
+        case CommitBlock::MODE_DOWNLOAD:
             //! Always write-in full-size
-            emit requireWriteData(AbstractAddress(DATA_BLOCK_HEAD),QVariant::fromValue(commandBlockCache));
+            emit requireWriteData(AbstractAddress(DATA_BLOCK_HEAD),QVariant::fromValue(__commandBlock));
             break;
         default:
             break;
         }
 
-        emit requireWriteData(AbstractAddress(COMMIT_BLOCK),QVariant::fromValue(commitBlockCache));
+        emit requireWriteData(AbstractAddress(COMMIT_BLOCK),QVariant::fromValue(__commitBlock));
         emit requireWriteData(AbstractAddress(RUN),QVariant::fromValue(true));//set Run on
     });
     //!
@@ -63,10 +62,10 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
     connect(s2,&QState::exited,[this](){
         //!
         //! read out block if need
-        switch (commitBlockCache.mode) {
-        case UPLOAD:
+        switch (__commitBlock.mode) {
+        case CommitBlock::MODE_UPLOAD:
             //! should read full size
-            emit requireReadData(AbstractAddress(DATA_BLOCK_HEAD),QVariant::fromValue(commandBlockCache));
+            emit requireReadData(AbstractAddress(DATA_BLOCK_HEAD),QVariant::fromValue(__commandBlock));
             break;
         default:
             break;
@@ -91,13 +90,13 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
 //!
 //! \brief ControllerManualMode::onMonitorBlockReply
 //! \param event
-//!
+//! intercept monitor block updating event
 void ControllerManualMode::onMonitorBlockReply(UpdateEvent *event)
 {
     switch (event->address) {
     case POS_COMMAND:
         //! keep polling monitor status
-        emit requireReadData(AbstractAddress(POS_COMMAND),QVariant::fromValue(monitorBlockCache));
+        emit requireReadData(AbstractAddress(POS_COMMAND),QVariant::fromValue(__monitorBlock));
         break;
     default:
         break;

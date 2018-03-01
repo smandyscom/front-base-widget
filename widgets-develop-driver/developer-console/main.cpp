@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
     size_t sz = sizeof(AbstractCommandBlock);//22bytes
     sz = sizeof(PosICommandBlock);//30bytes
     sz = sizeof(ZretCommandBlock);//38bytes
-    AbstractCommandBlock acb = {0,NOP,0,0,0,0,0};
+    AbstractCommandBlock acb = {0,BCT_NOP,0,0,0,0,0};
     PosICommandBlock pcb;
 
 

@@ -11,55 +11,7 @@ using namespace BaseLayer;
 #include <basicblocksdefinition.h>
 #include <QVariant>
 
-typedef quint16 CommitIndex ;
 
-
-struct CommitBlock
-{
-    enum CommitSelection : MODBUS_WORD
-    {
-        AXIS = 0,
-        CYLINDER = 1,
-        COMMAND_BLOCK = 2,
-    };
-    enum CommitMode : MODBUS_WORD
-    {
-        BLOCK_COMMAND=0,
-        DOWNLOAD = 15, //PLC<-HMI
-        UPLOAD = 16,   //PLC->HMI
-    };
-    CommitMode mode;
-    CommitSelection selection;
-    CommitIndex index;
-};
-Q_DECLARE_METATYPE(CommitBlock)
-
-#define MONITOR_BLOCK_FULL_OCCUPATION 10
-struct GenericMonitorBlock
-{
-    MODBUS_WORD reserved[10];
-};
-struct AxisMonitorBlock
-{
-    //!
-    //! \brief positionCommand
-    //! in 0.001mm
-    MODBUS_LONG positionCommand;
-    //!
-    //! \brief positionFeedback
-    //! in 0.001mm
-    MODBUS_LONG positionFeedback;
-    //!
-    //! \brief speedFeedback
-    //! in 0.001mm/sec
-    MODBUS_LONG speedFeedback;
-    //!
-    //! \brief torqueFeedback
-    //! in 0.01%
-    MODBUS_LONG torqueFeedback;
-};
-Q_DECLARE_METATYPE(AxisMonitorBlock)
-Q_DECLARE_METATYPE(GenericMonitorBlock)
 
 //!
 //! \brief The ControllerManualMode class
@@ -69,7 +21,7 @@ class ControllerManualMode : public QStateMachine
 {
     Q_OBJECT
 public:
-    enum ManualContext
+    enum ManualContext : quint32
     {
         STATUS_WORD=0x00000000,
         ENGAGED_PLC=0x00000000,
@@ -96,25 +48,25 @@ public:
 
     //!
     //! Data interfaces
-    void setCommitMode(CommitMode mode);
-    void setCommitSelection(CommitSelection selection);
+    void setCommitMode(CommitBlock::CommitMode mode);
+    void setCommitSelection(CommitBlock::CommitSelection selection);
     void setCommitIndex(CommitIndex index);
     //!
     //! \brief blockCache
     //! Mind alignment problem
 
-    void setCommandBlock(QVariant commandBlock)
+    void CommandBlock(ExtendedCommandBlock commandBlock)
     {
         //Value copy (memcopy?
-        commandBlockCache = commandBlock;
+        __commandBlock = commandBlock;
     }
-    QVariant readCommandBlock() const
+    ExtendedCommandBlock CommandBlock() const
     {
-        return QVariant::fromValue(commandBlockCache);
+        return __commandBlock;
     }
-    QVariant readMonitorBlock() const
+    AbstractMonitorBlock MonitorBlock() const
     {
-        return QVariant::fromValue(monitorBlockCache);
+        return __monitorBlock;
     }
 
 signals:
@@ -142,10 +94,10 @@ protected:
     //! Looping
     void onMonitorBlockReply(UpdateEvent* event);
 
-    GenericCommandBlock commandBlockCache;
-    GenericMonitorBlock monitorBlockCache;
+    ExtendedCommandBlock __commandBlock;
+    AbstractMonitorBlock __monitorBlock;
 
-    CommitBlock commitBlockCache;
+    CommitBlock __commitBlock;
 
     ModbusChannel* channel; //TODO
 };

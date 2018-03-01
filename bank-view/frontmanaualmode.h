@@ -8,6 +8,8 @@
 #include <controllermanualmode.h>
 
 #include <QVariant>
+#include <QListView>
+#include <QAbstractTableModel>
 
 namespace Ui {
 class FrontManaualMode;
@@ -18,7 +20,9 @@ class FrontManaualMode : public QWidget
     Q_OBJECT
 
 public:
-    explicit FrontManaualMode(QWidget *parent = 0);
+    explicit FrontManaualMode(QAbstractTableModel* wholeCommandBankModel,
+                              QAbstractTableModel* wholeAxisBankModel,
+                              QWidget *parent = 0);
     ~FrontManaualMode();
 signals:
     //!
@@ -31,14 +35,29 @@ signals:
     //! \param parameters
     //! Transmit parameters to Bank manager
     void bankParameterSet(QVariant parameters);
-public slots:
+    //!
+    //! \brief onAxisChanged
+    //! \param id
+    //! Triggered by combobox
+    void axisIdChanged(quint16 id);
 
+public slots:
+    //!
+    //! \brief onCommandBlockChanged
+    //! \param block
+    //! Inject by bank manager
+    void onCommandBlockChanged(ExtendedCommandBlock block);
+    //!
+    //! \brief onComboBoxAxisLoading
+    //! Loading combo box contents
+    void onComboBoxAxisLoading();
+    void onComboBoxCategroryLoading();
 
 protected slots:
     //!
     //! \brief onButtonBankSetClick
     //! Perform bank set related operations
-    void onButtonBankSetClick();
+    void onBankOperationPerformed();
     //!
     //! \brief onOperationPerform
     //!
@@ -47,11 +66,7 @@ protected slots:
     //! \brief onButtonReleased
     //! Feed stop
     void onOperationStopped();
-    //!
-    //! \brief onAxisChanged
-    //! \param id
-    //! Triggered by combobox
-    void onAxisChanged(quint16 id);
+
     //!
     //! \brief onFocusChanged
     //! \param old
@@ -62,14 +77,22 @@ protected slots:
     //! \brief onTimerTimeout
     //! Polling monitor status
     void onTimerTimeout();
+
+    void onComboBoxIndexChanged();
 protected:
-    GenericCommandBlock genericCommandBlock;
+    ExtendedCommandBlock __commandBlock;
     ControllerManualMode* controller;
 
     void setCommonParameters();
 private:
     Ui::FrontManaualMode *ui;
     QTimer* updateTimer;
+
+    //!
+    //! \brief wholeCommandBank
+    //!
+    QAbstractTableModel* __wholeCommandBankModel;
+
 };
 
 #endif // FRONTMANAUALMODE_H

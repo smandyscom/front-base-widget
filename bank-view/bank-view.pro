@@ -26,7 +26,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     ptpzrn_viewer.cpp \
-    manualpanel.cpp \
     modbussetupwidget.cpp \
     utilities.cpp \
     enumcomboboxdynamic.cpp \
@@ -38,12 +37,13 @@ SOURCES += \
     controllermanualmode.cpp \
     basicblocksdefinition.cpp \
     frontmanaualmode.cpp \
-    frontbankmanager.cpp
+    frontbankmanager.cpp \
+    controllerbankmanager.cpp \
+    junctionbankdatabase.cpp
 
 HEADERS += \
         bank-view_global.h \ 
     ptpzrn_viewer.h \
-    manualpanel.h \
     modbussetupwidget.h \
     utilities.h \
     enumcomboboxdynamic.h \
@@ -56,7 +56,9 @@ HEADERS += \
     controllermanualmode.h \
     basicblocksdefinition.h \
     frontmanaualmode.h \
-    frontbankmanager.h
+    frontbankmanager.h \
+    controllerbankmanager.h \
+    junctionbankdatabase.h
 
 unix {
     target.path = /usr/lib
@@ -65,7 +67,6 @@ unix {
 
 FORMS += \
     ptpzrn_viewer.ui \
-    manualpanel.ui \
     modbussetupwidget.ui \
     frontmanaualmode.ui \
     frontbankmanager.ui

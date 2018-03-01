@@ -27,6 +27,8 @@ public:
     explicit ModbusSetupWidget(QWidget *parent = 0);
     ~ModbusSetupWidget();
 
+    QModbusDevice Device() const {return __device;}
+
 private slots:
     void onStateChanged(QModbusDevice::State state);
     void onErrorOccured(QModbusDevice::Error error);
