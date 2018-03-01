@@ -241,7 +241,83 @@ public:
 Q_DECLARE_METATYPE(FeedCommandBlock)
 
 
+typedef quint16 CommitIndex ;
 
+
+struct CommitBlock
+{
+    enum CommitSelection : MODBUS_WORD
+    {
+        SELECTION_AXIS = 0,
+        SELECTION_CYLINDER = 1,
+        SELECTION_COMMAND_BLOCK = 2,
+    };
+    enum CommitMode : MODBUS_WORD
+    {
+        MODE_COMMAND_BLOCK=0,
+        MODE_DOWNLOAD = 15, //PLC<-HMI
+        MODE_UPLOAD = 16,   //PLC->HMI
+    };
+    CommitMode mode;
+    CommitSelection selection;
+    CommitIndex index;
+};
+Q_DECLARE_METATYPE(CommitBlock)
+
+#define MONITOR_BLOCK_FULL_OCCUPATION 10
+class AbstractMonitorBlock
+{
+protected:
+    MODBUS_WORD reserved[MONITOR_BLOCK_FULL_OCCUPATION];
+
+    //!
+    //! \brief Length
+    //! in mm
+    //! TODOS , query axis parameter table , get right ratio
+    float Length() const
+    {
+        return 0.001;
+    }
+    //!
+    //! \brief Time
+    //! in sec
+    float Time() const
+    {
+        return 0.001;
+    }
+    //!
+    //! \brief Torque
+    //! \return
+    //! in Percentage
+    float TorquePercentage() const
+    {
+        return 0.01;
+    }
+
+};
+Q_DECLARE_METATYPE(AbstractMonitorBlock)
+class AxisMonitorBlock : public AbstractMonitorBlock
+{
+public:
+    //!
+    //! \brief positionCommand
+    //! in 0.001mm
+    float PositionCommand() const { return reinterpret_cast<const MODBUS_LONG*>(reserved)[0] * Length();}
+
+    //!
+    //! \brief positionFeedback
+    //! in 0.001mm
+    float PositionFeedback() const {return reinterpret_cast<const MODBUS_LONG*>(reserved)[1] * Length();}
+    //!
+    //! \brief speedFeedback
+    //! in 0.001mm/sec
+    float SpeedFeedback() const {return reinterpret_cast<const MODBUS_LONG*>(reserved)[2] * Length();}
+    //!
+    //! \brief torqueFeedback
+    //! in 0.01%
+    float TorqueFeedback() const {return reinterpret_cast<const MODBUS_LONG*>(reserved)[3] * TorquePercentage();}
+};
+Q_DECLARE_METATYPE(AxisMonitorBlock)
 
 
 #endif // BASICBLOCKSDEFINITION_H
