@@ -2,13 +2,13 @@
 #include <QDebug>
 ModbusSerializedClient::ModbusSerializedClient(QModbusClient *driver, int serverAddress, QObject *parent) :
     QObject(parent),
-    driverReference(driver),
-    serverAddress(serverAddress)
+    __driver(driver),
+    __serverAddress(serverAddress)
 {
-    timer = new QTimer(this);
-    connect(timer,SIGNAL(timeout()),this,SLOT(onPopRequest()));
-    timer->start();
-    isProcessing = false;
+    __timer = new QTimer(this);
+    connect(__timer,SIGNAL(timeout()),this,SLOT(onPopRequest()));
+    connect(__driver,SIGNAL(stateChanged(QModbusDevice::State)),this,SLOT(onDriverStateChanged(QModbusDevice::State)));
+    __isProcessing = false;
 }
 
 //!
@@ -16,23 +16,23 @@ ModbusSerializedClient::ModbusSerializedClient(QModbusClient *driver, int server
 //! this function would be poll repeatly
 void ModbusSerializedClient::onPopRequest()
 {
-    if(requestQueue.isEmpty() || isProcessing)
+    if(requestQueue.isEmpty() || __isProcessing)
         return;
 
     //!
     //! Lock-up processor
     //!
-    isProcessing = true;
+    __isProcessing = true;
 
     //request = const_cast<ModbusRequest*>(requestQueue.head());
 
     QModbusReply* reply = nullptr;
     switch (requestQueue.head()->second) {
     case READ:
-        reply = driverReference->sendReadRequest(requestQueue.head()->first,serverAddress);
+        reply = __driver->sendReadRequest(requestQueue.head()->first,__serverAddress);
         break;
     case WRITE:
-        reply = driverReference->sendWriteRequest(requestQueue.head()->first,serverAddress);
+        reply = __driver->sendWriteRequest(requestQueue.head()->first,__serverAddress);
         break;
     case READ_WRITE:
         //reserved
@@ -61,11 +61,26 @@ void ModbusSerializedClient::onPopRequest()
             break;
         }//switch
 
-        isProcessing = false;
+        __isProcessing = false;
     });
 }
 
 void ModbusSerializedClient::pushRequest(const ModbusRequest *request)
 {
     requestQueue.enqueue(request);
+}
+
+void ModbusSerializedClient::onDriverStateChanged(QModbusDevice::State state)
+{
+    switch (state) {
+    case QModbusDevice::ConnectedState:
+        __timer->start();
+        break;
+    case QModbusDevice::ConnectionError:
+    case QModbusDevice::ConnectingState:
+        __timer->stop();
+        break;
+    default:
+        break;
+    }
 }

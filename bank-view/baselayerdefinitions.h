@@ -43,10 +43,6 @@ inline bool operator==(const AbstractAddress& lhp,const AbstractAddress& rhp)
 {
     return lhp.getAddress() == rhp.getAddress();
 }
-inline uint qHash(const AbstractAddress &key, uint seed)
-{
-    return key.getAddress();
-}
 inline bool operator !=(const AbstractAddress& lhp,const AbstractAddress& rhp)
 {
     return !(lhp==rhp);
@@ -134,10 +130,11 @@ public:
         VALUE_UPDATED
     };
 
-    ValueTransition(const AbstractAddress address,Detection action,QObject *parent = nullptr):
-    address(address.getAddress()),
-    bitMask(address.toBitwiseMask()),
-    detection(action){}
+    ValueTransition(const AbstractAddress address,Detection action):
+        address(address.getAddress()),
+        bitMask(address.toBitwiseMask()),
+        detection(action)
+    {}
 
 protected:
     virtual bool eventTest(QEvent *event);

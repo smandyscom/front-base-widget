@@ -23,9 +23,7 @@ class ModbusChannel : public QObject
 
     Q_OBJECT
 public:
-    explicit ModbusChannel(const ModbusSerializedClient* clientList[],
-                           const int channelCounts,
-                           QObject *parent = nullptr);
+
 
     //!1
     //! Accessing interface
@@ -49,7 +47,9 @@ public:
     //! \brief getInstance
     //! \return
     //! Singleton
-    static ModbusChannel* getInstance();
+    static ModbusChannel* Instance();
+    static void Channels(QList<ModbusSerializedClient*> value);
+    static QList<ModbusSerializedClient*> Channels();
 
 signals:
     //!
@@ -67,12 +67,6 @@ protected slots:
     void onRequestProcessed(QModbusDataUnit result);
 
 protected:
-    //!
-    //! \brief dataMap
-    //! Build Address-Value pair , type info included in QVariant
-    //QMap<ModbusDriverAddress,QVariant> dataMap;
-
-
 
     QModbusDataUnit preparedReadRequest;
     QModbusDataUnit preparedWriteRequest;
@@ -93,9 +87,12 @@ protected:
     //! \param source
     //! update both cache and variant
     void writeData(ModbusDriverAddress modbusAddress, const void *source, size_t count);
-private:
-    static ModbusChannel* instance;
 
+    explicit ModbusChannel(QList<ModbusSerializedClient*> clientList,
+                           QObject *parent = nullptr);
+
+    static ModbusChannel* __instance;
+    static QList<ModbusSerializedClient*> __channels;
 };
 
 #endif // CHANNEL_H

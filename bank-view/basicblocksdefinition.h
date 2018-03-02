@@ -244,8 +244,9 @@ Q_DECLARE_METATYPE(FeedCommandBlock)
 typedef quint16 CommitIndex ;
 
 
-struct CommitBlock
+class CommitBlock
 {
+public:
     enum CommitSelection : MODBUS_WORD
     {
         SELECTION_AXIS = 0,
@@ -258,9 +259,16 @@ struct CommitBlock
         MODE_DOWNLOAD = 15, //PLC<-HMI
         MODE_UPLOAD = 16,   //PLC->HMI
     };
-    CommitMode mode;
-    CommitSelection selection;
-    CommitIndex index;
+    void Mode(CommitMode value) {__mode = value;}
+    CommitMode Mode() const {return __mode;}
+    void Selection(CommitSelection value) {__selection = value;}
+    CommitSelection Selection() const {return __selection;}
+    void Index(CommitIndex value) {__index = value;}
+    CommitIndex Index() const {return __index;}
+protected:
+    CommitMode __mode;
+    CommitSelection __selection;
+    CommitIndex __index;
 };
 Q_DECLARE_METATYPE(CommitBlock)
 

@@ -299,7 +299,7 @@ p, li { white-space: pre-wrap; }
       <x>10</x>
       <y>10</y>
       <width>311</width>
-      <height>141</height>
+      <height>333</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2">
@@ -517,12 +517,12 @@ p, li { white-space: pre-wrap; }
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QComboBox" name="comboBoxCategrory"/>
+      <widget class="QComboBox" name="comboBoxRegion"/>
      </item>
      <item row="0" column="1">
       <widget class="QLabel" name="label_24">
        <property name="text">
-        <string>Categrory</string>
+        <string>Region</string>
        </property>
       </widget>
      </item>

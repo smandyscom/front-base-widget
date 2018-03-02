@@ -11,6 +11,8 @@
 #include <QListView>
 #include <QAbstractTableModel>
 
+#include <junctionbankdatabase.h>
+
 namespace Ui {
 class FrontManaualMode;
 }
@@ -47,11 +49,7 @@ public slots:
     //! \param block
     //! Inject by bank manager
     void onCommandBlockChanged(ExtendedCommandBlock block);
-    //!
-    //! \brief onComboBoxAxisLoading
-    //! Loading combo box contents
-    void onComboBoxAxisLoading();
-    void onComboBoxCategroryLoading();
+
 
 protected slots:
     //!
@@ -81,6 +79,7 @@ protected slots:
     void onComboBoxIndexChanged();
 protected:
     ExtendedCommandBlock __commandBlock;
+    CommitBlock __commitOption;
     ControllerManualMode* controller;
 
     void setCommonParameters();

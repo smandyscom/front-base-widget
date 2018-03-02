@@ -30,16 +30,13 @@ SOURCES += \
     utilities.cpp \
     enumcomboboxdynamic.cpp \
     modbuschannel.cpp \
-    modbuscluster.cpp \
-    modbussegment.cpp \
     modbusserializedclient.cpp \
     baselayerdefinitions.cpp \
     controllermanualmode.cpp \
     basicblocksdefinition.cpp \
     frontmanaualmode.cpp \
-    frontbankmanager.cpp \
-    controllerbankmanager.cpp \
-    junctionbankdatabase.cpp
+    junctionbankdatabase.cpp \
+    controllerbanktransfer.cpp
 
 HEADERS += \
         bank-view_global.h \ 
@@ -50,15 +47,12 @@ HEADERS += \
     enumcomboboxgeneric.h \
     baselayerdefinitions.h \
     modbuschannel.h \
-    modbuscluster.h \
-    modbussegment.h \
     modbusserializedclient.h \
     controllermanualmode.h \
     basicblocksdefinition.h \
     frontmanaualmode.h \
-    frontbankmanager.h \
-    controllerbankmanager.h \
-    junctionbankdatabase.h
+    junctionbankdatabase.h \
+    controllerbanktransfer.h
 
 unix {
     target.path = /usr/lib
@@ -68,5 +62,4 @@ unix {
 FORMS += \
     ptpzrn_viewer.ui \
     modbussetupwidget.ui \
-    frontmanaualmode.ui \
-    frontbankmanager.ui
+    frontmanaualmode.ui

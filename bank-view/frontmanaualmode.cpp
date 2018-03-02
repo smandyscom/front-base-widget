@@ -5,9 +5,13 @@ FrontManaualMode::FrontManaualMode(QAbstractTableModel* wholeCommandBankModel,
                                    QAbstractTableModel* wholeAxisBankModel,
                                    QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::FrontManaualMode)
+    ui(new Ui::FrontManaualMode),
+    __wholeCommandBankModel(wholeCommandBankModel)
 {
     ui->setupUi(this);
+
+    //setup
+    __commitOption.Mode(CommitBlock::MODE_COMMAND_BLOCK);
 
     //!
     //! \brief connect
@@ -34,7 +38,7 @@ FrontManaualMode::FrontManaualMode(QAbstractTableModel* wholeCommandBankModel,
     //! setModel on combobox
     //! (AxisId,Region,AxisName)
     ui->comboBoxAxisName->setModel(wholeAxisBankModel);
-    ui->comboBoxAxisName->setModelColumn();//setup the visiable column
+    ui->comboBoxAxisName->setModelColumn(JunctionBankDatabase::ATH_NAME);//setup the visiable column
     ui->comboBoxAxisName->setView(new QListView(ui->comboBoxAxisName));
 
 }
@@ -49,21 +53,21 @@ FrontManaualMode::~FrontManaualMode()
 void FrontManaualMode::onBankOperationPerformed()
 {
     auto button = qobject_cast<QPushButton*>(sender());
-    switch (button->objectName()) {
-    case "pushButtonCoordinateSet":
+
+    if(button==ui->pushButtonCoordinateSet)
+    {
         emit bankCoordinateSet(ui->textEditCoordinate->toPlainText().toFloat());
-        break;
-    case "pushButtonParameterSet":
+    }
+    else if(button == ui->pushButtonParameterSet)
+    {
         emit bankParameterSet(QVariant::fromValue(__commandBlock));
-        break;
-    case "pushButtonBankExecution":
+    }
+    else if(button == ui->pushButtonBankExecution)
+    {
         //! trigger the sequence
         //!  CommandBlock had been preseted by external unit
         controller->CommandBlock(__commandBlock);
         emit controller->operationTriggered();
-        break;
-    default:
-        break;
     }
 }
 
@@ -73,46 +77,40 @@ void FrontManaualMode::onBankOperationPerformed()
 //! 1. POSI
 //! 2. ZRET
 //! 3. STOP
-void FrontManaualMode::onOperationTriggered()
-{\
+void FrontManaualMode::onOperationPerform()
+{
     auto button = qobject_cast<QPushButton*>(sender());
     setCommonParameters(); //
 
-    switch (button->objectName()) {
-    case "pushButtonZret":
+    if(button == ui->pushButtonZret)
     {
         ZretCommandBlock* zcb = static_cast<ZretCommandBlock*>(&__commandBlock);
         zcb->Direction(ui->radioButtonForward);
         zcb->Method(DEC1_C_PULSE);
-        zcb->Offset(ui->textEditOffset->toPlainText());
+        zcb->Offset(ui->textEditOffset->toPlainText().toFloat());
         zcb->SpeedCreep(ui->textEditSpeedCreep->toPlainText().toFloat());
         zcb->SpeedAppoach(ui->textEditSpeedApproach->toPlainText().toFloat());
         zcb->CommandType(BCT_ZRET);
-        break;
     }
-    case "pushButtonPosition":
+    else if(button == ui->pushButtonPosition)
     {
         //setup coordiante
         PosICommandBlock* pcb = static_cast<PosICommandBlock*>(&__commandBlock);
         pcb->Coordinate(ui->textEditCoordinate->toPlainText().toFloat());
         pcb->IsAbsoluteMode(ui->radioButtonAbsolute->isChecked());
         pcb->CommandType(BCT_POS_I);
-        break;
     }
-    case "pushButtonFeedForward":
-    case "pushButtonFeedBackward":
+    else if(button == ui->pushButtonFeedForward ||
+            button == ui->pushButtonFeedBackward)
     {
         FeedCommandBlock* fcb = static_cast<FeedCommandBlock*>(&__commandBlock);
         fcb->Direction(button->objectName() == "pushButtonFeedForward");
         fcb->CommandType(BCT_FEED);
-        break;
-    }
-    default:
-        break;
     }
 
     //! trigger the sequence
     controller->CommandBlock(__commandBlock);
+    controller->CommitOption(__commitOption);
     emit controller->operationTriggered();
 }
 
@@ -129,10 +127,10 @@ void FrontManaualMode::setCommonParameters()
     //!
     //! Setup common parameters
     //! TODO , unsafe input
-    __commandBlock->Speed(ui->textEditSpeedReference->toPlainText().toFloat()); // to units/sec
-    __commandBlock->Acceralation(ui->textEditAcceralationTime->toPlainText().toFloat()); // to ms
-    __commandBlock->Deceralation(ui->textEditDeceralationTime->toPlainText().toFloat()); // to ms
-    __commandBlock->TorqueLimit(ui->textEditTorqueLimit->toPlainText().toFloat()); // to 0.01%
+    __commandBlock.Speed(ui->textEditSpeedReference->toPlainText().toFloat()); // to units/sec
+    __commandBlock.Acceralation(ui->textEditAcceralationTime->toPlainText().toFloat()); // to ms
+    __commandBlock.Deceralation(ui->textEditDeceralationTime->toPlainText().toFloat()); // to ms
+    __commandBlock.TorqueLimit(ui->textEditTorqueLimit->toPlainText().toFloat()); // to 0.01%
 
     //reset cancel request
     emit controller->requireWriteData(AbstractAddress(ControllerManualMode::CANCEL),QVariant::fromValue(false));
@@ -149,12 +147,13 @@ void FrontManaualMode::onFocusChanged(QWidget *old, QWidget *now)
 
 void FrontManaualMode::onTimerTimeout()
 {
-    const AxisMonitorBlock* amb = static_cast<const AxisMonitorBlock*>(&controller->MonitorBlock());
+    AbstractMonitorBlock mb = controller->MonitorBlock();
+    AxisMonitorBlock* amb = static_cast<AxisMonitorBlock*>(&mb);
 
-    ui->textBrowserPositionReference->setText(amb->PositionCommand());
-    ui->textBrowserPositionFeedback->setText(amb->PositionFeedback());
-    ui->textBrowserSpeedFeedback->setText(amb->SpeedFeedback());
-    ui->textBrowserTorqueFeedback->setText(amb->TorqueFeedback());
+    ui->textBrowserPositionReference->setText(QString::number(amb->PositionCommand()));
+    ui->textBrowserPositionFeedback->setText(QString::number(amb->PositionFeedback()));
+    ui->textBrowserSpeedFeedback->setText(QString::number(amb->SpeedFeedback()));
+    ui->textBrowserTorqueFeedback->setText(QString::number(amb->TorqueFeedback()));
 }
 
 void FrontManaualMode::onCommandBlockChanged(ExtendedCommandBlock block)
@@ -167,23 +166,24 @@ void FrontManaualMode::onCommandBlockChanged(ExtendedCommandBlock block)
 //!
 void FrontManaualMode::onComboBoxIndexChanged()
 {
-    auto comboBox = static_cast<QComboBox*>(sender());
+    auto* comboBox = static_cast<QComboBox*>(sender());
 
-    switch (comboBox->objectName()) {
-    case "comboBoxAxisName":
+    if(comboBox == ui->comboBoxAxisName)
+    {
+        QModelIndex currentSelection = comboBox->model()->index(comboBox->currentIndex(),JunctionBankDatabase::ATH_ID);
+        quint16 id = comboBox->model()->data(currentSelection).value<quint16>();
         //! inform the bank manager
-        emit axisIdChanged(comboBox->model()->data(comboBox->model()->index(comboBox->currentIndex(),0)).value<quint16>());
+        emit axisIdChanged(id);
         //! change base-object-id
         __commandBlock.ObjectId(id);
         //! change monitor axis id
         emit controller->requireWriteData(AbstractAddress(ControllerManualMode::AXIS_ADR),
                                           QVariant::fromValue(static_cast<MODBUS_WORD>(id)));
-        break;
-    case "comboBoxCategrory":
+    }
+    else if(comboBox == ui->comboBoxRegion)
+    {
         //TODO ,
         //auto table = static_cast<QAbstractTableModel*>(comboBox->model());
-
-    default:
-        break;
     }
+
 }

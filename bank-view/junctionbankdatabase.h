@@ -10,6 +10,10 @@
 //! Should be singleton
 class JunctionBankDatabase : public QObject
 {
+
+
+    Q_OBJECT
+public:
     enum AxisTableHeaders
     {
         ATH_ID,
@@ -45,8 +49,7 @@ class JunctionBankDatabase : public QObject
     };
     Q_ENUM(TableNames)
 
-    Q_OBJECT
-public:
+
     static JunctionBankDatabase* Instance();
     static void DatabaseName(QString value){ __databaseName = value;}
     static QString DatabaseName(){return __databaseName;}

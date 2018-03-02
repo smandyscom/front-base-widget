@@ -48,9 +48,8 @@ public:
 
     //!
     //! Data interfaces
-    void setCommitMode(CommitBlock::CommitMode mode);
-    void setCommitSelection(CommitBlock::CommitSelection selection);
-    void setCommitIndex(CommitIndex index);
+    void CommitOption(CommitBlock value) {__commitOption = value;}
+    CommitBlock CommitOption() const {return  __commitOption;}
     //!
     //! \brief blockCache
     //! Mind alignment problem
@@ -97,7 +96,7 @@ protected:
     ExtendedCommandBlock __commandBlock;
     AbstractMonitorBlock __monitorBlock;
 
-    CommitBlock __commitBlock;
+    CommitBlock __commitOption;
 
     ModbusChannel* channel; //TODO
 };

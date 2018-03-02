@@ -7,12 +7,15 @@
 #include <junctionbankdatabase.h>
 //!
 //! \brief The ControllerBankManager class
-//! Offered the UI of SQL VIEW , which combined by two table (Name tags and Values
-class ControllerBankManager : public QObject
+//! Charge the operation about transfer from/to PLC
+class ControllerBankTransfer : public QObject
 {
     Q_OBJECT
 public:
-    explicit ControllerBankManager(QObject *parent = nullptr);
+    explicit ControllerBankTransfer(QObject *parent = nullptr);
+
+    void GoalCount(int value) {__goalCount = value;}
+    int GoalCount() {return __goalCount;}
 public slots:
     //!
     //! \brief onUpdatedFromPLC
@@ -24,10 +27,12 @@ public slots:
     void onCommitToPlc();
 protected slots:
     void onOperationPerformed();
-private:
-    int currentIndex;
-    ExtendedCommandBlock genericCommandBlock;
-    ControllerManualMode* controller;
+protected:
+    int __currentIndex;
+    int __goalCount;
+    ExtendedCommandBlock __commandBlock;
+    CommitBlock __commitOption;
+    ControllerManualMode* __controller;
 
     QAbstractTableModel* __commandBankTable;
 };

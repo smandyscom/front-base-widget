@@ -29,3 +29,6 @@ JunctionBankDatabase* JunctionBankDatabase::Instance()
     if(__instance == nullptr)
         __instance = new JunctionBankDatabase(__databaseName);
 }
+
+JunctionBankDatabase* JunctionBankDatabase::__instance = nullptr;
+QString JunctionBankDatabase::__databaseName = "base.db";

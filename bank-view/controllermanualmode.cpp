@@ -13,7 +13,7 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
     //!
     //! \brief engagedPLCOff
     //! Common transition
-    ValueTransition* engagedPLCOff = new ValueTransition(AbstractAddress(ENGAGED_PLC),ValueTransition::BIT_STATE_OFF,this);
+    ValueTransition* engagedPLCOff = new ValueTransition(AbstractAddress(ENGAGED_PLC),ValueTransition::BIT_STATE_OFF);
     engagedPLCOff->setTargetState(s1);
     QList<QState*> states({s1,s2,s3});
     foreach (QState* s, states)
@@ -37,7 +37,7 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
     connect(s1,&QState::exited,[this](){
         //!
         //! commit block if need
-        switch (__commitBlock.mode) {
+        switch (__commitOption.Mode()) {
         case CommitBlock::MODE_DOWNLOAD:
             //! Always write-in full-size
             emit requireWriteData(AbstractAddress(DATA_BLOCK_HEAD),QVariant::fromValue(__commandBlock));
@@ -46,13 +46,13 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
             break;
         }
 
-        emit requireWriteData(AbstractAddress(COMMIT_BLOCK),QVariant::fromValue(__commitBlock));
+        emit requireWriteData(AbstractAddress(COMMIT_BLOCK),QVariant::fromValue(__commitOption));
         emit requireWriteData(AbstractAddress(RUN),QVariant::fromValue(true));//set Run on
     });
     //!
     //! s2
-    ValueTransition* doneOn = new ValueTransition(AbstractAddress(DONE),ValueTransition::BIT_STATE_ON,this);
-    ValueTransition* doneNotOn = new ValueTransition(AbstractAddress(DONE),ValueTransition::BIT_STATE_OFF,this);
+    ValueTransition* doneOn = new ValueTransition(AbstractAddress(DONE),ValueTransition::BIT_STATE_ON);
+    ValueTransition* doneNotOn = new ValueTransition(AbstractAddress(DONE),ValueTransition::BIT_STATE_OFF);
     doneOn->setTargetState(s3);
     doneNotOn->setTargetState(s2); //self transition
 
@@ -62,7 +62,7 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
     connect(s2,&QState::exited,[this](){
         //!
         //! read out block if need
-        switch (__commitBlock.mode) {
+        switch (__commitOption.Mode()) {
         case CommitBlock::MODE_UPLOAD:
             //! should read full size
             emit requireReadData(AbstractAddress(DATA_BLOCK_HEAD),QVariant::fromValue(__commandBlock));
@@ -76,8 +76,8 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
     });
     //!
     //! s3
-    ValueTransition* doneOff = new ValueTransition(AbstractAddress(DONE),ValueTransition::BIT_STATE_OFF,this);
-    ValueTransition* doneNotOff = new ValueTransition(AbstractAddress(DONE),ValueTransition::BIT_STATE_ON,this);
+    ValueTransition* doneOff = new ValueTransition(AbstractAddress(DONE),ValueTransition::BIT_STATE_OFF);
+    ValueTransition* doneNotOff = new ValueTransition(AbstractAddress(DONE),ValueTransition::BIT_STATE_ON);
 
     doneOff->setTargetState(s1);
     doneNotOff->setTargetState(s3); //self transition

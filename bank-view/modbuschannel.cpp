@@ -2,10 +2,10 @@
 #include <utilities.h>
 #include <QCoreApplication>
 
-ModbusChannel::ModbusChannel(const ModbusSerializedClient* channelList[], const int channelCounts, QObject *parent) :
+ModbusChannel::ModbusChannel(QList<ModbusSerializedClient *> channelList, QObject *parent) :
     QObject(parent)
 {
-    for(int i=0;i<channelCounts;i++){
+    for(int i=0;i<channelList.count();i++){
         channelCache.append(new quint16[USHRT_MAX]);
         channelGateWays.append(const_cast<ModbusSerializedClient*>(channelList[i]));
         //
@@ -72,7 +72,7 @@ void ModbusChannel::commit(ModbusDriverAddress address, const QVariant value)
 
     preparedWriteRequest.setStartAddress(address.getRegisterAddress());
     QVector<quint16> temp;
-    for(int i=0;i<sizeInWord;i++)
+    for(size_t i=0;i<sizeInWord;i++)
         temp.append(reinterpret_cast<const quint16*>(writeInData.data())[i]);
 
     preparedWriteRequest.setValues(temp);
@@ -145,3 +145,21 @@ void ModbusChannel::writeData(ModbusDriverAddress modbusAddress,const void* sour
            count);
 }
 
+ModbusChannel* ModbusChannel::Instance()
+{
+    if(__instance==nullptr)
+        __instance = new ModbusChannel(__channels);
+
+    return __instance;
+}
+void ModbusChannel::Channels(QList<ModbusSerializedClient *> value)
+{
+    ModbusChannel::__channels = value;
+}
+QList<ModbusSerializedClient*> ModbusChannel::Channels()
+{
+    return ModbusChannel::__channels;
+}
+
+ModbusChannel* ModbusChannel::__instance = nullptr;
+QList<ModbusSerializedClient*> ModbusChannel::__channels;
