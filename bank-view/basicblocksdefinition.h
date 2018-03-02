@@ -117,6 +117,19 @@ Q_DECLARE_METATYPE(AbstractCommandBlock)
 //! Define the fully occupied memory for all kind of command blocks
 class ExtendedCommandBlock : public AbstractCommandBlock
 {
+public:
+    //!
+    //! \brief setCoordinate
+    //! \param coordinateInMm
+    //!
+    void Coordinate1(float value)
+    {
+        __coord1Offset = value / Length();
+    }
+    float Coordinate1() const
+    {
+        return __coord1Offset * Length();
+    }
 protected:
     MODBUS_WORD __extendControlWord;
     MODBUS_WORD __reservedWord;
@@ -149,20 +162,7 @@ public:
     bool IsCheckReach() const
     {
         return (__extendControlWord & 0x02) > 0;
-    }
-
-    //!
-    //! \brief setCoordinate
-    //! \param coordinateInMm
-    //!
-    void Coordinate(float value)
-    {
-        __coord1Offset = value / Length();
-    }
-    float Coordinate() const
-    {
-        return __coord1Offset * Length();
-    }
+    }  
 };
 Q_DECLARE_METATYPE(PosICommandBlock)
 
@@ -198,11 +198,11 @@ public:
     }
     void Offset(float value)
     {
-        __coord1Offset = value / Length();
+        Coordinate1(value);
     }
     float Offset() const
     {
-        return __coord1Offset * Length();
+        return Coordinate1();
     }
     void SpeedCreep(float value)
     {

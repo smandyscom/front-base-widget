@@ -26,31 +26,6 @@ public:
                               QAbstractTableModel* wholeAxisBankModel,
                               QWidget *parent = 0);
     ~FrontManaualMode();
-signals:
-    //!
-    //! \brief bankCoordinateSet
-    //! \param coordinate
-    //! Transmit parameters to Bank manager
-    void bankCoordinateSet(float coordinate);
-    //!
-    //! \brief bankParameterSet
-    //! \param parameters
-    //! Transmit parameters to Bank manager
-    void bankParameterSet(QVariant parameters);
-    //!
-    //! \brief onAxisChanged
-    //! \param id
-    //! Triggered by combobox
-    void axisIdChanged(quint16 id);
-
-public slots:
-    //!
-    //! \brief onCommandBlockChanged
-    //! \param block
-    //! Inject by bank manager
-    void onCommandBlockChanged(ExtendedCommandBlock block);
-
-
 protected slots:
     //!
     //! \brief onButtonBankSetClick
@@ -80,17 +55,16 @@ protected slots:
 protected:
     ExtendedCommandBlock __commandBlock;
     CommitBlock __commitOption;
-    ControllerManualMode* controller;
+    ControllerManualMode* __controller;
 
     void setCommonParameters();
-private:
-    Ui::FrontManaualMode *ui;
-    QTimer* updateTimer;
 
-    //!
-    //! \brief wholeCommandBank
-    //!
-    QAbstractTableModel* __wholeCommandBankModel;
+
+    Ui::FrontManaualMode *ui;
+    QTimer* __timer;
+
+    QModelIndex SelectedRowIndex() const { return ui->tableViewCommandBlock->selectionModel()->selectedRows().first();}
+    QAbstractTableModel* CommandBlockTable() const {return ui->tableViewCommandBlock->model();}
 
 };
 

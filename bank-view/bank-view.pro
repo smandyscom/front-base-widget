@@ -36,7 +36,9 @@ SOURCES += \
     basicblocksdefinition.cpp \
     frontmanaualmode.cpp \
     junctionbankdatabase.cpp \
-    controllerbanktransfer.cpp
+    controllerbanktransfer.cpp \
+    tablemodelcommandblock.cpp \
+    tablemodelaxis.cpp
 
 HEADERS += \
         bank-view_global.h \ 
@@ -52,7 +54,9 @@ HEADERS += \
     basicblocksdefinition.h \
     frontmanaualmode.h \
     junctionbankdatabase.h \
-    controllerbanktransfer.h
+    controllerbanktransfer.h \
+    tablemodelcommandblock.h \
+    tablemodelaxis.h
 
 unix {
     target.path = /usr/lib
