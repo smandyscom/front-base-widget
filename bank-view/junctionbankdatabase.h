@@ -28,20 +28,7 @@ public:
         ATH_COMMENT,
     };
     Q_ENUM(AxisTableHeaders)
-    enum CommandBlockTableHeaders
-    {
-        CBT_AXIS_ID,
-        CBT_BANK_ID,
-        CBT_NAME,
-        CBT_IS_ABS,
-        CBT_COORDIANTE,
-        CBT_SPEED,
-        CBT_ACCERALATION,
-        CBT_DCCERALATION,
-        CBT_TORQUE_LIMIT,
-        CBT_COMMENT,
-    };
-    Q_ENUM(CommandBlockTableHeaders)
+
     enum TableNames
     {
         WHOLE_AXIS,
