@@ -17,6 +17,12 @@ enum BlockCommandType : MODBUS_WORD
 
 class AbstractCommandBlock
 {
+protected:
+    enum ControlBit
+    {
+        IS_PARA_SETTED,
+        IS_RESET_POS_REFERENCE,
+    };
 public:
     void ObjectId(MODBUS_WORD value)
     {
@@ -106,10 +112,21 @@ protected:
     //! \return
     //! in Percentage
     float TorquePercentage() const
-    { return 0.01;
+    {
+        return 0.01;
     }
 
-
+    void ControlWord(int bitIndex,bool value)
+    {
+        if(value)
+            __controlWord |= (0x01 << bitIndex);
+        else
+            __controlWord &= ~(0x01 << bitIndex);
+    }
+    bool ControlWord(int bitIndex) const
+    {
+        return (__controlWord & (0x01 << bitIndex)) > 0;
+    }
 };
 Q_DECLARE_METATYPE(AbstractCommandBlock)
 //!
@@ -122,14 +139,40 @@ public:
     //! \brief setCoordinate
     //! \param coordinateInMm
     //!
-    void Coordinate1(float value)
+    void Coordinate1(float value){ __coord1Offset = value / Length();}
+    float Coordinate1() const{ return __coord1Offset * Length();}
+
+    void Coordinate2(float value) { __coord2SpeedCreep = value/Length();}
+    float Coordinate2() const {return __coord2SpeedCreep * Length();}
+
+    void Coordinate3(float value) { __coord3SpeedApproach = value / Length();}
+    float Coordinate3() const {return __coord3SpeedApproach * Length();}
+
+    //!
+    //! \brief ExtensionControlWord
+    //! \param bitIndex
+    //! \param value
+    //! definition would be varied by different child
+    void ExtensionControlWord(int bitIndex,bool value)
     {
-        __coord1Offset = value / Length();
+        if(value)
+            __extendControlWord |= (0x01 << bitIndex);
+        else
+            __extendControlWord &= ~(0x01 << bitIndex);
     }
-    float Coordinate1() const
+    bool ExtensionControlWord(int bitIndex) const
     {
-        return __coord1Offset * Length();
+        return (__extendControlWord & (0x01 << bitIndex)) > 0;
     }
+    void ReservedWord(MODBUS_WORD value)
+    {
+        __reservedWord = value;
+    }
+    MODBUS_WORD ReservedWord() const
+    {
+        return __reservedWord;
+    }
+
 protected:
     MODBUS_WORD __extendControlWord;
     MODBUS_WORD __reservedWord;
@@ -140,28 +183,29 @@ protected:
 Q_DECLARE_METATYPE(ExtendedCommandBlock)
 class PosICommandBlock : public ExtendedCommandBlock
 {
-public:
-    void IsAbsoluteMode(bool isAbsolute)
+protected:
+    enum ExtendControlBit
     {
-        if(isAbsolute)
-            __extendControlWord |= 0x01;
-        else
-            __extendControlWord &= ~0x01;
+        BIT_0_IS_ABSOLUTE,
+        BIT_1_IS_CHECK_REACH,
+    };
+public:
+
+    void IsAbsoluteMode(bool value)
+    {
+        ExtensionControlWord(BIT_0_IS_ABSOLUTE,value);
     }
     bool IsAbsoluteMode() const
     {
-        return (__extendControlWord & 0x01) > 0;
+        return ExtendControlBit(BIT_0_IS_ABSOLUTE);
     }
-    void IsCheckReach(bool isCheck)
+    void IsCheckReach(bool value)
     {
-        if(isCheck)
-            __extendControlWord |= 0x02;
-        else
-            __extendControlWord &= ~0x02;
+        ExtensionControlWord(BIT_1_IS_CHECK_REACH,value);
     }
     bool IsCheckReach() const
     {
-        return (__extendControlWord & 0x02) > 0;
+        return ExtensionControlWord(BIT_1_IS_CHECK_REACH);
     }  
 };
 Q_DECLARE_METATYPE(PosICommandBlock)
@@ -172,29 +216,33 @@ enum ZretMethods : MODBUS_WORD
 };
 class ZretCommandBlock : public ExtendedCommandBlock
 {
+protected:
+    enum ExtendControlBit
+    {
+        //! 1:Forward/0:Backward
+        BIT_0_DIRECTION,
+    };
 public:
+
     //!
     //! \brief Direction
     //! \param isForward
     //! True : forward
-    void Direction(bool isForward)
+    void Direction(bool value)
     {
-        if(isForward)
-            __extendControlWord |= 0x01;
-        else
-            __extendControlWord &= ~0x01;
+        ExtensionControlWord(BIT_0_DIRECTION,value);
     }
     bool Direction() const
     {
-        return (__extendControlWord & 0x01) > 0;
+        return ExtensionControlWord(BIT_0_DIRECTION);
     }
     void Method(ZretMethods value)
     {
-        __reservedWord = value;
+        ReservedWord(value);
     }
     ZretMethods Method() const
     {
-        return ZretMethods(__reservedWord);
+        return ZretMethods(ReservedWord());
     }
     void Offset(float value)
     {
@@ -206,36 +254,40 @@ public:
     }
     void SpeedCreep(float value)
     {
-        __coord2SpeedCreep = value / Length();
+        Coordinate2(value);
     }
     float SpeedCreep() const
     {
-        return __coord2SpeedCreep * Length();
+        return Coordinate2();
     }
     void SpeedAppoach(float value)
     {
-        __coord3SpeedApproach = value / Length();
+        Coordinate3(value);
     }
     float SpeedAppoach() const
     {
-        return __coord3SpeedApproach * Length();
+        return Coordinate3();
     }
 
 };
 Q_DECLARE_METATYPE(ZretCommandBlock)
 class FeedCommandBlock : public ExtendedCommandBlock
 {
-public:
-    void Direction(bool isForward)
+protected:
+    enum ExtendControlBit
     {
-        if(isForward)
-            __extendControlWord |= 0x01;
-        else
-            __extendControlWord &= ~0x01;
+        //! 1:Forward/0:Backward
+        BIT_0_DIRECTION,
+    };
+public:
+
+    void Direction(bool value)
+    {
+        ExtensionControlWord(BIT_0_DIRECTION,value);
     }
     bool Direction() const
     {
-        return (__extendControlWord & 0x01) > 0;
+        return ExtensionControlWord(BIT_0_DIRECTION);
     }
 };
 Q_DECLARE_METATYPE(FeedCommandBlock)
@@ -243,7 +295,9 @@ Q_DECLARE_METATYPE(FeedCommandBlock)
 
 typedef quint16 CommitIndex ;
 
-
+//!
+//! \brief The CommitBlock class
+//!
 class CommitBlock
 {
 public:

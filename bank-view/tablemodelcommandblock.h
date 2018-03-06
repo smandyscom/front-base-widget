@@ -11,26 +11,34 @@ class TableModelCommandBlock : public QSqlRelationalTableModel
 {
     Q_OBJECT
 public:
-    enum CommandBlockTableHeaders
+    //!
+    //! \brief The CommandBlockTableHeaders enum
+    //! Fully reflect WHOLE_COMMAND_BLOCKS
+    enum Headers
     {
-        CBT_AXIS_ID,
-        CBT_BANK_ID,
-        CBT_NAME,
-        CBT_IS_ABS,
-        CBT_COORDIANTE,
-        CBT_SPEED,
-        CBT_ACCERALATION,
-        CBT_DCCERALATION,
-        CBT_TORQUE_LIMIT,
-        CBT_COMMENT,
+        COMMAND_BLOCK_ID,
+        COMMAND_TYPE,
+        AXIS_ID,
+        NAME,
+        EXT_CONTROL_BIT_0,
+        COORD1,
+        SPEED,
+        ACC_TIME,
+        DEC_TIME,
+        TORQUE_LIMIT,
+        COMMENT,
+        IS_RESET_POS_R,
+        RESERVED_WORD,
+        COORD2,
+        COORD3,
     };
-    Q_ENUM(CommandBlockTableHeaders)
+    Q_ENUM(Headers)
 
-    explicit TableModelCommandBlock(QObject *parent = Q_NULLPTR,
+    explicit TableModelCommandBlock(QObject *parent = 0,
                                     QSqlDatabase db = QSqlDatabase());
 
     ExtendedCommandBlock Row(int rowIndex);
-    void Row(int rowIndex,ExtendedCommandBlock value);
+    void Row(int rowIndex, const ExtendedCommandBlock value);
 };
 
 #endif // TABLEMODELCOMMANDBLOCK_H

@@ -12,11 +12,15 @@
 #include <QAbstractTableModel>
 
 #include <junctionbankdatabase.h>
+#include <tablemodelcommandblock.h>
 
 namespace Ui {
 class FrontManaualMode;
 }
 
+//!
+//! \brief The FrontManaualMode class
+//!
 class FrontManaualMode : public QWidget
 {
     Q_OBJECT
@@ -63,8 +67,8 @@ protected:
     Ui::FrontManaualMode *ui;
     QTimer* __timer;
 
-    QModelIndex SelectedRowIndex() const { return ui->tableViewCommandBlock->selectionModel()->selectedRows().first();}
-    QAbstractTableModel* CommandBlockTable() const {return ui->tableViewCommandBlock->model();}
+    int SelectedRowIndex() const;// { return ui->tableViewCommandBlock->selectionModel()->selectedRows().first();}
+    TableModelCommandBlock* CommandBlockTable() const;// {return qobject_cast<TableModelCommandBlock*>(ui->tableViewCommandBlock->model());}
 
 };
 

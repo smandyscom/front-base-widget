@@ -58,7 +58,8 @@ void FrontManaualMode::onBankOperationPerformed()
 
     auto button = qobject_cast<QPushButton*>(sender());
 
-     //TODO , from model to ExtendCommandBlock
+     //from model to ExtendCommandBlock
+    __commandBlock = CommandBlockTable()->Row(SelectedRowIndex());
 
     if(button==ui->pushButtonCoordinateSet)
     {
@@ -80,7 +81,8 @@ void FrontManaualMode::onBankOperationPerformed()
         emit __controller->operationTriggered();
     }
 
-    //TODO , commit back to model
+    //commit back to model
+    CommandBlockTable()->Row(SelectedRowIndex(),__commandBlock);
 }
 
 //!
@@ -168,11 +170,6 @@ void FrontManaualMode::onTimerTimeout()
     ui->textBrowserTorqueFeedback->setText(QString::number(amb->TorqueFeedback()));
 }
 
-void FrontManaualMode::onCommandBlockChanged(ExtendedCommandBlock block)
-{
-    __commandBlock = block;
-}
-
 //!
 //! \brief FrontManaualMode::onComboBoxIndexChanged
 //!
@@ -198,4 +195,14 @@ void FrontManaualMode::onComboBoxIndexChanged()
         //auto table = static_cast<QAbstractTableModel*>(comboBox->model());
     }
 
+}
+
+int FrontManaualMode::SelectedRowIndex() const
+{
+    return ui->tableViewCommandBlock->selectionModel()->selectedRows().first().row();
+}
+
+TableModelCommandBlock* FrontManaualMode::CommandBlockTable() const
+{
+    return qobject_cast<TableModelCommandBlock*>(ui->tableViewCommandBlock->model());
 }
