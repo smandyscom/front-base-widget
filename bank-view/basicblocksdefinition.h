@@ -51,35 +51,35 @@ public:
     {
         return (__controlWord & 0x01) > 0;
     }
-    void Speed(float value)
+    void Speed(qreal value)
     {
         __speed = value / Length();
     }
-    float Speed() const
+    qreal Speed() const
     {
         return __speed * Length();
     }
-    void Acceralation(float value)
+    void Acceralation(qreal value)
     {
         __acceralation = value / Time();
     }
-    float Acceralation() const
+    qreal Acceralation() const
     {
         return __acceralation * Time();
     }
-    void Deceralation(float value)
+    void Deceralation(qreal value)
     {
         __deceralation = value / Time();
     }
-    float Deceralation() const
+    qreal Deceralation() const
     {
         return __deceralation * Time();
     }
-    void TorqueLimit(float value)
+    void TorqueLimit(qreal value)
     {
         __torqueLimit = value / TorquePercentage();
     }
-    float TorqueLimit() const
+    qreal TorqueLimit() const
     {
         return __torqueLimit * TorquePercentage();
     }
@@ -96,14 +96,14 @@ protected:
     //! \brief Length
     //! in mm
     //! TODOS , query axis parameter table , get right ratio
-    float Length() const
+    qreal Length() const
     {
         return 0.001;
     }
     //!
     //! \brief Time
     //! in sec
-    float Time() const
+    qreal Time() const
     {
         return 0.001;
     }
@@ -111,7 +111,7 @@ protected:
     //! \brief Torque
     //! \return
     //! in Percentage
-    float TorquePercentage() const
+    qreal TorquePercentage() const
     {
         return 0.01;
     }
@@ -139,14 +139,14 @@ public:
     //! \brief setCoordinate
     //! \param coordinateInMm
     //!
-    void Coordinate1(float value){ __coord1Offset = value / Length();}
-    float Coordinate1() const{ return __coord1Offset * Length();}
+    void Coordinate1(qreal value){ __coord1Offset = value / Length();}
+    qreal Coordinate1() const{ return __coord1Offset * Length();}
 
-    void Coordinate2(float value) { __coord2SpeedCreep = value/Length();}
-    float Coordinate2() const {return __coord2SpeedCreep * Length();}
+    void Coordinate2(qreal value) { __coord2SpeedCreep = value/Length();}
+    qreal Coordinate2() const {return __coord2SpeedCreep * Length();}
 
-    void Coordinate3(float value) { __coord3SpeedApproach = value / Length();}
-    float Coordinate3() const {return __coord3SpeedApproach * Length();}
+    void Coordinate3(qreal value) { __coord3SpeedApproach = value / Length();}
+    qreal Coordinate3() const {return __coord3SpeedApproach * Length();}
 
     //!
     //! \brief ExtensionControlWord
@@ -244,27 +244,27 @@ public:
     {
         return ZretMethods(ReservedWord());
     }
-    void Offset(float value)
+    void Offset(qreal value)
     {
         Coordinate1(value);
     }
-    float Offset() const
+    qreal Offset() const
     {
         return Coordinate1();
     }
-    void SpeedCreep(float value)
+    void SpeedCreep(qreal value)
     {
         Coordinate2(value);
     }
-    float SpeedCreep() const
+    qreal SpeedCreep() const
     {
         return Coordinate2();
     }
-    void SpeedAppoach(float value)
+    void SpeedAppoach(qreal value)
     {
         Coordinate3(value);
     }
-    float SpeedAppoach() const
+    qreal SpeedAppoach() const
     {
         return Coordinate3();
     }
@@ -336,14 +336,14 @@ protected:
     //! \brief Length
     //! in mm
     //! TODOS , query axis parameter table , get right ratio
-    float Length() const
+    qreal Length() const
     {
         return 0.001;
     }
     //!
     //! \brief Time
     //! in sec
-    float Time() const
+    qreal Time() const
     {
         return 0.001;
     }
@@ -351,7 +351,7 @@ protected:
     //! \brief Torque
     //! \return
     //! in Percentage
-    float TorquePercentage() const
+    qreal TorquePercentage() const
     {
         return 0.01;
     }
@@ -364,20 +364,20 @@ public:
     //!
     //! \brief positionCommand
     //! in 0.001mm
-    float PositionCommand() const { return reinterpret_cast<const MODBUS_LONG*>(reserved)[0] * Length();}
+    qreal PositionCommand() const { return reinterpret_cast<const MODBUS_LONG*>(reserved)[0] * Length();}
 
     //!
     //! \brief positionFeedback
     //! in 0.001mm
-    float PositionFeedback() const {return reinterpret_cast<const MODBUS_LONG*>(reserved)[1] * Length();}
+    qreal PositionFeedback() const {return reinterpret_cast<const MODBUS_LONG*>(reserved)[1] * Length();}
     //!
     //! \brief speedFeedback
     //! in 0.001mm/sec
-    float SpeedFeedback() const {return reinterpret_cast<const MODBUS_LONG*>(reserved)[2] * Length();}
+    qreal SpeedFeedback() const {return reinterpret_cast<const MODBUS_LONG*>(reserved)[2] * Length();}
     //!
     //! \brief torqueFeedback
     //! in 0.01%
-    float TorqueFeedback() const {return reinterpret_cast<const MODBUS_LONG*>(reserved)[3] * TorquePercentage();}
+    qreal TorqueFeedback() const {return reinterpret_cast<const MODBUS_LONG*>(reserved)[3] * TorquePercentage();}
 };
 Q_DECLARE_METATYPE(AxisMonitorBlock)
 

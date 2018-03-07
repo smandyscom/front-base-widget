@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>983</width>
-    <height>708</height>
+    <width>1055</width>
+    <height>797</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,9 +19,15 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>961</width>
-      <height>641</height>
+      <width>1041</width>
+      <height>741</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
     </property>
     <property name="layoutDirection">
      <enum>Qt::LeftToRight</enum>
@@ -61,7 +67,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>983</width>
+     <width>1055</width>
      <height>21</height>
     </rect>
    </property>

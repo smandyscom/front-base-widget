@@ -4,14 +4,13 @@
 #include <QWidget>
 #include <QModbusDevice>
 #include <QStandardItemModel>
-#include <bank-view_global.h>
 #include <enumcomboboxgeneric.h>
 
 namespace Ui {
 class ModbusSetupWidget;
 }
 
-class BANKVIEWSHARED_EXPORT ModbusSetupWidget : public QWidget
+class  ModbusSetupWidget : public QWidget
 {
     Q_OBJECT
 

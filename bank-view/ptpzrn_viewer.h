@@ -5,13 +5,11 @@
 #include <QSqlDatabase>
 #include <QSqlRelationalTableModel>
 
-#include <bank-view_global.h>
-
 namespace Ui {
 class ptpzrn_viewer;
 }
 
-class BANKVIEWSHARED_EXPORT ptpzrn_viewer : public QWidget
+class ptpzrn_viewer : public QWidget
 {
     Q_OBJECT
 

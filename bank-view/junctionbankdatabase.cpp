@@ -20,11 +20,13 @@ void JunctionBankDatabase::onInitialize()
         return;
 
     //! Prepared models
-    __axisTable = new QSqlTableModel(this);
+    __axisTable = new QSqlRelationalTableModel(this);
+    __axisTable->setEditStrategy(QSqlTableModel::OnManualSubmit);
     __axisTable->setTable(QVariant::fromValue(WHOLE_AXIS).value<QString>());
     __axisTable->select();//engaged
 
-    __commandBlockTable = new QSqlTableModel(this);
+    __commandBlockTable = new QSqlRelationalTableModel(this);
+    __commandBlockTable->setEditStrategy(QSqlTableModel::OnManualSubmit);
     __commandBlockTable->setTable(QVariant::fromValue(WHOLE_COMMAND_BLOCKS).value<QString>());
     __commandBlockTable->select();//engaged
 

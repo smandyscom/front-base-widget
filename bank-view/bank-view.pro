@@ -4,14 +4,14 @@
 #
 #-------------------------------------------------
 
-QT       += core gui widgets sql serialbus serialport
-
+QT       += core gui sql widgets serialbus serialport
+#greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 #QT       -= gui
 
 TARGET = bank-view
 TEMPLATE = app
 
-DEFINES += BANKVIEW_LIBRARY
+#DEFINES += BANKVIEW_LIBRARY
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked as deprecated (the exact warnings
@@ -43,7 +43,6 @@ SOURCES += \
     main.cpp
 
 HEADERS += \
-        bank-view_global.h \ 
     ptpzrn_viewer.h \
     modbussetupwidget.h \
     utilities.h \

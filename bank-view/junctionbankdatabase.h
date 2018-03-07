@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QSqlDatabase>
-#include <QSqlTableModel>
+#include <QSqlRelationalTableModel>
 #include <QAbstractTableModel>
 #include <QFileInfo>
 #include <QDir>

@@ -2,12 +2,13 @@
 #define TABLEMODELCOMMANDBLOCK_H
 
 #include <QObject>
-#include <QSqlRelationalTableModel>
+#include <QSqlTableModel>
 #include <basicblocksdefinition.h>
 //!
 //! \brief The TableModelCommandBlock class
 //! Define how to convert row to/from ExtendCommandBlock
-class TableModelCommandBlock : public QSqlRelationalTableModel
+//! Decoration mode
+class TableModelCommandBlock : public QSqlTableModel
 {
     Q_OBJECT
 public:
@@ -16,7 +17,7 @@ public:
     //! Fully reflect WHOLE_COMMAND_BLOCKS
     enum Headers
     {
-        COMMAND_BLOCK_ID,
+        COMMAND_BLOCK_ID = 0,
         COMMAND_TYPE,
         AXIS_ID,
         NAME,
@@ -34,11 +35,12 @@ public:
     };
     Q_ENUM(Headers)
 
-    explicit TableModelCommandBlock(QObject *parent = 0,
-                                    QSqlDatabase db = QSqlDatabase());
+    explicit TableModelCommandBlock(QSqlTableModel* instance);
 
     ExtendedCommandBlock Row(int rowIndex);
     void Row(int rowIndex, const ExtendedCommandBlock value);
+protected:
+    QSqlTableModel* __instance;
 };
 
 #endif // TABLEMODELCOMMANDBLOCK_H

@@ -9,7 +9,7 @@
 
 #include <QVariant>
 #include <QListView>
-#include <QAbstractTableModel>
+#include <QSqlTableModel>
 
 #include <junctionbankdatabase.h>
 #include <tablemodelcommandblock.h>
@@ -26,8 +26,8 @@ class FrontManaualMode : public QWidget
     Q_OBJECT
 
 public:
-    explicit FrontManaualMode(QAbstractTableModel* wholeCommandBankModel,
-                              QAbstractTableModel* wholeAxisBankModel,
+    explicit FrontManaualMode(QSqlTableModel* wholeCommandBankModel,
+                              QSqlTableModel* wholeAxisBankModel,
                               QWidget *parent = 0);
     ~FrontManaualMode();
 protected slots:
@@ -67,9 +67,11 @@ protected:
     Ui::FrontManaualMode *ui;
     QTimer* __timer;
 
-    int SelectedRowIndex() const;// { return ui->tableViewCommandBlock->selectionModel()->selectedRows().first();}
-    TableModelCommandBlock* CommandBlockTable() const;// {return qobject_cast<TableModelCommandBlock*>(ui->tableViewCommandBlock->model());}
+    int SelectedRowIndex() const;
+    TableModelCommandBlock* __commandBlockTable;
 
+private slots:
+    void on_pushButton_clicked();
 };
 
 #endif // FRONTMANAUALMODE_H

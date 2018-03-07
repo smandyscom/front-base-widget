@@ -1,8 +1,8 @@
 #include "frontmanaualmode.h"
 #include "ui_frontmanaualmode.h"
 
-FrontManaualMode::FrontManaualMode(QAbstractTableModel* wholeCommandBankModel,
-                                   QAbstractTableModel* wholeAxisBankModel,
+FrontManaualMode::FrontManaualMode(QSqlTableModel *wholeCommandBankModel,
+                                   QSqlTableModel *wholeAxisBankModel,
                                    QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FrontManaualMode)
@@ -47,6 +47,8 @@ FrontManaualMode::FrontManaualMode(QAbstractTableModel* wholeCommandBankModel,
     ui->tableViewCommandBlock->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableViewCommandBlock->setModel(wholeCommandBankModel);
 
+    //decorated instance
+    __commandBlockTable = new TableModelCommandBlock(wholeCommandBankModel);
     //!
     connect(ui->comboBoxAxisName,SIGNAL(currentIndexChanged(int)),this,SLOT(onComboBoxIndexChanged()));
     connect(ui->comboBoxRegion,SIGNAL(currentIndexChanged(int)),this,SLOT(onComboBoxIndexChanged()));
@@ -70,7 +72,7 @@ void FrontManaualMode::onBankOperationPerformed()
     auto button = qobject_cast<QPushButton*>(sender());
 
      //from model to ExtendCommandBlock
-    __commandBlock = CommandBlockTable()->Row(SelectedRowIndex());
+    __commandBlock = __commandBlockTable->Row(SelectedRowIndex());
 
     if(button==ui->pushButtonCoordinateSet)
     {
@@ -92,8 +94,9 @@ void FrontManaualMode::onBankOperationPerformed()
         emit __controller->operationTriggered();
     }
 
-    //commit back to model
-    CommandBlockTable()->Row(SelectedRowIndex(),__commandBlock);
+    //write back to model
+    __commandBlockTable->Row(SelectedRowIndex(),__commandBlock);
+
 }
 
 //!
@@ -212,10 +215,19 @@ void FrontManaualMode::onComboBoxIndexChanged()
 
 int FrontManaualMode::SelectedRowIndex() const
 {
+    auto ref = ui->tableViewCommandBlock->selectionModel()->selectedRows();
     return ui->tableViewCommandBlock->selectionModel()->selectedRows().first().row();
 }
 
-TableModelCommandBlock* FrontManaualMode::CommandBlockTable() const
+void FrontManaualMode::on_pushButton_clicked()
 {
-    return qobject_cast<TableModelCommandBlock*>(ui->tableViewCommandBlock->model());
+    auto table = qobject_cast<QSqlTableModel*>(ui->tableViewCommandBlock->model());
+    table->database().transaction();
+    if(table->submitAll())
+        table->database().commit();
+    else
+    {
+        table->revertAll();
+        table->database().rollback();
+    }
 }
