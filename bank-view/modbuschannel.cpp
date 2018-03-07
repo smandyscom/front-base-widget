@@ -5,10 +5,14 @@
 ModbusChannel::ModbusChannel(QList<ModbusSerializedClient *> channelList, QObject *parent) :
     QObject(parent)
 {
-    for(int i=0;i<channelList.count();i++){
+    //! initialize whole inner cache anyway
+    for(int i=0;i<CHANNEL_MAX_NUM;i++)
+    {
         channelCache.append(new quint16[USHRT_MAX]);
+    }
+    //! link
+    for(int i=0;i<channelList.count();i++){
         channelGateWays.append(const_cast<ModbusSerializedClient*>(channelList[i]));
-        //
         connect(channelList[i],&ModbusSerializedClient::requestDone,this,&ModbusChannel::onRequestProcessed);
     }
     preparedReadRequest.setRegisterType(QModbusDataUnit::HoldingRegisters);

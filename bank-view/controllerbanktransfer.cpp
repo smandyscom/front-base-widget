@@ -37,13 +37,13 @@ void ControllerBankTransfer::onOperationPerformed()
         switch (__commitOption.Mode()) {
         case CommitBlock::MODE_UPLOAD:
         {
-           __commandBankTable->setData(__commandBankTable->index(__currentIndex,JunctionBankDatabase::CBT_AXIS_ID),generic.ObjectId());
+           //__commandBankTable->setData(__commandBankTable->index(__currentIndex,JunctionBankDatabase::CBT_AXIS_ID),generic.ObjectId());
            //__commandBankTable->setData(__commandBankTable->index(__currentIndex,JunctionBankDatabase::CBT_AXIS_ID),generic.CommandType());
             break;
         }
         case CommitBlock::MODE_DOWNLOAD:
         {
-            generic.ObjectId(__commandBankTable->data(__commandBankTable->index(__currentIndex,JunctionBankDatabase::CBT_AXIS_ID)).value<MODBUS_WORD>());
+            //generic.ObjectId(__commandBankTable->data(__commandBankTable->index(__currentIndex,JunctionBankDatabase::CBT_AXIS_ID)).value<MODBUS_WORD>());
             //generic.CommandType(__commandBankTable->data(__commandBankTable->index(__currentIndex,JunctionBankDatabase::CBT_AXIS_ID)).value<MODBUS_WORD>());
             break;
         }

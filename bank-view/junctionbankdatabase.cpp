@@ -1,4 +1,5 @@
 #include "junctionbankdatabase.h"
+#include <QDebug>
 
 JunctionBankDatabase::JunctionBankDatabase(QString databaseName, QObject *parent) :
     QObject(parent)
@@ -9,6 +10,12 @@ JunctionBankDatabase::JunctionBankDatabase(QString databaseName, QObject *parent
 
 void JunctionBankDatabase::onInitialize()
 {
+    QFileInfo qf(__databaseName);
+    qDebug() << QDir::currentPath();
+
+    if(!qf.exists())
+        return;
+
     if(!db.open())
         return;
 
@@ -28,6 +35,7 @@ JunctionBankDatabase* JunctionBankDatabase::Instance()
 {
     if(__instance == nullptr)
         __instance = new JunctionBankDatabase(__databaseName);
+    return __instance;
 }
 
 JunctionBankDatabase* JunctionBankDatabase::__instance = nullptr;

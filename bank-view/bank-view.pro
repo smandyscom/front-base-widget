@@ -4,12 +4,12 @@
 #
 #-------------------------------------------------
 
-QT       += widgets sql serialbus serialport
+QT       += core gui widgets sql serialbus serialport
 
 #QT       -= gui
 
 TARGET = bank-view
-TEMPLATE = lib
+TEMPLATE = app
 
 DEFINES += BANKVIEW_LIBRARY
 
@@ -38,7 +38,9 @@ SOURCES += \
     junctionbankdatabase.cpp \
     controllerbanktransfer.cpp \
     tablemodelcommandblock.cpp \
-    tablemodelaxis.cpp
+    tablemodelaxis.cpp \
+    mainwindow.cpp \
+    main.cpp
 
 HEADERS += \
         bank-view_global.h \ 
@@ -56,7 +58,8 @@ HEADERS += \
     junctionbankdatabase.h \
     controllerbanktransfer.h \
     tablemodelcommandblock.h \
-    tablemodelaxis.h
+    tablemodelaxis.h \
+    mainwindow.h
 
 unix {
     target.path = /usr/lib
@@ -66,4 +69,5 @@ unix {
 FORMS += \
     ptpzrn_viewer.ui \
     modbussetupwidget.ui \
-    frontmanaualmode.ui
+    frontmanaualmode.ui \
+    mainwindow.ui

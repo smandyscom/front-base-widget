@@ -29,8 +29,11 @@ FrontManaualMode::FrontManaualMode(QAbstractTableModel* wholeCommandBankModel,
     connect(ui->pushButtonParameterSet,SIGNAL(clicked(bool)),this,SLOT(onBankOperationPerformed()));
     connect(ui->pushButtonBankExecution,SIGNAL(clicked(bool)),this,SLOT(onBankOperationPerformed()));
 
+
+
+    __timer = new QTimer(this);
     connect(__timer,SIGNAL(timeout()),this,SLOT(onTimerTimeout()));
-    __timer->start(100);//every 100 ms update once
+    //__timer->start(100);//every 100 ms update once
 
     //!
     //! combo box loading
@@ -38,9 +41,17 @@ FrontManaualMode::FrontManaualMode(QAbstractTableModel* wholeCommandBankModel,
     //! (AxisId,Region,AxisName)
     ui->comboBoxAxisName->setModel(wholeAxisBankModel);
     ui->comboBoxAxisName->setModelColumn(JunctionBankDatabase::ATH_NAME);//setup the visiable column
-    ui->comboBoxAxisName->setView(new QListView(ui->comboBoxAxisName));
+    ui->comboBoxAxisName->setView(new QTableView(ui->comboBoxAxisName));
 
+    ui->tableViewCommandBlock->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->tableViewCommandBlock->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableViewCommandBlock->setModel(wholeCommandBankModel);
+
+    //!
+    connect(ui->comboBoxAxisName,SIGNAL(currentIndexChanged(int)),this,SLOT(onComboBoxIndexChanged()));
+    connect(ui->comboBoxRegion,SIGNAL(currentIndexChanged(int)),this,SLOT(onComboBoxIndexChanged()));
+    //! Link
+    __controller = ControllerManualMode::Instance();
 
 }
 
@@ -181,8 +192,10 @@ void FrontManaualMode::onComboBoxIndexChanged()
     {
         QModelIndex currentSelection = comboBox->model()->index(comboBox->currentIndex(),JunctionBankDatabase::ATH_ID);
         quint16 id = comboBox->model()->data(currentSelection).value<quint16>();
+        auto ref= ui->tableViewCommandBlock->model();
+        QSqlTableModel* model = qobject_cast<QSqlTableModel*>(ui->tableViewCommandBlock->model());
         //! filter out
-        static_cast<QSqlTableModel*>(ui->tableViewCommandBlock->model())->setFilter(tr("AXID_ID=%1").arg(id));
+        model->setFilter(tr("AXIS_ID=%1").arg(id));
         //! change base-object-id
         __commandBlock.ObjectId(id);
         //! change monitor axis id

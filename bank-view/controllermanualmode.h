@@ -44,7 +44,7 @@ public:
 
     Q_ENUM(ManualContext)
 
-    explicit ControllerManualMode(QObject *parent = nullptr);
+
 
     //!
     //! Data interfaces
@@ -68,6 +68,8 @@ public:
         return __monitorBlock;
     }
 
+    static ControllerManualMode* Instance();
+
 signals:
     //!
     //! \brief readWordIn
@@ -87,6 +89,8 @@ signals:
     void operationTriggered();
     void operationPerformed();
 protected:
+     explicit ControllerManualMode(QObject *parent = nullptr);
+
     //!
     //! \brief onMonitorBlockReply
     //! \param event
@@ -98,7 +102,9 @@ protected:
 
     CommitBlock __commitOption;
 
-    ModbusChannel* channel; //TODO
+    ModbusChannel* channel;
+
+    static ControllerManualMode* __instance;
 };
 
 #endif // CONTROLLERMANUALMODE_H

@@ -10,7 +10,7 @@
 #include <baselayerdefinitions.h>
 using namespace BaseLayer;
 
-#define CHANNEL_NUM 16
+#define CHANNEL_MAX_NUM 16
 
 //!
 //! \brief The ModbusChannel class

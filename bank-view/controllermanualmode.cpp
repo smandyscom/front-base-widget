@@ -3,6 +3,9 @@
 ControllerManualMode::ControllerManualMode(QObject *parent) :
     QStateMachine(parent)
 {
+    //! Channel initialize
+    channel = ModbusChannel::Instance();
+
     //!
     //! \brief s1
     //!
@@ -102,3 +105,16 @@ void ControllerManualMode::onMonitorBlockReply(UpdateEvent *event)
         break;
     }
 }
+
+//!
+//! \brief Instance
+//! \return
+//!
+ControllerManualMode* ControllerManualMode::Instance()
+{
+    if(__instance == nullptr)
+        __instance = new ControllerManualMode();
+    return __instance;
+}
+
+ControllerManualMode* ControllerManualMode::__instance = nullptr;

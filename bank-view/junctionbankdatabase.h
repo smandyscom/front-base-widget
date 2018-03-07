@@ -5,6 +5,9 @@
 #include <QSqlDatabase>
 #include <QSqlTableModel>
 #include <QAbstractTableModel>
+#include <QFileInfo>
+#include <QDir>
+
 //!
 //! \brief The JunctionBankDatabase class
 //! Should be singleton
