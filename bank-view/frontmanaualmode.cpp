@@ -206,7 +206,7 @@ void FrontManaualMode::onComboBoxIndexChanged()
         auto ref= ui->tableViewCommandBlock->model();
         QSqlTableModel* model = qobject_cast<QSqlTableModel*>(ui->tableViewCommandBlock->model());
         //! filter out
-        model->setFilter(tr("AXIS_ID=%1").arg(id));
+        model->setFilter(tr("AXIS_ID=%1").arg(address));
         //! change base-object-id
         __commandBlock.ObjectId(address);
         //! change monitor axis id
