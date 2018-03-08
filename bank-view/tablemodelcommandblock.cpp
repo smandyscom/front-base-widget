@@ -43,19 +43,19 @@ ExtendedCommandBlock TableModelCommandBlock::Row(int rowIndex)
 void TableModelCommandBlock::Row(int rowIndex,const ExtendedCommandBlock value)
 {
     //! Basic
-    __instance->setData(index(rowIndex,AXIS_ID),QVariant::fromValue(value.ObjectId()));
-    __instance->setData(index(rowIndex,COMMAND_TYPE),QVariant::fromValue(static_cast<MODBUS_WORD>(value.CommandType())));
-    __instance->setData(index(rowIndex,SPEED),QVariant::fromValue(value.Speed()));
-    __instance->setData(index(rowIndex,ACC_TIME),QVariant::fromValue(value.Acceralation()));
-    __instance->setData(index(rowIndex,DEC_TIME),QVariant::fromValue(value.Deceralation()));
-    __instance->setData(index(rowIndex,TORQUE_LIMIT),QVariant::fromValue(value.TorqueLimit()));
-    __instance->setData(index(rowIndex,IS_RESET_POS_R),QVariant::fromValue(value.IsResetPositionReference()));
+    __instance->setData(__instance->index(rowIndex,AXIS_ID),QVariant::fromValue(value.ObjectId()));
+    __instance->setData(__instance->index(rowIndex,COMMAND_TYPE),QVariant::fromValue(static_cast<MODBUS_WORD>(value.CommandType())));
+    __instance->setData(__instance->index(rowIndex,SPEED),QVariant::fromValue(value.Speed()));
+    __instance->setData(__instance->index(rowIndex,ACC_TIME),QVariant::fromValue(value.Acceralation()));
+    __instance->setData(__instance->index(rowIndex,DEC_TIME),QVariant::fromValue(value.Deceralation()));
+    __instance->setData(__instance->index(rowIndex,TORQUE_LIMIT),QVariant::fromValue(value.TorqueLimit()));
+    __instance->setData(__instance->index(rowIndex,IS_RESET_POS_R),QVariant::fromValue(value.IsResetPositionReference()));
     //! Extension
-    __instance->setData(index(rowIndex,EXT_CONTROL_BIT_0),QVariant::fromValue(value.ExtensionControlWord(0)));
-    __instance->setData(index(rowIndex,RESERVED_WORD),QVariant::fromValue(value.ReservedWord()));
-    __instance->setData(index(rowIndex,COORD1),QVariant::fromValue(value.Coordinate1()));
-    __instance->setData(index(rowIndex,COORD2),QVariant::fromValue(value.Coordinate2()));
-    __instance->setData(index(rowIndex,COORD3),QVariant::fromValue(value.Coordinate3()));
+    __instance->setData(__instance->index(rowIndex,EXT_CONTROL_BIT_0),QVariant::fromValue(value.ExtensionControlWord(0)));
+    __instance->setData(__instance->index(rowIndex,RESERVED_WORD),QVariant::fromValue(value.ReservedWord()));
+    __instance->setData(__instance->index(rowIndex,COORD1),QVariant::fromValue(value.Coordinate1()));
+    __instance->setData(__instance->index(rowIndex,COORD2),QVariant::fromValue(value.Coordinate2()));
+    __instance->setData(__instance->index(rowIndex,COORD3),QVariant::fromValue(value.Coordinate3()));
 
     //!
     __instance->database().transaction();
