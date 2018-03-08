@@ -1,64 +1,54 @@
 #include "controllerbanktransfer.h"
 
-ControllerBankTransfer::ControllerBankTransfer(QObject *parent) :
-    QObject(parent)
+ControllerBankTransfer::ControllerBankTransfer(TableModelCommandBlock *model, QObject *parent) :
+    QObject(parent),
+    __model(model)
 {
     //setup
     __commitOption.Selection(CommitBlock::SELECTION_COMMAND_BLOCK);
 
-    __goalCount = 128;
+    __controller = ControllerManualMode::Instance();
+    connect(__controller,SIGNAL(operationPerformed()),this,SLOT(onOperationPerformed()));
 }
 
-void ControllerBankTransfer::onUpdatedFromPlc()
+void ControllerBankTransfer::onTransferData(CommitBlock::CommitMode mode, int rowIndex)
 {
-    //!
-    //! 1.Commit request
-    //! 2.Wait until operationPerformed (SIGNAL
-    __commitOption.Mode(CommitBlock::MODE_UPLOAD);
-    onOperationPerformed();//raise first shot
+    if(mode==CommitBlock::MODE_COMMAND_BLOCK)
+        return; // invalid
+    __commitOption.Mode(mode);
+    if(rowIndex==-1)
+    {
+        __currentIndex = 0;
+        __goal = __model->rowCount(); //batch mode activated
+    }
+    else
+    {
+        __currentIndex = rowIndex;
+        __goal = __currentIndex+1; //single mode
+    }
+
+    //!Raise operation
+    __commitOption.Index(__currentIndex);
+    __controller->CommitOption(__commitOption);
+    __controller->CommandBlock(__model->Row(__currentIndex)); //Write-in anyway (would be override in update mode
+    emit __controller->operationTriggered();
 }
-void ControllerBankTransfer::onCommitToPlc()
-{
-    __commitOption.Mode(CommitBlock::MODE_DOWNLOAD);
-    onOperationPerformed();//raise first shot
-}
+
 //!
 //! \brief ControllerBankTransfer::onOperationPerformed
 //! Would iteratlly perform opertion until index reached
 void ControllerBankTransfer::onOperationPerformed()
 {
-    //! Turns QVariant data to Mode data
-    //! TODOS
-
-    if(__currentIndex!=-1)
-    {
-        ExtendedCommandBlock generic = __controller->CommandBlock();
-
-        switch (__commitOption.Mode()) {
-        case CommitBlock::MODE_UPLOAD:
-        {
-           //__commandBankTable->setData(__commandBankTable->index(__currentIndex,JunctionBankDatabase::CBT_AXIS_ID),generic.ObjectId());
-           //__commandBankTable->setData(__commandBankTable->index(__currentIndex,JunctionBankDatabase::CBT_AXIS_ID),generic.CommandType());
-            break;
-        }
-        case CommitBlock::MODE_DOWNLOAD:
-        {
-            //generic.ObjectId(__commandBankTable->data(__commandBankTable->index(__currentIndex,JunctionBankDatabase::CBT_AXIS_ID)).value<MODBUS_WORD>());
-            //generic.CommandType(__commandBankTable->data(__commandBankTable->index(__currentIndex,JunctionBankDatabase::CBT_AXIS_ID)).value<MODBUS_WORD>());
-            break;
-        }
-        default:
-            break;
-        }
-    }
-
-    //! Raise next operation if any
+    __model->Row(__currentIndex,__controller->CommandBlock()); // read-out anyway (would be override in commit mode
     __currentIndex++;
-    __commitOption.Index(__currentIndex);
-    __controller->CommitOption(__commitOption);
-    //!
-    if(__currentIndex < __goalCount)
+    //! Raise next operation if any
+    if(__currentIndex < __goal)
+    {
+        __commitOption.Index(__currentIndex);
+        __controller->CommitOption(__commitOption);
+        __controller->CommandBlock(__model->Row(__currentIndex)); //Write-in anyway
         emit __controller->operationTriggered();
+    }
     else
-        __currentIndex = -1; //reset
+        return; //no next trigger
 }

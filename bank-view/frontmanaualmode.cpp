@@ -111,22 +111,6 @@ void FrontManaualMode::onBankOperationPerformed()
 
     //write back to model
     __commandBlockTable->Row(SelectedRowIndex(),__commandBlock);
-
-        auto table = qobject_cast<QSqlTableModel*>(ui->tableViewCommandBlock->model());
-        table->database().transaction();
-        if(table->submitAll())
-        {
-            table->database().commit();
-            qDebug() << table->lastError().text();
-            qDebug() << table->query().lastQuery();
-        }
-        else
-        {
-            qDebug() << table->lastError().text();
-            qDebug() << table->query().lastQuery();
-            table->revertAll();
-            table->database().rollback();
-        }
 }
 
 //!
