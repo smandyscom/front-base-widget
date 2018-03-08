@@ -56,6 +56,7 @@ protected:
     static QString __databaseName;
 
     explicit JunctionBankDatabase(QString databaseName,QObject *parent = nullptr);
+    ~JunctionBankDatabase();
 
     QSqlDatabase db;
 

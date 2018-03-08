@@ -13,6 +13,7 @@
 
 #include <junctionbankdatabase.h>
 #include <tablemodelcommandblock.h>
+#include <controllerbanktransfer.h>
 
 namespace Ui {
 class FrontManaualMode;
@@ -56,6 +57,11 @@ protected slots:
     void onTimerTimeout();
 
     void onComboBoxIndexChanged();
+    //!
+    //! \brief onSubmitted
+    //!
+    void onSubmitted();
+    void onTransfer();
 protected:
     ExtendedCommandBlock __commandBlock;
     CommitBlock __commitOption;
@@ -69,9 +75,10 @@ protected:
 
     int SelectedRowIndex() const;
     TableModelCommandBlock* __commandBlockTable;
+    ControllerBankTransfer* __bankTransfer;
+
 
 private slots:
-    void on_pushButton_clicked();
 };
 
 #endif // FRONTMANAUALMODE_H

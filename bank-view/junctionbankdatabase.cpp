@@ -1,11 +1,16 @@
 #include "junctionbankdatabase.h"
 #include <QDebug>
+#include <QApplication>
 
 JunctionBankDatabase::JunctionBankDatabase(QString databaseName, QObject *parent) :
     QObject(parent)
 {
     db = QSqlDatabase::addDatabase("QSQLITE");//setup driver
     db.setDatabaseName(databaseName);
+}
+JunctionBankDatabase::~JunctionBankDatabase()
+{
+    db.close();
 }
 
 void JunctionBankDatabase::onInitialize()
@@ -36,7 +41,7 @@ void JunctionBankDatabase::onInitialize()
 JunctionBankDatabase* JunctionBankDatabase::Instance()
 {
     if(__instance == nullptr)
-        __instance = new JunctionBankDatabase(__databaseName);
+        __instance = new JunctionBankDatabase(__databaseName,qApp);
     return __instance;
 }
 

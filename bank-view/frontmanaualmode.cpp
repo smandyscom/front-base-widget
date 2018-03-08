@@ -31,7 +31,7 @@ FrontManaualMode::FrontManaualMode(QSqlTableModel *wholeCommandBankModel,
     connect(ui->pushButtonParameterSet,SIGNAL(clicked(bool)),this,SLOT(onBankOperationPerformed()));
     connect(ui->pushButtonBankExecution,SIGNAL(clicked(bool)),this,SLOT(onBankOperationPerformed()));
 
-
+    connect(ui->pushButtonSubmit,SIGNAL(clicked(bool)),this,SLOT(onSubmitted()));
 
     __timer = new QTimer(this);
     connect(__timer,SIGNAL(timeout()),this,SLOT(onTimerTimeout()));
@@ -54,9 +54,10 @@ FrontManaualMode::FrontManaualMode(QSqlTableModel *wholeCommandBankModel,
     //!
     connect(ui->comboBoxAxisName,SIGNAL(currentIndexChanged(int)),this,SLOT(onComboBoxIndexChanged()));
     connect(ui->comboBoxRegion,SIGNAL(currentIndexChanged(int)),this,SLOT(onComboBoxIndexChanged()));
+    ui->comboBoxAxisName->setCurrentIndex(0);//
     //! Link
     __controller = ControllerManualMode::Instance();
-
+    __bankTransfer=new ControllerBankTransfer(qobject_cast<TableModelCommandBlock*>(wholeCommandBankModel),this);
 }
 
 FrontManaualMode::~FrontManaualMode()
@@ -68,19 +69,6 @@ FrontManaualMode::~FrontManaualMode()
 //!
 void FrontManaualMode::onBankOperationPerformed()
 {
-//    auto table = qobject_cast<QSqlTableModel*>(ui->tableViewCommandBlock->model());
-//    table->database().transaction();
-//    if(table->submitAll())
-//        table->database().commit();
-//    else
-//    {
-//        qDebug() << table->lastError().text();
-//        qDebug() << table->query().lastQuery();
-//        table->revertAll();
-//        table->database().rollback();
-//    }
-//    return;
-
     if(!ui->tableViewCommandBlock->selectionModel()->hasSelection())
         return;
 
@@ -229,19 +217,31 @@ void FrontManaualMode::onComboBoxIndexChanged()
 
 int FrontManaualMode::SelectedRowIndex() const
 {
-    auto ref = ui->tableViewCommandBlock->selectionModel()->selectedRows();
     return ui->tableViewCommandBlock->selectionModel()->selectedRows().first().row();
 }
-
-void FrontManaualMode::on_pushButton_clicked()
+//!
+//! \brief FrontManaualMode::onSubmitted
+//! Commit unstaged records(Rows) into Model and underlying device(e.g PLC)
+void FrontManaualMode::onSubmitted()
 {
+    //! Commit to database firstly , once fail (could not pass the contraint
+    //!  no need go further
     auto table = qobject_cast<QSqlTableModel*>(ui->tableViewCommandBlock->model());
     table->database().transaction();
     if(table->submitAll())
+    {
         table->database().commit();
+        //! Start bank trunsation
+        //__bankTransfer->onTransferData(CommitBlock::MODE_DOWNLOAD);
+    }
     else
     {
+        qDebug() << table->lastError().text();
         table->revertAll();
         table->database().rollback();
     }
+}
+void FrontManaualMode::onTransfer()
+{
+
 }
