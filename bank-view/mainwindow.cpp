@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QUrl>
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -9,7 +11,24 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
 
-    //! Initialize Modbus Channels
+    //! Initialize Modbus Serialized Client
+    //! port from 10001-10008 (CH1-CH8
+    QList<ModbusSerializedClient*> __list;
+    for(int i=0;i<4;i++)
+    {
+        QModbusTcpClient* client = new QModbusTcpClient(this);
+        QUrl url = QUrl::fromUserInput(tr("169.254.28.1:%1").arg(10001+i));
+        //QUrl url = QUrl::fromUserInput(tr("127.0.0.1:%1").arg(500+1+i));
+        client->setConnectionParameter(QModbusDevice::NetworkAddressParameter,url.host());
+        client->setConnectionParameter(QModbusDevice::NetworkPortParameter,url.port());
+        ModbusSerializedClient* __serializedClient = new ModbusSerializedClient(client);
+        __list.append(__serializedClient);
+    }
+    ModbusChannel::Channels(__list);
+    foreach (ModbusSerializedClient* arg, __list) {
+        arg->Driver()->connectDevice();
+    }
+
 
     //! Intialize Database
     JunctionBankDatabase::DatabaseName("base.db");
@@ -19,6 +38,13 @@ MainWindow::MainWindow(QWidget *parent) :
     FrontManaualMode* fmm = new FrontManaualMode(JunctionBankDatabase::Instance()->CommandBlockTable(),
                                                  JunctionBankDatabase::Instance()->AxisTable(),
                                                  ui->tabManual);
+
+    //! Connect controller and channel
+    ControllerManualMode* __controller =  ControllerManualMode::Instance();
+    ModbusChannel* __channel = ModbusChannel::Instance();
+    connect(__controller,&ControllerManualMode::requireReadData,__channel,&ModbusChannel::beginUpdate);
+    connect(__controller,&ControllerManualMode::requireWriteData,__channel,&ModbusChannel::commit);
+    connect(__channel,SIGNAL(raiseUpdateEvent(UpdateEvent*)),this,SLOT(onRaiseUpdateEvent(UpdateEvent*)));
 }
 
 MainWindow::~MainWindow()
@@ -26,4 +52,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-
+void MainWindow::onRaiseUpdateEvent(UpdateEvent *e)
+{
+    ControllerManualMode::Instance()->postEvent(e);
+}

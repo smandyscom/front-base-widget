@@ -21,25 +21,27 @@ class ControllerManualMode : public QStateMachine
 {
     Q_OBJECT
 public:
+    //!
+    //! \brief The ManualContext enum
+    //! Should do channel offset
     enum ManualContext : quint32
     {
-        STATUS_WORD=0x00000000,
-        ENGAGED_PLC=0x00000000,
-        DONE=0x00010000,
-        AXIS_ADR=0x00000001,
-        POS_COMMAND=0x00000002,
-        POS_FEEDBACK=0x00000004,
-        SPD_FEEDBACK=0x00000006,
-        TOR_FEEDBACK=0x00000008,
-        ENGAGED_HMI=0x00000010,
-        RUN=0x00010010,
-        CANCEL=0x00020010,
-        COMMIT_BLOCK=0x00000011,
-        COMMIT_MODE=0x00000011,
-        COMMIT_SELECTION=0x00000012,
-        COMMIT_INDEX=0x00000013,
-        DATA_BLOCK_HEAD=0x00000020,
-        DATA_BLOCK_END=0x7F,
+        STATUS_WORD=0x02000000,
+        ENGAGED_PLC=0x02000000,
+        DONE=0x02010000,
+        AXIS_ADR=0x02000001,
+        POS_COMMAND=0x02000002,
+        POS_FEEDBACK=0x02000004,
+        SPD_FEEDBACK=0x02000006,
+        TOR_FEEDBACK=0x02000008,
+        ENGAGED_HMI=0x02000010,
+        RUN=0x02010010,
+        CANCEL=0x02020010,
+        COMMIT_BLOCK=0x02000011,
+        COMMIT_MODE=0x02000011,
+        COMMIT_SELECTION=0x02000012,
+        COMMIT_INDEX=0x02000013,
+        DATA_BLOCK_HEAD=0x02000020,
     };
 
     Q_ENUM(ManualContext)
@@ -76,26 +78,28 @@ signals:
     //! \param address
     //! \param wordData
     //!
-    void requireReadData(AbstractAddress address,const QVariant data);
+    void requireReadData(ModbusDriverAddress address,const QVariant data);
     //!
     //! \brief writeData
     //! \param address
     //! \param data
     //!
-    void requireWriteData(AbstractAddress address,const QVariant data);
+    void requireWriteData(ModbusDriverAddress address,const QVariant data);
     //!
     //! \brief triggerOperation
     //! Linked to S1 transition condition
     void operationTriggered();
     void operationPerformed();
-protected:
-     explicit ControllerManualMode(QObject *parent = nullptr);
-
+protected slots:
     //!
     //! \brief onMonitorBlockReply
     //! \param event
     //! Looping
     void onMonitorBlockReply(UpdateEvent* event);
+protected:
+     explicit ControllerManualMode(QObject *parent = nullptr);
+
+
 
     ExtendedCommandBlock __commandBlock;
     AbstractMonitorBlock __monitorBlock;

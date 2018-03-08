@@ -41,14 +41,14 @@ signals:
     //! \brief readRequestDone
     //! emitted when request had processed
     void requestDone(const QModbusDataUnit);
-public slots:
+protected slots:
+    void onPopRequest();
     //!
     //! \brief onDriverStateChanged
     //! \param state
     //! Control whether start/stop handling timer
     void onDriverStateChanged(QModbusDevice::State state);
-protected slots:
-    void onPopRequest();
+    void onDriverErrorOccured(QModbusDevice::Error error);
 protected:
 
     QQueue<const ModbusRequest*> requestQueue;

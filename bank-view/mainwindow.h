@@ -5,6 +5,8 @@
 #include <modbuschannel.h>
 #include <frontmanaualmode.h>
 
+#include <QModbusTcpClient>
+
 namespace Ui {
 class MainWindow;
 }
@@ -18,7 +20,7 @@ public:
     ~MainWindow();
 
 private slots:
-
+    void onRaiseUpdateEvent(UpdateEvent* e);
 private:
     Ui::MainWindow *ui;
 };

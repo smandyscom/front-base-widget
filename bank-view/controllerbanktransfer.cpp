@@ -39,8 +39,11 @@ void ControllerBankTransfer::onTransferData(CommitBlock::CommitMode mode, int ro
 //! Would iteratlly perform opertion until index reached
 void ControllerBankTransfer::onOperationPerformed()
 {
+    if(__controller->CommitOption().Mode()==CommitBlock::MODE_COMMAND_BLOCK)
+        return; //ignored
+
     __model->Row(__currentIndex,__controller->CommandBlock()); // read-out anyway (would be override in commit mode
-    __currentIndex++;
+    __currentIndex = __controller->CommitOption().Index()+1; //follow the current index
     //! Raise next operation if any
     if(__currentIndex < __goal)
     {

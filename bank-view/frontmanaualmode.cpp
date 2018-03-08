@@ -33,9 +33,10 @@ FrontManaualMode::FrontManaualMode(QSqlTableModel *wholeCommandBankModel,
 
     connect(ui->pushButtonSubmit,SIGNAL(clicked(bool)),this,SLOT(onSubmitted()));
 
+    //!
     __timer = new QTimer(this);
     connect(__timer,SIGNAL(timeout()),this,SLOT(onTimerTimeout()));
-    //__timer->start(100);//every 100 ms update once
+    __timer->start(100);//every 100 ms update once
 
     //!
     //! combo box loading
@@ -54,7 +55,7 @@ FrontManaualMode::FrontManaualMode(QSqlTableModel *wholeCommandBankModel,
     //!
     connect(ui->comboBoxAxisName,SIGNAL(currentIndexChanged(int)),this,SLOT(onComboBoxIndexChanged()));
     connect(ui->comboBoxRegion,SIGNAL(currentIndexChanged(int)),this,SLOT(onComboBoxIndexChanged()));
-    ui->comboBoxAxisName->setCurrentIndex(0);//
+    ui->comboBoxAxisName->setCurrentIndex(0);
     //! Link
     __controller = ControllerManualMode::Instance();
     __bankTransfer=new ControllerBankTransfer(qobject_cast<TableModelCommandBlock*>(wholeCommandBankModel),this);
@@ -150,7 +151,7 @@ void FrontManaualMode::onOperationPerform()
 void FrontManaualMode::onOperationStopped()
 {
     //! raise immediate stop request
-    emit __controller->requireWriteData(AbstractAddress(ControllerManualMode::CANCEL),QVariant::fromValue(true));
+    emit __controller->requireWriteData(ModbusDriverAddress(ControllerManualMode::CANCEL),QVariant::fromValue(true));
 }
 void FrontManaualMode::setCommonParameters()
 {
@@ -163,7 +164,7 @@ void FrontManaualMode::setCommonParameters()
     __commandBlock.TorqueLimit(ui->textEditTorqueLimit->toPlainText().toFloat()); // to 0.01%
 
     //reset cancel request
-    emit __controller->requireWriteData(AbstractAddress(ControllerManualMode::CANCEL),QVariant::fromValue(false));
+    emit __controller->requireWriteData(ModbusDriverAddress(ControllerManualMode::CANCEL),QVariant::fromValue(false));
 }
 
 void FrontManaualMode::onFocusChanged(QWidget *old, QWidget *now)
@@ -172,7 +173,7 @@ void FrontManaualMode::onFocusChanged(QWidget *old, QWidget *now)
         return; //irrelavent signal
 
     //! on focused
-    emit __controller->requireWriteData(AbstractAddress(ControllerManualMode::ENGAGED_HMI),QVariant::fromValue(this == now));
+    emit __controller->requireWriteData(ModbusDriverAddress(ControllerManualMode::ENGAGED_HMI),QVariant::fromValue(this == now));
 }
 
 void FrontManaualMode::onTimerTimeout()
@@ -184,6 +185,9 @@ void FrontManaualMode::onTimerTimeout()
     ui->textBrowserPositionFeedback->setText(QString::number(amb->PositionFeedback()));
     ui->textBrowserSpeedFeedback->setText(QString::number(amb->SpeedFeedback()));
     ui->textBrowserTorqueFeedback->setText(QString::number(amb->TorqueFeedback()));
+
+    //! raise reading requirement
+    __controller->requireReadData(ModbusDriverAddress(ControllerManualMode::POS_COMMAND),QVariant::fromValue(mb));
 }
 
 //!
@@ -195,17 +199,19 @@ void FrontManaualMode::onComboBoxIndexChanged()
 
     if(comboBox == ui->comboBoxAxisName)
     {
-        QModelIndex currentSelection = comboBox->model()->index(comboBox->currentIndex(),JunctionBankDatabase::ATH_ID);
-        quint16 id = comboBox->model()->data(currentSelection).value<quint16>();
+        QModelIndex currentSelectionId = comboBox->model()->index(comboBox->currentIndex(),JunctionBankDatabase::ATH_ID);
+        QModelIndex currentSelectionAddress = comboBox->model()->index(comboBox->currentIndex(),JunctionBankDatabase::ATH_ADDRESS);
+        MODBUS_WORD id = comboBox->model()->data(currentSelectionId).value<MODBUS_WORD>();
+        MODBUS_WORD address = comboBox->model()->data(currentSelectionAddress).value<MODBUS_WORD>();
         auto ref= ui->tableViewCommandBlock->model();
         QSqlTableModel* model = qobject_cast<QSqlTableModel*>(ui->tableViewCommandBlock->model());
         //! filter out
         model->setFilter(tr("AXIS_ID=%1").arg(id));
         //! change base-object-id
-        __commandBlock.ObjectId(id);
+        __commandBlock.ObjectId(address);
         //! change monitor axis id
-        emit __controller->requireWriteData(AbstractAddress(ControllerManualMode::AXIS_ADR),
-                                          QVariant::fromValue(static_cast<MODBUS_WORD>(id)));
+        emit __controller->requireWriteData(ModbusDriverAddress(ControllerManualMode::AXIS_ADR),
+                                          QVariant::fromValue(static_cast<MODBUS_WORD>(address)));
     }
     else if(comboBox == ui->comboBoxRegion)
     {

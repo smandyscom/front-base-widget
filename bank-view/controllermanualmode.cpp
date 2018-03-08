@@ -5,6 +5,7 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
 {
     //! Channel initialize
     channel = ModbusChannel::Instance();
+    __commitOption.Mode(CommitBlock::MODE_COMMAND_BLOCK);
 
     //!
     //! \brief s1
@@ -28,7 +29,7 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
 
         connect(s,&QState::entered,this,[this](){
             //! trigger read action
-            emit requireReadData(AbstractAddress(STATUS_WORD),QVariant::fromValue(static_cast<MODBUS_WORD>(0)));
+            emit requireReadData(ModbusDriverAddress(STATUS_WORD),QVariant::fromValue(static_cast<MODBUS_WORD>(0)));
         });
     }
 
@@ -43,14 +44,14 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
         switch (__commitOption.Mode()) {
         case CommitBlock::MODE_DOWNLOAD:
             //! Always write-in full-size
-            emit requireWriteData(AbstractAddress(DATA_BLOCK_HEAD),QVariant::fromValue(__commandBlock));
+            emit requireWriteData(ModbusDriverAddress(DATA_BLOCK_HEAD),QVariant::fromValue(__commandBlock));
             break;
         default:
             break;
         }
 
-        emit requireWriteData(AbstractAddress(COMMIT_BLOCK),QVariant::fromValue(__commitOption));
-        emit requireWriteData(AbstractAddress(RUN),QVariant::fromValue(true));//set Run on
+        emit requireWriteData(ModbusDriverAddress(COMMIT_BLOCK),QVariant::fromValue(__commitOption));
+        emit requireWriteData(ModbusDriverAddress(RUN),QVariant::fromValue(true));//set Run on
     });
     //!
     //! s2
@@ -68,14 +69,14 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
         switch (__commitOption.Mode()) {
         case CommitBlock::MODE_UPLOAD:
             //! should read full size
-            emit requireReadData(AbstractAddress(DATA_BLOCK_HEAD),QVariant::fromValue(__commandBlock));
+            emit requireReadData(ModbusDriverAddress(DATA_BLOCK_HEAD),QVariant::fromValue(__commandBlock));
             break;
         default:
             break;
         }
 
         //set RUN off
-        emit requireWriteData(AbstractAddress(RUN),QVariant::fromValue(false));
+        emit requireWriteData(ModbusDriverAddress(RUN),QVariant::fromValue(false));
     });
     //!
     //! s3
@@ -88,6 +89,12 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
     s3->addTransition(doneOff); //when DONE off
     s3->addTransition(doneNotOff); //when DONE on
 
+    //!
+    connect(channel,SIGNAL(raiseUpdateEvent(UpdateEvent*)),this,SLOT(onMonitorBlockReply(UpdateEvent*)));
+
+    //!
+    setInitialState(s1);
+    start();
 }
 
 //!
@@ -98,9 +105,13 @@ void ControllerManualMode::onMonitorBlockReply(UpdateEvent *event)
 {
     switch (event->address) {
     case POS_COMMAND:
+    {
         //! keep polling monitor status
-        emit requireReadData(AbstractAddress(POS_COMMAND),QVariant::fromValue(__monitorBlock));
+        QVariant value = QVariant::fromValue(__monitorBlock);
+        channel->update(ModbusDriverAddress(POS_COMMAND),value);
+        __monitorBlock = value.value<AbstractMonitorBlock>();
         break;
+    }
     default:
         break;
     }

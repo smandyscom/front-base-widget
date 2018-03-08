@@ -8,6 +8,7 @@ ModbusSerializedClient::ModbusSerializedClient(QModbusClient *driver, int server
     __timer = new QTimer(this);
     connect(__timer,SIGNAL(timeout()),this,SLOT(onPopRequest()));
     connect(__driver,SIGNAL(stateChanged(QModbusDevice::State)),this,SLOT(onDriverStateChanged(QModbusDevice::State)));
+    connect(__driver,SIGNAL(errorOccurred(QModbusDevice::Error)),this,SLOT(onDriverErrorOccured(QModbusDevice::Error)));
     __isProcessing = false;
 }
 
@@ -76,10 +77,21 @@ void ModbusSerializedClient::onDriverStateChanged(QModbusDevice::State state)
     case QModbusDevice::ConnectedState:
         __timer->start();
         break;
+    case QModbusDevice::UnconnectedState:
+        __driver->connectDevice();
+    default:
+        break;
+    }
+}
+
+void ModbusSerializedClient::onDriverErrorOccured(QModbusDevice::Error error)
+{
+    switch (error) {
     case QModbusDevice::ConnectionError:
-    case QModbusDevice::ConnectingState:
+    case QModbusDevice::ReplyAbortedError:
         __timer->stop();
         break;
+        //! Drop invalid request when occured
     default:
         break;
     }
