@@ -53,5 +53,8 @@ void ControllerBankTransfer::onOperationPerformed()
         emit __controller->operationTriggered();
     }
     else
+    {
+        emit dataTransfered();
         return; //no next trigger
+    }
 }

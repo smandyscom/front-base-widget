@@ -52,7 +52,8 @@ void ModbusSerializedClient::onPopRequest()
     connect(reply,&QModbusReply::finished,this,[this,reply](){
         switch (reply->error()) {
         case QModbusDevice::NoError:
-            emit requestDone(reply->result());
+            if(requestQueue.head()->second==READ)
+                emit readRequestDone(reply->result());
             //destroy
             requestQueue.dequeue();
             reply->deleteLater();

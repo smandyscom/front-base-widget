@@ -18,7 +18,8 @@ public:
     int CurrentIndex() const {return __currentIndex;}
     bool IsProcessing() const { return __currentIndex != -1;}
     qreal Progress() const { return (__currentIndex+1)/__goal;}
-
+signals:
+    void dataTransfered();
 public slots:
     //!
     //! \brief onTransferData

@@ -8,12 +8,14 @@ ModbusChannel::ModbusChannel(QList<ModbusSerializedClient *> channelList, QObjec
     //! initialize whole inner cache anyway
     for(int i=0;i<CHANNEL_MAX_NUM;i++)
     {
-        channelCache.append(new quint16[USHRT_MAX]);
+        quint16* __cache = new quint16[USHRT_MAX];
+        memset(__cache,0,USHRT_MAX); // cache initialization
+        channelCache.append(__cache);
     }
     //! link
     for(int i=0;i<channelList.count();i++){
         channelGateWays.append(const_cast<ModbusSerializedClient*>(channelList[i]));
-        connect(channelList[i],&ModbusSerializedClient::requestDone,this,&ModbusChannel::onRequestProcessed);
+        connect(channelList[i],&ModbusSerializedClient::readRequestDone,this,&ModbusChannel::onReadRequestProcessed);
     }
     preparedReadRequest.setRegisterType(QModbusDataUnit::HoldingRegisters);
     preparedWriteRequest.setRegisterType(QModbusDataUnit::HoldingRegisters);
@@ -69,11 +71,13 @@ void ModbusChannel::commit(ModbusDriverAddress address, const QVariant value)
     default:
         break;
     }
+
     //
     // From map query type of QVariant
     // Get the object size , so that you can make right request
     size_t sizeInWord = (utilities::sizeOf(writeInData))/2; //size of in byte
 
+    //! Translate to MODBUSUNIT
     preparedWriteRequest.setStartAddress(address.getRegisterAddress());
     QVector<quint16> temp;
     for(size_t i=0;i<sizeInWord;i++)
@@ -84,6 +88,9 @@ void ModbusChannel::commit(ModbusDriverAddress address, const QVariant value)
     //once no specific channel , do no action
     if(address.getChannel() >= channelGateWays.size() )
         return;
+
+    //! Write into cache
+    writeData(address,writeInData.data(),utilities::sizeOf(writeInData));
     channelGateWays[address.getChannel()]->pushRequest(new ModbusSerializedClient::ModbusRequest(preparedWriteRequest,ModbusSerializedClient::WRITE));
 }
 
@@ -119,7 +126,7 @@ quint16* ModbusChannel::toCacheAddress(const ModbusDriverAddress modbusAddress)
 //! \brief ModbusChannel::onReplyUpdated
 //! \param result
 //!
-void ModbusChannel::onRequestProcessed(QModbusDataUnit result)
+void ModbusChannel::onReadRequestProcessed(QModbusDataUnit result)
 {
    //identify which channel?
    int channelIndex = channelGateWays.indexOf(qobject_cast<ModbusSerializedClient*>(sender()));

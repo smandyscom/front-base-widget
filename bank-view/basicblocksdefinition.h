@@ -91,8 +91,8 @@ protected:
     MODBUS_LONG __acceralation;
     MODBUS_LONG __deceralation;
     MODBUS_LONG __torqueLimit;
-    MODBUS_WORD __controlWord;
-
+    MODBUS_WORD __controlWord; //#10
+    MODBUS_WORD __reserved[5];//#11-#15
     //!
     //! \brief Length
     //! in mm

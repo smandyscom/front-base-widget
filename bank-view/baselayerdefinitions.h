@@ -130,7 +130,7 @@ public:
         VALUE_UPDATED
     };
 
-    ValueTransition(const AbstractAddress address,Detection action):
+    ValueTransition(const AbstractAddress& address,Detection action):
         address(address.getAddress()),
         bitMask(address.toBitwiseMask()),
         detection(action)

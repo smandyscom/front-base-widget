@@ -61,7 +61,12 @@ protected slots:
     //! \brief onSubmitted
     //!
     void onSubmitted();
-    void onTransfer();
+
+    //!
+    //! \brief onLockControlPanel
+    //! Interlinked with controller
+    void onLockControlPanel();
+    void onUnlockControlPanel();
 protected:
     ExtendedCommandBlock __commandBlock;
     CommitBlock __commitOption;

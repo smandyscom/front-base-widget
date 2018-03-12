@@ -59,6 +59,10 @@ FrontManaualMode::FrontManaualMode(QSqlTableModel *wholeCommandBankModel,
     //! Link
     __controller = ControllerManualMode::Instance();
     __bankTransfer=new ControllerBankTransfer(qobject_cast<TableModelCommandBlock*>(wholeCommandBankModel),this);
+
+    //! Control panel accessment control
+    connect(__controller,SIGNAL(operationTriggered()),this,SLOT(onLockControlPanel()));
+    connect(__controller,SIGNAL(operationPerformed()),this,SLOT(onUnlockControlPanel()));
 }
 
 FrontManaualMode::~FrontManaualMode()
@@ -152,6 +156,8 @@ void FrontManaualMode::onOperationStopped()
 {
     //! raise immediate stop request
     emit __controller->requireWriteData(ModbusDriverAddress(ControllerManualMode::CANCEL),QVariant::fromValue(true));
+    //reset cancel request
+    emit __controller->requireWriteData(ModbusDriverAddress(ControllerManualMode::CANCEL),QVariant::fromValue(false));
 }
 void FrontManaualMode::setCommonParameters()
 {
@@ -168,8 +174,7 @@ void FrontManaualMode::setCommonParameters()
     __commandBlock.ControlWord(AbstractCommandBlock::IS_PARA_SETTED,false);
     __commandBlock.ControlWord(AbstractCommandBlock::IS_RESET_POS_REFERENCE,false);
 
-    //reset cancel request
-    emit __controller->requireWriteData(ModbusDriverAddress(ControllerManualMode::CANCEL),QVariant::fromValue(false));
+
 }
 
 void FrontManaualMode::onFocusChanged(QWidget *old, QWidget *now)
@@ -244,7 +249,8 @@ void FrontManaualMode::onSubmitted()
     {
         table->database().commit();
         //! Start bank trunsation
-        //__bankTransfer->onTransferData(CommitBlock::MODE_DOWNLOAD);
+        __bankTransfer->onTransferData(CommitBlock::MODE_DOWNLOAD); // mode , transfer all
+        //TODOS , optimization , transfer those rows edited
     }
     else
     {
@@ -253,7 +259,20 @@ void FrontManaualMode::onSubmitted()
         table->database().rollback();
     }
 }
-void FrontManaualMode::onTransfer()
+//!
+//! \brief FrontManaualMode::onUnlockControlPanel
+//!
+void FrontManaualMode::onUnlockControlPanel()
+{
+
+}
+//!
+//! \brief FrontManaualMode::onLockControlPanel
+//! Lock all except cancel
+//! On PLC Side:
+//!    cancel comes , procedure intercept , and force axis to stop
+//!    cancel release , release stop command
+void FrontManaualMode::onLockControlPanel()
 {
 
 }

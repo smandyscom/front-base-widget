@@ -1,13 +1,15 @@
 #include "controllermanualmode.h"
-
+#include <QDebug>
 ControllerManualMode::ControllerManualMode(QObject *parent) :
     QStateMachine(parent)
 {
     //! Channel initialize
-    channel = ModbusChannel::Instance();
+    __channel = ModbusChannel::Instance();
     __commitOption.Mode(CommitBlock::MODE_COMMAND_BLOCK);
-    onTimerTimeout(); //fire the first shot
 
+    //! Very first shot
+    __channel->beginUpdate(ModbusDriverAddress(POS_COMMAND),QVariant::fromValue(__monitorBlock));
+    __channel->beginUpdate(ModbusDriverAddress(STATUS_WORD),QVariant::fromValue(static_cast<MODBUS_WORD>(0)));
     //!
     //! \brief s1
     //!
@@ -18,7 +20,7 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
     //!
     //! \brief engagedPLCOff
     //! Common transition
-    ValueTransition* engagedPLCOff = new ValueTransition(AbstractAddress(ENGAGED_PLC),ValueTransition::BIT_STATE_OFF);
+    ValueTransition* engagedPLCOff = new ValueTransition(ModbusDriverAddress(ENGAGED_PLC),ValueTransition::BIT_STATE_OFF);
     engagedPLCOff->setTargetState(s1);
     QList<QState*> states({s1,s2,s3});
     foreach (QState* s, states)
@@ -30,7 +32,7 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
 
         connect(s,&QState::entered,this,[this](){
             //! trigger read action
-            emit requireReadData(ModbusDriverAddress(STATUS_WORD),QVariant::fromValue(static_cast<MODBUS_WORD>(0)));
+            __currentState = qobject_cast<QState*>(sender());
         });
     }
 
@@ -38,7 +40,6 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
     //!
     //! s1
     s1->addTransition(this,SIGNAL(operationTriggered()),s2);// when user triggered
-    connect(s1,&QState::entered,[this](){emit operationPerformed();}); //inform required operation had performed
     connect(s1,&QState::exited,[this](){
         //!
         //! commit block if need
@@ -53,19 +54,20 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
         }
 
         emit requireWriteData(ModbusDriverAddress(COMMIT_BLOCK),QVariant::fromValue(__commitOption));
+        emit requireWriteData(ModbusDriverAddress(ENGAGED_HMI),QVariant::fromValue(true));
         emit requireWriteData(ModbusDriverAddress(RUN),QVariant::fromValue(true));//set Run on
     });
     //!
     //! s2
-    ValueTransition* doneOn = new ValueTransition(AbstractAddress(DONE),ValueTransition::BIT_STATE_ON);
-    ValueTransition* doneNotOn = new ValueTransition(AbstractAddress(DONE),ValueTransition::BIT_STATE_OFF);
+    ValueTransition* doneOn = new ValueTransition(ModbusDriverAddress(DONE),ValueTransition::BIT_STATE_ON);
     doneOn->setTargetState(s3);
-    doneNotOn->setTargetState(s2); //self transition
 
     s2->addTransition(doneOn); //when DONE on
-    s2->addTransition(doneNotOn); //when DONE off
-
+    connect(s2,&QState::entered,[this](){
+       qDebug() << "S2";
+    });
     connect(s2,&QState::exited,[this](){
+
         //!
         //! read out block if need
         switch (__commitOption.Mode()) {
@@ -82,17 +84,16 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
     });
     //!
     //! s3
-    ValueTransition* doneOff = new ValueTransition(AbstractAddress(DONE),ValueTransition::BIT_STATE_OFF);
-    ValueTransition* doneNotOff = new ValueTransition(AbstractAddress(DONE),ValueTransition::BIT_STATE_ON);
+    ValueTransition* doneOff = new ValueTransition(ModbusDriverAddress(DONE),ValueTransition::BIT_STATE_OFF);
 
     doneOff->setTargetState(s1);
-    doneNotOff->setTargetState(s3); //self transition
 
     s3->addTransition(doneOff); //when DONE off
-    s3->addTransition(doneNotOff); //when DONE on
-
+    connect(s3,&QState::exited,[this](){
+           emit operationPerformed();//inform required operation had performed
+    });
     //!
-    connect(channel,SIGNAL(raiseUpdateEvent(UpdateEvent*)),this,SLOT(onMonitorBlockReply(UpdateEvent*)));
+    connect(__channel,SIGNAL(raiseUpdateEvent(UpdateEvent*)),this,SLOT(onReply(UpdateEvent*)));
 
     //!
     setInitialState(s1);
@@ -103,26 +104,31 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
 //! \brief ControllerManualMode::onMonitorBlockReply
 //! \param event
 //! intercept monitor block updating event
-void ControllerManualMode::onMonitorBlockReply(UpdateEvent *event)
+void ControllerManualMode::onReply(UpdateEvent *event)
 {
     switch (event->address) {
     case POS_COMMAND:
     {
         //! keep polling monitor status
         QVariant value = QVariant::fromValue(__monitorBlock);
-        channel->update(ModbusDriverAddress(POS_COMMAND),value);
+        __channel->update(ModbusDriverAddress(POS_COMMAND),value);
         __monitorBlock = value.value<AbstractMonitorBlock>();
-        QTimer::singleShot(100,this,SLOT(onTimerTimeout()));
+        QTimer::singleShot(100,this,[this](){
+            //Schedual the next polling
+            __channel->beginUpdate(ModbusDriverAddress(POS_COMMAND),QVariant::fromValue(__monitorBlock));
+        });
         break;
     }
+    case STATUS_WORD:
+        QTimer::singleShot(100,this,[this](){
+           //Schedual the next polling
+            __channel->beginUpdate(ModbusDriverAddress(STATUS_WORD),QVariant::fromValue(static_cast<MODBUS_WORD>(0)));
+        });
     default:
         break;
     }
 }
-void ControllerManualMode::onTimerTimeout()
-{
-    channel->beginUpdate(ModbusDriverAddress(POS_COMMAND),QVariant::fromValue(__monitorBlock));
-}
+
 
 //!
 //! \brief Instance

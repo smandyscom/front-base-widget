@@ -64,7 +64,7 @@ protected slots:
     //! \brief onReplyUpdated
     //! \param result
     //! Reply processor
-    void onRequestProcessed(QModbusDataUnit result);
+    void onReadRequestProcessed(QModbusDataUnit result);
 
 protected:
 

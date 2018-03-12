@@ -40,7 +40,7 @@ signals:
     //!
     //! \brief readRequestDone
     //! emitted when request had processed
-    void requestDone(const QModbusDataUnit);
+    void readRequestDone(const QModbusDataUnit);
 protected slots:
     void onPopRequest();
     //!

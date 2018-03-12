@@ -95,8 +95,7 @@ protected slots:
     //! \brief onMonitorBlockReply
     //! \param event
     //! Looping
-    void onMonitorBlockReply(UpdateEvent* event);
-    void onTimerTimeout();
+    void onReply(UpdateEvent* event);
 protected:
      explicit ControllerManualMode(QObject *parent = nullptr);
 
@@ -104,8 +103,9 @@ protected:
     AbstractMonitorBlock __monitorBlock;
 
     CommitBlock __commitOption;
+    QState* __currentState;
 
-    ModbusChannel* channel;
+    ModbusChannel* __channel;
 
     static ControllerManualMode* __instance;
 };
