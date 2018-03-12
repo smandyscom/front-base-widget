@@ -17,13 +17,13 @@ enum BlockCommandType : MODBUS_WORD
 
 class AbstractCommandBlock
 {
-protected:
+public:
     enum ControlBit
     {
         IS_PARA_SETTED,
         IS_RESET_POS_REFERENCE,
     };
-public:
+
     void ObjectId(MODBUS_WORD value)
     {
         __objectId = value;
@@ -39,17 +39,6 @@ public:
     BlockCommandType CommandType() const
     {
         return __commandType;
-    }
-    void IsResetPositionReference(bool isReset)
-    {
-        if(isReset)
-            __controlWord |= 0x01;
-        else
-            __controlWord &= ~0x01;
-    }
-    bool IsResetPositionReference() const
-    {
-        return (__controlWord & 0x01) > 0;
     }
     void Speed(qreal value)
     {
@@ -82,6 +71,18 @@ public:
     qreal TorqueLimit() const
     {
         return __torqueLimit * TorquePercentage();
+    }
+
+    void ControlWord(int bitIndex,bool value)
+    {
+        if(value)
+            __controlWord |= (0x01 << bitIndex);
+        else
+            __controlWord &= ~(0x01 << bitIndex);
+    }
+    bool ControlWord(int bitIndex) const
+    {
+        return (__controlWord & (0x01 << bitIndex)) > 0;
     }
 protected:
     MODBUS_WORD __objectId;
@@ -116,17 +117,7 @@ protected:
         return 0.01;
     }
 
-    void ControlWord(int bitIndex,bool value)
-    {
-        if(value)
-            __controlWord |= (0x01 << bitIndex);
-        else
-            __controlWord &= ~(0x01 << bitIndex);
-    }
-    bool ControlWord(int bitIndex) const
-    {
-        return (__controlWord & (0x01 << bitIndex)) > 0;
-    }
+
 };
 Q_DECLARE_METATYPE(AbstractCommandBlock)
 //!

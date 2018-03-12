@@ -24,7 +24,7 @@ ExtendedCommandBlock TableModelCommandBlock::Row(int rowIndex)
     result.Acceralation(__instance->index(rowIndex,ACC_TIME).data().value<float>());
     result.Deceralation(__instance->index(rowIndex,DEC_TIME).data().value<float>());
     result.TorqueLimit(__instance->index(rowIndex,TORQUE_LIMIT).data().value<float>());
-    result.IsResetPositionReference(__instance->index(rowIndex,IS_RESET_POS_R).data().value<bool>());
+    result.ControlWord(AbstractCommandBlock::IS_RESET_POS_REFERENCE,__instance->index(rowIndex,IS_RESET_POS_R).data().value<bool>());
     //! Extension
     result.ExtensionControlWord(0,__instance->index(rowIndex,EXT_CONTROL_BIT_0).data().value<bool>());
     result.ReservedWord(__instance->index(rowIndex,RESERVED_WORD).data().value<MODBUS_WORD>());
@@ -49,7 +49,7 @@ void TableModelCommandBlock::Row(int rowIndex,const ExtendedCommandBlock value)
     __instance->setData(__instance->index(rowIndex,ACC_TIME),QVariant::fromValue(value.Acceralation()));
     __instance->setData(__instance->index(rowIndex,DEC_TIME),QVariant::fromValue(value.Deceralation()));
     __instance->setData(__instance->index(rowIndex,TORQUE_LIMIT),QVariant::fromValue(value.TorqueLimit()));
-    __instance->setData(__instance->index(rowIndex,IS_RESET_POS_R),QVariant::fromValue(value.IsResetPositionReference()));
+    __instance->setData(__instance->index(rowIndex,IS_RESET_POS_R),QVariant::fromValue(value.ControlWord(AbstractCommandBlock::IS_RESET_POS_REFERENCE)));
     //! Extension
     __instance->setData(__instance->index(rowIndex,EXT_CONTROL_BIT_0),QVariant::fromValue(value.ExtensionControlWord(0)));
     __instance->setData(__instance->index(rowIndex,RESERVED_WORD),QVariant::fromValue(value.ReservedWord()));

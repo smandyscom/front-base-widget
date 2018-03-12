@@ -6,6 +6,7 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
     //! Channel initialize
     channel = ModbusChannel::Instance();
     __commitOption.Mode(CommitBlock::MODE_COMMAND_BLOCK);
+    onTimerTimeout(); //fire the first shot
 
     //!
     //! \brief s1
@@ -43,6 +44,7 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
         //! commit block if need
         switch (__commitOption.Mode()) {
         case CommitBlock::MODE_DOWNLOAD:
+        case CommitBlock::MODE_COMMAND_BLOCK:
             //! Always write-in full-size
             emit requireWriteData(ModbusDriverAddress(DATA_BLOCK_HEAD),QVariant::fromValue(__commandBlock));
             break;
@@ -110,11 +112,16 @@ void ControllerManualMode::onMonitorBlockReply(UpdateEvent *event)
         QVariant value = QVariant::fromValue(__monitorBlock);
         channel->update(ModbusDriverAddress(POS_COMMAND),value);
         __monitorBlock = value.value<AbstractMonitorBlock>();
+        QTimer::singleShot(100,this,SLOT(onTimerTimeout()));
         break;
     }
     default:
         break;
     }
+}
+void ControllerManualMode::onTimerTimeout()
+{
+    channel->beginUpdate(ModbusDriverAddress(POS_COMMAND),QVariant::fromValue(__monitorBlock));
 }
 
 //!

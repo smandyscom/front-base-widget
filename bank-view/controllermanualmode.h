@@ -10,7 +10,7 @@ using namespace BaseLayer;
 #include <modbuschannel.h>
 #include <basicblocksdefinition.h>
 #include <QVariant>
-
+#include <QTimer>
 
 
 //!
@@ -96,10 +96,9 @@ protected slots:
     //! \param event
     //! Looping
     void onMonitorBlockReply(UpdateEvent* event);
+    void onTimerTimeout();
 protected:
      explicit ControllerManualMode(QObject *parent = nullptr);
-
-
 
     ExtendedCommandBlock __commandBlock;
     AbstractMonitorBlock __monitorBlock;

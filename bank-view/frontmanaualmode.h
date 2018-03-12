@@ -74,6 +74,9 @@ protected:
     QTimer* __timer;
 
     int SelectedRowIndex() const;
+    MODBUS_WORD SelectedAxisAddress() const;
+    MODBUS_WORD SelectedAxisId() const;
+
     TableModelCommandBlock* __commandBlockTable;
     ControllerBankTransfer* __bankTransfer;
 
