@@ -37,8 +37,8 @@ public:
 
     explicit TableModelCommandBlock(QSqlTableModel* instance);
 
-    ExtendedCommandBlock Row(int rowIndex);
-    void Row(int rowIndex, const ExtendedCommandBlock value);
+    ExtendedCommandBlock Value(int rowIndex);
+    void Value(int rowIndex, const ExtendedCommandBlock value);
 protected:
     QSqlTableModel* __instance;
 };

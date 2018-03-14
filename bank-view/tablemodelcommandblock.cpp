@@ -12,7 +12,7 @@ TableModelCommandBlock::TableModelCommandBlock(QSqlTableModel *instance):
 //! \return
 //! Turns row to value
 //! Rowid should be aligned with COMMAND_BANK_ID
-ExtendedCommandBlock TableModelCommandBlock::Row(int rowIndex)
+ExtendedCommandBlock TableModelCommandBlock::Value(int rowIndex)
 {
 
     ExtendedCommandBlock result;
@@ -40,7 +40,7 @@ ExtendedCommandBlock TableModelCommandBlock::Row(int rowIndex)
 //! \param rowIndex
 //! \param value
 //! Turns value to row
-void TableModelCommandBlock::Row(int rowIndex,const ExtendedCommandBlock value)
+void TableModelCommandBlock::Value(int rowIndex,const ExtendedCommandBlock value)
 {
     //! Basic
     __instance->setData(__instance->index(rowIndex,AXIS_ID),QVariant::fromValue(value.ObjectId()));

@@ -13,6 +13,7 @@
 
 #include <junctionbankdatabase.h>
 #include <tablemodelcommandblock.h>
+#include <tablemodelaxis.h>
 #include <controllerbanktransfer.h>
 
 namespace Ui {
@@ -64,8 +65,10 @@ protected:
     int SelectedRowIndex() const;
     MODBUS_WORD SelectedAxisAddress() const;
     MODBUS_WORD SelectedAxisId() const;
+    QVariant SelectedAxisValue(TableModelAxis::Headers header) const;
 
     TableModelCommandBlock* __commandBlockTable;
+    TableModelAxis* __axisTable;
     ControllerBankTransfer* __bankTransfer;
 
 

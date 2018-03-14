@@ -17,20 +17,7 @@ class JunctionBankDatabase : public QObject
 
     Q_OBJECT
 public:
-    enum AxisTableHeaders
-    {
-        ATH_ID,
-        ATH_REGION,
-        ATH_NAME,
-        ATH_ADDRESS,
-        ATH_TYPE,
-        ATH_LIMIT_MINUS,
-        ATH_LIMIT_PLUS,
-        ATH_POSITION_TOLERANCE,
-        ATH_SPEED_MAX,
-        ATH_COMMENT,
-    };
-    Q_ENUM(AxisTableHeaders)
+
 
     enum TableNames
     {

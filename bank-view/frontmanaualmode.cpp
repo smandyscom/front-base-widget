@@ -44,7 +44,7 @@ FrontManaualMode::FrontManaualMode(QSqlTableModel *wholeCommandBankModel,
     //! setModel on combobox
     //! (AxisId,Region,AxisName)
     ui->comboBoxAxisName->setModel(wholeAxisBankModel);
-    ui->comboBoxAxisName->setModelColumn(JunctionBankDatabase::ATH_NAME);//setup the visiable column
+    //ui->comboBoxAxisName->setModelColumn(TableModelAxis::NAME);//setup the visiable column
     ui->comboBoxAxisName->setView(new QTableView(ui->comboBoxAxisName));
 
     ui->tableViewCommandBlock->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -53,6 +53,7 @@ FrontManaualMode::FrontManaualMode(QSqlTableModel *wholeCommandBankModel,
 
     //decorated instance
     __commandBlockTable = new TableModelCommandBlock(wholeCommandBankModel);
+    __axisTable = new TableModelAxis(wholeAxisBankModel);
     //!
     connect(ui->comboBoxAxisName,SIGNAL(currentIndexChanged(int)),this,SLOT(onComboBoxIndexChanged()));
     connect(ui->comboBoxRegion,SIGNAL(currentIndexChanged(int)),this,SLOT(onComboBoxIndexChanged()));
@@ -74,7 +75,7 @@ void FrontManaualMode::onBankOperationPerformed()
     auto button = qobject_cast<QPushButton*>(sender());
 
      //from model to ExtendCommandBlock
-    __commandBlock = __commandBlockTable->Row(SelectedRowIndex());
+    __commandBlock = __commandBlockTable->Value(SelectedRowIndex());
 
     if(button==ui->pushButtonCoordinateSet)
     {
@@ -97,7 +98,7 @@ void FrontManaualMode::onBankOperationPerformed()
     }
 
     //write back to model
-    __commandBlockTable->Row(SelectedRowIndex(),__commandBlock);
+    __commandBlockTable->Value(SelectedRowIndex(),__commandBlock);
 }
 
 //!
@@ -136,9 +137,17 @@ void FrontManaualMode::onOperationPerform()
     else if(button == ui->pushButtonFeedForward ||
             button == ui->pushButtonFeedBackward)
     {
-        FeedCommandBlock* fcb = static_cast<FeedCommandBlock*>(&__commandBlock);
-        fcb->Direction(button->objectName() == "pushButtonFeedForward");
-        fcb->CommandType(BCT_FEED);
+        //setup coordiante
+        PosICommandBlock* pcb = static_cast<PosICommandBlock*>(&__commandBlock);
+        //Positive limit/Negtive limit
+        if(button==ui->pushButtonFeedForward)
+            pcb->Coordinate1(SelectedAxisValue(TableModelAxis::LIMIT_PLUS).toReal());
+        else
+            pcb->Coordinate1(SelectedAxisValue(TableModelAxis::LIMIT_MINUS).toReal());
+
+
+        pcb->IsAbsoluteMode(true);//always in ABS
+        pcb->CommandType(BCT_POS_I);
     }
 
     //! trigger the sequence
@@ -207,11 +216,15 @@ int FrontManaualMode::SelectedRowIndex() const
 }
 MODBUS_WORD FrontManaualMode::SelectedAxisAddress() const
 {
-    return ui->comboBoxAxisName->model()->index(ui->comboBoxAxisName->currentIndex(),JunctionBankDatabase::ATH_ADDRESS).data().value<MODBUS_WORD>();
+    return ui->comboBoxAxisName->model()->index(ui->comboBoxAxisName->currentIndex(),TableModelAxis::ADDRESS).data().value<MODBUS_WORD>();
 }
 MODBUS_WORD FrontManaualMode::SelectedAxisId() const
 {
-    return ui->comboBoxAxisName->model()->index(ui->comboBoxAxisName->currentIndex(),JunctionBankDatabase::ATH_ID).data().value<MODBUS_WORD>();
+    return ui->comboBoxAxisName->model()->index(ui->comboBoxAxisName->currentIndex(),TableModelAxis::ID).data().value<MODBUS_WORD>();
+}
+QVariant FrontManaualMode::SelectedAxisValue(TableModelAxis::Headers header) const
+{
+    return __axisTable->Value(ui->comboBoxAxisName->currentIndex(),header);
 }
 
 //!

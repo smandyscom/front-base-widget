@@ -30,7 +30,7 @@ void ControllerBankTransfer::onTransferData(CommitBlock::CommitMode mode, int ro
     //!Raise operation
     __commitOption.Index(__currentIndex);
     __controller->CommitOption(__commitOption);
-    __controller->CommandBlock(__model->Row(__currentIndex)); //Write-in anyway (would be override in update mode
+    __controller->CommandBlock(__model->Value(__currentIndex)); //Write-in anyway (would be override in update mode
     emit __controller->operationTriggered();
 }
 
@@ -42,14 +42,14 @@ void ControllerBankTransfer::onOperationPerformed()
     if(__controller->CommitOption().Mode()==CommitBlock::MODE_COMMAND_BLOCK)
         return; //ignored
 
-    __model->Row(__currentIndex,__controller->CommandBlock()); // read-out anyway (would be override in commit mode
+    __model->Value(__currentIndex,__controller->CommandBlock()); // read-out anyway (would be override in commit mode
     __currentIndex = __controller->CommitOption().Index()+1; //follow the current index
     //! Raise next operation if any
     if(__currentIndex < __goal)
     {
         __commitOption.Index(__currentIndex);
         __controller->CommitOption(__commitOption);
-        __controller->CommandBlock(__model->Row(__currentIndex)); //Write-in anyway
+        __controller->CommandBlock(__model->Value(__currentIndex)); //Write-in anyway
         emit __controller->operationTriggered();
     }
     else
