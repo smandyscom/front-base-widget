@@ -2,8 +2,8 @@
 #define CONTROLLERMANUALMODE_H
 
 #include <QObject>
+#include <QMap>
 #include <QStateMachine>
-
 #include <baselayerdefinitions.h>
 using namespace BaseLayer;
 
@@ -21,6 +21,7 @@ class ControllerManualMode : public QStateMachine
 {
     Q_OBJECT
 public:
+
     //!
     //! \brief The ManualContext enum
     //! Should do channel offset
@@ -43,9 +44,15 @@ public:
         COMMIT_INDEX=0x02000013,
         DATA_BLOCK_HEAD=0x02000020,
     };
-
     Q_ENUM(ManualContext)
-
+    enum ManualState : int
+    {
+        STATE_IN_AUTO,
+        STATE_IDLE,
+        STATE_COMPLETE,
+        STATE_FINISH,
+    };
+    Q_ENUM(ManualState)
 
 
     //!
@@ -70,8 +77,13 @@ public:
         return __monitorBlock;
     }
 
-    static ControllerManualMode* Instance();
+    ManualState CurrentState() const { return __currentState;}
 
+
+    static ControllerManualMode* Instance();
+public slots:
+    void onInterrupted() { emit requireWriteData(ModbusDriverAddress(ControllerManualMode::ENGAGED_HMI),QVariant::fromValue(false));}
+    void onMonitorAxisChanged(MODBUS_WORD objectId){emit requireWriteData(ModbusDriverAddress(ControllerManualMode::AXIS_ADR),QVariant::fromValue(objectId));}
 signals:
     //!
     //! \brief readWordIn
@@ -103,7 +115,9 @@ protected:
     AbstractMonitorBlock __monitorBlock;
 
     CommitBlock __commitOption;
-    QState* __currentState;
+
+    QMap<ManualState,QState*> __stateMap;
+    ManualState __currentState;
 
     ModbusChannel* __channel;
 

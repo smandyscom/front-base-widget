@@ -13,29 +13,31 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
     //!
     //! \brief s1
     //!
+    QState* s0 = new QState(this);
     QState* s1 = new QState(this);
     QState* s2 = new QState(this);
     QState* s3 = new QState(this);
+    __stateMap[STATE_IN_AUTO] =s0;
+    __stateMap[STATE_IDLE] = s1;
+    __stateMap[STATE_COMPLETE] = s2;
+    __stateMap[STATE_FINISH] = s3;
 
     //!
-    //! \brief engagedPLCOff
-    //! Common transition
-    ValueTransition* engagedPLCOff = new ValueTransition(ModbusDriverAddress(ENGAGED_PLC),ValueTransition::BIT_STATE_OFF);
-    engagedPLCOff->setTargetState(s1);
-    QList<QState*> states({s1,s2,s3});
-    foreach (QState* s, states)
+    //! Common
+    foreach (QState* s, __stateMap.values())
     {
-        //!
-        //! Link common transition
-        //!
-        s->addTransition(engagedPLCOff);
-
+        //! Report current state
         connect(s,&QState::entered,this,[this](){
             //! trigger read action
-            __currentState = qobject_cast<QState*>(sender());
+            __currentState = __stateMap.key(qobject_cast<QState*>(sender()));
         });
     }
 
+    //!
+    //! s0
+    ValueTransition* engagedPLCOn = new ValueTransition(ModbusDriverAddress(ENGAGED_PLC),ValueTransition::BIT_STATE_ON);
+    engagedPLCOn->setTargetState(s1);
+    s0->addTransition(engagedPLCOn);
 
     //!
     //! s1
@@ -86,7 +88,7 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
     //! s3
     ValueTransition* doneOff = new ValueTransition(ModbusDriverAddress(DONE),ValueTransition::BIT_STATE_OFF);
 
-    doneOff->setTargetState(s1);
+    doneOff->setTargetState(s0);
 
     s3->addTransition(doneOff); //when DONE off
     connect(s3,&QState::exited,[this](){
@@ -128,7 +130,6 @@ void ControllerManualMode::onReply(UpdateEvent *event)
         break;
     }
 }
-
 
 //!
 //! \brief Instance

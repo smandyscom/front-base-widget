@@ -10,22 +10,23 @@ FrontManaualMode::FrontManaualMode(QSqlTableModel *wholeCommandBankModel,
     ui(new Ui::FrontManaualMode)
 {
     ui->setupUi(this);
-
+    //! Link
+    __controller = ControllerManualMode::Instance();
+    __bankTransfer=new ControllerBankTransfer(qobject_cast<TableModelCommandBlock*>(wholeCommandBankModel),this);
     //setup
     __commitOption.Mode(CommitBlock::MODE_COMMAND_BLOCK);
 
     //!
     //! \brief connect
     //!
-    connect(qApp,SIGNAL(focusChanged(QWidget*,QWidget*)),this,SLOT(onFocusChanged(QWidget*,QWidget*)));
     connect(ui->pushButtonPosition,SIGNAL(clicked(bool)),this,SLOT(onOperationPerform()));
     connect(ui->pushButtonZret,SIGNAL(clicked(bool)),this,SLOT(onOperationPerform()));
-    connect(ui->pushButtonStop,SIGNAL(clicked(bool)),this,SLOT(onOperationStopped()));
+    connect(ui->pushButtonStop,SIGNAL(clicked(bool)),__controller,SLOT(onInterrupted()));
 
     connect(ui->pushButtonFeedForward,SIGNAL(pressed()),this,SLOT(onOperationPerform()));
     connect(ui->pushButtonFeedBackward,SIGNAL(pressed()),this,SLOT(onOperationPerform()));
-    connect(ui->pushButtonFeedForward,SIGNAL(released()),this,SLOT(onOperationStopped()));
-    connect(ui->pushButtonFeedBackward,SIGNAL(released()),this,SLOT(onOperationStopped()));
+    connect(ui->pushButtonFeedForward,SIGNAL(released()),__controller,SLOT(onInterrupted()));
+    connect(ui->pushButtonFeedBackward,SIGNAL(released()),__controller,SLOT(onInterrupted()));
 
     connect(ui->pushButtonCoordinateSet,SIGNAL(clicked(bool)),this,SLOT(onBankOperationPerformed()));
     connect(ui->pushButtonParameterSet,SIGNAL(clicked(bool)),this,SLOT(onBankOperationPerformed()));
@@ -56,13 +57,6 @@ FrontManaualMode::FrontManaualMode(QSqlTableModel *wholeCommandBankModel,
     connect(ui->comboBoxAxisName,SIGNAL(currentIndexChanged(int)),this,SLOT(onComboBoxIndexChanged()));
     connect(ui->comboBoxRegion,SIGNAL(currentIndexChanged(int)),this,SLOT(onComboBoxIndexChanged()));
     ui->comboBoxAxisName->setCurrentIndex(0);
-    //! Link
-    __controller = ControllerManualMode::Instance();
-    __bankTransfer=new ControllerBankTransfer(qobject_cast<TableModelCommandBlock*>(wholeCommandBankModel),this);
-
-    //! Control panel accessment control
-    connect(__controller,SIGNAL(operationTriggered()),this,SLOT(onLockControlPanel()));
-    connect(__controller,SIGNAL(operationPerformed()),this,SLOT(onUnlockControlPanel()));
 }
 
 FrontManaualMode::~FrontManaualMode()
@@ -114,6 +108,10 @@ void FrontManaualMode::onBankOperationPerformed()
 //! 3. STOP
 void FrontManaualMode::onOperationPerform()
 {
+    //! Command refused
+    if(__controller->CurrentState()!=ControllerManualMode::STATE_IDLE)
+        return;
+
     auto button = qobject_cast<QPushButton*>(sender());
     setCommonParameters(); //
 
@@ -149,16 +147,6 @@ void FrontManaualMode::onOperationPerform()
     emit __controller->operationTriggered();
 }
 
-//!
-//! \brief FrontManaualMode::onButtonReleased
-//! Trigger stop
-void FrontManaualMode::onOperationStopped()
-{
-    //! raise immediate stop request
-    emit __controller->requireWriteData(ModbusDriverAddress(ControllerManualMode::CANCEL),QVariant::fromValue(true));
-    //reset cancel request
-    emit __controller->requireWriteData(ModbusDriverAddress(ControllerManualMode::CANCEL),QVariant::fromValue(false));
-}
 void FrontManaualMode::setCommonParameters()
 {
     //!
@@ -175,15 +163,6 @@ void FrontManaualMode::setCommonParameters()
     __commandBlock.ControlWord(AbstractCommandBlock::IS_RESET_POS_REFERENCE,false);
 
 
-}
-
-void FrontManaualMode::onFocusChanged(QWidget *old, QWidget *now)
-{
-    if(this != now && this !=old)
-        return; //irrelavent signal
-
-    //! on focused
-    emit __controller->requireWriteData(ModbusDriverAddress(ControllerManualMode::ENGAGED_HMI),QVariant::fromValue(this == now));
 }
 
 void FrontManaualMode::onTimerTimeout()
@@ -212,8 +191,7 @@ void FrontManaualMode::onComboBoxIndexChanged()
         //! change base-object-id
         __commandBlock.ObjectId(SelectedAxisAddress());
         //! change monitor axis id
-        emit __controller->requireWriteData(ModbusDriverAddress(ControllerManualMode::AXIS_ADR),
-                                          QVariant::fromValue(static_cast<MODBUS_WORD>(SelectedAxisAddress())));
+        __controller->onMonitorAxisChanged(static_cast<MODBUS_WORD>(SelectedAxisAddress()));
     }
     else if(comboBox == ui->comboBoxRegion)
     {
@@ -241,6 +219,10 @@ MODBUS_WORD FrontManaualMode::SelectedAxisId() const
 //! Commit unstaged records(Rows) into Model and underlying device(e.g PLC)
 void FrontManaualMode::onSubmitted()
 {
+    //! Refuse
+    if(__controller->CurrentState()!=ControllerManualMode::STATE_IDLE)
+        return;
+
     //! Commit to database firstly , once fail (could not pass the contraint
     //!  no need go further
     auto table = qobject_cast<QSqlTableModel*>(ui->tableViewCommandBlock->model());
@@ -259,20 +241,4 @@ void FrontManaualMode::onSubmitted()
         table->database().rollback();
     }
 }
-//!
-//! \brief FrontManaualMode::onUnlockControlPanel
-//!
-void FrontManaualMode::onUnlockControlPanel()
-{
 
-}
-//!
-//! \brief FrontManaualMode::onLockControlPanel
-//! Lock all except cancel
-//! On PLC Side:
-//!    cancel comes , procedure intercept , and force axis to stop
-//!    cancel release , release stop command
-void FrontManaualMode::onLockControlPanel()
-{
-
-}

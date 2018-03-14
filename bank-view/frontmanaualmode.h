@@ -41,17 +41,6 @@ protected slots:
     //!
     void onOperationPerform();
     //!
-    //! \brief onButtonReleased
-    //! Feed stop
-    void onOperationStopped();
-
-    //!
-    //! \brief onFocusChanged
-    //! \param old
-    //! \param now
-    //! Trigger by qApp
-    void onFocusChanged(QWidget* old,QWidget* now);
-    //!
     //! \brief onTimerTimeout
     //! Polling monitor status
     void onTimerTimeout();
@@ -61,12 +50,6 @@ protected slots:
     //! \brief onSubmitted
     //!
     void onSubmitted();
-
-    //!
-    //! \brief onLockControlPanel
-    //! Interlinked with controller
-    void onLockControlPanel();
-    void onUnlockControlPanel();
 protected:
     ExtendedCommandBlock __commandBlock;
     CommitBlock __commitOption;
