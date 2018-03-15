@@ -5,6 +5,9 @@
 #include <controllermanualmode.h>
 #include <QAbstractTableModel>
 #include <tablemodelcommandblock.h>
+
+#include <QThreadPool>
+#include <QtConcurrent/QtConcurrent>
 //!
 //! \brief The ControllerBankManager class
 //! Charge the operation about transfer from/to PLC
@@ -41,6 +44,7 @@ protected:
     //! From the sigalton
     ControllerManualMode* __controller;
 
+    void transfer();
 };
 
 #endif // CONTROLLERBANKMANAGER_H

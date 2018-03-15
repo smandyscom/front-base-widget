@@ -56,4 +56,6 @@ void TableModelCommandBlock::Value(int rowIndex,const ExtendedCommandBlock value
     __instance->setData(__instance->index(rowIndex,COORD1),QVariant::fromValue(value.Coordinate1()));
     __instance->setData(__instance->index(rowIndex,COORD2),QVariant::fromValue(value.Coordinate2()));
     __instance->setData(__instance->index(rowIndex,COORD3),QVariant::fromValue(value.Coordinate3()));
+
+    __instance->submit();
 }

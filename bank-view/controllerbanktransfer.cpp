@@ -28,10 +28,7 @@ void ControllerBankTransfer::onTransferData(CommitBlock::CommitMode mode, int ro
     }
 
     //!Raise operation
-    __commitOption.Index(__currentIndex);
-    __controller->CommitOption(__commitOption);
-    __controller->CommandBlock(__model->Value(__currentIndex)); //Write-in anyway (would be override in update mode
-    emit __controller->operationTriggered();
+    QtConcurrent::run(this,&ControllerBankTransfer::transfer);
 }
 
 //!
@@ -47,14 +44,21 @@ void ControllerBankTransfer::onOperationPerformed()
     //! Raise next operation if any
     if(__currentIndex < __goal)
     {
-        __commitOption.Index(__currentIndex);
-        __controller->CommitOption(__commitOption);
-        __controller->CommandBlock(__model->Value(__currentIndex)); //Write-in anyway
-        emit __controller->operationTriggered();
+        QtConcurrent::run(this,&ControllerBankTransfer::transfer);
     }
     else
     {
         emit dataTransfered();
         return; //no next trigger
     }
+}
+
+void ControllerBankTransfer::transfer()
+{
+    __commitOption.Index(__currentIndex);
+    __controller->CommitOption(__commitOption);
+    __controller->CommandBlock(__model->Value(__currentIndex)); //Write-in anyway
+    //! Wait until controller comes to right state
+    while (__controller->CurrentState()!=ControllerManualMode::STATE_IDLE) {}
+    emit __controller->operationTriggered();
 }

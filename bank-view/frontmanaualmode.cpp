@@ -10,30 +10,33 @@ FrontManaualMode::FrontManaualMode(QSqlTableModel *wholeCommandBankModel,
     ui(new Ui::FrontManaualMode)
 {
     ui->setupUi(this);
+    //!decorated instance
+    __commandBlockTable = new TableModelCommandBlock(wholeCommandBankModel);
+    __axisTable = new TableModelAxis(wholeAxisBankModel);
     //! Link
     __controller = ControllerManualMode::Instance();
-    __bankTransfer=new ControllerBankTransfer(qobject_cast<TableModelCommandBlock*>(wholeCommandBankModel),this);
+    __bankTransfer=new ControllerBankTransfer(__commandBlockTable,this);
     //setup
     __commitOption.Mode(CommitBlock::MODE_COMMAND_BLOCK);
 
     //!
     //! \brief connect
     //!
-    connect(ui->pushButtonPosition,SIGNAL(clicked(bool)),this,SLOT(onOperationPerform()));
-    connect(ui->pushButtonZret,SIGNAL(clicked(bool)),this,SLOT(onOperationPerform()));
+    connect(ui->pushButtonPosition,SIGNAL(clicked(bool)),this,SLOT(onManualOperationClicked()));
+    connect(ui->pushButtonZret,SIGNAL(clicked(bool)),this,SLOT(onManualOperationClicked()));
     connect(ui->pushButtonStop,SIGNAL(clicked(bool)),__controller,SLOT(onInterrupted()));
 
-    connect(ui->pushButtonFeedForward,SIGNAL(pressed()),this,SLOT(onOperationPerform()));
-    connect(ui->pushButtonFeedBackward,SIGNAL(pressed()),this,SLOT(onOperationPerform()));
+    connect(ui->pushButtonFeedForward,SIGNAL(pressed()),this,SLOT(onManualOperationClicked()));
+    connect(ui->pushButtonFeedBackward,SIGNAL(pressed()),this,SLOT(onManualOperationClicked()));
     connect(ui->pushButtonFeedForward,SIGNAL(released()),__controller,SLOT(onInterrupted()));
     connect(ui->pushButtonFeedBackward,SIGNAL(released()),__controller,SLOT(onInterrupted()));
 
-    connect(ui->pushButtonCoordinateSet,SIGNAL(clicked(bool)),this,SLOT(onBankOperationPerformed()));
-    connect(ui->pushButtonParameterSet,SIGNAL(clicked(bool)),this,SLOT(onBankOperationPerformed()));
-    connect(ui->pushButtonBankExecution,SIGNAL(clicked(bool)),this,SLOT(onBankOperationPerformed()));
+    connect(ui->pushButtonCoordinateSet,SIGNAL(clicked(bool)),this,SLOT(onBankOperationClicked()));
+    connect(ui->pushButtonParameterSet,SIGNAL(clicked(bool)),this,SLOT(onBankOperationClicked()));
+    connect(ui->pushButtonBankExecution,SIGNAL(clicked(bool)),this,SLOT(onBankOperationClicked()));
 
-    connect(ui->pushButtonSubmit,SIGNAL(clicked(bool)),this,SLOT(onSubmitted()));
-
+    connect(ui->pushButtonSubmit,SIGNAL(clicked(bool)),this,SLOT(onDataTransfer()));
+    connect(ui->pushButtonUpdate,SIGNAL(clicked(bool)),this,SLOT(onDataTransfer()));
     //!
     __timer = new QTimer(this);
     connect(__timer,SIGNAL(timeout()),this,SLOT(onTimerTimeout()));
@@ -44,20 +47,26 @@ FrontManaualMode::FrontManaualMode(QSqlTableModel *wholeCommandBankModel,
     //! setModel on combobox
     //! (AxisId,Region,AxisName)
     ui->comboBoxAxisName->setModel(wholeAxisBankModel);
-    //ui->comboBoxAxisName->setModelColumn(TableModelAxis::NAME);//setup the visiable column
+    ui->comboBoxAxisName->setModelColumn(TableModelAxis::NAME);//setup the visiable column
     ui->comboBoxAxisName->setView(new QTableView(ui->comboBoxAxisName));
 
     ui->tableViewCommandBlock->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->tableViewCommandBlock->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableViewCommandBlock->setModel(wholeCommandBankModel);
 
-    //decorated instance
-    __commandBlockTable = new TableModelCommandBlock(wholeCommandBankModel);
-    __axisTable = new TableModelAxis(wholeAxisBankModel);
+
     //!
     connect(ui->comboBoxAxisName,SIGNAL(currentIndexChanged(int)),this,SLOT(onComboBoxIndexChanged()));
     connect(ui->comboBoxRegion,SIGNAL(currentIndexChanged(int)),this,SLOT(onComboBoxIndexChanged()));
     ui->comboBoxAxisName->setCurrentIndex(0);
+
+    //! Progress bar
+    ui->progressBarDataTransfer->setMinimum(0);
+    connect(__controller,&ControllerManualMode::operationPerformed,this,[this](){
+        if(__controller->CommitOption().Mode() == CommitBlock::MODE_COMMAND_BLOCK)
+            return; //ignorance
+        ui->progressBarDataTransfer->setValue(__bankTransfer->CurrentIndex()+1);
+    });
 }
 
 FrontManaualMode::~FrontManaualMode()
@@ -67,7 +76,7 @@ FrontManaualMode::~FrontManaualMode()
 //!
 //! \brief FrontManaualMode::onButtonBankSetClick
 //!
-void FrontManaualMode::onBankOperationPerformed()
+void FrontManaualMode::onBankOperationClicked()
 {
     if(!ui->tableViewCommandBlock->selectionModel()->hasSelection())
         return;
@@ -107,7 +116,7 @@ void FrontManaualMode::onBankOperationPerformed()
 //! 1. POSI
 //! 2. ZRET
 //! 3. STOP
-void FrontManaualMode::onOperationPerform()
+void FrontManaualMode::onManualOperationClicked()
 {
     //! Command refused
     if(__controller->CurrentState()!=ControllerManualMode::STATE_IDLE)
@@ -230,28 +239,45 @@ QVariant FrontManaualMode::SelectedAxisValue(TableModelAxis::Headers header) con
 //!
 //! \brief FrontManaualMode::onSubmitted
 //! Commit unstaged records(Rows) into Model and underlying device(e.g PLC)
-void FrontManaualMode::onSubmitted()
+void FrontManaualMode::onDataTransfer()
 {
     //! Refuse
     if(__controller->CurrentState()!=ControllerManualMode::STATE_IDLE)
         return;
 
-    //! Commit to database firstly , once fail (could not pass the contraint
-    //!  no need go further
     auto table = qobject_cast<QSqlTableModel*>(ui->tableViewCommandBlock->model());
-    table->database().transaction();
-    if(table->submitAll())
+
+    if(sender()==ui->pushButtonSubmit)
     {
-        table->database().commit();
-        //! Start bank trunsation
-        __bankTransfer->onTransferData(CommitBlock::MODE_DOWNLOAD); // mode , transfer all
-        //TODOS , optimization , transfer those rows edited
+        //! Commit to database firstly , once fail (could not pass the contraint
+        //!  no need go further
+
+        table->database().transaction();
+        if(table->submitAll())
+        {
+            table->database().commit();
+            //! Start bank trunsation
+            __bankTransfer->onTransferData(CommitBlock::MODE_DOWNLOAD); // mode , transfer all
+            //TODOS , optimization , transfer those rows edited
+        }
+        else
+        {
+            qDebug() << table->lastError().text();
+            table->revertAll();
+            table->database().rollback();
+        }
     }
-    else
+    else if(sender()==ui->pushButtonUpdate)
     {
-        qDebug() << table->lastError().text();
-        table->revertAll();
-        table->database().rollback();
+        __bankTransfer->onTransferData(CommitBlock::MODE_UPLOAD);
+        //table->setData(table->index(0,TableModelCommandBlock::ACC_TIME),QVariant::fromValue(0.05f));
+//        ExtendedCommandBlock ecb;
+//        ecb.Acceralation(0.4f);
+//        __commandBlockTable->Value(0,ecb);
     }
+
+    //!Setup progress bar
+    ui->progressBarDataTransfer->setMaximum(__bankTransfer->Goal());
+    ui->progressBarDataTransfer->reset();
 }
 

@@ -37,8 +37,11 @@ public:
 
     explicit TableModelCommandBlock(QSqlTableModel* instance);
 
+    QSqlTableModel* Instance() const {return __instance;}
     ExtendedCommandBlock Value(int rowIndex);
     void Value(int rowIndex, const ExtendedCommandBlock value);
+
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE { return __instance->rowCount();}
 protected:
     QSqlTableModel* __instance;
 };

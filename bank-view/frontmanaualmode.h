@@ -36,11 +36,11 @@ protected slots:
     //!
     //! \brief onButtonBankSetClick
     //! Perform bank set related operations
-    void onBankOperationPerformed();
+    void onBankOperationClicked();
     //!
     //! \brief onOperationPerform
     //!
-    void onOperationPerform();
+    void onManualOperationClicked();
     //!
     //! \brief onTimerTimeout
     //! Polling monitor status
@@ -50,7 +50,7 @@ protected slots:
     //!
     //! \brief onSubmitted
     //!
-    void onSubmitted();
+    void onDataTransfer();
 protected:
     ExtendedCommandBlock __commandBlock;
     CommitBlock __commitOption;

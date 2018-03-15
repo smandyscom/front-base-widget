@@ -30,6 +30,7 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
         connect(s,&QState::entered,this,[this](){
             //! trigger read action
             __currentState = __stateMap.key(qobject_cast<QState*>(sender()));
+            //qDebug() << QVariant::fromValue(__currentState).value<QString>();
         });
     }
 
@@ -65,9 +66,6 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
     doneOn->setTargetState(s3);
 
     s2->addTransition(doneOn); //when DONE on
-    connect(s2,&QState::entered,[this](){
-       qDebug() << "S2";
-    });
     connect(s2,&QState::exited,[this](){
 
         //!
@@ -121,11 +119,19 @@ void ControllerManualMode::onReply(UpdateEvent *event)
         });
         break;
     }
+    case DATA_BLOCK_HEAD:
+    {
+        QVariant value  =QVariant::fromValue(__commandBlock);
+        __channel->update(ModbusDriverAddress(DATA_BLOCK_HEAD),value);
+        __commandBlock = value.value<ExtendedCommandBlock>();
+        break;
+    }
     case STATUS_WORD:
-        QTimer::singleShot(100,this,[this](){
+        QTimer::singleShot(5,this,[this](){
            //Schedual the next polling
             __channel->beginUpdate(ModbusDriverAddress(STATUS_WORD),QVariant::fromValue(static_cast<MODBUS_WORD>(0)));
         });
+        break;
     default:
         break;
     }

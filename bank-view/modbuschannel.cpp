@@ -62,10 +62,10 @@ void ModbusChannel::commit(ModbusDriverAddress address, const QVariant value)
         // handling signal bit
         if(value.value<bool>())
             //set
-            writeInData.setValue(writeInData.value<quint16>() | address.toBitwiseMask());
+            writeInData.setValue(static_cast<MODBUS_WORD>(writeInData.value<quint16>() | address.toBitwiseMask()));
         else
             //unset
-            writeInData.setValue(writeInData.value<quint16>() & (~address.toBitwiseMask()));
+            writeInData.setValue(static_cast<MODBUS_WORD>(writeInData.value<quint16>() & (~address.toBitwiseMask())));
         break;
     }
     default:
@@ -77,8 +77,12 @@ void ModbusChannel::commit(ModbusDriverAddress address, const QVariant value)
     // Get the object size , so that you can make right request
     size_t sizeInWord = (utilities::sizeOf(writeInData))/2; //size of in byte
 
+    if(sizeInWord == 0)
+        sizeInWord = 1; //prevent zero count
+
     //! Translate to MODBUSUNIT
     preparedWriteRequest.setStartAddress(address.getRegisterAddress());
+    preparedWriteRequest.setValueCount(sizeInWord);
     QVector<quint16> temp;
     for(size_t i=0;i<sizeInWord;i++)
         temp.append(reinterpret_cast<const quint16*>(writeInData.data())[i]);
