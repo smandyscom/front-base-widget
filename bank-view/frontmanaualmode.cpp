@@ -3,6 +3,8 @@
 #include <QDebug>
 #include <QSqlError>
 #include <QSqlQuery>
+#include <QPalette>
+#include <utilities.h>
 FrontManaualMode::FrontManaualMode(QSqlTableModel *wholeCommandBankModel,
                                    QSqlTableModel *wholeAxisBankModel,
                                    QWidget *parent) :
@@ -67,6 +69,12 @@ FrontManaualMode::FrontManaualMode(QSqlTableModel *wholeCommandBankModel,
             return; //ignorance
         ui->progressBarDataTransfer->setValue(__bankTransfer->CurrentIndex()+1);
     });
+
+    //!
+    connect(ui->pushButtonServoOn,&QPushButton::clicked,this,&FrontManaualMode::onOperationPerformed);
+
+    connect(ui->pushButtonAlarmClear,&QPushButton::pressed,this,&FrontManaualMode::onOperationPerformed);
+    connect(ui->pushButtonAlarmClear,&QPushButton::released,this,&FrontManaualMode::onOperationPerformed);
 }
 
 FrontManaualMode::~FrontManaualMode()
@@ -164,6 +172,24 @@ void FrontManaualMode::onManualOperationClicked()
     __controller->CommitOption(__commitOption);
     emit __controller->operationTriggered();
 }
+//!
+//! \brief FrontManaualMode::onOperationPressed
+//!
+void FrontManaualMode::onOperationPerformed()
+{
+    AbstractMonitorBlock mb = __controller->MonitorBlock();
+    AxisMonitorBlock* amb = static_cast<AxisMonitorBlock*>(&mb);
+
+    if(sender()==ui->pushButtonServoOn)
+    {
+        //Toggle
+        __controller->Operation(ControllerManualMode::SERVO_ON,!amb->Operation(AxisMonitorBlock::OP_SERVO_ON));
+    }
+    else if(sender()==ui->pushButtonAlarmClear)
+    {
+        __controller->Operation(ControllerManualMode::ALARM_CLEAR,ui->pushButtonAlarmClear->isDown());
+    }
+}
 
 void FrontManaualMode::setCommonParameters()
 {
@@ -192,6 +218,10 @@ void FrontManaualMode::onTimerTimeout()
     ui->textBrowserPositionFeedback->setText(QString::number(amb->PositionFeedback()));
     ui->textBrowserSpeedFeedback->setText(QString::number(amb->SpeedFeedback()));
     ui->textBrowserTorqueFeedback->setText(QString::number(amb->TorqueFeedback()));
+
+    //! Servo On/Alarm clear
+    utilities::colorChangeOver(ui->pushButtonServoOn, amb->Operation(AxisMonitorBlock::OP_SERVO_ON));
+      utilities::colorChangeOver(ui->pushButtonAlarmClear, amb->Operation(AxisMonitorBlock::OP_ALARM_CLEAR),Qt::red);
 }
 
 //!
@@ -205,7 +235,9 @@ void FrontManaualMode::onComboBoxIndexChanged()
     {
         QSqlTableModel* model = qobject_cast<QSqlTableModel*>(ui->tableViewCommandBlock->model());
         //! filter out
-        model->setFilter(tr("AXIS_ID=%1").arg(SelectedAxisAddress()));
+                model->setFilter(tr("AXIS_ID=%2").arg(SelectedAxisAddress()));
+//        model->setFilter(tr("%1=%2").arg(QVariant::fromValue(TableModelAxis::AXIS_ID).value<QString>(),
+//                                         SelectedAxisAddress()));
         //! change base-object-id
         __commandBlock.ObjectId(SelectedAxisAddress());
         //! change monitor axis id
@@ -229,7 +261,7 @@ MODBUS_WORD FrontManaualMode::SelectedAxisAddress() const
 }
 MODBUS_WORD FrontManaualMode::SelectedAxisId() const
 {
-    return ui->comboBoxAxisName->model()->index(ui->comboBoxAxisName->currentIndex(),TableModelAxis::ID).data().value<MODBUS_WORD>();
+    return ui->comboBoxAxisName->model()->index(ui->comboBoxAxisName->currentIndex(),TableModelAxis::AXIS_ID).data().value<MODBUS_WORD>();
 }
 QVariant FrontManaualMode::SelectedAxisValue(TableModelAxis::Headers header) const
 {
@@ -247,16 +279,17 @@ void FrontManaualMode::onDataTransfer()
 
     auto table = qobject_cast<QSqlTableModel*>(ui->tableViewCommandBlock->model());
 
+
     if(sender()==ui->pushButtonSubmit)
     {
         //! Commit to database firstly , once fail (could not pass the contraint
         //!  no need go further
-
         table->database().transaction();
         if(table->submitAll())
         {
             table->database().commit();
             //! Start bank trunsation
+            table->setFilter(""); //reset filter
             __bankTransfer->onTransferData(CommitBlock::MODE_DOWNLOAD); // mode , transfer all
             //TODOS , optimization , transfer those rows edited
         }
@@ -269,11 +302,8 @@ void FrontManaualMode::onDataTransfer()
     }
     else if(sender()==ui->pushButtonUpdate)
     {
+        table->setFilter(""); //reset filter
         __bankTransfer->onTransferData(CommitBlock::MODE_UPLOAD);
-        //table->setData(table->index(0,TableModelCommandBlock::ACC_TIME),QVariant::fromValue(0.05f));
-//        ExtendedCommandBlock ecb;
-//        ecb.Acceralation(0.4f);
-//        __commandBlockTable->Value(0,ecb);
     }
 
     //!Setup progress bar

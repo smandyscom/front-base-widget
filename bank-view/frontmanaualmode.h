@@ -51,6 +51,8 @@ protected slots:
     //! \brief onSubmitted
     //!
     void onDataTransfer();
+
+    void onOperationPerformed();
 protected:
     ExtendedCommandBlock __commandBlock;
     CommitBlock __commitOption;

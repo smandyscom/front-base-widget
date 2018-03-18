@@ -22,3 +22,17 @@ int utilities::sizeOf(QVariant value)
 {
     return QMetaType::sizeOf(QMetaType::type(value.typeName()));
 }
+
+void utilities::colorChangeOver(QWidget *target, bool value, Qt::GlobalColor trueColor)
+{
+    QPalette pal = target->palette();
+
+    target->setAutoFillBackground(true);
+    if(value)
+        pal.setColor(QPalette::Button,QColor(trueColor));
+    else
+        pal.setColor(QPalette::Button,QColor(Qt::gray));
+
+    target->setPalette(pal);
+    target->update();
+}

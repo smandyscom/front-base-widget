@@ -30,19 +30,27 @@ public:
         STATUS_WORD=0x02000000,
         ENGAGED_PLC=0x02000000,
         DONE=0x02010000,
-        AXIS_ADR=0x02000001,
-        POS_COMMAND=0x02000002,
-        POS_FEEDBACK=0x02000004,
-        SPD_FEEDBACK=0x02000006,
-        TOR_FEEDBACK=0x02000008,
-        ENGAGED_HMI=0x02000010,
-        RUN=0x02010010,
-        CANCEL=0x02020010,
-        COMMIT_BLOCK=0x02000011,
-        COMMIT_MODE=0x02000011,
-        COMMIT_SELECTION=0x02000012,
-        COMMIT_INDEX=0x02000013,
-        DATA_BLOCK_HEAD=0x02000020,
+        MONITOR_BLOCK_HEAD=0x02000008,
+        OPERATION=0x02000008,
+        SERVO_ON=0x02000008,
+        ALARM_CLEAR=0x20F0008,
+        POS_COMMAND=0x200000A,
+        RUN_STATUS=0x200000C,
+        WARNINGS=0x200000E,
+        ALARMS=0x02000010,
+        COMMAND_STATUS=0x02000012,
+        POS_STATUS=0x02000014,
+        POS_FEEDBACK=0x02000016,
+        SPD_FEEDBACK=0x02000018,
+        TOR_FEEDBACK=0x200001A,
+        ENGAGED_HMI=0x02000020,
+        RUN=0x02010020,
+        AXIS_ADR=0x02000028,
+        COMMIT_BLOCK=0x200002A,
+        COMMIT_MODE=0x200002A,
+        COMMIT_SELECTION=0x200002C,
+        COMMIT_INDEX=0x200002E,
+        DATA_BLOCK_HEAD=0x02000040,
     };
     Q_ENUM(ManualContext)
     enum ManualState : int
@@ -79,6 +87,7 @@ public:
 
     ManualState CurrentState() const { return __currentState;}
 
+    void Operation(ManualContext bit,bool value);
 
     static ControllerManualMode* Instance();
 public slots:

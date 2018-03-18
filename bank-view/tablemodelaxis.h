@@ -12,7 +12,7 @@ class TableModelAxis : public QSqlTableModel
 public:
     enum Headers
     {
-        ID,
+        AXIS_ID,
         REGION,
         NAME,
         ADDRESS,

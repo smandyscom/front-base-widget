@@ -8,7 +8,7 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
     __commitOption.Mode(CommitBlock::MODE_COMMAND_BLOCK);
 
     //! Very first shot
-    __channel->beginUpdate(ModbusDriverAddress(POS_COMMAND),QVariant::fromValue(__monitorBlock));
+    __channel->beginUpdate(ModbusDriverAddress(MONITOR_BLOCK_HEAD),QVariant::fromValue(__monitorBlock));
     __channel->beginUpdate(ModbusDriverAddress(STATUS_WORD),QVariant::fromValue(static_cast<MODBUS_WORD>(0)));
     //!
     //! \brief s1
@@ -107,15 +107,15 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
 void ControllerManualMode::onReply(UpdateEvent *event)
 {
     switch (event->address) {
-    case POS_COMMAND:
+    case MONITOR_BLOCK_HEAD:
     {
         //! keep polling monitor status
         QVariant value = QVariant::fromValue(__monitorBlock);
-        __channel->update(ModbusDriverAddress(POS_COMMAND),value);
+        __channel->update(ModbusDriverAddress(MONITOR_BLOCK_HEAD),value);
         __monitorBlock = value.value<AbstractMonitorBlock>();
         QTimer::singleShot(100,this,[this](){
             //Schedual the next polling
-            __channel->beginUpdate(ModbusDriverAddress(POS_COMMAND),QVariant::fromValue(__monitorBlock));
+            __channel->beginUpdate(ModbusDriverAddress(MONITOR_BLOCK_HEAD),QVariant::fromValue(__monitorBlock));
         });
         break;
     }
@@ -135,6 +135,10 @@ void ControllerManualMode::onReply(UpdateEvent *event)
     default:
         break;
     }
+}
+void ControllerManualMode::Operation(ManualContext address, bool value)
+{
+    __channel->commit(ModbusDriverAddress(address),QVariant::fromValue(value));
 }
 
 //!
