@@ -36,10 +36,16 @@
      </rect>
     </property>
     <property name="sizePolicy">
-     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
       <horstretch>0</horstretch>
       <verstretch>0</verstretch>
      </sizepolicy>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>1261</width>
+      <height>741</height>
+     </size>
     </property>
     <property name="layoutDirection">
      <enum>Qt::LeftToRight</enum>
@@ -51,7 +57,7 @@
      <enum>QTabWidget::Rounded</enum>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <property name="iconSize">
      <size>
@@ -70,6 +76,11 @@
     <widget class="QWidget" name="tabChannel">
      <attribute name="title">
       <string>Channel</string>
+     </attribute>
+    </widget>
+    <widget class="QWidget" name="tabIO">
+     <attribute name="title">
+      <string>Page</string>
      </attribute>
     </widget>
    </widget>

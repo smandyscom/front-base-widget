@@ -40,7 +40,11 @@ SOURCES += \
     tablemodelcommandblock.cpp \
     tablemodelaxis.cpp \
     mainwindow.cpp \
-    main.cpp
+    main.cpp \
+    tablemodeliooverride.cpp \
+    frontiooverride.cpp \
+    abstractsqlrelationaltablemodeldecorator.cpp \
+    bitflipitemdelegate.cpp
 
 HEADERS += \
     ptpzrn_viewer.h \
@@ -52,13 +56,18 @@ HEADERS += \
     modbuschannel.h \
     modbusserializedclient.h \
     controllermanualmode.h \
-    basicblocksdefinition.h \
     frontmanaualmode.h \
     junctionbankdatabase.h \
     controllerbanktransfer.h \
     tablemodelcommandblock.h \
     tablemodelaxis.h \
-    mainwindow.h
+    mainwindow.h \
+    tablemodeliooverride.h \
+    frontiooverride.h \
+    abstractsqlrelationaltablemodeldecorator.h \
+    bitflipitemdelegate.h \
+    bitflipitemdelegate.h \
+    basicblocksdefinition.h
 
 unix {
     target.path = /usr/lib
@@ -69,4 +78,5 @@ FORMS += \
     ptpzrn_viewer.ui \
     modbussetupwidget.ui \
     frontmanaualmode.ui \
-    mainwindow.ui
+    mainwindow.ui \
+    frontiooverride.ui

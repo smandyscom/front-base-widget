@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include <modbuschannel.h>
 #include <frontmanaualmode.h>
-
+#include <frontiooverride.h>
 #include <QModbusTcpClient>
 
 namespace Ui {

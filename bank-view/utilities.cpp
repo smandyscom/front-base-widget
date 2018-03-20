@@ -25,14 +25,5 @@ int utilities::sizeOf(QVariant value)
 
 void utilities::colorChangeOver(QWidget *target, bool value, Qt::GlobalColor trueColor)
 {
-    QPalette pal = target->palette();
-
-    target->setAutoFillBackground(true);
-    if(value)
-        pal.setColor(QPalette::Button,QColor(trueColor));
-    else
-        pal.setColor(QPalette::Button,QColor(Qt::gray));
-
-    target->setPalette(pal);
-    target->update();
+    target->setStyleSheet(QString("background-color : %1").arg(QVariant::fromValue(trueColor).value<QString>()));
 }

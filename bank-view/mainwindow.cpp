@@ -38,7 +38,10 @@ MainWindow::MainWindow(QWidget *parent) :
     FrontManaualMode* fmm = new FrontManaualMode(JunctionBankDatabase::Instance()->CommandBlockTable(),
                                                  JunctionBankDatabase::Instance()->AxisTable(),
                                                  ui->tabManual);
-
+    FrontIoOverride* fio = new FrontIoOverride(JunctionBankDatabase::Instance()->InputTable(),
+                                               JunctionBankDatabase::Instance()->OutputTable(),
+                                               JunctionBankDatabase::Instance()->RegionTable(),
+                                               ui->tabIO);
     //! Connect controller and channel
     ControllerManualMode* __controller =  ControllerManualMode::Instance();
     ModbusChannel* __channel = ModbusChannel::Instance();

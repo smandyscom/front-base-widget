@@ -28,8 +28,8 @@ class FrontManaualMode : public QWidget
     Q_OBJECT
 
 public:
-    explicit FrontManaualMode(QSqlTableModel* wholeCommandBankModel,
-                              QSqlTableModel* wholeAxisBankModel,
+    explicit FrontManaualMode(QSqlRelationalTableModel* wholeCommandBankModel,
+                              QSqlRelationalTableModel *wholeAxisBankModel,
                               QWidget *parent = 0);
     ~FrontManaualMode();
 protected slots:

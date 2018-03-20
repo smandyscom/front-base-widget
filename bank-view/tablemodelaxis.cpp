@@ -1,7 +1,7 @@
 #include "tablemodelaxis.h"
 
-TableModelAxis::TableModelAxis(QSqlTableModel *instance) :
-    QSqlTableModel(instance->parent()),
+TableModelAxis::TableModelAxis(QSqlRelationalTableModel *instance) :
+    QSqlRelationalTableModel(instance->parent()),
     __instance(instance)
 {
 

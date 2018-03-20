@@ -5,8 +5,8 @@
 #include <QSqlQuery>
 #include <QPalette>
 #include <utilities.h>
-FrontManaualMode::FrontManaualMode(QSqlTableModel *wholeCommandBankModel,
-                                   QSqlTableModel *wholeAxisBankModel,
+FrontManaualMode::FrontManaualMode(QSqlRelationalTableModel *wholeCommandBankModel,
+                                   QSqlRelationalTableModel *wholeAxisBankModel,
                                    QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FrontManaualMode)
@@ -221,7 +221,12 @@ void FrontManaualMode::onTimerTimeout()
 
     //! Servo On/Alarm clear
     utilities::colorChangeOver(ui->pushButtonServoOn, amb->Operation(AxisMonitorBlock::OP_SERVO_ON));
-      utilities::colorChangeOver(ui->pushButtonAlarmClear, amb->Operation(AxisMonitorBlock::OP_ALARM_CLEAR),Qt::red);
+    utilities::colorChangeOver(ui->pushButtonAlarmClear, amb->Operation(AxisMonitorBlock::OP_ALARM_CLEAR),Qt::red);
+    //! Servo ready/alarm
+    utilities::colorChangeOver(ui->labelServoReady,amb->RunStatus(AxisMonitorBlock::RS_SERVO_READY));
+    utilities::colorChangeOver(ui->labelAlarm,amb->Warning() > 0 || amb->Alarm() > 0,Qt::red);
+    ui->textBrowserWarning->setText(QString(amb->Warning()));
+    ui->textBrowseAlarm->setText(QString(amb->Alarm()));
 }
 
 //!

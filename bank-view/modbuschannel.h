@@ -42,6 +42,13 @@ public:
     //! Fire and forget
     void commit(ModbusDriverAddress address, const QVariant value);
 
+    bool Bit(const ModbusDriverAddress address);
+    //!
+    //! \brief Bit
+    //! \param address
+    //! \param value
+    //! Synchonous function
+    void Bit(ModbusDriverAddress address,bool value);
 
     //!
     //! \brief getInstance

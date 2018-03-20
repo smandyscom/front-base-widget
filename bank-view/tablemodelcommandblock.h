@@ -41,7 +41,8 @@ public:
     ExtendedCommandBlock Value(int rowIndex);
     void Value(int rowIndex, const ExtendedCommandBlock value);
 
-    void setFilter(const QString &filter) {__instance->setFilter(filter);}
+    //! Ovrrides
+    void setFilter(const QString &filter) Q_DECL_OVERRIDE {__instance->setFilter(filter);}
     bool select() Q_DECL_OVERRIDE { __instance->select();}
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE { return __instance->rowCount();}
 protected:

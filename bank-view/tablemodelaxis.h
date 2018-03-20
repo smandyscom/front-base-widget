@@ -2,11 +2,11 @@
 #define TABLEMODELAXIS_H
 
 #include <QObject>
-#include <QSqlTableModel>
+#include <QSqlRelationalTableModel>
 //!
 //! \brief The TableModelAxis class
 //! Decoration mode
-class TableModelAxis : public QSqlTableModel
+class TableModelAxis : public QSqlRelationalTableModel
 {
     Q_OBJECT
 public:
@@ -24,7 +24,7 @@ public:
         COMMENT,
     };
     Q_ENUM(Headers)
-    explicit TableModelAxis(QSqlTableModel* instance);
+    explicit TableModelAxis(QSqlRelationalTableModel* instance);
 
     QVariant Value(int id,Headers header) const ;
 protected:

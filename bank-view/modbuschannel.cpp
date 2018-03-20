@@ -160,6 +160,23 @@ void ModbusChannel::writeData(ModbusDriverAddress modbusAddress,const void* sour
            count);
 }
 
+bool ModbusChannel::Bit(const ModbusDriverAddress address)
+{
+    QVariant value = QVariant::fromValue(false);
+    update(address,value);
+    return value.toBool();
+}
+//!
+//! \brief ModbusChannel::Bit
+//! \param address
+//! \param value
+//! Synchonrous
+void ModbusChannel::Bit(ModbusDriverAddress address, bool value)
+{
+    QVariant __value = QVariant::fromValue(value);
+    commit(address,__value);
+}
+
 ModbusChannel* ModbusChannel::Instance()
 {
     if(__instance==nullptr)
