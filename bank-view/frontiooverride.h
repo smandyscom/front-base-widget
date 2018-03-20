@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QSqlRelationalTableModel>
 #include <tablemodeliooverride.h>
+#include <modbuschannel.h>
 namespace Ui {
 class FrontIoOverride;
 }

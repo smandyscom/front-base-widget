@@ -1,8 +1,13 @@
 #include "tablemodeliooverride.h"
-
 TableModelIOOverride::TableModelIOOverride(QObject *parent) : QSqlRelationalTableModel(parent)
 {
     __channel = ModbusChannel::Instance();
+    //! Forced to inform View to update periodically
+    __timer = new QTimer(this);
+    connect(__timer,&QTimer::timeout,[=](){
+       emit dataChanged(index(0,0),index(rowCount(),columnCount()));
+    });
+    __timer->start(100);
 }
 //!
 //! \brief TableModelIOOverride::data
@@ -17,34 +22,13 @@ QVariant TableModelIOOverride::data(const QModelIndex &idx, int role) const
         return QSqlRelationalTableModel::data(idx,role);
 
     //!Change color once the background role request comes
+    auto v = CurrentIndexAddress(idx.row());
     if(__channel->Bit(CurrentIndexAddress(idx.row())))
         return QColor(Qt::green);
     else
         return QColor(Qt::gray);
 }
-//!
-//! \brief TableModelIOOverride::setData
-//! \param index
-//! \param value
-//! \param role
-//! \return
-//!
-bool TableModelIOOverride::setData(const QModelIndex &index, const QVariant &value, int role)
-{
-    //! Call base method
-    if(!(index.column()==NAME && role==Qt::EditRole && __isEnableStateControl))
-    {
-        QSqlRelationalTableModel::setData(index,value,role);
-        return true;
-    }
-    else
-    {
-        //flip the bit status
-        __channel->Bit(CurrentIndexAddress(index.row()),!__channel->Bit(CurrentIndexAddress(index.row())));
-    }
 
-    return false;
-}
 //!
 //! \brief TableModelIOOverride::CurrentIndexAddress
 //! \param rowIndex

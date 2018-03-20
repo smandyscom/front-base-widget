@@ -5,6 +5,8 @@
 #include <QSqlRelationalTableModel>
 #include <modbuschannel.h>
 #include <QColor>
+#include <QTimer>
+
 //!
 //! \brief The TableModelIOOverride class
 //! Override/Read the I/O data
@@ -36,18 +38,13 @@ public:
     //! \return
     //! Override the Background role
     QVariant data(const QModelIndex &idx, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-    //!
-    //! \brief setData
-    //! \param index
-    //! \param value
-    //! \param role
-    //! Offer the ability to control STATE
-    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
 
 protected:
     bool __isEnableStateControl;
     ModbusChannel* __channel;
     ModbusDriverAddress CurrentIndexAddress(int rowIndex) const;
+
+    QTimer* __timer;
 };
 
 #endif // TABLEMODELIOOVERRIDE_H

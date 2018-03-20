@@ -39,7 +39,13 @@ FrontIoOverride::FrontIoOverride(QSqlRelationalTableModel *inputTable,
         view->hideColumn(TableModelIOOverride::ID);
         view->hideColumn(TableModelIOOverride::HAL_ADDRESS);
         view->hideColumn(TableModelIOOverride::REGION);
+        view->setCornerButtonEnabled(false);
     }
+    //!
+    connect(ui->tableViewOutputs,&QTableView::clicked,[=](QModelIndex index){
+        ModbusDriverAddress address = ModbusDriverAddress(__outputTable->index(index.row(),TableModelIOOverride::HAL_ADDRESS).data().toInt());
+        ModbusChannel::Instance()->Bit(address,!ModbusChannel::Instance()->Bit(address));
+    });
 }
 //!
 //! \brief FrontIoOverride::onComboxCurrentIndexChanged
