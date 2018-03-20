@@ -51,6 +51,7 @@ public:
         COMMIT_SELECTION=0x200002C,
         COMMIT_INDEX=0x200002E,
         DATA_BLOCK_HEAD=0x02000040,
+        IO_MON_OVERRIDE=0x02000100,
     };
     Q_ENUM(ManualContext)
     enum ManualState : int

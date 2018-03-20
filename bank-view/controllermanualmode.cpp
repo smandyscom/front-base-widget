@@ -10,6 +10,7 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
     //! Very first shot
     __channel->beginUpdate(ModbusDriverAddress(MONITOR_BLOCK_HEAD),QVariant::fromValue(__monitorBlock));
     __channel->beginUpdate(ModbusDriverAddress(STATUS_WORD),QVariant::fromValue(static_cast<MODBUS_WORD>(0)));
+    __channel->beginUpdate(ModbusDriverAddress(IO_MON_OVERRIDE),QVariant::fromValue(IoMonitorOverrideBlock()));
     //!
     //! \brief s1
     //!
@@ -130,6 +131,13 @@ void ControllerManualMode::onReply(UpdateEvent *event)
         QTimer::singleShot(5,this,[this](){
            //Schedual the next polling
             __channel->beginUpdate(ModbusDriverAddress(STATUS_WORD),QVariant::fromValue(static_cast<MODBUS_WORD>(0)));
+        });
+        break;
+    case IO_MON_OVERRIDE:
+        QTimer::singleShot(100,this,[this](){
+           //Schedual the next polling
+           //polling 8 Words so far
+           __channel->beginUpdate(ModbusDriverAddress(IO_MON_OVERRIDE),QVariant::fromValue(IoMonitorOverrideBlock()));
         });
         break;
     default:

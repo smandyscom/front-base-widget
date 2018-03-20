@@ -479,5 +479,12 @@ public:
 };
 Q_DECLARE_METATYPE(AxisMonitorBlock)
 
+class IoMonitorOverrideBlock
+{
+public:
+protected:
+    MODBUS_WORD reserved[8];
+};
+Q_DECLARE_METATYPE(IoMonitorOverrideBlock)
 
 #endif // BASICBLOCKSDEFINITION_H
