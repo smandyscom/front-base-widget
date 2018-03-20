@@ -18,9 +18,11 @@ FrontIoOverride::FrontIoOverride(QSqlRelationalTableModel *inputTable,
                                     ui->comboBoxOutputsFilter};
     //!
     foreach (QComboBox* var, __comboxes) {
-        var->setView(new QTableView(var));
+        QTableView* qtv = new QTableView(var);
+        var->setView(qtv);
         var->setModel(regionTable);
         var->setModelColumn(1);
+        qtv->hideColumn(0);
         connect(var,SIGNAL(currentIndexChanged(int)),this,SLOT(onComboxCurrentIndexChanged()));
     }
     //!
@@ -54,9 +56,9 @@ void FrontIoOverride::onComboxCurrentIndexChanged()
 {
     QComboBox* cb = qobject_cast<QComboBox*>(sender());
     QString regionKey = QVariant::fromValue(TableModelIOOverride::REGION).value<QString>();
-    int regionId = __regionTable->index(cb->currentIndex(),0).data().toUInt();
+    uint regionId = __regionTable->index(cb->currentIndex(),0).data().toUInt();
 
-    QString filterString = QString("%1=%2").arg(regionKey,regionId);
+    QString filterString = tr("%1=%2").arg(regionKey).arg(regionId);
 
     if(sender()==ui->comboBoxInputsFilter)
     {
@@ -75,10 +77,12 @@ void FrontIoOverride::onSelectAll()
     if(sender()==ui->pushButtonInputsSelectAllRegion)
     {
         __inputTable->setFilter("");
+        __inputTable->select();
     }
     else if(sender()==ui->pushButtonOutputsSelectAllRegion)
     {
         __outputTable->setFilter("");
+        __outputTable->select();
     }
 }
 

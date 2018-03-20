@@ -26,6 +26,8 @@ public:
     Q_ENUM(Headers)
     explicit TableModelAxis(QSqlRelationalTableModel* instance);
 
+    void setFilter(const QString &filter) Q_DECL_OVERRIDE {__instance->setFilter(filter);}
+
     QVariant Value(int id,Headers header) const ;
 protected:
     QSqlTableModel* __instance;

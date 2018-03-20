@@ -30,6 +30,7 @@ class FrontManaualMode : public QWidget
 public:
     explicit FrontManaualMode(QSqlRelationalTableModel* wholeCommandBankModel,
                               QSqlRelationalTableModel *wholeAxisBankModel,
+                              QSqlRelationalTableModel *regionModel,
                               QWidget *parent = 0);
     ~FrontManaualMode();
 protected slots:
@@ -53,6 +54,8 @@ protected slots:
     void onDataTransfer();
 
     void onOperationPerformed();
+
+    void onSelectReset();
 protected:
     ExtendedCommandBlock __commandBlock;
     CommitBlock __commitOption;
@@ -71,6 +74,8 @@ protected:
 
     TableModelCommandBlock* __commandBlockTable;
     TableModelAxis* __axisTable;
+    QSqlRelationalTableModel* __regionTable;
+
     ControllerBankTransfer* __bankTransfer;
 
 

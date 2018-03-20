@@ -44,6 +44,7 @@ void JunctionBankDatabase::onInitialize()
     __outputTable->select();//engaged
     //!
     __regionTable = new QSqlRelationalTableModel(this);
+    __regionTable->setEditStrategy(QSqlTableModel::OnManualSubmit);
     __regionTable->setTable(QVariant::fromValue(DEF_REGION).value<QString>());
     __regionTable->select();//engaged
 

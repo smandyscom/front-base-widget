@@ -37,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //! Initialize FrontManaul panel
     FrontManaualMode* fmm = new FrontManaualMode(JunctionBankDatabase::Instance()->CommandBlockTable(),
                                                  JunctionBankDatabase::Instance()->AxisTable(),
+                                                 JunctionBankDatabase::Instance()->RegionTable(),
                                                  ui->tabManual);
     FrontIoOverride* fio = new FrontIoOverride(JunctionBankDatabase::Instance()->InputTable(),
                                                JunctionBankDatabase::Instance()->OutputTable(),

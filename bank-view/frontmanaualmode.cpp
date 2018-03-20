@@ -7,6 +7,7 @@
 #include <utilities.h>
 FrontManaualMode::FrontManaualMode(QSqlRelationalTableModel *wholeCommandBankModel,
                                    QSqlRelationalTableModel *wholeAxisBankModel,
+                                   QSqlRelationalTableModel *regionModel,
                                    QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FrontManaualMode)
@@ -15,6 +16,7 @@ FrontManaualMode::FrontManaualMode(QSqlRelationalTableModel *wholeCommandBankMod
     //!decorated instance
     __commandBlockTable = new TableModelCommandBlock(wholeCommandBankModel);
     __axisTable = new TableModelAxis(wholeAxisBankModel);
+    __regionTable = regionModel;
     //! Link
     __controller = ControllerManualMode::Instance();
     __bankTransfer=new ControllerBankTransfer(__commandBlockTable,this);
@@ -24,7 +26,9 @@ FrontManaualMode::FrontManaualMode(QSqlRelationalTableModel *wholeCommandBankMod
     //!
     //! \brief connect
     //!
-    connect(ui->pushButtonPosition,SIGNAL(clicked(bool)),this,SLOT(onManualOperationClicked()));
+    connect(ui->pushButtonAbsolute,SIGNAL(clicked(bool)),this,SLOT(onManualOperationClicked()));
+    connect(ui->pushButtonStepMinus,SIGNAL(clicked(bool)),this,SLOT(onManualOperationClicked()));
+    connect(ui->pushButtonStepPlus,SIGNAL(clicked(bool)),this,SLOT(onManualOperationClicked()));
     connect(ui->pushButtonZret,SIGNAL(clicked(bool)),this,SLOT(onManualOperationClicked()));
     connect(ui->pushButtonStop,SIGNAL(clicked(bool)),__controller,SLOT(onInterrupted()));
 
@@ -33,12 +37,16 @@ FrontManaualMode::FrontManaualMode(QSqlRelationalTableModel *wholeCommandBankMod
     connect(ui->pushButtonFeedForward,SIGNAL(released()),__controller,SLOT(onInterrupted()));
     connect(ui->pushButtonFeedBackward,SIGNAL(released()),__controller,SLOT(onInterrupted()));
 
+
     connect(ui->pushButtonCoordinateSet,SIGNAL(clicked(bool)),this,SLOT(onBankOperationClicked()));
     connect(ui->pushButtonParameterSet,SIGNAL(clicked(bool)),this,SLOT(onBankOperationClicked()));
     connect(ui->pushButtonBankExecution,SIGNAL(clicked(bool)),this,SLOT(onBankOperationClicked()));
 
     connect(ui->pushButtonSubmit,SIGNAL(clicked(bool)),this,SLOT(onDataTransfer()));
     connect(ui->pushButtonUpdate,SIGNAL(clicked(bool)),this,SLOT(onDataTransfer()));
+
+    connect(ui->pushButtonSelectAllAxis,SIGNAL(clicked(bool)),this,SLOT(onSelectReset()));
+    connect(ui->pushButtonSelectAllRegion,SIGNAL(clicked(bool)),this,SLOT(onSelectReset()));
     //!
     __timer = new QTimer(this);
     connect(__timer,SIGNAL(timeout()),this,SLOT(onTimerTimeout()));
@@ -50,17 +58,36 @@ FrontManaualMode::FrontManaualMode(QSqlRelationalTableModel *wholeCommandBankMod
     //! (AxisId,Region,AxisName)
     ui->comboBoxAxisName->setModel(wholeAxisBankModel);
     ui->comboBoxAxisName->setModelColumn(TableModelAxis::NAME);//setup the visiable column
-    ui->comboBoxAxisName->setView(new QTableView(ui->comboBoxAxisName));
+    QTableView* qtv = new QTableView(ui->comboBoxAxisName);
+    ui->comboBoxAxisName->setView(qtv);
+    qtv->setStyleSheet(ui->comboBoxAxisName->styleSheet());
+    qtv->setFont(ui->comboBoxAxisName->font());
+    qtv->setCornerButtonEnabled(false);
+
+    ui->comboBoxRegion->setModel(regionModel);
+    ui->comboBoxRegion->setModelColumn(1);
+    qtv = new QTableView(ui->comboBoxRegion);
+    ui->comboBoxRegion->setView(qtv);
+    qtv->setStyleSheet(ui->comboBoxRegion->styleSheet());
+    qtv->setFont(ui->comboBoxRegion->font());
+    qtv->setCornerButtonEnabled(false);
+    qtv->hideColumn(0);
 
     ui->tableViewCommandBlock->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->tableViewCommandBlock->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableViewCommandBlock->setModel(wholeCommandBankModel);
-
+    QList<TableModelCommandBlock::Headers> __headersGoing2Hide = {TableModelCommandBlock::COMMAND_BLOCK_ID,
+                                                                 TableModelCommandBlock::COMMAND_TYPE,
+                                                                 TableModelCommandBlock::AXIS_ID};
+    foreach (TableModelCommandBlock::Headers var, __headersGoing2Hide) {
+        ui->tableViewCommandBlock->hideColumn(var);
+    }
 
     //!
     connect(ui->comboBoxAxisName,SIGNAL(currentIndexChanged(int)),this,SLOT(onComboBoxIndexChanged()));
     connect(ui->comboBoxRegion,SIGNAL(currentIndexChanged(int)),this,SLOT(onComboBoxIndexChanged()));
     ui->comboBoxAxisName->setCurrentIndex(0);
+    ui->comboBoxRegion->setCurrentIndex(0);
 
     //! Progress bar
     ui->progressBarDataTransfer->setMinimum(0);
@@ -70,9 +97,9 @@ FrontManaualMode::FrontManaualMode(QSqlRelationalTableModel *wholeCommandBankMod
         ui->progressBarDataTransfer->setValue(__bankTransfer->CurrentIndex()+1);
     });
 
-    //!
+    //! Toogle mode
     connect(ui->pushButtonServoOn,&QPushButton::clicked,this,&FrontManaualMode::onOperationPerformed);
-
+    //! Press/Release mode
     connect(ui->pushButtonAlarmClear,&QPushButton::pressed,this,&FrontManaualMode::onOperationPerformed);
     connect(ui->pushButtonAlarmClear,&QPushButton::released,this,&FrontManaualMode::onOperationPerformed);
 }
@@ -97,7 +124,7 @@ void FrontManaualMode::onBankOperationClicked()
     if(button==ui->pushButtonCoordinateSet)
     {
         //setup field of coordinate
-        __commandBlock.Coordinate1(ui->textEditCoordinate->toPlainText().toFloat());
+        __commandBlock.Coordinate1(ui->textBrowserPositionFeedback->toPlainText().toFloat());
     }
     else if(button == ui->pushButtonParameterSet)
     {
@@ -143,12 +170,24 @@ void FrontManaualMode::onManualOperationClicked()
         zcb->SpeedAppoach(ui->textEditSpeedApproach->toPlainText().toFloat());
         zcb->CommandType(BCT_ZRET);
     }
-    else if(button == ui->pushButtonPosition)
+    else if(button == ui->pushButtonAbsolute)
     {
         //setup coordiante
         PosICommandBlock* pcb = static_cast<PosICommandBlock*>(&__commandBlock);
-        pcb->Coordinate1(ui->textEditCoordinate->toPlainText().toFloat());
-        pcb->IsAbsoluteMode(ui->radioButtonAbsolute->isChecked());
+        pcb->Coordinate1(ui->textEditCoordinateAbsolute->toPlainText().toFloat());
+        pcb->IsAbsoluteMode(true);
+        pcb->CommandType(BCT_POS_I);
+    }
+    else if(button == ui->pushButtonStepMinus ||
+            button == ui->pushButtonStepPlus)
+    {
+        float multi=1;
+        if(button==ui->pushButtonStepMinus)
+            multi=-1;
+        //setup coordiante
+        PosICommandBlock* pcb = static_cast<PosICommandBlock*>(&__commandBlock);
+        pcb->Coordinate1(ui->textEditCoordinateStep->toPlainText().toFloat()*multi);
+        pcb->IsAbsoluteMode(false);//relative moving mode
         pcb->CommandType(BCT_POS_I);
     }
     else if(button == ui->pushButtonFeedForward ||
@@ -238,11 +277,8 @@ void FrontManaualMode::onComboBoxIndexChanged()
 
     if(comboBox == ui->comboBoxAxisName)
     {
-        QSqlTableModel* model = qobject_cast<QSqlTableModel*>(ui->tableViewCommandBlock->model());
         //! filter out
-                model->setFilter(tr("AXIS_ID=%2").arg(SelectedAxisAddress()));
-//        model->setFilter(tr("%1=%2").arg(QVariant::fromValue(TableModelAxis::AXIS_ID).value<QString>(),
-//                                         SelectedAxisAddress()));
+        __commandBlockTable->setFilter(tr("AXIS_ID=%2").arg(SelectedAxisAddress()));
         //! change base-object-id
         __commandBlock.ObjectId(SelectedAxisAddress());
         //! change monitor axis id
@@ -250,8 +286,13 @@ void FrontManaualMode::onComboBoxIndexChanged()
     }
     else if(comboBox == ui->comboBoxRegion)
     {
-        //TODO ,
-        //auto table = static_cast<QAbstractTableModel*>(comboBox->model());
+        QString regionKey = QVariant::fromValue(TableModelAxis::REGION).value<QString>();
+        int regionId = __regionTable->index(comboBox->currentIndex(),0).data().toUInt();
+
+        QString filterString = tr("%1=%2").arg(regionKey).arg(regionId);
+        __axisTable->setFilter(filterString);
+        //! reselect axis
+        ui->comboBoxAxisName->setCurrentIndex(0);
     }
 
 }
@@ -316,3 +357,14 @@ void FrontManaualMode::onDataTransfer()
     ui->progressBarDataTransfer->reset();
 }
 
+void FrontManaualMode::onSelectReset()
+{
+    if(sender()==ui->pushButtonSelectAllRegion)
+    {
+        __axisTable->setFilter("");
+    }
+    else if(sender()==ui->pushButtonSelectAllAxis)
+    {
+        __commandBlockTable->setFilter("");
+    }
+}
