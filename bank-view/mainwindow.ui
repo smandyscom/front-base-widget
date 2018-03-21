@@ -29,22 +29,22 @@
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>1261</width>
-      <height>741</height>
+      <x>0</x>
+      <y>0</y>
+      <width>1280</width>
+      <height>721</height>
      </rect>
     </property>
     <property name="sizePolicy">
-     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
       <horstretch>0</horstretch>
       <verstretch>0</verstretch>
      </sizepolicy>
     </property>
     <property name="maximumSize">
      <size>
-      <width>1261</width>
-      <height>741</height>
+      <width>1280</width>
+      <height>768</height>
      </size>
     </property>
     <property name="layoutDirection">
@@ -68,6 +68,11 @@
     <property name="elideMode">
      <enum>Qt::ElideLeft</enum>
     </property>
+    <widget class="QWidget" name="tabMain">
+     <attribute name="title">
+      <string>Main</string>
+     </attribute>
+    </widget>
     <widget class="QWidget" name="tabManual">
      <attribute name="title">
       <string>Manual</string>
@@ -80,7 +85,7 @@
     </widget>
     <widget class="QWidget" name="tabIO">
      <attribute name="title">
-      <string>Page</string>
+      <string>I/O</string>
      </attribute>
     </widget>
    </widget>
