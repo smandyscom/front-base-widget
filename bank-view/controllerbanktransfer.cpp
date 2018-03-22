@@ -39,7 +39,7 @@ void ControllerBankTransfer::onOperationPerformed()
     if(__controller->CommitOption().Mode()==CommitBlock::MODE_COMMAND_BLOCK)
         return; //ignored
 
-    __model->Value(__currentIndex,__controller->CommandBlock()); // read-out anyway (would be override in commit mode
+    __model->Value(__currentIndex,__controller->DataBlock<ExtendedCommandBlock>().value<ExtendedCommandBlock>()); // read-out anyway (would be override in commit mode
     __currentIndex = __controller->CommitOption().Index()+1; //follow the current index
     //! Raise next operation if any
     if(__currentIndex < __goal)
@@ -57,7 +57,7 @@ void ControllerBankTransfer::transfer()
 {
     __commitOption.Index(__currentIndex);
     __controller->CommitOption(__commitOption);
-    __controller->CommandBlock(__model->Value(__currentIndex)); //Write-in anyway
+    __controller->DataBlock(QVariant::fromValue(__model->Value(__currentIndex))); //Write-in anyway
     //! Wait until controller comes to right state
     while (__controller->CurrentState()!=ControllerManualMode::STATE_IDLE) {}
     emit __controller->operationTriggered();

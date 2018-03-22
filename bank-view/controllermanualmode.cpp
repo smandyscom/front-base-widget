@@ -5,12 +5,12 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
 {
     //! Channel initialize
     __channel = ModbusChannel::Instance();
-    __commitOption.Mode(CommitBlock::MODE_COMMAND_BLOCK);
+    CommitOption(CommitBlock());
 
     //! Very first shot
-    __channel->beginUpdate(ModbusDriverAddress(MONITOR_BLOCK_HEAD),QVariant::fromValue(__monitorBlock));
-    __channel->beginUpdate(ModbusDriverAddress(STATUS_WORD),QVariant::fromValue(static_cast<MODBUS_WORD>(0)));
-    __channel->beginUpdate(ModbusDriverAddress(IO_MON_OVERRIDE),QVariant::fromValue(IoMonitorOverrideBlock()));
+    __channel->beginAccess<AbstractMonitorBlock>(ModbusDriverAddress(MONITOR_BLOCK_HEAD));
+    __channel->beginAccess<MODBUS_WORD>(ModbusDriverAddress(STATUS_WORD));
+    __channel->beginAccess<IoMonitorOverrideBlock>(ModbusDriverAddress(IO_MON_OVERRIDE));
     //!
     //! \brief s1
     //!
@@ -47,17 +47,6 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
     connect(s1,&QState::exited,[this](){
         //!
         //! commit block if need
-        switch (__commitOption.Mode()) {
-        case CommitBlock::MODE_DOWNLOAD:
-        case CommitBlock::MODE_COMMAND_BLOCK:
-            //! Always write-in full-size
-            emit requireWriteData(ModbusDriverAddress(DATA_BLOCK_HEAD),QVariant::fromValue(__commandBlock));
-            break;
-        default:
-            break;
-        }
-
-        emit requireWriteData(ModbusDriverAddress(COMMIT_BLOCK),QVariant::fromValue(__commitOption));
         emit requireWriteData(ModbusDriverAddress(ENGAGED_HMI),QVariant::fromValue(true));
         emit requireWriteData(ModbusDriverAddress(RUN),QVariant::fromValue(true));//set Run on
     });
@@ -71,10 +60,10 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
 
         //!
         //! read out block if need
-        switch (__commitOption.Mode()) {
+        switch (CommitOption().Mode()) {
         case CommitBlock::MODE_UPLOAD:
             //! should read full size
-            emit requireReadData(ModbusDriverAddress(DATA_BLOCK_HEAD),QVariant::fromValue(__commandBlock));
+            emit requireReadData(ModbusDriverAddress(DATA_BLOCK_HEAD),QVariant::fromValue(AbstractDataBlock()));
             break;
         default:
             break;
@@ -111,42 +100,42 @@ void ControllerManualMode::onReply(UpdateEvent *event)
     case MONITOR_BLOCK_HEAD:
     {
         //! keep polling monitor status
-        QVariant value = QVariant::fromValue(__monitorBlock);
-        __channel->update(ModbusDriverAddress(MONITOR_BLOCK_HEAD),value);
-        __monitorBlock = value.value<AbstractMonitorBlock>();
         QTimer::singleShot(100,this,[this](){
             //Schedual the next polling
-            __channel->beginUpdate(ModbusDriverAddress(MONITOR_BLOCK_HEAD),QVariant::fromValue(__monitorBlock));
+            __channel->beginAccess<AbstractMonitorBlock>(ModbusDriverAddress(MONITOR_BLOCK_HEAD));
         });
-        break;
-    }
-    case DATA_BLOCK_HEAD:
-    {
-        QVariant value  =QVariant::fromValue(__commandBlock);
-        __channel->update(ModbusDriverAddress(DATA_BLOCK_HEAD),value);
-        __commandBlock = value.value<ExtendedCommandBlock>();
         break;
     }
     case STATUS_WORD:
+    {
         QTimer::singleShot(5,this,[this](){
-           //Schedual the next polling
-            __channel->beginUpdate(ModbusDriverAddress(STATUS_WORD),QVariant::fromValue(static_cast<MODBUS_WORD>(0)));
+            //Schedual the next polling
+            __channel->beginAccess<MODBUS_WORD>(ModbusDriverAddress(STATUS_WORD));
         });
         break;
+    }
     case IO_MON_OVERRIDE:
+    {
         QTimer::singleShot(100,this,[this](){
-           //Schedual the next polling
-           //polling 8 Words so far
-           __channel->beginUpdate(ModbusDriverAddress(IO_MON_OVERRIDE),QVariant::fromValue(IoMonitorOverrideBlock()));
+            //Schedual the next polling
+            //polling 8 Words so far
+            __channel->beginAccess<IoMonitorOverrideBlock>(ModbusDriverAddress(IO_MON_OVERRIDE));
         });
         break;
+    }
     default:
         break;
     }
 }
-void ControllerManualMode::Operation(ManualContext address, bool value)
+
+//!
+//! \brief ControllerManualMode::Operation
+//! \param bit
+//! Toogle
+void ControllerManualMode::Operation(ManualContext bit)
 {
-    __channel->commit(ModbusDriverAddress(address),QVariant::fromValue(value));
+    ModbusDriverAddress address = ModbusDriverAddress(bit);
+    __channel->Access(address,!__channel->Access<bool>(address));
 }
 
 //!

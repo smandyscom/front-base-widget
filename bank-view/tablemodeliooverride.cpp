@@ -23,7 +23,7 @@ QVariant TableModelIOOverride::data(const QModelIndex &idx, int role) const
 
     //!Change color once the background role request comes
     auto v = CurrentIndexAddress(idx.row());
-    if(__channel->Bit(CurrentIndexAddress(idx.row())))
+    if(__channel->Access<bool>(CurrentIndexAddress(idx.row())))
         return QColor(Qt::green);
     else
         return QColor(Qt::gray);

@@ -44,7 +44,8 @@ SOURCES += \
     tablemodeliooverride.cpp \
     frontiooverride.cpp \
     abstractsqlrelationaltablemodeldecorator.cpp \
-    bitflipitemdelegate.cpp
+    bitflipitemdelegate.cpp \
+    frontcontrolpanel.cpp
 
 HEADERS += \
     ptpzrn_viewer.h \
@@ -64,10 +65,10 @@ HEADERS += \
     mainwindow.h \
     tablemodeliooverride.h \
     frontiooverride.h \
-    abstractsqlrelationaltablemodeldecorator.h \
     bitflipitemdelegate.h \
     bitflipitemdelegate.h \
-    basicblocksdefinition.h
+    basicblocksdefinition.h \
+    frontcontrolpanel.h
 
 unix {
     target.path = /usr/lib
@@ -79,4 +80,5 @@ FORMS += \
     modbussetupwidget.ui \
     frontmanaualmode.ui \
     mainwindow.ui \
-    frontiooverride.ui
+    frontiooverride.ui \
+    frontcontrolpanel.ui

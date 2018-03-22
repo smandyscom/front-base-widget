@@ -46,8 +46,12 @@ MainWindow::MainWindow(QWidget *parent) :
     //! Connect controller and channel
     ControllerManualMode* __controller =  ControllerManualMode::Instance();
     ModbusChannel* __channel = ModbusChannel::Instance();
-    connect(__controller,&ControllerManualMode::requireReadData,__channel,&ModbusChannel::beginUpdate);
-    connect(__controller,&ControllerManualMode::requireWriteData,__channel,&ModbusChannel::commit);
+    connect(__controller,&ControllerManualMode::requireReadData,__channel,[__channel](ModbusDriverAddress address,const QVariant data){
+        __channel->beginAccess(address,data);
+    });
+    connect(__controller,&ControllerManualMode::requireWriteData,__channel,[__channel](ModbusDriverAddress address,const QVariant data){
+        __channel->Access(address,data);
+    });
     connect(__channel,SIGNAL(raiseUpdateEvent(UpdateEvent*)),this,SLOT(onRaiseUpdateEvent(UpdateEvent*)));
 }
 

@@ -5,6 +5,13 @@ using namespace BaseLayer;
 
 #pragma pack(1)
 
+class AbstractDataBlock
+{
+protected:
+    MODBUS_WORD reserved[64];
+};
+Q_DECLARE_METATYPE(AbstractDataBlock)
+
 enum BlockCommandType : MODBUS_WORD
 {
     BCT_NOP=0,
@@ -292,6 +299,8 @@ typedef MODBUS_LONG CommitIndex ;
 class CommitBlock
 {
 public:
+
+
     enum CommitSelection : MODBUS_LONG
     {
         SELECTION_AXIS = 0,
@@ -304,6 +313,13 @@ public:
         MODE_DOWNLOAD = 15, //PLC<-HMI
         MODE_UPLOAD = 16,   //PLC->HMI
     };
+    CommitBlock()
+    {
+        __mode = MODE_COMMAND_BLOCK;
+        __selection = SELECTION_COMMAND_BLOCK;
+        __index = 0;
+    }
+
     void Mode(CommitMode value) {__mode = value;}
     CommitMode Mode() const {return __mode;}
     void Selection(CommitSelection value) {__selection = value;}

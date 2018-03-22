@@ -21,7 +21,7 @@ ModbusChannel::ModbusChannel(QList<ModbusSerializedClient *> channelList, QObjec
     preparedWriteRequest.setRegisterType(QModbusDataUnit::HoldingRegisters);
 }
 
-void ModbusChannel::beginUpdate(ModbusDriverAddress address, const QVariant dataForm)
+void ModbusChannel::beginAccess(ModbusDriverAddress address, const QVariant dataForm)
 {
     // From map query type of QVariant
     // Get the object size , so that you can make right request
@@ -44,7 +44,7 @@ void ModbusChannel::beginUpdate(ModbusDriverAddress address, const QVariant data
 //! \param address
 //! \param value
 //! handling bit?
-void ModbusChannel::commit(ModbusDriverAddress address, const QVariant value)
+void ModbusChannel::__commit(ModbusDriverAddress address, const QVariant value)
 {
     QVariant writeInData = value;
 
@@ -55,10 +55,10 @@ void ModbusChannel::commit(ModbusDriverAddress address, const QVariant value)
     case QVariant::Bool:
     {
         //make sure readout a word
-        quint16 temp=0;
+        MODBUS_WORD temp=0;
         writeInData.setValue(temp);
 
-        update(address,writeInData);
+        __update(address,writeInData);
         // handling signal bit
         if(value.value<bool>())
             //set
@@ -98,7 +98,7 @@ void ModbusChannel::commit(ModbusDriverAddress address, const QVariant value)
     channelGateWays[address.getChannel()]->pushRequest(new ModbusSerializedClient::ModbusRequest(preparedWriteRequest,ModbusSerializedClient::WRITE));
 }
 
-void ModbusChannel::update(const ModbusDriverAddress modbusAddress, QVariant &fetchOut)
+void ModbusChannel::__update(const ModbusDriverAddress modbusAddress, QVariant &fetchOut) const
 {
     //!
     //! For bool type need specical handling
@@ -158,23 +158,6 @@ void ModbusChannel::writeData(ModbusDriverAddress modbusAddress,const void* sour
     memcpy(toCacheAddress(modbusAddress),
            source,
            count);
-}
-
-bool ModbusChannel::Bit(const ModbusDriverAddress address)
-{
-    QVariant value = QVariant::fromValue(false);
-    update(address,value);
-    return value.toBool();
-}
-//!
-//! \brief ModbusChannel::Bit
-//! \param address
-//! \param value
-//! Synchonrous
-void ModbusChannel::Bit(ModbusDriverAddress address, bool value)
-{
-    QVariant __value = QVariant::fromValue(value);
-    commit(address,__value);
 }
 
 ModbusChannel* ModbusChannel::Instance()

@@ -25,5 +25,8 @@ int utilities::sizeOf(QVariant value)
 
 void utilities::colorChangeOver(QWidget *target, bool value, Qt::GlobalColor trueColor)
 {
-    target->setStyleSheet(QString("background-color : %1").arg(QVariant::fromValue(trueColor).value<QString>()));
+    Qt::GlobalColor __color = trueColor;
+    if(!value)
+        __color = Qt::gray;
+    target->setStyleSheet(QString("background-color : %1").arg(QVariant::fromValue(__color).value<QString>()));
 }

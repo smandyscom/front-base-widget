@@ -12,6 +12,7 @@ using namespace BaseLayer;
 #include <QVariant>
 #include <QTimer>
 
+#include <utilities.h>
 
 //!
 //! \brief The ControllerManualMode class
@@ -66,29 +67,27 @@ public:
 
     //!
     //! Data interfaces
-    void CommitOption(CommitBlock value) {__commitOption = value;}
-    CommitBlock CommitOption() const {return  __commitOption;}
-    //!
-    //! \brief blockCache
-    //! Mind alignment problem
+    void CommitOption(CommitBlock value) {__channel->Access<CommitBlock>(ModbusDriverAddress(COMMIT_BLOCK),value);}
+    CommitBlock CommitOption() const {return  __channel->Access<CommitBlock>(ModbusDriverAddress(COMMIT_BLOCK));}
 
-    void CommandBlock(ExtendedCommandBlock commandBlock)
+    //!
+    //! \brief DataBlock
+    //! \param value
+    //! Unpack and write in
+    void DataBlock(QVariant value){__channel->Access(ModbusDriverAddress(DATA_BLOCK_HEAD),value);}
+    template<typename T>
+    QVariant DataBlock() const
     {
-        //Value copy (memcopy?
-        __commandBlock = commandBlock;
-    }
-    ExtendedCommandBlock CommandBlock() const
-    {
-        return __commandBlock;
+        return QVariant::fromValue(__channel->Access<T>(ModbusDriverAddress(DATA_BLOCK_HEAD)));
     }
     AbstractMonitorBlock MonitorBlock() const
     {
-        return __monitorBlock;
+        return __channel->Access<AbstractMonitorBlock>(ModbusDriverAddress(MONITOR_BLOCK_HEAD));
     }
 
     ManualState CurrentState() const { return __currentState;}
 
-    void Operation(ManualContext bit,bool value);
+    void Operation(ManualContext bit);
 
     static ControllerManualMode* Instance();
 public slots:
@@ -121,10 +120,10 @@ protected slots:
 protected:
      explicit ControllerManualMode(QObject *parent = nullptr);
 
-    ExtendedCommandBlock __commandBlock;
-    AbstractMonitorBlock __monitorBlock;
+//    ExtendedCommandBlock __commandBlock;
+//    AbstractMonitorBlock __monitorBlock;
 
-    CommitBlock __commitOption;
+//    CommitBlock __commitOption;
 
     QMap<ManualState,QState*> __stateMap;
     ManualState __currentState;

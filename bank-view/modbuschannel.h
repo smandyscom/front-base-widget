@@ -19,36 +19,44 @@ using namespace BaseLayer;
 //! (*Going to be generalized as common HAL Layer
 class ModbusChannel : public QObject
 {
-
-
     Q_OBJECT
 public:
-
-
     //!1
     //! Accessing interface
     //! raising asynchrous updating operation
-    void beginUpdate(ModbusDriverAddress address,const QVariant dataForm); //
-    //!
-    //! \brief readData
-    //! \param address
-    //! \return
-    //! synchrous function , direct return cached value
-    void update(const ModbusDriverAddress modbusAddress,QVariant& fetchOut);
-    //!
-    //! \brief writeData
-    //! \param address
-    //! \param value
-    //! Fire and forget
-    void commit(ModbusDriverAddress address, const QVariant value);
+    void beginAccess(ModbusDriverAddress address,const QVariant dataForm); //
 
-    bool Bit(const ModbusDriverAddress address);
+    template<typename T>
+    inline
+    void beginAccess(ModbusDriverAddress address)
+    {
+        QVariant form = QVariant::fromValue(T());
+        beginAccess(address,form);
+    }
     //!
-    //! \brief Bit
-    //! \param address
-    //! \param value
-    //! Synchonous function
-    void Bit(ModbusDriverAddress address,bool value);
+    //!
+    //!Read
+    template<typename T>
+    inline
+    T Access(const ModbusDriverAddress address)
+    {
+        QVariant result = QVariant::fromValue(T());
+        this->__update(address,result);
+        return result.value<T>();
+    }
+
+
+    //!Write
+    void Access(ModbusDriverAddress address,const QVariant value)
+    {
+        __commit(address,value);
+    }
+    template<typename T>
+    inline
+    void Access(ModbusDriverAddress address,T value)
+    {
+        __commit(address,QVariant::fromValue(value));
+    }
 
     //!
     //! \brief getInstance
@@ -66,7 +74,6 @@ signals:
     void raiseUpdateEvent(UpdateEvent* event);
 
 protected slots:
-    //void requestRaised(const ModbusSegment* request); //bridge cluster and gateway
     //!
     //! \brief onReplyUpdated
     //! \param result
@@ -74,6 +81,18 @@ protected slots:
     void onReadRequestProcessed(QModbusDataUnit result);
 
 protected:
+    //!
+    //! \brief readData
+    //! \param address
+    //! \return
+    //! synchrous function , direct return cached value
+    void __update(const ModbusDriverAddress modbusAddress,QVariant& fetchOut) const ;
+    //!
+    //! \brief writeData
+    //! \param address
+    //! \param value
+    //! Fire and forget
+    void __commit(ModbusDriverAddress address, const QVariant value);
 
     QModbusDataUnit preparedReadRequest;
     QModbusDataUnit preparedWriteRequest;

@@ -46,7 +46,7 @@ FrontIoOverride::FrontIoOverride(QSqlRelationalTableModel *inputTable,
     //!
     connect(ui->tableViewOutputs,&QTableView::clicked,[=](QModelIndex index){
         ModbusDriverAddress address = ModbusDriverAddress(__outputTable->index(index.row(),TableModelIOOverride::HAL_ADDRESS).data().toInt());
-        ModbusChannel::Instance()->Bit(address,!ModbusChannel::Instance()->Bit(address));
+        ModbusChannel::Instance()->Access<bool>(address,!ModbusChannel::Instance()->Access<bool>(address));
     });
 }
 //!

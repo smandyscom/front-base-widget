@@ -136,7 +136,7 @@ void FrontManaualMode::onBankOperationClicked()
     }
     else if(button == ui->pushButtonBankExecution)
     {
-        __controller->CommandBlock(__commandBlock);
+        __controller->DataBlock(QVariant::fromValue(__commandBlock));
         __controller->CommitOption(__commitOption);
         emit __controller->operationTriggered();
     }
@@ -207,7 +207,7 @@ void FrontManaualMode::onManualOperationClicked()
     }
 
     //! trigger the sequence
-    __controller->CommandBlock(__commandBlock);
+    __controller->DataBlock(QVariant::fromValue(__commandBlock));
     __controller->CommitOption(__commitOption);
     emit __controller->operationTriggered();
 }
@@ -216,18 +216,17 @@ void FrontManaualMode::onManualOperationClicked()
 //!
 void FrontManaualMode::onOperationPerformed()
 {
-    AbstractMonitorBlock mb = __controller->MonitorBlock();
-    AxisMonitorBlock* amb = static_cast<AxisMonitorBlock*>(&mb);
-
+    ControllerManualMode::ManualContext __controlBit;
     if(sender()==ui->pushButtonServoOn)
     {
-        //Toggle
-        __controller->Operation(ControllerManualMode::SERVO_ON,!amb->Operation(AxisMonitorBlock::OP_SERVO_ON));
+        __controlBit = ControllerManualMode::SERVO_ON;
     }
     else if(sender()==ui->pushButtonAlarmClear)
     {
-        __controller->Operation(ControllerManualMode::ALARM_CLEAR,ui->pushButtonAlarmClear->isDown());
+        __controlBit = ControllerManualMode::ALARM_CLEAR;
     }
+
+    __controller->Operation(__controlBit);
 }
 
 void FrontManaualMode::setCommonParameters()
