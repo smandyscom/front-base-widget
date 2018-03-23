@@ -61,7 +61,7 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
         //!
         //! read out block if need
         switch (CommitOption().Mode()) {
-        case CommitBlock::MODE_UPLOAD:
+        case CommitBlock::MODE_UPLOAD_DATA_BLOCK:
             //! should read full size
             emit requireReadData(ModbusDriverAddress(DATA_BLOCK_HEAD),QVariant::fromValue(AbstractDataBlock()));
             break;

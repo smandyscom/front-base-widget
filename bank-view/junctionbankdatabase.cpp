@@ -64,7 +64,14 @@ void JunctionBankDatabase::onInitialize()
     }
     //!TODO , should use Decorator Mode fix this
     __tableMap[WHOLE_CYLINDERS] = TableEntity(false,new TableModelCylinder(this));
-
+    __tableMap[WHOLE_AXIS] = __axisTable;
+    __tableMap[WHOLE_COMMAND_BLOCKS] = __commandBlockTable;
+    __tableMap[DEF_REGION] = __commandBlockTable;
+    __tableMap[DEF_IS_ABS] = nullptr;
+    __tableMap[DEF_MIII_ZRET_METHOD] = __commandBlockTable;
+    __tableMap[INPUT_ATTRIBUTES] = __inputTable;
+    __tableMap[OUTPUT_ATTRIBUTES] = __outputTable;
+    //!
     foreach (TableNames var, __tableList) {
         if(__tableMap.contains(var))
         {

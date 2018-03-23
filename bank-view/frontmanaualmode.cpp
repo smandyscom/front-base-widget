@@ -19,7 +19,7 @@ FrontManaualMode::FrontManaualMode(TableModelCommandBlock *wholeCommandBankModel
     __regionTable = regionModel;
     //! Link
     __controller = ControllerManualMode::Instance();
-    __bankTransfer=new ControllerBankTransfer(__commandBlockTable,this);
+    __bankTransfer= ControllerBankTransfer::Instance();
     //setup
     __commitOption.Mode(CommitBlock::MODE_COMMAND_BLOCK);
 
@@ -335,7 +335,7 @@ void FrontManaualMode::onDataTransfer()
             table->database().commit();
             //! Start bank trunsation
             table->setFilter(""); //reset filter
-            __bankTransfer->onTransferData(CommitBlock::MODE_DOWNLOAD); // mode , transfer all
+            __bankTransfer->onTransferData(CommitBlock::MODE_DOWNLOAD_DATA_BLOCK); // mode , transfer all
             //TODOS , optimization , transfer those rows edited
         }
         else
@@ -348,7 +348,7 @@ void FrontManaualMode::onDataTransfer()
     else if(sender()==ui->pushButtonUpdate)
     {
         table->setFilter(""); //reset filter
-        __bankTransfer->onTransferData(CommitBlock::MODE_UPLOAD);
+        __bankTransfer->onTransferData(CommitBlock::MODE_UPLOAD_DATA_BLOCK);
     }
 
     //!Setup progress bar

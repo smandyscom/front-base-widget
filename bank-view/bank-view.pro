@@ -47,7 +47,10 @@ SOURCES += \
     frontcontrolpanel.cpp \
     abstractqvariantsqltable.cpp \
     tablemodelcylinder.cpp \
-    frontcylinderpanel.cpp
+    frontcylinderpanel.cpp \
+    frontbanktransfer.cpp \
+    frontsinglefilter.cpp \
+    fronttwinfilter.cpp
 
 HEADERS += \
     ptpzrn_viewer.h \
@@ -73,7 +76,10 @@ HEADERS += \
     frontcontrolpanel.h \
     abstractqvariantsqltable.h \
     tablemodelcylinder.h \
-    frontcylinderpanel.h
+    frontcylinderpanel.h \
+    frontbanktransfer.h \
+    frontsinglefilter.h \
+    fronttwinfilter.h
 
 unix {
     target.path = /usr/lib
@@ -87,4 +93,7 @@ FORMS += \
     mainwindow.ui \
     frontiooverride.ui \
     frontcontrolpanel.ui \
-    frontcylinderpanel.ui
+    frontcylinderpanel.ui \
+    frontbanktransfer.ui \
+    fronttwinfilter.ui \
+    frontsinglefilter.ui

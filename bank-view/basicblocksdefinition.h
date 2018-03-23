@@ -328,7 +328,7 @@ public:
 Q_DECLARE_METATYPE(FeedCommandBlock)
 
 
-typedef MODBUS_LONG CommitIndex ;
+typedef MODBUS_LONG CommitDataBlockIndex ;
 
 //!
 //! \brief The CommitBlock class
@@ -336,19 +336,22 @@ typedef MODBUS_LONG CommitIndex ;
 class CommitBlock
 {
 public:
-
-
-    enum CommitSelection : MODBUS_LONG
+    //!
+    //! \brief The CommitSelection enum
+    //! Data block selection
+    enum CommitDataBlockSelection : MODBUS_LONG
     {
         SELECTION_AXIS = 0,
         SELECTION_CYLINDER = 1,
         SELECTION_COMMAND_BLOCK = 2,
+        SELECTION_UNIT = 3,
     };
     enum CommitMode : MODBUS_LONG
     {
         MODE_COMMAND_BLOCK=0,
-        MODE_DOWNLOAD = 15, //PLC<-HMI
-        MODE_UPLOAD = 16,   //PLC->HMI
+        MODE_COMMAND_CYLINDER=1,
+        MODE_DOWNLOAD_DATA_BLOCK = 15, //PLC<-HMI
+        MODE_UPLOAD_DATA_BLOCK = 16,   //PLC->HMI
     };
     CommitBlock()
     {
@@ -359,14 +362,14 @@ public:
 
     void Mode(CommitMode value) {__mode = value;}
     CommitMode Mode() const {return __mode;}
-    void Selection(CommitSelection value) {__selection = value;}
-    CommitSelection Selection() const {return __selection;}
-    void Index(CommitIndex value) {__index = value;}
-    CommitIndex Index() const {return __index;}
+    void Selection(CommitDataBlockSelection value) {__selection = value;}
+    CommitDataBlockSelection Selection() const {return __selection;}
+    void Index(CommitDataBlockIndex value) {__index = value;}
+    CommitDataBlockIndex Index() const {return __index;}
 protected:
     CommitMode __mode;
-    CommitSelection __selection;
-    CommitIndex __index;
+    CommitDataBlockSelection __selection;
+    CommitDataBlockIndex __index;
 };
 Q_DECLARE_METATYPE(CommitBlock)
 

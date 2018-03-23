@@ -1,22 +1,24 @@
 #include "controllerbanktransfer.h"
 
-ControllerBankTransfer::ControllerBankTransfer(TableModelCommandBlock *model, QObject *parent) :
-    QObject(parent),
-    __model(model)
+ControllerBankTransfer::ControllerBankTransfer(QObject *parent) :
+    QObject(parent)
 {
     //setup
     __commitOption.Selection(CommitBlock::SELECTION_COMMAND_BLOCK);
-
     __controller = ControllerManualMode::Instance();
-    connect(__controller,SIGNAL(operationPerformed()),this,SLOT(onOperationPerformed()));
+
+    connect(__controller,SIGNAL(operationPerformed()),this,SLOT(onControllerOperationPerformed()));
+
+    __currentIndex = !PROCESSING;
 }
 
-void ControllerBankTransfer::onTransferData(CommitBlock::CommitMode mode, int rowIndex)
+void ControllerBankTransfer::onTransferData(int rowIndex)
 {
-    if(mode==CommitBlock::MODE_COMMAND_BLOCK)
-        return; // invalid
-    __commitOption.Mode(mode);
-    if(rowIndex==-1)
+    if(__commitOption.Mode()!=CommitBlock::MODE_DOWNLOAD_DATA_BLOCK &&
+            __commitOption.Mode() != CommitBlock::MODE_UPLOAD_DATA_BLOCK)
+        return; // invalid mode
+
+    if(rowIndex==BATCH_MODE)
     {
         __currentIndex = 0;
         __goal = __model->rowCount(); //batch mode activated
@@ -27,23 +29,26 @@ void ControllerBankTransfer::onTransferData(CommitBlock::CommitMode mode, int ro
         __goal = __currentIndex+1; //single mode
     }
 
-    //!Raise operation
+    //!Raise asynchrons operation
     QtConcurrent::run(this,&ControllerBankTransfer::transfer);
 }
 
 //!
 //! \brief ControllerBankTransfer::onOperationPerformed
 //! Would iteratlly perform opertion until index reached
-void ControllerBankTransfer::onOperationPerformed()
+void ControllerBankTransfer::onControllerOperationPerformed()
 {
-    if(__controller->CommitOption().Mode()==CommitBlock::MODE_COMMAND_BLOCK)
+    if(__controller->CommitOption().Mode()!=CommitBlock::MODE_DOWNLOAD_DATA_BLOCK &&
+            __controller->CommitOption().Mode()!=CommitBlock::MODE_UPLOAD_DATA_BLOCK)
         return; //ignored
 
-    //__model->RowRecord(__currentIndex,__controller->DataBlock<AbstractDataBlock>()); // read-out anyway (would be override in commit mode
+    __model->select();//get all records
+
     __currentIndex = __controller->CommitOption().Index()+1; //follow the current index
     //! Raise next operation if any
     if(__currentIndex < __goal)
     {
+
         QtConcurrent::run(this,&ControllerBankTransfer::transfer);
     }
     else
@@ -51,6 +56,8 @@ void ControllerBankTransfer::onOperationPerformed()
         emit dataTransfered();
         return; //no next trigger
     }
+
+    emit dataTransfering();
 }
 
 void ControllerBankTransfer::transfer()
@@ -62,3 +69,12 @@ void ControllerBankTransfer::transfer()
     while (__controller->CurrentState()!=ControllerManualMode::STATE_IDLE) {}
     emit __controller->operationTriggered();
 }
+
+ControllerBankTransfer* ControllerBankTransfer::Instance()
+{
+    if(__instance==nullptr)
+        __instance = new ControllerBankTransfer();
+    return __instance;
+}
+
+ControllerBankTransfer* ControllerBankTransfer::__instance = nullptr;

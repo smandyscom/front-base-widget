@@ -24,14 +24,10 @@ QVariant TableModelCylinder::RowRecord(int rowIndex) const
     QSqlRecord __record = record(rowIndex);
     AbstractDataBlock __adb;
     //! fetch by HEADER NAME
-    QVariant v = __record.value(QVariant::fromValue(TIMER_SET).value<QString>());
-
-    v = __record.value(QVariant::fromValue(ACT_B_1).value<QString>());
     __adb.Value(TIMER_SET,__record.value(QVariant::fromValue(TIMER_SET).value<QString>()).toReal() * 1000);
     //! Set address
     foreach (Offset var, __addressList) {
         bool isConvertOK;
-        QVariant w = __record.value(QVariant::fromValue(var).value<QString>());
         MODBUS_WORD address = __record.value(QVariant::fromValue(var).value<QString>()).value<QString>().toUShort(&isConvertOK,16);
         if(isConvertOK)
             __adb.Value(var,address);
