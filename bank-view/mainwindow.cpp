@@ -43,6 +43,9 @@ MainWindow::MainWindow(QWidget *parent) :
                                                JunctionBankDatabase::Instance()->OutputTable(),
                                                JunctionBankDatabase::Instance()->RegionTable(),
                                                ui->tabIO);
+    FrontCylinderPanel* fcp = new FrontCylinderPanel(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_CYLINDERS),
+                                                     ui->tabCylinder);
+
     //! Connect controller and channel
     ControllerManualMode* __controller =  ControllerManualMode::Instance();
     ModbusChannel* __channel = ModbusChannel::Instance();

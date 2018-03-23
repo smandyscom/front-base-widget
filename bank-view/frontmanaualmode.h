@@ -28,7 +28,7 @@ class FrontManaualMode : public QWidget
     Q_OBJECT
 
 public:
-    explicit FrontManaualMode(QSqlRelationalTableModel* wholeCommandBankModel,
+    explicit FrontManaualMode(TableModelCommandBlock *wholeCommandBankModel,
                               QSqlRelationalTableModel *wholeAxisBankModel,
                               QSqlRelationalTableModel *regionModel,
                               QWidget *parent = 0);

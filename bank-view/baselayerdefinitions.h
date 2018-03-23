@@ -11,10 +11,8 @@ namespace BaseLayer {
 
 #define MODBUS_WORD qint16
 #define MODBUS_LONG qint32
-#define BIT  bool
-
-
-
+#define MODBUS_QUAD qint64
+#define MODBUS_ADDRESS quint16
 
 //!
 //! \brief The AbstractAddress class

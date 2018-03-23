@@ -3,17 +3,21 @@
 
 #include <QObject>
 #include <QSqlDatabase>
-#include <QSqlRelationalTableModel>
 #include <QAbstractTableModel>
 #include <QFileInfo>
 #include <QDir>
 #include <QMap>
 #include <QPair>
 #include <tablemodeliooverride.h>
+#include <tablemodelcylinder.h>
+#include <abstractqvariantsqltable.h>
+#include <tablemodelcommandblock.h>
+
+#include <QList>
 //!
 //! \brief TableEntity
 //!
-typedef QPair<bool,QSqlRelationalTableModel*> TableEntity;
+typedef QPair<bool,AbstractQVariantSqlTable*> TableEntity;
 
 //!
 //! \brief The JunctionBankDatabase class
@@ -29,6 +33,7 @@ public:
     {
         WHOLE_AXIS,
         WHOLE_COMMAND_BLOCKS,
+        WHOLE_CYLINDERS,
         DEF_REGION,
         DEF_IS_ABS,
         DEF_MIII_ZRET_METHOD,
@@ -43,10 +48,18 @@ public:
     static QString DatabaseName(){return __databaseName;}
 
     QSqlRelationalTableModel* AxisTable() const {return __axisTable;}
-    QSqlRelationalTableModel* CommandBlockTable() const {return __commandBlockTable;}
+    TableModelCommandBlock* CommandBlockTable() const {return __commandBlockTable;}
     QSqlRelationalTableModel* InputTable() const { return __inputTable;}
     QSqlRelationalTableModel* OutputTable() const {return __outputTable;}
     QSqlRelationalTableModel* RegionTable() const {return __regionTable;}
+
+    QSqlRelationalTableModel* CommandBlockTable2() const {return __commandBlockTable2;}
+
+    AbstractQVariantSqlTable* TableMap(TableNames value) const
+    {
+        return __tableMap[value].second;
+    }
+
 signals:
     void databaseOpened();
 public slots:
@@ -63,10 +76,12 @@ protected:
     QMap<TableNames,TableEntity> __tableMap;
 
     QSqlRelationalTableModel* __axisTable;
-    QSqlRelationalTableModel* __commandBlockTable;
+    TableModelCommandBlock* __commandBlockTable;
     QSqlRelationalTableModel* __inputTable;
     QSqlRelationalTableModel* __outputTable;
     QSqlRelationalTableModel* __regionTable;
+
+    QSqlRelationalTableModel* __commandBlockTable2;
 };
 
 #endif // JUNCTIONBANKDATABASE_H

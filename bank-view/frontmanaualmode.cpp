@@ -5,7 +5,7 @@
 #include <QSqlQuery>
 #include <QPalette>
 #include <utilities.h>
-FrontManaualMode::FrontManaualMode(QSqlRelationalTableModel *wholeCommandBankModel,
+FrontManaualMode::FrontManaualMode(TableModelCommandBlock *wholeCommandBankModel,
                                    QSqlRelationalTableModel *wholeAxisBankModel,
                                    QSqlRelationalTableModel *regionModel,
                                    QWidget *parent) :
@@ -14,7 +14,7 @@ FrontManaualMode::FrontManaualMode(QSqlRelationalTableModel *wholeCommandBankMod
 {
     ui->setupUi(this);
     //!decorated instance
-    __commandBlockTable = new TableModelCommandBlock(wholeCommandBankModel);
+    __commandBlockTable = wholeCommandBankModel;
     __axisTable = new TableModelAxis(wholeAxisBankModel);
     __regionTable = regionModel;
     //! Link
@@ -75,7 +75,7 @@ FrontManaualMode::FrontManaualMode(QSqlRelationalTableModel *wholeCommandBankMod
 
     ui->tableViewCommandBlock->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->tableViewCommandBlock->setSelectionBehavior(QAbstractItemView::SelectRows);
-    ui->tableViewCommandBlock->setModel(wholeCommandBankModel);
+    ui->tableViewCommandBlock->setModel(__commandBlockTable);
     QList<TableModelCommandBlock::Headers> __headersGoing2Hide = {TableModelCommandBlock::COMMAND_BLOCK_ID,
                                                                  TableModelCommandBlock::COMMAND_TYPE,
                                                                  TableModelCommandBlock::AXIS_ID};
@@ -119,7 +119,7 @@ void FrontManaualMode::onBankOperationClicked()
     auto button = qobject_cast<QPushButton*>(sender());
 
      //from model to ExtendCommandBlock
-    __commandBlock = __commandBlockTable->Value(SelectedRowIndex());
+    __commandBlock = __commandBlockTable->RowRecord(SelectedRowIndex()).value<ExtendedCommandBlock>();
 
     if(button==ui->pushButtonCoordinateSet)
     {
@@ -142,7 +142,7 @@ void FrontManaualMode::onBankOperationClicked()
     }
 
     //write back to model
-    __commandBlockTable->Value(SelectedRowIndex(),__commandBlock);
+    __commandBlockTable->RowRecord(SelectedRowIndex(),QVariant::fromValue(__commandBlock));
 }
 
 //!

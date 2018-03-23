@@ -43,9 +43,11 @@ SOURCES += \
     main.cpp \
     tablemodeliooverride.cpp \
     frontiooverride.cpp \
-    abstractsqlrelationaltablemodeldecorator.cpp \
     bitflipitemdelegate.cpp \
-    frontcontrolpanel.cpp
+    frontcontrolpanel.cpp \
+    abstractqvariantsqltable.cpp \
+    tablemodelcylinder.cpp \
+    frontcylinderpanel.cpp
 
 HEADERS += \
     ptpzrn_viewer.h \
@@ -68,7 +70,10 @@ HEADERS += \
     bitflipitemdelegate.h \
     bitflipitemdelegate.h \
     basicblocksdefinition.h \
-    frontcontrolpanel.h
+    frontcontrolpanel.h \
+    abstractqvariantsqltable.h \
+    tablemodelcylinder.h \
+    frontcylinderpanel.h
 
 unix {
     target.path = /usr/lib
@@ -81,4 +86,5 @@ FORMS += \
     frontmanaualmode.ui \
     mainwindow.ui \
     frontiooverride.ui \
-    frontcontrolpanel.ui
+    frontcontrolpanel.ui \
+    frontcylinderpanel.ui

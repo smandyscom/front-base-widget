@@ -42,8 +42,8 @@ public:
     static KeyValueCollection model2KeyValuePairs(const QAbstractItemModel &model);
 
     static int sizeOf(QVariant value);
-
     static void colorChangeOver(QWidget* target,bool value,Qt::GlobalColor trueColor=Qt::green);
+
 };
 
 #endif // UTILITIES_H

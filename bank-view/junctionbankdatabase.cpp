@@ -30,10 +30,16 @@ void JunctionBankDatabase::onInitialize()
     __axisTable->setTable(QVariant::fromValue(WHOLE_AXIS).value<QString>());
     __axisTable->select();//engaged
     //!
-    __commandBlockTable = new QSqlRelationalTableModel(this);
+    __commandBlockTable = new TableModelCommandBlock(this);
     __commandBlockTable->setEditStrategy(QSqlTableModel::OnManualSubmit);
     __commandBlockTable->setTable(QVariant::fromValue(WHOLE_COMMAND_BLOCKS).value<QString>());
     __commandBlockTable->select();//engaged
+    //!
+    __commandBlockTable2 = new QSqlRelationalTableModel(this);
+    __commandBlockTable2->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    __commandBlockTable2->setTable(QVariant::fromValue(WHOLE_COMMAND_BLOCKS).value<QString>());
+    __commandBlockTable2->select();//engaged
+
     //!
     __inputTable = new TableModelIOOverride(this);
     __inputTable->setTable(QVariant::fromValue(INPUT_ATTRIBUTES).value<QString>());
@@ -48,9 +54,32 @@ void JunctionBankDatabase::onInitialize()
     __regionTable->setTable(QVariant::fromValue(DEF_REGION).value<QString>());
     __regionTable->select();//engaged
 
+
+    //!
+    QList<TableNames> __tableList;
+    QMetaEnum __qme  =QMetaEnum::fromType<TableNames>();
+    for(int i=0;i<__qme.keyCount();i++)
+    {
+        __tableList.append(TableNames(__qme.value(i)));
+    }
+    //!TODO , should use Decorator Mode fix this
+    __tableMap[WHOLE_CYLINDERS] = TableEntity(false,new TableModelCylinder(this));
+
+    foreach (TableNames var, __tableList) {
+        if(__tableMap.contains(var))
+        {
+            AbstractQVariantSqlTable* __reference = __tableMap[var].second;
+            bool result = false;
+            __reference->setEditStrategy(QSqlTableModel::OnManualSubmit);
+            __reference->setTable(QVariant::fromValue(var).value<QString>());
+            result = __reference->select();
+            __tableMap[var] = TableEntity(result,__reference);
+        }
+    }
 //    QMetaEnum __qme  =QMetaEnum::fromType<TableNames>();
 //    for(int i=0;i<__qme.keyCount();i++)
 //    {
+        //TODO , should use Decorator Mode fix this
 //        QSqlRelationalTableModel* reference = new QSqlRelationalTableModel(this);
 //        bool result = false;
 //        reference->setEditStrategy(QSqlTableModel::OnManualSubmit);

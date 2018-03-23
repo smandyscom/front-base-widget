@@ -2,15 +2,14 @@
 #define TABLEMODELIOOVERRIDE_H
 
 #include <QObject>
-#include <QSqlRelationalTableModel>
 #include <modbuschannel.h>
 #include <QColor>
 #include <QTimer>
-
+#include <abstractqvariantsqltable.h>
 //!
 //! \brief The TableModelIOOverride class
 //! Override/Read the I/O data
-class TableModelIOOverride : public QSqlRelationalTableModel
+class TableModelIOOverride : public AbstractQVariantSqlTable
 {
     Q_OBJECT
 public:
@@ -27,10 +26,6 @@ public:
     Q_ENUM(Header)
     explicit TableModelIOOverride(QObject *parent = nullptr);
 
-    void IsEnableStateControl(bool value);
-    bool IsEnableStateControl(void) const;
-
-
     //!
     //! \brief data
     //! \param idx
@@ -40,7 +35,6 @@ public:
     QVariant data(const QModelIndex &idx, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
 protected:
-    bool __isEnableStateControl;
     ModbusChannel* __channel;
     ModbusDriverAddress CurrentIndexAddress(int rowIndex) const;
 

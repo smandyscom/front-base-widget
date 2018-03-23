@@ -4,11 +4,48 @@
 using namespace BaseLayer;
 
 #pragma pack(1)
-
+#define DATA_BLOCK_SIZE_IN_WORD 64
 class AbstractDataBlock
 {
+public:
+    AbstractDataBlock()
+    {
+        memset(reserved,0,sizeof(MODBUS_WORD) * DATA_BLOCK_SIZE_IN_WORD);
+    }
+
+    void Value(int index,MODBUS_WORD value)
+    {
+        reserved[index] = value;
+    }
+    MODBUS_WORD Value(int index) const
+    {
+        return reserved[index];
+    }
 protected:
-    MODBUS_WORD reserved[64];
+    MODBUS_WORD reserved[DATA_BLOCK_SIZE_IN_WORD];
+    //!
+    //! \brief Length
+    //! in mm
+    //! TODOS , query axis parameter table , get right ratio
+    qreal Length() const
+    {
+        return 0.001;
+    }
+    //!
+    //! \brief Time
+    //! in sec
+    qreal Time() const
+    {
+        return 0.001;
+    }
+    //!
+    //! \brief Torque
+    //! \return
+    //! in Percentage
+    qreal TorquePercentage() const
+    {
+        return 0.01;
+    }
 };
 Q_DECLARE_METATYPE(AbstractDataBlock)
 
@@ -502,5 +539,34 @@ protected:
     MODBUS_WORD reserved[8];
 };
 Q_DECLARE_METATYPE(IoMonitorOverrideBlock)
+
+class CylinderContextBlock : AbstractDataBlock
+{
+public:
+
+};
+
+class AxisContextBlock : AbstractDataBlock
+{
+public:
+    enum Offset
+    {
+        ADDRESS=0,
+        AXIS_TYPE=0,
+        LIMIT_PLUS=2,
+        LIMIT_MINUS=4,
+        SPEED_MAX=6,
+        POS_TOLERANCE=8,
+    };
+
+    void MotionParameter(int itemIndex,qreal value)
+    {
+        *(reinterpret_cast<MODBUS_LONG*>(&(reserved[itemIndex]))) = value / Length();
+    }
+    qreal MotionParameter(int itemIndex) const
+    {
+        return *(reinterpret_cast<const MODBUS_LONG*>(&reserved[itemIndex]));
+    }
+};
 
 #endif // BASICBLOCKSDEFINITION_H

@@ -3,9 +3,12 @@
 
 #include <QMainWindow>
 #include <modbuschannel.h>
+
+#include <QModbusTcpClient>
+
 #include <frontmanaualmode.h>
 #include <frontiooverride.h>
-#include <QModbusTcpClient>
+#include <frontcylinderpanel.h>
 
 namespace Ui {
 class MainWindow;

@@ -78,9 +78,9 @@
       <string>Manual</string>
      </attribute>
     </widget>
-    <widget class="QWidget" name="tabChannel">
+    <widget class="QWidget" name="tabCylinder">
      <attribute name="title">
-      <string>Channel</string>
+      <string>Cylinder</string>
      </attribute>
     </widget>
     <widget class="QWidget" name="tabIO">

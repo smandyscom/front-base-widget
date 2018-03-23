@@ -2,13 +2,13 @@
 #define TABLEMODELCOMMANDBLOCK_H
 
 #include <QObject>
-#include <QSqlTableModel>
 #include <basicblocksdefinition.h>
+#include <abstractqvariantsqltable.h>
 //!
 //! \brief The TableModelCommandBlock class
 //! Define how to convert row to/from ExtendCommandBlock
 //! Decoration mode
-class TableModelCommandBlock : public QSqlTableModel
+class TableModelCommandBlock : public AbstractQVariantSqlTable
 {
     Q_OBJECT
 public:
@@ -35,18 +35,11 @@ public:
     };
     Q_ENUM(Headers)
 
-    explicit TableModelCommandBlock(QSqlTableModel* instance);
+    explicit TableModelCommandBlock(QObject *parent = Q_NULLPTR);
 
-    QSqlTableModel* Instance() const {return __instance;}
-    ExtendedCommandBlock Value(int rowIndex);
-    void Value(int rowIndex, const ExtendedCommandBlock value);
+    QVariant RowRecord(int rowIndex) const Q_DECL_OVERRIDE;
+    void RowRecord(int rowIndex, const QVariant value) Q_DECL_OVERRIDE;
 
-    //! Ovrrides
-    void setFilter(const QString &filter) Q_DECL_OVERRIDE {__instance->setFilter(filter);}
-    bool select() Q_DECL_OVERRIDE { __instance->select();}
-    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE { return __instance->rowCount();}
-protected:
-    QSqlTableModel* __instance;
 };
 
 #endif // TABLEMODELCOMMANDBLOCK_H
