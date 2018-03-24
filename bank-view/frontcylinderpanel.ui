@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>955</width>
-    <height>628</height>
+    <width>1261</width>
+    <height>735</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,13 +18,19 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>931</width>
-     <height>611</height>
+     <width>1241</width>
+     <height>711</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_6">
     <item>
      <widget class="QGroupBox" name="groupBox">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>400</height>
+       </size>
+      </property>
       <property name="title">
        <string>Parameters</string>
       </property>
@@ -32,7 +38,14 @@
        <item>
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
-          <widget class="QTableView" name="tableViewCylinder"/>
+          <widget class="QTableView" name="tableViewCylinder">
+           <property name="minimumSize">
+            <size>
+             <width>200</width>
+             <height>150</height>
+            </size>
+           </property>
+          </widget>
          </item>
          <item>
           <widget class="QWidget" name="widgetFilter" native="true">
@@ -41,6 +54,18 @@
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>140</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>140</height>
+            </size>
            </property>
           </widget>
          </item>

@@ -48,12 +48,11 @@ public:
     static QString DatabaseName(){return __databaseName;}
 
     QSqlRelationalTableModel* AxisTable() const {return __axisTable;}
-    TableModelCommandBlock* CommandBlockTable() const {return __commandBlockTable;}
+    TableModelCommandBlock* CommandBlockTable() const {return reinterpret_cast<TableModelCommandBlock*>(__commandBlockTable);}
     QSqlRelationalTableModel* InputTable() const { return __inputTable;}
     QSqlRelationalTableModel* OutputTable() const {return __outputTable;}
     QSqlRelationalTableModel* RegionTable() const {return __regionTable;}
 
-    QSqlRelationalTableModel* CommandBlockTable2() const {return __commandBlockTable2;}
 
     AbstractQVariantSqlTable* TableMap(TableNames value) const
     {
@@ -76,12 +75,10 @@ protected:
     QMap<TableNames,TableEntity> __tableMap;
 
     QSqlRelationalTableModel* __axisTable;
-    TableModelCommandBlock* __commandBlockTable;
-    QSqlRelationalTableModel* __inputTable;
-    QSqlRelationalTableModel* __outputTable;
-    QSqlRelationalTableModel* __regionTable;
-
-    QSqlRelationalTableModel* __commandBlockTable2;
+    AbstractQVariantSqlTable* __commandBlockTable;
+    AbstractQVariantSqlTable* __inputTable;
+    AbstractQVariantSqlTable* __outputTable;
+    AbstractQVariantSqlTable* __regionTable;
 };
 
 #endif // JUNCTIONBANKDATABASE_H

@@ -59,6 +59,7 @@ void FrontIoOverride::onComboxCurrentIndexChanged()
     uint regionId = __regionTable->index(cb->currentIndex(),0).data().toUInt();
 
     QString filterString = tr("%1=%2").arg(regionKey).arg(regionId);
+    //QString filterString = tr("%1=%2").arg("PLC_ADDRESS").arg("\'803E\'");
 
     if(sender()==ui->comboBoxInputsFilter)
     {

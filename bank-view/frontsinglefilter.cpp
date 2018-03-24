@@ -30,5 +30,6 @@ void FrontSingleFilter::onSelectedIndexChanged(int i)
 
 void FrontSingleFilter::onSelectAll()
 {
+    __dataTable->setFilter(nullptr);
     __dataTable->select();
 }

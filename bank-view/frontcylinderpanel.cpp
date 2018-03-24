@@ -1,11 +1,10 @@
 #include "frontcylinderpanel.h"
 #include "ui_frontcylinderpanel.h"
 
-FrontCylinderPanel::FrontCylinderPanel(AbstractQVariantSqlTable *cylinderTable,
-                                       QWidget *parent) :
+FrontCylinderPanel::FrontCylinderPanel(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FrontCylinderPanel),
-    __cylinderTable(cylinderTable)
+    __cylinderTable(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_CYLINDERS))
 {
     ui->setupUi(this);
     //!
@@ -35,7 +34,7 @@ FrontCylinderPanel::FrontCylinderPanel(AbstractQVariantSqlTable *cylinderTable,
                           ui->widgetBankTransfer);
     //!
     ui->tableViewInputs->setModel(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::INPUT_ATTRIBUTES));
-    ui->tableViewInputs->setModel(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::OUTPUT_ATTRIBUTES));
+    ui->tableViewOutputs->setModel(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::OUTPUT_ATTRIBUTES));
     //!
     ui->tableViewCylinder->setModel(__cylinderTable);
     ui->tableViewCylinder->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -85,10 +84,14 @@ QString FrontCylinderPanel::generateFilterString(QString key, QList<QString> con
     int i=0;
     QString result;
     while (i<conditions.count()-1) {
-        result.append(tr("%1=%2 OR ").arg(key).arg(conditions[i]));
+        if(conditions[i] != "")
+            result.append(tr("%1=\'%2\' OR ").arg(key).arg(conditions[i]));
         i++;
     }
-    result.append(tr("%1=%2").arg(key).arg(conditions[conditions.count()-1]));
+    if(conditions[conditions.count()-1] != "")
+        result.append(tr("%1=\'%2\'").arg(key).arg(conditions[conditions.count()-1]));
+    else
+        result.append(tr("%1=\'%2\'").arg(key).arg(0));
 
     return result;
 }
