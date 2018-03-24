@@ -33,9 +33,12 @@ MainWindow::MainWindow(QWidget *parent) :
     //! Intialize Database
     JunctionBankDatabase::DatabaseName("base.db");
     JunctionBankDatabase::Instance()->onInitialize();
+    //! Link
+    ControllerBankTransfer::Instance()->Model(CommitBlock::SELECTION_COMMAND_BLOCK,JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_COMMAND_BLOCKS));
+    ControllerBankTransfer::Instance()->Model(CommitBlock::SELECTION_CYLINDER,JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_CYLINDERS));
 
     //! Initialize FrontManaul panel
-    FrontManaualMode* fmm = new FrontManaualMode(JunctionBankDatabase::Instance()->CommandBlockTable(),
+    FrontManaualMode* fmm = new FrontManaualMode(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_COMMAND_BLOCKS),
                                                  JunctionBankDatabase::Instance()->AxisTable(),
                                                  JunctionBankDatabase::Instance()->RegionTable(),
                                                  ui->tabManual);

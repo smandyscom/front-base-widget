@@ -31,8 +31,22 @@ QVariant TableModelCylinder::RowRecord(int rowIndex) const
         MODBUS_WORD address = __record.value(QVariant::fromValue(var).value<QString>()).value<QString>().toUShort(&isConvertOK,16);
         if(isConvertOK)
             __adb.Value(var,address);
+        else
+            __adb.Value(var,0); //set as invalid address
     }
     //! Calculating sensor usage
+    MODBUS_WORD counter=0;
+    for(int i=SEN_A_1;i<=SEN_A_4;i++)
+        if(__adb.Value(i)!=0)
+            counter++;
+    __adb.Value(A_SENSOR_USED_COUNT,counter);
+    //!
+    counter=0;
+    for(int i=SEN_B_1;i<=SEN_B_4;i++)
+        if(__adb.Value(i)!=0)
+            counter++;
+    __adb.Value(B_SENSOR_USED_COUNT,counter);
+
 
     return QVariant::fromValue(__adb);
 }

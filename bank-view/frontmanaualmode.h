@@ -16,6 +16,8 @@
 #include <tablemodelaxis.h>
 #include <controllerbanktransfer.h>
 
+#include <abstractqvariantsqltable.h>
+
 namespace Ui {
 class FrontManaualMode;
 }
@@ -28,7 +30,7 @@ class FrontManaualMode : public QWidget
     Q_OBJECT
 
 public:
-    explicit FrontManaualMode(TableModelCommandBlock *wholeCommandBankModel,
+    explicit FrontManaualMode(AbstractQVariantSqlTable *wholeCommandBankModel,
                               QSqlRelationalTableModel *wholeAxisBankModel,
                               QSqlRelationalTableModel *regionModel,
                               QWidget *parent = 0);

@@ -5,7 +5,7 @@
 #include <QSqlQuery>
 #include <QPalette>
 #include <utilities.h>
-FrontManaualMode::FrontManaualMode(TableModelCommandBlock *wholeCommandBankModel,
+FrontManaualMode::FrontManaualMode(AbstractQVariantSqlTable *wholeCommandBankModel,
                                    QSqlRelationalTableModel *wholeAxisBankModel,
                                    QSqlRelationalTableModel *regionModel,
                                    QWidget *parent) :
@@ -14,7 +14,7 @@ FrontManaualMode::FrontManaualMode(TableModelCommandBlock *wholeCommandBankModel
 {
     ui->setupUi(this);
     //!decorated instance
-    __commandBlockTable = wholeCommandBankModel;
+    __commandBlockTable = qobject_cast<TableModelCommandBlock*>(wholeCommandBankModel);
     __axisTable = new TableModelAxis(wholeAxisBankModel);
     __regionTable = regionModel;
     //! Link
@@ -329,26 +329,30 @@ void FrontManaualMode::onDataTransfer()
     {
         //! Commit to database firstly , once fail (could not pass the contraint
         //!  no need go further
-        table->database().transaction();
+        //table->database().transaction();
         if(table->submitAll())
         {
-            table->database().commit();
+            //table->database().commit();
             //! Start bank trunsation
-            table->setFilter(""); //reset filter
-            __bankTransfer->onTransferData(CommitBlock::MODE_DOWNLOAD_DATA_BLOCK); // mode , transfer all
+            table->setFilter(nullptr); //reset filter
+            __bankTransfer->DataBlockSelection(CommitBlock::SELECTION_COMMAND_BLOCK);
+            __bankTransfer->Direction(CommitBlock::MODE_DOWNLOAD_DATA_BLOCK);
+            __bankTransfer->onTransferData(); // mode , transfer all
             //TODOS , optimization , transfer those rows edited
         }
         else
         {
             qDebug() << table->lastError().text();
             table->revertAll();
-            table->database().rollback();
+            //table->database().rollback();
         }
     }
     else if(sender()==ui->pushButtonUpdate)
     {
         table->setFilter(""); //reset filter
-        __bankTransfer->onTransferData(CommitBlock::MODE_UPLOAD_DATA_BLOCK);
+        __bankTransfer->DataBlockSelection(CommitBlock::SELECTION_COMMAND_BLOCK);
+        __bankTransfer->Direction(CommitBlock::MODE_UPLOAD_DATA_BLOCK);
+        __bankTransfer->onTransferData();
     }
 
     //!Setup progress bar

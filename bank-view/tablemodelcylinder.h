@@ -15,8 +15,8 @@ public:
     enum Offset
     {
         TIMER_SET=0,
-        A_SENSOR_USED_COUNT=1,
-        B_SENSOR_USED_COUNT=2,
+        A_SENSOR_USED_COUNT=2,
+        B_SENSOR_USED_COUNT=3,
         ACT_A_1=4,
         ACT_A_2=5,
         ACT_B_1=6,

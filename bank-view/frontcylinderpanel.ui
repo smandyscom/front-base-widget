@@ -19,7 +19,7 @@
      <x>10</x>
      <y>10</y>
      <width>1241</width>
-     <height>711</height>
+     <height>740</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -94,6 +94,12 @@
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>250</height>
+              </size>
+             </property>
              <property name="styleSheet">
               <string notr="true">border-color: rgb(0, 0, 0);
 gridline-color: rgb(0, 0, 0);</string>
@@ -113,7 +119,7 @@ gridline-color: rgb(0, 0, 0);</string>
                <property name="maximumSize">
                 <size>
                  <width>16777215</width>
-                 <height>150</height>
+                 <height>100</height>
                 </size>
                </property>
                <property name="text">
@@ -132,7 +138,7 @@ gridline-color: rgb(0, 0, 0);</string>
                <property name="maximumSize">
                 <size>
                  <width>16777215</width>
-                 <height>150</height>
+                 <height>100</height>
                 </size>
                </property>
                <property name="text">
