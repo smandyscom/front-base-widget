@@ -32,7 +32,7 @@
       <x>0</x>
       <y>0</y>
       <width>1280</width>
-      <height>721</height>
+      <height>711</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -57,7 +57,7 @@
      <enum>QTabWidget::Rounded</enum>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>5</number>
     </property>
     <property name="iconSize">
      <size>
@@ -88,6 +88,16 @@
       <string>I/O</string>
      </attribute>
     </widget>
+    <widget class="QWidget" name="tabAxis">
+     <attribute name="title">
+      <string>Axis</string>
+     </attribute>
+    </widget>
+    <widget class="QWidget" name="tabUnit">
+     <attribute name="title">
+      <string>Unit</string>
+     </attribute>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -99,8 +109,26 @@
      <height>26</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuDatabase">
+    <property name="title">
+     <string>Database</string>
+    </property>
+    <addaction name="actionCommit"/>
+    <addaction name="actionRollback"/>
+   </widget>
+   <addaction name="menuDatabase"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionCommit">
+   <property name="text">
+    <string>Commit</string>
+   </property>
+  </action>
+  <action name="actionRollback">
+   <property name="text">
+    <string>Rollback</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

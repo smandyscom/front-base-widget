@@ -5,6 +5,7 @@
 #include <QSqlQuery>
 #include <QPalette>
 #include <utilities.h>
+#include <QApplication>
 FrontManaualMode::FrontManaualMode(AbstractQVariantSqlTable *wholeCommandBankModel,
                                    QSqlRelationalTableModel *wholeAxisBankModel,
                                    QSqlRelationalTableModel *regionModel,
@@ -21,7 +22,7 @@ FrontManaualMode::FrontManaualMode(AbstractQVariantSqlTable *wholeCommandBankMod
     __controller = ControllerManualMode::Instance();
     __bankTransfer= ControllerBankTransfer::Instance();
     //setup
-    __commitOption.Mode(CommitBlock::MODE_COMMAND_BLOCK);
+    __commitOption.Mode(CommitBlock::MODE_EXE_COMMAND_BLOCK);
 
     //!
     //! \brief connect
@@ -92,16 +93,17 @@ FrontManaualMode::FrontManaualMode(AbstractQVariantSqlTable *wholeCommandBankMod
     //! Progress bar
     ui->progressBarDataTransfer->setMinimum(0);
     connect(__controller,&ControllerManualMode::operationPerformed,this,[this](){
-        if(__controller->CommitOption().Mode() == CommitBlock::MODE_COMMAND_BLOCK)
+        if(__controller->CommitOption().Mode() == CommitBlock::MODE_EXE_COMMAND_BLOCK)
             return; //ignorance
         ui->progressBarDataTransfer->setValue(__bankTransfer->CurrentIndex()+1);
     });
 
     //! Toogle mode
     connect(ui->pushButtonServoOn,&QPushButton::clicked,this,&FrontManaualMode::onOperationPerformed);
-    //! Press/Release mode
-    connect(ui->pushButtonAlarmClear,&QPushButton::pressed,this,&FrontManaualMode::onOperationPerformed);
-    connect(ui->pushButtonAlarmClear,&QPushButton::released,this,&FrontManaualMode::onOperationPerformed);
+    connect(ui->pushButtonAlarmClear,&QPushButton::clicked,this,&FrontManaualMode::onOperationPerformed);
+
+    //!
+    connect(qApp,&QApplication::focusChanged,this,&FrontManaualMode::onFocused);
 }
 
 FrontManaualMode::~FrontManaualMode()
@@ -114,6 +116,8 @@ FrontManaualMode::~FrontManaualMode()
 void FrontManaualMode::onBankOperationClicked()
 {
     if(!ui->tableViewCommandBlock->selectionModel()->hasSelection())
+        return;
+    if(__controller->CurrentState()!=ControllerManualMode::STATE_IDLE)
         return;
 
     auto button = qobject_cast<QPushButton*>(sender());
@@ -136,6 +140,9 @@ void FrontManaualMode::onBankOperationClicked()
     }
     else if(button == ui->pushButtonBankExecution)
     {
+        __commandBlock.ControlWord(AbstractCommandBlock::IS_PARA_SETTED,false);
+        __commandBlock.ControlWord(AbstractCommandBlock::IS_RESET_POS_REFERENCE,false);
+        __commitOption.Mode(CommitBlock::MODE_EXE_COMMAND_BLOCK);
         __controller->DataBlock(QVariant::fromValue(__commandBlock));
         __controller->CommitOption(__commitOption);
         emit __controller->operationTriggered();
@@ -159,6 +166,7 @@ void FrontManaualMode::onManualOperationClicked()
 
     auto button = qobject_cast<QPushButton*>(sender());
     setCommonParameters(); //
+    __commitOption.Mode(CommitBlock::MODE_EXE_COMMAND_BLOCK);
 
     if(button == ui->pushButtonZret)
     {
@@ -216,17 +224,22 @@ void FrontManaualMode::onManualOperationClicked()
 //!
 void FrontManaualMode::onOperationPerformed()
 {
-    ControllerManualMode::ManualContext __controlBit;
+    __commitOption.Mode(CommitBlock::MODE_EXE_AXIS);
+    AxisOperationBlock __block;
+
     if(sender()==ui->pushButtonServoOn)
     {
-        __controlBit = ControllerManualMode::SERVO_ON;
+        __block.Operation(AxisMonitorBlock::OP_SERVO_ON,true);
     }
     else if(sender()==ui->pushButtonAlarmClear)
     {
-        __controlBit = ControllerManualMode::ALARM_CLEAR;
+        __block.Operation(AxisMonitorBlock::OP_ALARM_CLEAR,true);
     }
 
-    __controller->Operation(__controlBit);
+    __controller->CommitOption(__commitOption);
+    __controller->DataBlock(QVariant::fromValue(__block));
+    emit __controller->operationTriggered();
+
 }
 
 void FrontManaualMode::setCommonParameters()
@@ -249,8 +262,8 @@ void FrontManaualMode::setCommonParameters()
 
 void FrontManaualMode::onTimerTimeout()
 {
-    AbstractMonitorBlock mb = __controller->MonitorBlock();
-    AxisMonitorBlock* amb = static_cast<AxisMonitorBlock*>(&mb);
+    AbstractDataBlock __adb = __controller->MonitorBlock();
+    AxisMonitorBlock* amb = reinterpret_cast<AxisMonitorBlock*>(&__adb);
 
     ui->textBrowserPositionReference->setText(QString::number(amb->PositionCommand()));
     ui->textBrowserPositionFeedback->setText(QString::number(amb->PositionFeedback()));
@@ -281,7 +294,7 @@ void FrontManaualMode::onComboBoxIndexChanged()
         //! change base-object-id
         __commandBlock.ObjectId(SelectedAxisAddress());
         //! change monitor axis id
-        __controller->onMonitorAxisChanged(static_cast<MODBUS_WORD>(SelectedAxisAddress()));
+        __controller->onMonitorDeviceIndexChanged(static_cast<MODBUS_WORD>(SelectedAxisId()));
     }
     else if(comboBox == ui->comboBoxRegion)
     {
@@ -364,10 +377,16 @@ void FrontManaualMode::onSelectReset()
 {
     if(sender()==ui->pushButtonSelectAllRegion)
     {
-        __axisTable->setFilter("");
+        __axisTable->setFilter(nullptr);
     }
     else if(sender()==ui->pushButtonSelectAllAxis)
     {
-        __commandBlockTable->setFilter("");
+        __commandBlockTable->setFilter(nullptr);
     }
+}
+
+void FrontManaualMode::onFocused(QWidget *old, QWidget *now)
+{
+    if(now==this->parent())
+        __controller->MonitorDeviceCategrory(CommitBlock::SELECTION_AXIS);
 }

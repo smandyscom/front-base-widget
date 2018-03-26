@@ -79,7 +79,9 @@ HEADERS += \
     frontcylinderpanel.h \
     frontbanktransfer.h \
     frontsinglefilter.h \
-    fronttwinfilter.h
+    fronttwinfilter.h \
+    axisblocksdefinition.h \
+    cylinderblockdefinition.h
 
 unix {
     target.path = /usr/lib

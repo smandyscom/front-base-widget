@@ -8,7 +8,7 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
     CommitOption(CommitBlock());
 
     //! Very first shot
-    __channel->beginAccess<AbstractMonitorBlock>(ModbusDriverAddress(MONITOR_BLOCK_HEAD));
+    __channel->beginAccess<AbstractDataBlock>(ModbusDriverAddress(MONITOR_BLOCK_HEAD));
     __channel->beginAccess<MODBUS_WORD>(ModbusDriverAddress(STATUS_WORD));
     __channel->beginAccess<IoMonitorOverrideBlock>(ModbusDriverAddress(IO_MON_OVERRIDE));
     //!
@@ -102,7 +102,7 @@ void ControllerManualMode::onReply(UpdateEvent *event)
         //! keep polling monitor status
         QTimer::singleShot(100,this,[this](){
             //Schedual the next polling
-            __channel->beginAccess<AbstractMonitorBlock>(ModbusDriverAddress(MONITOR_BLOCK_HEAD));
+            __channel->beginAccess<AbstractDataBlock>(ModbusDriverAddress(MONITOR_BLOCK_HEAD));
         });
         break;
     }
@@ -126,16 +126,6 @@ void ControllerManualMode::onReply(UpdateEvent *event)
     default:
         break;
     }
-}
-
-//!
-//! \brief ControllerManualMode::Operation
-//! \param bit
-//! Toogle
-void ControllerManualMode::Operation(ManualContext bit)
-{
-    ModbusDriverAddress address = ModbusDriverAddress(bit);
-    __channel->Access(address,!__channel->Access<bool>(address));
 }
 
 //!

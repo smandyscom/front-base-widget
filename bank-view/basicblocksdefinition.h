@@ -348,14 +348,15 @@ public:
     };
     enum CommitMode : MODBUS_LONG
     {
-        MODE_COMMAND_BLOCK=0,
-        MODE_COMMAND_CYLINDER=1,
+        MODE_EXE_COMMAND_BLOCK=0,
+        MODE_EXE_CYLINDER=1,
+        MODE_EXE_AXIS=8,
         MODE_DOWNLOAD_DATA_BLOCK = 15, //PLC<-HMI
         MODE_UPLOAD_DATA_BLOCK = 16,   //PLC->HMI
     };
     CommitBlock()
     {
-        __mode = MODE_COMMAND_BLOCK;
+        __mode = MODE_EXE_COMMAND_BLOCK;
         __selection = SELECTION_COMMAND_BLOCK;
         __index = 0;
     }
@@ -373,167 +374,7 @@ protected:
 };
 Q_DECLARE_METATYPE(CommitBlock)
 
-#define MONITOR_BLOCK_FULL_OCCUPATION 24
-class AbstractMonitorBlock
-{
-protected:
-    MODBUS_WORD reserved[MONITOR_BLOCK_FULL_OCCUPATION];
 
-    //!
-    //! \brief Length
-    //! in mm
-    //! TODOS , query axis parameter table , get right ratio
-    qreal Length() const
-    {
-        return 0.001;
-    }
-    //!
-    //! \brief Time
-    //! in sec
-    qreal Time() const
-    {
-        return 0.001;
-    }
-    //!
-    //! \brief Torque
-    //! \return
-    //! in Percentage
-    qreal TorquePercentage() const
-    {
-        return 0.01;
-    }
-
-};
-Q_DECLARE_METATYPE(AbstractMonitorBlock)
-class AxisMonitorBlock : public AbstractMonitorBlock
-{
-public:
-    enum OPERATION : quint16
-    {
-        OP_SERVO_ON=0x0001,
-        OP_MACHINE_LOCK=0x0002,
-        OP_RESERVED0=0x0004,
-        OP_RESERVED1=0x0008,
-        OP_LATCH_DETECTION_REQUEST=0x0010,
-        OP_RESERVED2=0x0020,
-        OP_POSMAX_RESET=0x0040,
-        OP_ABS_INFINITE_POS_LOAD=0x0080,
-        OP_POSTIVE_EXT_TORQUE_LIMIT_INPUT=0x0100,
-        OP_NEGTIVE_EXT_TORQUE_LIMIT_INPUT=0x0200,
-        OP_RESERVERD3=0x0400,
-        OP_RESET_INTEGRATION=0x0800,
-        OP_RESET_NETWORK=0x1000,
-        OP_LATCH_COMPLETED_CLEAR=0x2000,
-        OP_RESET_COMM=0x4000,
-        OP_ALARM_CLEAR=0x8000,
-    };
-    enum WARNINGS : MODBUS_LONG
-    {
-        WARN_EXCESS_DEVIATION=0x0001,
-        WARN_SETTING_PARA_ERROR=0x0002,
-        WARN_FIXED_PARA_ERROR=0x0004,
-        WARN_SERVO_ERROR=0x0008,
-        WARN_MOTION_COMMAND_ERROR=0x0010,
-        WARN_RESERVED0=0x0020,
-        WARN_POT=0x0040,
-        WARN_NOT=0x0080,
-        WARN_SERVO_ON_INCOMPLETE=0x0100,
-        WARN_SERVO_COMM_WARNING=0x0200,
-        WARN_SERVO_STOP=0x0400,
-    };
-    enum ALARMS : MODBUS_LONG
-    {
-        ALM_SERVO_ERROR=0x0001,
-        ALM_POT=0x0002,
-        ALM_NOT=0x0004,
-        ALM_PSOT=0x0008,
-        ALM_NSOT=0x0010,
-        ALM_SERVO_OFF=0x0020,
-        ALM_POSITION_TIMEOUT=0x0040,
-        ALM_EXCESS_POSITION_TRAVEL_DISTANCE=0x0080,
-        ALM_EXCESS_SPEED=0x0100,
-        ALM_EXCESS_DEVIATION=0x0200,
-        ALM_FILTER_TYPE_CHANGE_ERROR=0x0400,
-        ALM_FILTER_TIME_CONSTANT_CHANGE_ERROR=0x0800,
-        ALM_ZERO_POINT_UNSET=0x2000,
-    };
-    enum COMMAND_STATUS : MODBUS_WORD
-    {
-        CS_BUSY=0x0001,
-        CS_HOLDL=0x0002,
-        CS_FAIL=0x0008,
-        CS_COMPLETE=0x0100,
-    };
-    enum RUN_STATUS : MODBUS_WORD
-    {
-        RS_SERVO_READY=0x0001,
-        RS_SERVO_ON=0x0002,
-        RS_SYS_BUSY=0x0004,
-        RS_SERVO_BUSY=0x0008,
-        RS_LATCH_MODE=0x0010,
-    };
-    enum POS_STATUS : MODBUS_WORD
-    {
-        PS_DEN=0x0001,
-        PS_POSCOMP=0x0002,
-        PS_LCOMP=0x0004,
-        PS_NEAR=0x0008,
-        PS_ZERO=0x0010,
-        PS_ZRNC=0x0020,
-        PS_MLKL=0x0040,
-        PS_ABSLDE=0x0100,
-        PS_POSMAX=0x0200,
-    };
-
-    //!
-    //! \brief Operation
-    //! \param value
-    //! \return
-    //!
-    bool Operation(OPERATION value) const
-    {
-        return (reserved[0] & value) > 0;
-    }
-    //!
-    //! \brief positionCommand
-    //! in 0.001mm
-    qreal PositionCommand() const { return reinterpret_cast<const MODBUS_LONG*>(reserved)[1] * Length();}
-    bool RunStatus(RUN_STATUS value)
-    {
-        return (reserved[4] & value) > 0;
-    }
-    WARNINGS Warning() const
-    {
-        return WARNINGS(reinterpret_cast<const MODBUS_LONG*>(reserved)[3]);
-    }
-    ALARMS Alarm() const
-    {
-        return ALARMS(reinterpret_cast<const MODBUS_LONG*>(reserved)[4]);
-    }
-    bool CommandStatus(COMMAND_STATUS value) const
-    {
-        return (reserved[10] & value) > 0;
-    }
-    bool PositionStatus(POS_STATUS value) const
-    {
-        return (reserved[12] & value) > 0;
-    }
-
-
-    //!
-    //! \brief positionFeedback
-    //! in 0.001mm
-    qreal PositionFeedback() const {return reinterpret_cast<const MODBUS_LONG*>(reserved)[7] * Length();}
-    //!
-    //! \brief speedFeedback
-    //! in 0.001mm/sec
-    qreal SpeedFeedback() const {return reinterpret_cast<const MODBUS_LONG*>(reserved)[8] * Length();}
-    //!
-    //! \brief torqueFeedback
-    //! in 0.01%
-    qreal TorqueFeedback() const {return reinterpret_cast<const MODBUS_LONG*>(reserved)[9] * TorquePercentage();}
-};
-Q_DECLARE_METATYPE(AxisMonitorBlock)
 
 class IoMonitorOverrideBlock
 {
@@ -543,33 +384,6 @@ protected:
 };
 Q_DECLARE_METATYPE(IoMonitorOverrideBlock)
 
-class CylinderContextBlock : AbstractDataBlock
-{
-public:
 
-};
-
-class AxisContextBlock : AbstractDataBlock
-{
-public:
-    enum Offset
-    {
-        ADDRESS=0,
-        AXIS_TYPE=0,
-        LIMIT_PLUS=2,
-        LIMIT_MINUS=4,
-        SPEED_MAX=6,
-        POS_TOLERANCE=8,
-    };
-
-    void MotionParameter(int itemIndex,qreal value)
-    {
-        *(reinterpret_cast<MODBUS_LONG*>(&(reserved[itemIndex]))) = value / Length();
-    }
-    qreal MotionParameter(int itemIndex) const
-    {
-        return *(reinterpret_cast<const MODBUS_LONG*>(&reserved[itemIndex]));
-    }
-};
 
 #endif // BASICBLOCKSDEFINITION_H
