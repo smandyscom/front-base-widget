@@ -38,6 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ControllerBankTransfer::Instance()->Model(CommitBlock::SELECTION_CYLINDER,JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_CYLINDERS));
 
     //! Initialize FrontManaul panel
+    frontControlPanel* fcp2 = new frontControlPanel(ui->tabMain);
     FrontManaualMode* fmm = new FrontManaualMode(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_COMMAND_BLOCKS),
                                                  JunctionBankDatabase::Instance()->AxisTable(),
                                                  JunctionBankDatabase::Instance()->RegionTable(),

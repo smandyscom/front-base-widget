@@ -9,6 +9,7 @@
 #include <frontmanaualmode.h>
 #include <frontiooverride.h>
 #include <frontcylinderpanel.h>
+#include <frontcontrolpanel.h>
 
 #include <QMap>
 
