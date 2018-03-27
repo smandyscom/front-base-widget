@@ -24,8 +24,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1241</width>
-     <height>679</height>
+     <width>1261</width>
+     <height>681</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -89,6 +89,15 @@
          <string>Control</string>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_4">
+         <property name="leftMargin">
+          <number>3</number>
+         </property>
+         <property name="topMargin">
+          <number>3</number>
+         </property>
+         <property name="rightMargin">
+          <number>3</number>
+         </property>
          <item>
           <layout class="QVBoxLayout" name="verticalLayoutControl">
            <item>
@@ -102,7 +111,7 @@
              <property name="minimumSize">
               <size>
                <width>0</width>
-               <height>250</height>
+               <height>210</height>
               </size>
              </property>
              <property name="styleSheet">
@@ -110,6 +119,52 @@
 gridline-color: rgb(0, 0, 0);</string>
              </property>
             </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayoutStatus">
+             <item>
+              <widget class="QLabel" name="labelWarn">
+               <property name="text">
+                <string>Warning</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="labelMonA">
+               <property name="text">
+                <string>Group A</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="labelMonB">
+               <property name="text">
+                <string>Group B</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="labelSuppress">
+               <property name="text">
+                <string>Suppress</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="labelTimeon">
+               <property name="text">
+                <string>Timer on</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="labelDone">
+               <property name="text">
+                <string>Done</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout">

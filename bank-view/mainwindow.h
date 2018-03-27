@@ -10,6 +10,8 @@
 #include <frontiooverride.h>
 #include <frontcylinderpanel.h>
 
+#include <QMap>
+
 namespace Ui {
 class MainWindow;
 }
@@ -24,8 +26,11 @@ public:
 
 private slots:
     void onRaiseUpdateEvent(UpdateEvent* e);
+    void onChangeMonitorCategrory();
 private:
     Ui::MainWindow *ui;
+
+    QMap<QWidget*,CommitBlock::CommitDataBlockSelection> __selectionMap;
 };
 
 #endif // MAINWINDOW_H

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>385</width>
-    <height>236</height>
+    <width>365</width>
+    <height>206</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -22,16 +22,31 @@
   <widget class="QGroupBox" name="groupBox">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>10</y>
+     <x>0</x>
+     <y>0</y>
      <width>362</width>
-     <height>221</height>
+     <height>211</height>
     </rect>
    </property>
    <property name="title">
     <string>Transfer Control</string>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_2">
+    <property name="spacing">
+     <number>3</number>
+    </property>
+    <property name="leftMargin">
+     <number>3</number>
+    </property>
+    <property name="topMargin">
+     <number>3</number>
+    </property>
+    <property name="rightMargin">
+     <number>3</number>
+    </property>
+    <property name="bottomMargin">
+     <number>3</number>
+    </property>
     <item>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
@@ -66,7 +81,7 @@
           <property name="maximumSize">
            <size>
             <width>16777215</width>
-            <height>35</height>
+            <height>30</height>
            </size>
           </property>
          </widget>
@@ -105,7 +120,7 @@
           <property name="maximumSize">
            <size>
             <width>16777215</width>
-            <height>35</height>
+            <height>30</height>
            </size>
           </property>
          </widget>

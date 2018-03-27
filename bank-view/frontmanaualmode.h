@@ -58,10 +58,7 @@ protected slots:
     void onOperationPerformed();
 
     void onSelectReset();
-    //!
-    //! \brief onFocused
-    //! Set MON_CATEGRORY as AXIS
-    void onFocused(QWidget *old, QWidget *now);
+
 protected:
     ExtendedCommandBlock __commandBlock;
     CommitBlock __commitOption;

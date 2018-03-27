@@ -29,6 +29,8 @@ public:
         SEN_B_2=13,
         SEN_B_3=14,
         SEN_B_4=15,
+
+        CYL_ID = 0xFFFF,
     };
     Q_ENUM(Offset)
 

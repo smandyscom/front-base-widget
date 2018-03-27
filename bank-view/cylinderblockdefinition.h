@@ -5,6 +5,7 @@
 
 class CylinderMonitorBlock : AbstractDataBlock
 {
+public:
     enum OffsetMonitor
     {
         OFFSET_MONITOR_STATUS_WORD=0,
@@ -20,7 +21,7 @@ class CylinderMonitorBlock : AbstractDataBlock
         INT_TMR_ON=0x0010,
         MOR_DONE=0x0020,
     };
-public:
+
     bool Status(StatusWord bit) const
     {
         return (reserved[OFFSET_MONITOR_STATUS_WORD] & bit) > 0;
@@ -30,6 +31,8 @@ Q_DECLARE_METATYPE(CylinderMonitorBlock)
 
 class CylinderOperationBlock:AbstractDataBlock
 {
+public:
+
     enum OffsetOperation
     {
         OFFSET_OPERATION_COMMAND_CACHED=1,
@@ -40,13 +43,12 @@ class CylinderOperationBlock:AbstractDataBlock
         OP_COMMAND_A=1,
         OP_COMMAND_B=2,
     };
-public:
-    void Operation(Operation value)
+    void CommandsOperation(Operation value)
     {
         reserved[OFFSET_OPERATION_COMMAND_CACHED] = value;
     }
 };
-
+Q_DECLARE_METATYPE(CylinderOperationBlock)
 class CylinderContext:AbstractDataBlock
 {
     enum OffsetContext

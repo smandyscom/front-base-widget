@@ -101,9 +101,6 @@ FrontManaualMode::FrontManaualMode(AbstractQVariantSqlTable *wholeCommandBankMod
     //! Toogle mode
     connect(ui->pushButtonServoOn,&QPushButton::clicked,this,&FrontManaualMode::onOperationPerformed);
     connect(ui->pushButtonAlarmClear,&QPushButton::clicked,this,&FrontManaualMode::onOperationPerformed);
-
-    //!
-    connect(qApp,&QApplication::focusChanged,this,&FrontManaualMode::onFocused);
 }
 
 FrontManaualMode::~FrontManaualMode()
@@ -383,10 +380,4 @@ void FrontManaualMode::onSelectReset()
     {
         __commandBlockTable->setFilter(nullptr);
     }
-}
-
-void FrontManaualMode::onFocused(QWidget *old, QWidget *now)
-{
-    if(now==this->parent())
-        __controller->MonitorDeviceCategrory(CommitBlock::SELECTION_AXIS);
 }

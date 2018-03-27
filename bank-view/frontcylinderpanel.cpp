@@ -8,6 +8,8 @@ FrontCylinderPanel::FrontCylinderPanel(QWidget *parent) :
 {
     ui->setupUi(this);
     //!
+    __controller  = ControllerManualMode::Instance();
+    //!
     __inputFields = {
         TableModelCylinder::SEN_A_1,
         TableModelCylinder::SEN_A_2,
@@ -45,7 +47,13 @@ FrontCylinderPanel::FrontCylinderPanel(QWidget *parent) :
     //!
     QList<QPushButton*> __buttonList = {ui->pushButtonGoA,
                                         ui->pushButtonGoB};
-    connect(ui->pushButtonGoA,SIGNAL(clicked(bool)),this,SLOT(onClicked()));
+    foreach (QPushButton* var, __buttonList) {
+        connect(var,SIGNAL(clicked(bool)),this,SLOT(onCylinderCommandClicked()));
+    }
+    //! Timer
+    __timer = new QTimer(this);
+    connect(__timer,SIGNAL(timeout()),this,SLOT(onTimerTimeout()));
+    __timer->start();
 }
 
 
@@ -54,8 +62,25 @@ FrontCylinderPanel::~FrontCylinderPanel()
     delete ui;
 }
 
-void FrontCylinderPanel::onClicked()
+void FrontCylinderPanel::onCylinderCommandClicked()
 {
+    CommitBlock __cb;
+    CylinderOperationBlock __cob;
+
+    __cb.Mode(CommitBlock::MODE_EXE_CYLINDER);
+
+    if(sender()==ui->pushButtonGoA)
+    {
+        __cob.CommandsOperation(CylinderOperationBlock::OP_COMMAND_A);
+    }
+    else if(sender()==ui->pushButtonGoB)
+    {
+        __cob.CommandsOperation(CylinderOperationBlock::OP_COMMAND_B);
+    }
+
+    __controller->CommitOption(__cb);
+    __controller->DataBlock(QVariant::fromValue(__cob));
+    emit __controller->operationTriggered();
 }
 
 void FrontCylinderPanel::onViewSelectionChanged()
@@ -77,6 +102,9 @@ void FrontCylinderPanel::onViewSelectionChanged()
     //filter out inputs
     qobject_cast<QSqlTableModel*>(ui->tableViewInputs->model())->setFilter(__inputFilterString);
     qobject_cast<QSqlTableModel*>(ui->tableViewOutputs->model())->setFilter(__outputFilterString);
+
+    //! Changeover monitor index
+    __controller->onMonitorDeviceIndexChanged(__record.value(QVariant::fromValue(TableModelCylinder::CYL_ID).toString()).value<MODBUS_WORD>());
 }
 
 QString FrontCylinderPanel::generateFilterString(QString key, QList<QString> conditions)
@@ -94,4 +122,17 @@ QString FrontCylinderPanel::generateFilterString(QString key, QList<QString> con
         result.append(tr("%1=\'%2\'").arg(key).arg(0));
 
     return result;
+}
+void FrontCylinderPanel::onTimerTimeout()
+{
+    //! Update cylinder status
+    AbstractDataBlock adb = __controller->MonitorBlock();
+    CylinderMonitorBlock* cmb = reinterpret_cast<CylinderMonitorBlock*>(&adb);
+    //! Show
+    utilities::colorChangeOver(ui->labelWarn,cmb->Status(CylinderMonitorBlock::MOR_WARN),Qt::yellow);
+    utilities::colorChangeOver(ui->labelMonA,cmb->Status(CylinderMonitorBlock::MOR_GROUP_A),Qt::green);
+    utilities::colorChangeOver(ui->labelMonB,cmb->Status(CylinderMonitorBlock::MOR_GROUP_B),Qt::green);
+    utilities::colorChangeOver(ui->labelSuppress,cmb->Status(CylinderMonitorBlock::CTL_SUPPRESS),Qt::red);
+    utilities::colorChangeOver(ui->labelTimeon,cmb->Status(CylinderMonitorBlock::INT_TMR_ON),Qt::green);
+    utilities::colorChangeOver(ui->labelDone,cmb->Status(CylinderMonitorBlock::MOR_DONE),Qt::green);
 }

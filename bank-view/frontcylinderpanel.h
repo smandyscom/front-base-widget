@@ -12,6 +12,8 @@
 
 #include <junctionbankdatabase.h>
 
+#include <cylinderblockdefinition.h>
+
 namespace Ui {
 class FrontCylinderPanel;
 }
@@ -24,8 +26,12 @@ public:
     explicit FrontCylinderPanel(QWidget *parent = 0);
     ~FrontCylinderPanel();
 protected slots:
-    void onClicked();
+    void onCylinderCommandClicked();
     void onViewSelectionChanged();
+    //!
+    //! \brief onTimerTimeout
+    //!
+    void onTimerTimeout();
 private:
     Ui::FrontCylinderPanel *ui;
 
@@ -37,6 +43,10 @@ private:
     QList<TableModelCylinder::Offset> __outputFields;
 
     QString generateFilterString(QString key,QList<QString> conditions);
+
+    QTimer* __timer;
+
+
 };
 
 #endif // FRONTCYLINDERPANEL_H

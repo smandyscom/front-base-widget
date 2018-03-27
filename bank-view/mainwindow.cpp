@@ -58,6 +58,11 @@ MainWindow::MainWindow(QWidget *parent) :
         __channel->Access(address,data);
     });
     connect(__channel,SIGNAL(raiseUpdateEvent(UpdateEvent*)),this,SLOT(onRaiseUpdateEvent(UpdateEvent*)));
+
+    //!
+    __selectionMap[ui->tabCylinder] = CommitBlock::SELECTION_CYLINDER;
+    __selectionMap[ui->tabManual] = CommitBlock::SELECTION_AXIS;
+    connect(ui->tabWidget,SIGNAL(currentChanged(int)),SLOT(onChangeMonitorCategrory()));
 }
 
 MainWindow::~MainWindow()
@@ -68,4 +73,11 @@ MainWindow::~MainWindow()
 void MainWindow::onRaiseUpdateEvent(UpdateEvent *e)
 {
     ControllerManualMode::Instance()->postEvent(e);
+}
+
+void MainWindow::onChangeMonitorCategrory()
+{
+    if(!__selectionMap.contains(ui->tabWidget->currentWidget()))
+        return;
+    ControllerManualMode::Instance()->MonitorDeviceCategrory(__selectionMap[ui->tabWidget->currentWidget()]);
 }
