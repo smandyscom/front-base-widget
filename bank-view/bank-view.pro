@@ -50,7 +50,8 @@ SOURCES += \
     frontcylinderpanel.cpp \
     frontbanktransfer.cpp \
     frontsinglefilter.cpp \
-    fronttwinfilter.cpp
+    fronttwinfilter.cpp \
+    controllermainpanel.cpp
 
 HEADERS += \
     ptpzrn_viewer.h \
@@ -81,7 +82,9 @@ HEADERS += \
     frontsinglefilter.h \
     fronttwinfilter.h \
     axisblocksdefinition.h \
-    cylinderblockdefinition.h
+    cylinderblockdefinition.h \
+    controllermainpanel.h \
+    unitblocksdefinition.h
 
 unix {
     target.path = /usr/lib
