@@ -11,7 +11,7 @@ frontControlPanel::frontControlPanel(QWidget *parent) :
     //!Button link
     connect(ui->pushButtonPause,&QPushButton::clicked,__controller,&ControllerMainPanel::Pause);
     connect(ui->pushButtonInitialize,&QPushButton::clicked,__controller,&ControllerMainPanel::Initialize);
-
+    connect(ui->pushButtonErrorReset,&QPushButton::clicked,__controller,&ControllerMainPanel::ErrorReset);
     //! Timer activated
     __timer = new QTimer(this);
     connect(__timer,SIGNAL(timeout()),this,SLOT(onTimerTimeout()));

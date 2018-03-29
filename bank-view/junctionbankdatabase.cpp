@@ -71,12 +71,14 @@ void JunctionBankDatabase::onInitialize()
         {
             AbstractQVariantSqlTable* __reference = __tableMap[var].second;
             bool result = false;
-            __reference->setEditStrategy(QSqlTableModel::OnManualSubmit);
+            __reference->setEditStrategy(QSqlTableModel::OnFieldChange);
             __reference->setTable(QVariant::fromValue(var).value<QString>());
             result = __reference->select();
             __tableMap[var] = TableEntity(result,__reference);
         }
     }
+
+    //auto es = __commandBlockTable->editStrategy();
 //    QMetaEnum __qme  =QMetaEnum::fromType<TableNames>();
 //    for(int i=0;i<__qme.keyCount();i++)
 //    {

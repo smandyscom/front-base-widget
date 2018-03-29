@@ -16,7 +16,7 @@ FrontSingleFilter::FrontSingleFilter(QSqlTableModel *dataTable,
     ui->comboBoxPrimary->setModel(primaryTable);
     ui->comboBoxPrimary->setModelColumn(primaryTable->fieldIndex(showColumn));
     ui->comboBoxPrimary->setView(new QTableView(ui->comboBoxPrimary));
-    connect(ui->comboBoxPrimary,SIGNAL(currentIndexChanged(int)),this,SLOT(onSelectedIndexChanged(int)));
+    connect(ui->comboBoxPrimary,SIGNAL(activated(int)),this,SLOT(onSelectedIndexChanged(int)));
     //!
     connect(ui->pushButtonSelectAll,SIGNAL(clicked(bool)),this,SLOT(onSelectAll()));
     //!

@@ -104,7 +104,8 @@ void FrontCylinderPanel::onViewSelectionChanged()
     qobject_cast<QSqlTableModel*>(ui->tableViewOutputs->model())->setFilter(__outputFilterString);
 
     //! Changeover monitor index
-    __controller->onMonitorDeviceIndexChanged(__record.value(QVariant::fromValue(TableModelCylinder::CYL_ID).toString()).value<MODBUS_WORD>());
+    __currentViewIndex = __record.value(QVariant::fromValue(TableModelCylinder::CYL_ID).toString()).value<MODBUS_WORD>();
+    __controller->onMonitorDeviceIndexChanged(__currentViewIndex);
 }
 
 QString FrontCylinderPanel::generateFilterString(QString key, QList<QString> conditions)
@@ -135,4 +136,13 @@ void FrontCylinderPanel::onTimerTimeout()
     utilities::colorChangeOver(ui->labelSuppress,cmb->Status(CylinderMonitorBlock::CTL_SUPPRESS),Qt::red);
     utilities::colorChangeOver(ui->labelTimeon,cmb->Status(CylinderMonitorBlock::INT_TMR_ON),Qt::green);
     utilities::colorChangeOver(ui->labelDone,cmb->Status(CylinderMonitorBlock::MOR_DONE),Qt::green);
+}
+
+void FrontCylinderPanel::showEvent(QShowEvent *event)
+{
+    //! Set monitoring focus
+    __controller->MonitorDeviceCategrory(CommitBlock::SELECTION_CYLINDER);
+    __controller->onMonitorDeviceIndexChanged(__currentViewIndex);
+    //!
+    QWidget::showEvent(event);
 }

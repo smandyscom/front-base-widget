@@ -32,6 +32,8 @@ protected slots:
     //! \brief onTimerTimeout
     //!
     void onTimerTimeout();
+protected:
+    void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
 private:
     Ui::FrontCylinderPanel *ui;
 
@@ -46,6 +48,7 @@ private:
 
     QTimer* __timer;
 
+    MODBUS_WORD __currentViewIndex;
 
 };
 

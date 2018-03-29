@@ -4,6 +4,8 @@
 #include <QObject>
 #include <basicblocksdefinition.h>
 #include <abstractqvariantsqltable.h>
+
+#include <QSqlRecord>
 //!
 //! \brief The TableModelCommandBlock class
 //! Define how to convert row to/from ExtendCommandBlock
@@ -21,7 +23,7 @@ public:
         COMMAND_TYPE,
         AXIS_ID,
         NAME,
-        EXT_CONTROL_BIT_0,
+        EXT_CTRL_BIT_0,
         COORD1,
         SPEED,
         ACC_TIME,

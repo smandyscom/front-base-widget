@@ -85,8 +85,8 @@ FrontManaualMode::FrontManaualMode(AbstractQVariantSqlTable *wholeCommandBankMod
     }
 
     //!
-    connect(ui->comboBoxAxisName,SIGNAL(currentIndexChanged(int)),this,SLOT(onComboBoxIndexChanged()));
-    connect(ui->comboBoxRegion,SIGNAL(currentIndexChanged(int)),this,SLOT(onComboBoxIndexChanged()));
+    connect(ui->comboBoxAxisName,SIGNAL(activated(int)),this,SLOT(onComboBoxIndexChanged()));
+    connect(ui->comboBoxRegion,SIGNAL(activated(int)),this,SLOT(onComboBoxIndexChanged()));
     ui->comboBoxAxisName->setCurrentIndex(0);
     ui->comboBoxRegion->setCurrentIndex(0);
 
@@ -286,12 +286,15 @@ void FrontManaualMode::onComboBoxIndexChanged()
 
     if(comboBox == ui->comboBoxAxisName)
     {
+
         //! filter out
         __commandBlockTable->setFilter(tr("AXIS_ID=%2").arg(SelectedAxisAddress()));
         //! change base-object-id
         __commandBlock.ObjectId(SelectedAxisAddress());
         //! change monitor axis id
         __controller->onMonitorDeviceIndexChanged(static_cast<MODBUS_WORD>(SelectedAxisId()));
+
+
     }
     else if(comboBox == ui->comboBoxRegion)
     {
@@ -342,7 +345,7 @@ void FrontManaualMode::onDataTransfer()
         //table->database().transaction();
         if(table->submitAll())
         {
-            //table->database().commit();
+           // table->database().commit();
             //! Start bank trunsation
             table->setFilter(nullptr); //reset filter
             __bankTransfer->DataBlockSelection(CommitBlock::SELECTION_COMMAND_BLOCK);
@@ -353,7 +356,7 @@ void FrontManaualMode::onDataTransfer()
         else
         {
             qDebug() << table->lastError().text();
-            table->revertAll();
+            //table->revertAll();
             //table->database().rollback();
         }
     }
@@ -380,4 +383,12 @@ void FrontManaualMode::onSelectReset()
     {
         __commandBlockTable->setFilter(nullptr);
     }
+}
+
+void FrontManaualMode::showEvent(QShowEvent *event)
+{
+    __controller->MonitorDeviceCategrory(CommitBlock::SELECTION_AXIS);
+    __controller->onMonitorDeviceIndexChanged(static_cast<MODBUS_WORD>(SelectedAxisId()));
+    //!
+    QWidget::showEvent(event);
 }

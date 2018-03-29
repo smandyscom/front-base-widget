@@ -60,6 +60,8 @@ protected slots:
     void onSelectReset();
 
 protected:
+    void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
+
     ExtendedCommandBlock __commandBlock;
     CommitBlock __commitOption;
     ControllerManualMode* __controller;
