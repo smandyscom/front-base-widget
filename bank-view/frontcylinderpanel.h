@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include <abstractqvariantsqltable.h>
-#include <basicblocksdefinition.h>
+#include <definitionbasicblocks.h>
 #include <controllermanualmode.h>
 
 #include <frontbanktransfer.h>
@@ -12,7 +12,7 @@
 
 #include <junctionbankdatabase.h>
 
-#include <cylinderblockdefinition.h>
+#include <definitioncylinderblock.h>
 
 namespace Ui {
 class FrontCylinderPanel;

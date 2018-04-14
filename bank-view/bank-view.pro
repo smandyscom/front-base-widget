@@ -25,7 +25,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    ptpzrn_viewer.cpp \
     modbussetupwidget.cpp \
     utilities.cpp \
     enumcomboboxdynamic.cpp \
@@ -43,7 +42,6 @@ SOURCES += \
     main.cpp \
     tablemodeliooverride.cpp \
     frontiooverride.cpp \
-    bitflipitemdelegate.cpp \
     frontcontrolpanel.cpp \
     abstractqvariantsqltable.cpp \
     tablemodelcylinder.cpp \
@@ -51,15 +49,17 @@ SOURCES += \
     frontbanktransfer.cpp \
     frontsinglefilter.cpp \
     fronttwinfilter.cpp \
-    controllermainpanel.cpp
+    controllermainpanel.cpp \
+    junctiondatabases1.cpp \
+    tablemodelmatslotn.cpp \
+    tablemodelunits.cpp \
+    tablemodelsignals.cpp
 
 HEADERS += \
-    ptpzrn_viewer.h \
     modbussetupwidget.h \
     utilities.h \
     enumcomboboxdynamic.h \
     enumcomboboxgeneric.h \
-    baselayerdefinitions.h \
     modbuschannel.h \
     modbusserializedclient.h \
     controllermanualmode.h \
@@ -71,9 +71,6 @@ HEADERS += \
     mainwindow.h \
     tablemodeliooverride.h \
     frontiooverride.h \
-    bitflipitemdelegate.h \
-    bitflipitemdelegate.h \
-    basicblocksdefinition.h \
     frontcontrolpanel.h \
     abstractqvariantsqltable.h \
     tablemodelcylinder.h \
@@ -81,10 +78,17 @@ HEADERS += \
     frontbanktransfer.h \
     frontsinglefilter.h \
     fronttwinfilter.h \
-    axisblocksdefinition.h \
-    cylinderblockdefinition.h \
     controllermainpanel.h \
-    unitblocksdefinition.h
+    definitionaxisblocks.h \
+    definitionsbaselayer.h \
+    definitionbasicblocks.h \
+    definitionunitblocks.h \
+    junctiondatabases1.h \
+    tablemodelmatslotn.h \
+    tablemodelunits.h \
+    tablemodelsignals.h \
+    definitioncommandblock.h \
+    definitioncylinderblock.h
 
 unix {
     target.path = /usr/lib

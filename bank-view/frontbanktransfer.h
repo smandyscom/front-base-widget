@@ -6,7 +6,7 @@
 #include <QList>
 
 #include <controllerbanktransfer.h>
-#include <basicblocksdefinition.h>
+#include <definitionbasicblocks.h>
 
 namespace Ui {
 class FrontBankTransfer;

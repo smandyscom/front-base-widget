@@ -2,8 +2,8 @@
 #define FRONTMANAUALMODE_H
 
 #include <QWidget>
-#include <basicblocksdefinition.h>
-#include <axisblocksdefinition.h>
+#include <definitionbasicblocks.h>
+#include <definitionaxisblocks.h>
 #include <modbuschannel.h>
 #include <controllermanualmode.h>
 

@@ -1,7 +1,7 @@
 #ifndef AXISBLOCKSDEFINITION_H
 #define AXISBLOCKSDEFINITION_H
 
-#include <basicblocksdefinition.h>
+#include <definitionbasicblocks.h>
 
 class AxisMonitorBlock : public AbstractDataBlock
 {
@@ -169,8 +169,10 @@ public:
 };
 Q_DECLARE_METATYPE(AxisOperationBlock)
 
-class AxisContextBlock : AxisMonitorBlock
+class AxisContextBlock : public AxisMonitorBlock
 {
+
+public:
     enum OffsetContext
     {
         OFFSET_CONTEXT_ADDRESS=32,
@@ -180,14 +182,28 @@ class AxisContextBlock : AxisMonitorBlock
         OFFSET_CONTEXT_SPEED_MAX=38,
         OFFSET_CONTEXT_POS_TOLERANCE=40,
     };
-public:
+
+    void MotionParameter(OffsetContext itemIndex,MODBUS_WORD value)
+    {
+        reserved[itemIndex] = value;
+    }
     void MotionParameter(OffsetContext itemIndex,qreal value)
     {
         *(reinterpret_cast<MODBUS_LONG*>(&(reserved[itemIndex]))) = value / Length();
     }
     qreal MotionParameter(OffsetContext itemIndex) const
     {
-        return *(reinterpret_cast<const MODBUS_LONG*>(&reserved[itemIndex]));
+        switch (itemIndex) {
+        case OFFSET_CONTEXT_ADDRESS:
+        case OFFSET_CONTEXT_AXIS_TYPE:
+            return reserved[itemIndex];
+            break;
+        default:
+            return *(reinterpret_cast<const MODBUS_LONG*>(&reserved[itemIndex]))*Length();
+            break;
+        }
+
+
     }
 };
 Q_DECLARE_METATYPE(AxisContextBlock)

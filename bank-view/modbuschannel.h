@@ -7,7 +7,7 @@
 #include <QMap>
 #include <modbusserializedclient.h>
 
-#include <baselayerdefinitions.h>
+#include <definitionsbaselayer.h>
 using namespace BaseLayer;
 
 #define CHANNEL_MAX_NUM 16

@@ -4,8 +4,8 @@
 #include <QObject>
 
 #include <modbuschannel.h>
-#include <baselayerdefinitions.h>
-#include <unitblocksdefinition.h>
+#include <definitionsbaselayer.h>
+#include <definitionunitblocks.h>
 
 #include <QTimer>
 

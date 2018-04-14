@@ -4,11 +4,11 @@
 #include <QObject>
 #include <QMap>
 #include <QStateMachine>
-#include <baselayerdefinitions.h>
+#include <definitionsbaselayer.h>
 using namespace BaseLayer;
 
 #include <modbuschannel.h>
-#include <basicblocksdefinition.h>
+#include <definitionbasicblocks.h>
 #include <QVariant>
 #include <QTimer>
 

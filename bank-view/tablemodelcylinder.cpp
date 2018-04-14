@@ -1,24 +1,5 @@
 #include "tablemodelcylinder.h"
 
-TableModelCylinder::TableModelCylinder(QObject *parent) :
-    AbstractQVariantSqlTable(parent)
-{
-    __addressList = {
-        ACT_A_1,
-        ACT_A_2,
-        ACT_B_1,
-        ACT_B_2,
-        SEN_A_1,
-        SEN_A_2,
-        SEN_A_3,
-        SEN_A_4,
-        SEN_B_1,
-        SEN_B_2,
-        SEN_B_3,
-        SEN_B_4,
-    };
-}
-
 QVariant TableModelCylinder::RowRecord(int rowIndex) const
 {
     QSqlRecord __record = record(rowIndex);
@@ -64,6 +45,4 @@ void TableModelCylinder::RowRecord(int rowIndex, QVariant value)
         __record.setValue(QVariant::fromValue(var).value<QString>(),address);
     }
     setRecord(rowIndex,__record);
-
-    //submit();
 }

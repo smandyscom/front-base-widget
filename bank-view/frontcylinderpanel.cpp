@@ -130,12 +130,12 @@ void FrontCylinderPanel::onTimerTimeout()
     AbstractDataBlock adb = __controller->MonitorBlock();
     CylinderMonitorBlock* cmb = reinterpret_cast<CylinderMonitorBlock*>(&adb);
     //! Show
-    utilities::colorChangeOver(ui->labelWarn,cmb->Status(CylinderMonitorBlock::MOR_WARN),Qt::yellow);
-    utilities::colorChangeOver(ui->labelMonA,cmb->Status(CylinderMonitorBlock::MOR_GROUP_A),Qt::green);
-    utilities::colorChangeOver(ui->labelMonB,cmb->Status(CylinderMonitorBlock::MOR_GROUP_B),Qt::green);
-    utilities::colorChangeOver(ui->labelSuppress,cmb->Status(CylinderMonitorBlock::CTL_SUPPRESS),Qt::red);
-    utilities::colorChangeOver(ui->labelTimeon,cmb->Status(CylinderMonitorBlock::INT_TMR_ON),Qt::green);
-    utilities::colorChangeOver(ui->labelDone,cmb->Status(CylinderMonitorBlock::MOR_DONE),Qt::green);
+    utilities::colorChangeOver(ui->labelWarn,cmb->Bit(CylinderMonitorBlock::MOR_WARN),Qt::yellow);
+    utilities::colorChangeOver(ui->labelMonA,cmb->Bit(CylinderMonitorBlock::MOR_GROUP_A),Qt::green);
+    utilities::colorChangeOver(ui->labelMonB,cmb->Bit(CylinderMonitorBlock::MOR_GROUP_B),Qt::green);
+    utilities::colorChangeOver(ui->labelSuppress,cmb->Bit(CylinderMonitorBlock::CTL_SUPPRESS),Qt::red);
+    utilities::colorChangeOver(ui->labelTimeon,cmb->Bit(CylinderMonitorBlock::INT_TMR_ON),Qt::green);
+    utilities::colorChangeOver(ui->labelDone,cmb->Bit(CylinderMonitorBlock::MOR_DONE),Qt::green);
 }
 
 void FrontCylinderPanel::showEvent(QShowEvent *event)

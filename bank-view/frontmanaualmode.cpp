@@ -101,6 +101,14 @@ FrontManaualMode::FrontManaualMode(AbstractQVariantSqlTable *wholeCommandBankMod
     //! Toogle mode
     connect(ui->pushButtonServoOn,&QPushButton::clicked,this,&FrontManaualMode::onOperationPerformed);
     connect(ui->pushButtonAlarmClear,&QPushButton::clicked,this,&FrontManaualMode::onOperationPerformed);
+
+    //! Down casting
+    AbstractQVariantSqlTable *___commandBlockTable = new TableModelCommandBlock(this);
+    ___commandBlockTable->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    ___commandBlockTable->setTable("WHOLE_COMMAND_BLOCKS");
+    ___commandBlockTable->select();//engaged
+    TableModelCommandBlock *ref = dynamic_cast<TableModelCommandBlock*>(___commandBlockTable);
+    QVariant v = ref->RowRecord(0);
 }
 
 FrontManaualMode::~FrontManaualMode()

@@ -8,12 +8,10 @@
 #include <QDir>
 #include <QMap>
 #include <QPair>
-#include <tablemodeliooverride.h>
-#include <tablemodelcylinder.h>
-#include <abstractqvariantsqltable.h>
-#include <tablemodelcommandblock.h>
-
 #include <QList>
+
+#include <abstractqvariantsqltable.h>
+
 //!
 //! \brief TableEntity
 //!
@@ -31,9 +29,17 @@ public:
     //! Those tables this application relied on
     enum TableNames
     {
+        //! Data tables
         WHOLE_AXIS,
         WHOLE_COMMAND_BLOCKS,
         WHOLE_CYLINDERS,
+        WHOLE_SIGNALS,
+
+        WHOLE_UNITS,
+
+        WHOLE_MAT_DATA_SLOTN,
+
+        //! Reference tables
         DEF_REGION,
         DEF_IS_ABS,
         DEF_MIII_ZRET_METHOD,
@@ -46,13 +52,6 @@ public:
     static JunctionBankDatabase* Instance();
     static void DatabaseName(QString value){ __databaseName = value;}
     static QString DatabaseName(){return __databaseName;}
-
-    QSqlRelationalTableModel* AxisTable() const {return __axisTable;}
-    TableModelCommandBlock* CommandBlockTable() const {return reinterpret_cast<TableModelCommandBlock*>(__commandBlockTable);}
-    QSqlRelationalTableModel* InputTable() const { return __inputTable;}
-    QSqlRelationalTableModel* OutputTable() const {return __outputTable;}
-    QSqlRelationalTableModel* RegionTable() const {return __regionTable;}
-
 
     AbstractQVariantSqlTable* TableMap(TableNames value) const
     {
@@ -70,15 +69,12 @@ protected:
     explicit JunctionBankDatabase(QString databaseName,QObject *parent = nullptr);
     ~JunctionBankDatabase();
 
+    virtual void decorateTable(){}
+
     QSqlDatabase db;
 
     QMap<TableNames,TableEntity> __tableMap;
 
-    QSqlRelationalTableModel* __axisTable;
-    AbstractQVariantSqlTable* __commandBlockTable;
-    AbstractQVariantSqlTable* __inputTable;
-    AbstractQVariantSqlTable* __outputTable;
-    AbstractQVariantSqlTable* __regionTable;
 };
 
 #endif // JUNCTIONBANKDATABASE_H
