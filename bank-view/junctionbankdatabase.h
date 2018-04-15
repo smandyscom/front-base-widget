@@ -10,12 +10,12 @@
 #include <QPair>
 #include <QList>
 
-#include <abstractqvariantsqltable.h>
+#include <QSqlRelationalTableModel>.h>
 
 //!
 //! \brief TableEntity
 //!
-typedef QPair<bool,AbstractQVariantSqlTable*> TableEntity;
+typedef QPair<bool,QSqlRelationalTableModel*> TableEntity;
 
 //!
 //! \brief The JunctionBankDatabase class
@@ -53,7 +53,7 @@ public:
     static void DatabaseName(QString value){ __databaseName = value;}
     static QString DatabaseName(){return __databaseName;}
 
-    AbstractQVariantSqlTable* TableMap(TableNames value) const
+    QSqlRelationalTableModel* TableMap(TableNames value) const
     {
         return __tableMap[value].second;
     }

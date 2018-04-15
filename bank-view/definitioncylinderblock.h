@@ -2,6 +2,10 @@
 #define CYLINDERBLOCKDEFINITION_H
 
 #include <definitionbasicblocks.h>
+#include <abstractsqltableadpater.h>
+
+namespace CylinderBlock {
+
 
 class CylinderMonitorBlock : public AbstractDataBlock
 {
@@ -148,4 +152,87 @@ public:
     }
 };
 Q_DECLARE_METATYPE(CylinderContext)
+
+enum DataBaseHeaders
+{
+    CYL_ID = 0xFFFF,
+    //! Data
+    TIMER_SET=CylinderContext::OFFSET_CONTEXT_TMR_SET_VALUE,
+    A_SENSOR_USED_COUNT=CylinderContext::OFFSET_CONTEXT_A_SENSOR_USED_COUNT,
+    B_SENSOR_USED_COUNT=CylinderContext::OFFSET_CONTEXT_B_SENSOR_USED_COUNT,
+    ACT_A_1=CylinderContext::OFFSET_CONTEXT_ACT_A_1,
+    ACT_A_2=CylinderContext::OFFSET_CONTEXT_ACT_A_2,
+    ACT_B_1=CylinderContext::OFFSET_CONTEXT_ACT_B_1,
+    ACT_B_2=CylinderContext::OFFSET_CONTEXT_ACT_B_2,
+    SEN_A_1=CylinderContext::OFFSET_CONTEXT_SENSOR_A_1,
+    SEN_A_2=CylinderContext::OFFSET_CONTEXT_SENSOR_A_2,
+    SEN_A_3=CylinderContext::OFFSET_CONTEXT_SENSOR_A_3,
+    SEN_A_4=CylinderContext::OFFSET_CONTEXT_SENSOR_A_4,
+    SEN_B_1=CylinderContext::OFFSET_CONTEXT_SENSOR_B_1,
+    SEN_B_2=CylinderContext::OFFSET_CONTEXT_SENSOR_B_2,
+    SEN_B_3=CylinderContext::OFFSET_CONTEXT_SENSOR_B_3,
+    SEN_B_4=CylinderContext::OFFSET_CONTEXT_SENSOR_B_4,
+};
+Q_ENUM_NS(DataBaseHeaders)
+
+//!
+//! \brief The CylinderSqlTableAdaptor class
+//! used to calculating sensor used count
+class CylinderSqlTableAdaptor : public AbstractSqlTableAdpater
+{
+    Q_OBJECT
+public:
+    CylinderSqlTableAdaptor(QObject* parent=nullptr):
+        AbstractSqlTableAdpater(parent)
+    {
+        __concreteTypeBlock = new CylinderContext();
+        __headerList = utilities::listupEnumVariant<DataBaseHeaders>();
+
+        __headerList.removeOne(QVariant::fromValue(CylinderContext::OFFSET_CONTEXT_A_SENSOR_USED_COUNT));
+        __headerList.removeOne(QVariant::fromValue(CylinderContext::OFFSET_CONTEXT_B_SENSOR_USED_COUNT));
+    }
+
+    QVariant record2Data(const QSqlRecord &record) Q_DECL_OVERRIDE
+    {
+       *__concreteTypeBlock =  AbstractSqlTableAdpater::record2Data(record);
+
+        //! Calculating sensor usage
+        MODBUS_WORD counter=0;
+        QList<CylinderContext> __addressList;
+
+        //! Sensor A used
+        counter = 0;
+        __addressList = {
+                    CylinderContext::OFFSET_CONTEXT_SENSOR_A_1,
+                    CylinderContext::OFFSET_CONTEXT_SENSOR_A_2,
+                    CylinderContext::OFFSET_CONTEXT_SENSOR_A_3,
+                    CylinderContext::OFFSET_CONTEXT_SENSOR_A_4,
+        };
+        foreach (CylinderContext::OffsetContext var, __addressList) {
+            if(__concreteTypeBlock->Value(var).toInt() != 0)
+                counter++;
+        }
+        __concreteTypeBlock->Value(CylinderContext::OFFSET_CONTEXT_A_SENSOR_USED_COUNT,QVariant::fromValue(counter));
+
+        //! Sensor B used
+        counter = 0;
+        __addressList = {
+                    CylinderContext::OFFSET_CONTEXT_SENSOR_B_1,
+                    CylinderContext::OFFSET_CONTEXT_SENSOR_B_2,
+                    CylinderContext::OFFSET_CONTEXT_SENSOR_B_3,
+                    CylinderContext::OFFSET_CONTEXT_SENSOR_B_4,
+        };
+        foreach (CylinderContext::OffsetContext var, __addressList) {
+            if(__concreteTypeBlock->Value(var).toInt() != 0)
+                counter++;
+        }
+        __concreteTypeBlock->Value(CylinderContext::OFFSET_CONTEXT_B_SENSOR_USED_COUNT,QVariant::fromValue(counter));
+
+        return QVariant::fromValue(__concreteTypeBlock);
+    }
+};
+
+
+}//namespace
+
 #endif // CYLINDERBLOCKDEFINITION_H

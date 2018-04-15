@@ -9,7 +9,7 @@
 #include <QMap>
 
 #include <controllermanualmode.h>
-#include <abstractqvariantsqltable.h>
+#include <abstractsqltableadpater.h>
 
 //!
 //! \brief The ControllerBankManager class
@@ -35,13 +35,13 @@ public:
     }
     qreal Progress() const { return (__currentIndex+1)/__goal;}
 
-    void Model(CommitBlock::CommitDataBlockSelection key,AbstractQVariantSqlTable* value)
+    void Adaptor(CommitBlock::CommitDataBlockSelection key,AbstractSqlTableAdpater* value)
     {
-        __modelMap[key] = value;
+        __adaptorMap[key] = value;
     }
     void DataBlockSelection(CommitBlock::CommitDataBlockSelection value)
     {
-        __model = __modelMap[value];
+        __adaptor = __adaptorMap[value];
         __commitOption.Selection(value);
     }
     CommitBlock::CommitDataBlockSelection DataBlockSelection() const
@@ -75,9 +75,9 @@ protected:
 
     CommitBlock __commitOption;
 
-    QMap<CommitBlock::CommitDataBlockSelection,AbstractQVariantSqlTable*> __modelMap;
+    QMap<CommitBlock::CommitDataBlockSelection,AbstractSqlTableAdpater*> __adaptorMap;
 
-    AbstractQVariantSqlTable* __model;
+    AbstractSqlTableAdpater* __adaptor;
     //!
     //! \brief __controller
     //! From the sigalton

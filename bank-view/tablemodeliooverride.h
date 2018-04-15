@@ -5,7 +5,7 @@
 #include <modbuschannel.h>
 #include <QColor>
 #include <QTimer>
-#include <abstractqvariantsqltable.h>
+#include <abstractsqltableadpater.h>
 //!
 //! \brief The TableModelIOOverride class
 //! Override/Read the I/O data

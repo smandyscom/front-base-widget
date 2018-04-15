@@ -15,75 +15,61 @@ public:
         memset(reserved,0,sizeof(MODBUS_WORD) * DATA_BLOCK_SIZE_IN_WORD_64);
     }
 
-    virtual void Value(int index,MODBUS_WORD value)
+    virtual void Value(int key, QVariant value)
     {
-        reserved[index] = value;
+        memcpy(&reserved[key],value.data(),utilities::sizeOf(value));
     }
-    virtual void Value(int index, MODBUS_LONG value)
-    {
-        *reinterpret_cast<MODBUS_LONG*>(&reserved[index]) = value;
-    }
-    virtual void Value(int index, MODBUS_QUAD value)
-    {
-        *reinterpret_cast<MODBUS_QUAD*>(&reserved[index]) = value;
-    }
-    virtual void Value(int index, qreal value)
-    {
-        *reinterpret_cast<MODBUS_LONG*>(&reserved[index]) = value;
-    }
-    virtual void Value(int index, QVariant value)
-    {
-        memcpy(reserved,value.data(),utilities::sizeOf(value));
-    }
-    virtual void Bit(int index,int bit,bool value)
-    {
-        if(value)
-            reserved[index] |= bit;
-        else
-            reserved[index] &= ~bit;
-    }
-
-
-
     //!
     //! \brief Value
     //! \param index
     //! \return
     //! 64Bits
-    virtual QVariant Value(int index) const
+    virtual QVariant Value(int key) const
     {
-        return QVariant::fromValue(reserved[index]);
+        return QVariant::fromValue(reserved[key]);
     }
-    virtual bool Bit(int index,int bit) const
-    {
-        return (reserved[index] & bit) > 0;
-    }
+
 
 
 protected:
     MODBUS_WORD reserved[DATA_BLOCK_SIZE_IN_WORD_64];
+
     //!
-    //! \brief Length
-    //! in mm
-    //! TODOS , query axis parameter table , get right ratio
-    qreal Length() const
+    //! Generic write
+    //! Long/Word/Bool
+    template<typename T>
+    void Data(int key,const T& data)
     {
-        return 0.001;
+        memcpy(&reserved[key],&data,sizeof(T));
     }
     //!
-    //! \brief Time
-    //! in sec
-    qreal Time() const
-    {
-        return 0.001;
-    }
+    //! Genric read
     //!
-    //! \brief Torque
-    //! \return
-    //! in Percentage
-    qreal TorquePercentage() const
+    template<typename T>
+    T Data(int key)
     {
-        return 0.01;
+        return *static_cast<T*>(&reserved[key]);
+    }
+    void Bit(int key,bool value)
+    {
+        //!
+        //! \brief mask
+        //! TODO
+        MODBUS_WORD mask = key;
+
+        if(value)
+            reserved[key&0xffff] |= mask;
+        else
+            reserved[key] &= ~mask;
+    }
+    bool Bit(int key) const
+    {
+        //!
+        //! \brief mask
+        //! TODO
+        MODBUS_WORD mask = key;
+
+        return (reserved[key] & mask) > 0;
     }
 };
 Q_DECLARE_METATYPE(AbstractDataBlock)

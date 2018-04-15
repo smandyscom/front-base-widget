@@ -36,24 +36,17 @@ SOURCES += \
     frontmanaualmode.cpp \
     junctionbankdatabase.cpp \
     controllerbanktransfer.cpp \
-    tablemodelcommandblock.cpp \
-    tablemodelaxis.cpp \
     mainwindow.cpp \
     main.cpp \
-    tablemodeliooverride.cpp \
     frontiooverride.cpp \
     frontcontrolpanel.cpp \
-    abstractqvariantsqltable.cpp \
-    tablemodelcylinder.cpp \
     frontcylinderpanel.cpp \
     frontbanktransfer.cpp \
     frontsinglefilter.cpp \
     fronttwinfilter.cpp \
     controllermainpanel.cpp \
     junctiondatabases1.cpp \
-    tablemodelmatslotn.cpp \
-    tablemodelunits.cpp \
-    tablemodelsignals.cpp
+    tablemodeliooverride.cpp
 
 HEADERS += \
     modbussetupwidget.h \
@@ -66,14 +59,9 @@ HEADERS += \
     frontmanaualmode.h \
     junctionbankdatabase.h \
     controllerbanktransfer.h \
-    tablemodelcommandblock.h \
-    tablemodelaxis.h \
     mainwindow.h \
-    tablemodeliooverride.h \
     frontiooverride.h \
     frontcontrolpanel.h \
-    abstractqvariantsqltable.h \
-    tablemodelcylinder.h \
     frontcylinderpanel.h \
     frontbanktransfer.h \
     frontsinglefilter.h \
@@ -84,11 +72,11 @@ HEADERS += \
     definitionbasicblocks.h \
     definitionunitblocks.h \
     junctiondatabases1.h \
-    tablemodelmatslotn.h \
-    tablemodelunits.h \
-    tablemodelsignals.h \
     definitioncommandblock.h \
-    definitioncylinderblock.h
+    definitioncylinderblock.h \
+    definitionsignalblock.h \
+    tablemodeliooverride.h \
+    abstractsqltableadpater.h
 
 unix {
     target.path = /usr/lib

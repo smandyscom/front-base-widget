@@ -2,7 +2,7 @@
 #define FRONTCYLINDERPANEL_H
 
 #include <QWidget>
-#include <abstractqvariantsqltable.h>
+#include <abstractsqltableadpater.h>
 #include <definitionbasicblocks.h>
 #include <controllermanualmode.h>
 

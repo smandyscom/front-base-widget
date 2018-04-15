@@ -38,7 +38,7 @@ void JunctionBankDatabase::onInitialize()
         __reference->setEditStrategy(QSqlTableModel::OnFieldChange);
         __reference->setTable(QVariant::fromValue(var).value<QString>());
         result = __reference->select();
-        __tableMap[var] = TableEntity(result,new AbstractQVariantSqlTable(__reference));
+        __tableMap[var] = TableEntity(result,__reference);
     }
 
 

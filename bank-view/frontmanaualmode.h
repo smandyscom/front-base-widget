@@ -12,15 +12,19 @@
 #include <QSqlTableModel>
 
 #include <junctionbankdatabase.h>
-#include <tablemodelcommandblock.h>
-#include <tablemodelaxis.h>
 #include <controllerbanktransfer.h>
 
-#include <abstractqvariantsqltable.h>
+#include <abstractsqltableadpater.h>
+
+#include <definitioncommandblock.h>
+#include <definitionaxisblocks.h>
 
 namespace Ui {
 class FrontManaualMode;
 }
+
+using namespace CommandBlock;
+using namespace AxisBlock;
 
 //!
 //! \brief The FrontManaualMode class
@@ -30,7 +34,7 @@ class FrontManaualMode : public QWidget
     Q_OBJECT
 
 public:
-    explicit FrontManaualMode(AbstractQVariantSqlTable *wholeCommandBankModel,
+    explicit FrontManaualMode(QSqlRelationalTableModel *wholeCommandBankModel,
                               QSqlRelationalTableModel *wholeAxisBankModel,
                               QSqlRelationalTableModel *regionModel,
                               QWidget *parent = 0);
@@ -77,8 +81,8 @@ protected:
     MODBUS_WORD SelectedAxisId() const;
     QVariant SelectedAxisValue(TableModelAxis::Headers header) const;
 
-    TableModelCommandBlock* __commandBlockTable;
-    TableModelAxis* __axisTable;
+    QSqlRelationalTableModel* __commandBlockTable;
+    QSqlRelationalTableModel* __axisTable;
     QSqlRelationalTableModel* __regionTable;
 
     ControllerBankTransfer* __bankTransfer;

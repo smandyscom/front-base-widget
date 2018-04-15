@@ -34,18 +34,18 @@ MainWindow::MainWindow(QWidget *parent) :
     JunctionBankDatabase::DatabaseName("base.db");
     JunctionBankDatabase::Instance()->onInitialize();
     //! Link
-    ControllerBankTransfer::Instance()->Model(CommitBlock::SELECTION_COMMAND_BLOCK,JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_COMMAND_BLOCKS));
-    ControllerBankTransfer::Instance()->Model(CommitBlock::SELECTION_CYLINDER,JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_CYLINDERS));
+    ControllerBankTransfer::Instance()->Adaptor(CommitBlock::SELECTION_COMMAND_BLOCK,JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_COMMAND_BLOCKS));
+    ControllerBankTransfer::Instance()->Adaptor(CommitBlock::SELECTION_CYLINDER,JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_CYLINDERS));
 
     //! Initialize FrontManaul panel
     frontControlPanel* fcp2 = new frontControlPanel(ui->tabMain);
     FrontManaualMode* fmm = new FrontManaualMode(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_COMMAND_BLOCKS),
-                                                 JunctionBankDatabase::Instance()->AxisTable(),
-                                                 JunctionBankDatabase::Instance()->RegionTable(),
+                                                 JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_AXIS),
+                                                 JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_REGION),
                                                  ui->tabManual);
-    FrontIoOverride* fio = new FrontIoOverride(JunctionBankDatabase::Instance()->InputTable(),
-                                               JunctionBankDatabase::Instance()->OutputTable(),
-                                               JunctionBankDatabase::Instance()->RegionTable(),
+    FrontIoOverride* fio = new FrontIoOverride(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::OUTPUT_ATTRIBUTES),
+                                               JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::INPUT_ATTRIBUTES),
+                                               JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_REGION),
                                                ui->tabIO);
     FrontCylinderPanel* fcp = new FrontCylinderPanel(ui->tabCylinder);
 

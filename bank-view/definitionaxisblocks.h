@@ -3,6 +3,10 @@
 
 #include <definitionbasicblocks.h>
 
+namespace AxisBlock {
+
+
+
 class AxisMonitorBlock : public AbstractDataBlock
 {
 public:
@@ -202,10 +206,66 @@ public:
             return *(reinterpret_cast<const MODBUS_LONG*>(&reserved[itemIndex]))*Length();
             break;
         }
-
-
     }
+
+    void Value(int key, QVariant value) Q_DECL_OVERRIDE
+    {
+        switch (key) {
+        case OFFSET_CONTEXT_ADDRESS:
+        case OFFSET_CONTEXT_AXIS_TYPE:
+            Data(key,value.value<MODBUS_WORD>());
+            break;
+        case OFFSET_CONTEXT_LIMIT_PLUS:
+        case OFFSET_CONTEXT_LIMIT_MINUS:
+        case OFFSET_CONTEXT_SPEED_MAX:
+        case OFFSET_CONTEXT_POS_TOLERANCE:
+            Data(key,value.value<MODBUS_LONG>());
+            break;
+        default:
+            AxisMonitorBlock::Value(key,value);
+            break;
+        }
+    }
+    QVariant Value(int key) const Q_DECL_OVERRIDE
+    {
+        switch (key) {
+        case OFFSET_CONTEXT_ADDRESS:
+        case OFFSET_CONTEXT_AXIS_TYPE:
+            return Data<MODBUS_WORD>(key);
+            break;
+        case OFFSET_CONTEXT_LIMIT_PLUS:
+        case OFFSET_CONTEXT_LIMIT_MINUS:
+        case OFFSET_CONTEXT_SPEED_MAX:
+        case OFFSET_CONTEXT_POS_TOLERANCE:
+            return Data<MODBUS_LONG>(key);
+            break;
+        default:
+            return AxisMonitorBlock::Value(key);
+            break;
+        }
+    }
+
 };
 Q_DECLARE_METATYPE(AxisContextBlock)
+
+enum DataBaseHeaders
+{
+    AXIS_ID,
+    REGION,
+    NAME,
+    COMMENT,
+    //! Data
+    ADDRESS = AxisContextBlock::OFFSET_CONTEXT_ADDRESS,
+    TYPE = AxisContextBlock::OFFSET_CONTEXT_AXIS_TYPE,
+    LIMIT_MINUS = AxisContextBlock::OFFSET_CONTEXT_LIMIT_MINUS,
+    LIMIT_PLUS = AxisContextBlock::OFFSET_CONTEXT_LIMIT_PLUS,
+    POSITION_TOLERANCE = AxisContextBlock::OFFSET_CONTEXT_POS_TOLERANCE,
+    SPEED_MAX = AxisContextBlock::OFFSET_CONTEXT_SPEED_MAX,
+};
+
+Q_ENUM_NS(DataBaseHeaders)
+
+
+}
 
 #endif // AXISBLOCKSDEFINITION_H

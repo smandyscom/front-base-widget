@@ -6,18 +6,17 @@
 #include <QPalette>
 #include <utilities.h>
 #include <QApplication>
-FrontManaualMode::FrontManaualMode(AbstractQVariantSqlTable *wholeCommandBankModel,
+FrontManaualMode::FrontManaualMode(QSqlRelationalTableModel *wholeCommandBankModel,
                                    QSqlRelationalTableModel *wholeAxisBankModel,
                                    QSqlRelationalTableModel *regionModel,
                                    QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::FrontManaualMode)
+    ui(new Ui::FrontManaualMode),
+    __commandBlockTable(wholeCommandBankModel),
+    __axisTable(wholeAxisBankModel),
+    __regionTable(regionModel)
 {
     ui->setupUi(this);
-    //!decorated instance
-    __commandBlockTable = qobject_cast<TableModelCommandBlock*>(wholeCommandBankModel);
-    __axisTable = new TableModelAxis(wholeAxisBankModel);
-    __regionTable = regionModel;
     //! Link
     __controller = ControllerManualMode::Instance();
     __bankTransfer= ControllerBankTransfer::Instance();
@@ -101,14 +100,6 @@ FrontManaualMode::FrontManaualMode(AbstractQVariantSqlTable *wholeCommandBankMod
     //! Toogle mode
     connect(ui->pushButtonServoOn,&QPushButton::clicked,this,&FrontManaualMode::onOperationPerformed);
     connect(ui->pushButtonAlarmClear,&QPushButton::clicked,this,&FrontManaualMode::onOperationPerformed);
-
-    //! Down casting
-    AbstractQVariantSqlTable *___commandBlockTable = new TableModelCommandBlock(this);
-    ___commandBlockTable->setEditStrategy(QSqlTableModel::OnManualSubmit);
-    ___commandBlockTable->setTable("WHOLE_COMMAND_BLOCKS");
-    ___commandBlockTable->select();//engaged
-    TableModelCommandBlock *ref = dynamic_cast<TableModelCommandBlock*>(___commandBlockTable);
-    QVariant v = ref->RowRecord(0);
 }
 
 FrontManaualMode::~FrontManaualMode()
@@ -133,6 +124,8 @@ void FrontManaualMode::onBankOperationClicked()
     if(button==ui->pushButtonCoordinateSet)
     {
         //setup field of coordinate
+        //
+        ui->tableViewCommandBlock->selectionModel()->selectedRows().first().row()
         __commandBlock.Coordinate1(ui->textBrowserPositionFeedback->toPlainText().toFloat());
     }
     else if(button == ui->pushButtonParameterSet)
@@ -145,8 +138,6 @@ void FrontManaualMode::onBankOperationClicked()
     }
     else if(button == ui->pushButtonBankExecution)
     {
-        __commandBlock.ControlWord(AbstractCommandBlock::IS_PARA_SETTED,false);
-        __commandBlock.ControlWord(AbstractCommandBlock::IS_RESET_POS_REFERENCE,false);
         __commitOption.Mode(CommitBlock::MODE_EXE_COMMAND_BLOCK);
         __controller->DataBlock(QVariant::fromValue(__commandBlock));
         __controller->CommitOption(__commitOption);

@@ -6,7 +6,7 @@
 #include <QTableView>
 #include <QMap>
 
-#include <abstractqvariantsqltable.h>
+#include <abstractsqltableadpater.h>
 
 namespace Ui {
 class FrontTwinFilter;

@@ -3,6 +3,33 @@
 
 #include <definitionbasicblocks.h>
 
+namespace CommandBlock {
+   Q_NAMESPACE
+
+//!
+//! \brief The DataBaseHeaders enum
+//! The Header map (NAME,OFFSET VALUE)
+enum DataBaseHeaders
+{
+    COMMAND_BLOCK_ID,
+    NAME,
+    COMMENT,
+    //! Data
+    COMMAND_TYPE = AbstractCommandBlock::OFFSET_ACB_COMMAND_TYPE,
+    AXIS_ID = AbstractCommandBlock::OFFSET_ACB_AXIS_ID,
+    SPEED = AbstractCommandBlock::OFFSET_ACB_SPD,
+    ACC_TIME = AbstractCommandBlock::OFFSET_ACB_ACC_T,
+    DEC_TIME = AbstractCommandBlock::OFFSET_ACB_DEC_T,
+    TORQUE_LIMIT= AbstractCommandBlock::OFFSET_ACB_TOR_LIMIT,
+    //! Data
+    EXT_CTRL_BIT_0 = ExtendedCommandBlock::OFFSET_EXT_CONTROL_BIT_0,
+    RESERVED_WORD = ExtendedCommandBlock::OFFSET_ECB_RESERVE_WORD,
+    COORD1 = ExtendedCommandBlock::OFFSET_ECB_COORD1,
+    COORD2 = ExtendedCommandBlock::OFFSET_ECB_COORD2,
+    COORD3 = ExtendedCommandBlock::OFFSET_ECB_COORD3,
+};
+Q_ENUM_NS(Headers)
+
 class AbstractCommandBlock : public AbstractDataBlock
 {
 public:
@@ -25,51 +52,35 @@ public:
         BCT_POS_III=65,
     };
 
-    void Value(int index, MODBUS_WORD value) Q_DECL_OVERRIDE
+    void Value(int key, QVariant value) Q_DECL_OVERRIDE
     {
-        switch (index) {
+        switch (key) {
         case OFFSET_ACB_AXIS_ID:
         case OFFSET_ACB_COMMAND_TYPE:
-            AbstractCommandBlock::Value(index,value);
+            Data(key,value.value<MODBUS_WORD>());
             break;
-        default:
-            break;
-        }
-    }
-    void Value(int index, qreal value) Q_DECL_OVERRIDE
-    {
-        switch (index) {
         case OFFSET_ACB_SPD:
-            AbstractCommandBlock::Value(index,value/Length());
-            break;
         case OFFSET_ACB_ACC_T:
         case OFFSET_ACB_DEC_T:
-            AbstractCommandBlock::Value(value/Time());
-            break;
         case OFFSET_ACB_TOR_LIMIT:
-            AbstractCommandBlock::Value(value/TorquePercentage());
+            Data(key,value.value<MODBUS_LONG>());
             break;
         default:
             break;
         }
     }
 
-    QVariant Value(int index) const Q_DECL_OVERRIDE
+    QVariant Value(int key) const Q_DECL_OVERRIDE
     {
-        switch (index) {
+        switch (key) {
         case OFFSET_ACB_AXIS_ID:
         case OFFSET_ACB_COMMAND_TYPE:
-            return QVariant::fromValue(reserved[index]);
-            break;
+            return QVariant::fromValue(Data<MODBUS_WORD>(key));
         case OFFSET_ACB_SPD:
-            return QVariant::fromValue(*reinterpret_cast<MODBUS_LONG*>(reserved[index]) * Length());
-            break;
         case OFFSET_ACB_ACC_T:
         case OFFSET_ACB_DEC_T:
-            return QVariant::fromValue(*reinterpret_cast<MODBUS_LONG*>(reserved[index]) * Time());
-            break;
         case OFFSET_ACB_TOR_LIMIT:
-            return QVariant::fromValue(*reinterpret_cast<MODBUS_LONG*>(reserved[index]) * TorquePercentage());
+            return QVariant::fromValue(Data<MODBUS_LONG>(key));
             break;
         default:
             return QVariant::fromValue(0);
@@ -86,32 +97,28 @@ class ExtendedCommandBlock : public AbstractCommandBlock
 public:
     enum Offset
     {
-        OFFSET_ECB_CONTROL_WORD,
+        OFFSET_EXT_CONTROL_BIT_0,
+        OFFSET_EXT_CONTROL_BIT_1,
         OFFSET_ECB_RESERVE_WORD,
         OFFSET_ECB_COORD1,
         OFFSET_ECB_COORD2,
         OFFSET_ECB_COORD3,
     };
 
-    void Value(int index,MODBUS_WORD value) Q_DECL_OVERRIDE
+    void Value(int index, QVariant value) Q_DECL_OVERRIDE
     {
         switch (index) {
-        case OFFSET_ECB_CONTROL_WORD:
         case OFFSET_ECB_RESERVE_WORD:
-            reserved[index]=value;
+            Data(index,value.value<MODBUS_WORD>());
             break;
-        default:
-            break;
-        }
-    }
-    void Value(int index, qreal value) Q_DECL_OVERRIDE
-    {
-        switch (index) {
         case OFFSET_ECB_COORD1:
         case OFFSET_ECB_COORD2:
         case OFFSET_ECB_COORD3:
-            AbstractCommandBlock::Value(index,value/Length());
+            Data(index,value.value<MODBUS_LONG>());
             break;
+        case OFFSET_EXT_CONTROL_BIT_0:
+        case OFFSET_EXT_CONTROL_BIT_1:
+            Bit(index,value.toBool());
         default:
             break;
         }
@@ -120,14 +127,17 @@ public:
     QVariant Value(int index) const Q_DECL_OVERRIDE
     {
         switch (index) {
-        case OFFSET_ECB_CONTROL_WORD:
         case OFFSET_ECB_RESERVE_WORD:
-            return QVariant::fromValue(reserved[index]);
+            return QVariant::fromValue(Data<MODBUS_WORD>(index));
             break;
         case OFFSET_ECB_COORD1:
         case OFFSET_ECB_COORD2:
         case OFFSET_ECB_COORD3:
-            return QVariant::fromValue(*reinterpret_cast<const MODBUS_LONG*>(&reserved[index]) * Length());
+            return QVariant::fromValue(Data<MODBUS_LONG>(index));
+            break;
+        case OFFSET_EXT_CONTROL_BIT_0:
+        case OFFSET_EXT_CONTROL_BIT_1:
+            return Bit(index);
             break;
         default:
             break;
@@ -143,8 +153,10 @@ class PosCommandBlock : public ExtendedCommandBlock
 public:
     enum PosIControlBit
     {
-        BIT_0_IS_ABSOLUTE = 0x01,
-        BIT_1_IS_CHECK_REACH = 0x02,
+        BIT_0_ABSOLUTE_MODE = true,
+        BIT_0_RELATIVE_MODE = false,
+        BIT_1_CHECK_REACH = true,
+        BIT_1_NO_CHECK_REACH = false,
     };
 };
 Q_DECLARE_METATYPE(PosCommandBlock)
@@ -157,7 +169,8 @@ public:
     enum ZretControlBit
     {
         //! 1:Forward/0:Backward
-        BIT_0_DIRECTION,
+        BIT_0_FORWARD = true,
+        BIT_0_RESERVE = false,
     };
     enum ZretMethods : MODBUS_WORD
     {
@@ -177,6 +190,8 @@ public:
     };
 };
 Q_DECLARE_METATYPE(ZretCommandBlock)
+
+}//namespace
 
 
 
