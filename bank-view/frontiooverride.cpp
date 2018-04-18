@@ -7,12 +7,11 @@ FrontIoOverride::FrontIoOverride(QSqlRelationalTableModel *inputTable,
                                  QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FrontIoOverride),
-    __inputTable(inputTable),
-    __outputTable(outputTable),
+    __inputTable(new TableModelIOOverride(inputTable)),
+    __outputTable(new TableModelIOOverride(outputTable)),
     __regionTable(regionTable)
 {
     ui->setupUi(this);
-
     //!
     QList<QComboBox*> __comboxes = {ui->comboBoxInputsFilter,
                                     ui->comboBoxOutputsFilter};
@@ -59,7 +58,6 @@ void FrontIoOverride::onComboxCurrentIndexChanged()
     uint regionId = __regionTable->index(cb->currentIndex(),0).data().toUInt();
 
     QString filterString = tr("%1=%2").arg(regionKey).arg(regionId);
-    //QString filterString = tr("%1=%2").arg("PLC_ADDRESS").arg("\'803E\'");
 
     if(sender()==ui->comboBoxInputsFilter)
     {
@@ -77,13 +75,11 @@ void FrontIoOverride::onSelectAll()
 {
     if(sender()==ui->pushButtonInputsSelectAllRegion)
     {
-        __inputTable->setFilter("");
-        __inputTable->select();
+        __inputTable->setFilter(nullptr);
     }
     else if(sender()==ui->pushButtonOutputsSelectAllRegion)
     {
-        __outputTable->setFilter("");
-        __outputTable->select();
+        __outputTable->setFilter(nullptr);
     }
 }
 

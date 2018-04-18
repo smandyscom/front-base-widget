@@ -45,7 +45,6 @@ SOURCES += \
     frontsinglefilter.cpp \
     fronttwinfilter.cpp \
     controllermainpanel.cpp \
-    junctiondatabases1.cpp \
     tablemodeliooverride.cpp
 
 HEADERS += \
@@ -71,12 +70,13 @@ HEADERS += \
     definitionsbaselayer.h \
     definitionbasicblocks.h \
     definitionunitblocks.h \
-    junctiondatabases1.h \
     definitioncommandblock.h \
     definitioncylinderblock.h \
     definitionsignalblock.h \
     tablemodeliooverride.h \
-    abstractsqltableadpater.h
+    abstractsqltableadpater.h \
+    definitionioattributes.h \
+    definitionauxiliarykeys.h
 
 unix {
     target.path = /usr/lib
@@ -84,7 +84,6 @@ unix {
 }
 
 FORMS += \
-    ptpzrn_viewer.ui \
     modbussetupwidget.ui \
     frontmanaualmode.ui \
     mainwindow.ui \

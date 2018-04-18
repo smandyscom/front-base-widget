@@ -5,13 +5,22 @@
 
 namespace UnitBlock {
 
+enum DataBaseHeaders
+{
+    ID,
+    REGION,
+};
+Q_ENUM_NS(DataBaseHeaders)
+
+}//namespace
+
 class UnitMonitorBlock:public AbstractDataBlock
 {
 public:
     enum OffsetMonitor
-    {       
+    {
         STATE=0x03000001,
-        ALARM_CODE=0x03000002,        
+        ALARM_CODE=0x03000002,
         TRIG_STEP_LAST=0x03040003,
         NEXT_STATE=0x03000004,
 
@@ -24,7 +33,7 @@ public:
         TEMP_CONDITION_5=0x30C0005,
         TEMP_CONDITION_6=0x30D0005,
         TEMP_CONDITION_7=0x03000000,
-        TEMP_CONDITION_8=0x30F0005,        
+        TEMP_CONDITION_8=0x30F0005,
     };
     //Q_ENUM(OffsetMonitor)
 
@@ -59,11 +68,11 @@ public:
     {
         switch (key) {
         case LUID_PARENT:
-            Data(key,value.value<MODBUS_LONG>());
+            setData(key,value.value<MODBUS_LONG>());
             break;
         case LSID_BASE:
         case LSID_COUNT:
-            Data(key,value.value<MODBUS_WORD>());
+            setData(key,value.value<MODBUS_WORD>());
             break;
         default:
             break;
@@ -72,7 +81,5 @@ public:
 
 };
 Q_DECLARE_METATYPE(UnitContextBlock)
-
-}//namespace
 
 #endif // UNITBLOCKSDEFINITION_H

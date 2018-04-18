@@ -17,7 +17,7 @@ public:
 
     virtual void Value(int key, QVariant value)
     {
-        memcpy(&reserved[key],value.data(),utilities::sizeOf(value));
+        setData(key,value.value<MODBUS_WORD>());
     }
     //!
     //! \brief Value
@@ -29,8 +29,6 @@ public:
         return QVariant::fromValue(reserved[key]);
     }
 
-
-
 protected:
     MODBUS_WORD reserved[DATA_BLOCK_SIZE_IN_WORD_64];
 
@@ -38,7 +36,7 @@ protected:
     //! Generic write
     //! Long/Word/Bool
     template<typename T>
-    void Data(int key,const T& data)
+    void setData(int key,const T& data)
     {
         memcpy(&reserved[key],&data,sizeof(T));
     }
@@ -46,9 +44,9 @@ protected:
     //! Genric read
     //!
     template<typename T>
-    T Data(int key)
+    T getData(int key) const
     {
-        return *static_cast<T*>(&reserved[key]);
+        return *reinterpret_cast<const T*>(&reserved[key]);
     }
     void Bit(int key,bool value)
     {

@@ -9,6 +9,11 @@
 #include <QAbstractItemModel>
 #include <QColor>
 #include <QPalette>
+#include <QTableView>
+
+#include <QSqlTableModel>
+#include <QSqlRecord>
+
 typedef QPair<QVariant,QVariant> KeyValuePair;
 typedef QList<KeyValuePair> KeyValueCollection;
 
@@ -44,6 +49,8 @@ public:
     static int sizeOf(QVariant value);
     static void colorChangeOver(QWidget* target,bool value,Qt::GlobalColor trueColor=Qt::green);
 
+    static int getSelectedValue(QTableView* target,const QString& keyName);
+    static QSqlRecord getSqlTableSelectedRecord(QSqlTableModel* target,QVariant keyName,QVariant keyValue);
 };
 
 #endif // UTILITIES_H

@@ -7,7 +7,7 @@
 #include <QMap>
 
 #include <abstractsqltableadpater.h>
-
+#include <QSqlRelationalTableModel>
 namespace Ui {
 class FrontTwinFilter;
 }
@@ -17,36 +17,36 @@ class FrontTwinFilter : public QWidget
     Q_OBJECT
 
 public:
-//    enum KeyWords
-//    {
-//        REGION,
-//        NAME,
-//    }
-//    Q_ENUM(KeyWords)
-
-    explicit FrontTwinFilter(AbstractQVariantSqlTable* dataTable,
-                             AbstractQVariantSqlTable* primaryTable,
-                             AbstractQVariantSqlTable* regionTable,
-                             QString primaryKey,
+    explicit FrontTwinFilter(QSqlRelationalTableModel* dataTable,
+                             QVariant key1,
+                             QSqlRelationalTableModel* primaryTable,
+                             QVariant key2,
+                             QSqlRelationalTableModel* secondaryTable,
                              QWidget *parent = 0);
     ~FrontTwinFilter();
+
+signals:
+    void primarySelected(QVariant primaryKey);
 protected slots:
     void onSelectionChanged(int i);
     void onSelectAll();
 private:
     Ui::FrontTwinFilter *ui;
 
-    AbstractQVariantSqlTable* __dataTable;
-    QString __primaryKeyName;
+    QSqlRelationalTableModel* __dataTable;
+    QString __key1;
     //!
     //! \brief __primaryTable
     //! Load to
-    AbstractQVariantSqlTable* __primaryTable;
-    AbstractQVariantSqlTable* __regionTable;
+    QSqlRelationalTableModel* __primaryTable;
+    QString __key2;
+    //!
+    //! \brief __secondaryTable
+    //!
+    QSqlRelationalTableModel* __secondaryTable;
 
     //!
-    QMap<QWidget*,AbstractQVariantSqlTable*> __manipulateMap;
-    QMap<QWidget*,QString> __fieldNameMap;
+    QMap<QWidget*,QSqlRelationalTableModel*> __manipulateMap;
 };
 
 #endif // FRONTWINFILTER_H

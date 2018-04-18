@@ -12,15 +12,27 @@ FrontManaualMode::FrontManaualMode(QSqlRelationalTableModel *wholeCommandBankMod
                                    QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FrontManaualMode),
-    __commandBlockTable(wholeCommandBankModel),
-    __axisTable(wholeAxisBankModel),
+    __commandBlockTableFront(wholeCommandBankModel),
+    __axisTableFront(wholeAxisBankModel),
     __regionTable(regionModel)
 {
     ui->setupUi(this);
     //! Link
     __controller = ControllerManualMode::Instance();
     __bankTransfer= ControllerBankTransfer::Instance();
-    //setup
+    //! Resued widgets
+    new FrontBankTransfer(CommitBlock::SELECTION_COMMAND_BLOCK,ui->widgetBankTransfer);
+    FrontTwinFilter* __ftf = new FrontTwinFilter(wholeCommandBankModel,
+                                                QVariant::fromValue(CommandBlock::AXIS_ID),
+                                                wholeAxisBankModel,
+                                                QVariant::fromValue(REGION),
+                                                regionModel,
+                                                ui->widgetFilter);
+    connect(__ftf,&FrontTwinFilter::primarySelected,[=](QVariant key){
+        __selectedAxisId = key.value<MODBUS_WORD>();
+        __controller->onMonitorDeviceIndexChanged(__selectedAxisId);
+    });
+    //!setup
     __commitOption.Mode(CommitBlock::MODE_EXE_COMMAND_BLOCK);
 
     //!
@@ -37,66 +49,23 @@ FrontManaualMode::FrontManaualMode(QSqlRelationalTableModel *wholeCommandBankMod
     connect(ui->pushButtonFeedForward,SIGNAL(released()),__controller,SLOT(onInterrupted()));
     connect(ui->pushButtonFeedBackward,SIGNAL(released()),__controller,SLOT(onInterrupted()));
 
-
     connect(ui->pushButtonCoordinateSet,SIGNAL(clicked(bool)),this,SLOT(onBankOperationClicked()));
     connect(ui->pushButtonParameterSet,SIGNAL(clicked(bool)),this,SLOT(onBankOperationClicked()));
     connect(ui->pushButtonBankExecution,SIGNAL(clicked(bool)),this,SLOT(onBankOperationClicked()));
-
-    connect(ui->pushButtonSubmit,SIGNAL(clicked(bool)),this,SLOT(onDataTransfer()));
-    connect(ui->pushButtonUpdate,SIGNAL(clicked(bool)),this,SLOT(onDataTransfer()));
-
-    connect(ui->pushButtonSelectAllAxis,SIGNAL(clicked(bool)),this,SLOT(onSelectReset()));
-    connect(ui->pushButtonSelectAllRegion,SIGNAL(clicked(bool)),this,SLOT(onSelectReset()));
     //!
     __timer = new QTimer(this);
     connect(__timer,SIGNAL(timeout()),this,SLOT(onTimerTimeout()));
     __timer->start(100);//every 100 ms update once
 
-    //!
-    //! combo box loading
-    //! setModel on combobox
-    //! (AxisId,Region,AxisName)
-    ui->comboBoxAxisName->setModel(wholeAxisBankModel);
-    ui->comboBoxAxisName->setModelColumn(TableModelAxis::NAME);//setup the visiable column
-    QTableView* qtv = new QTableView(ui->comboBoxAxisName);
-    ui->comboBoxAxisName->setView(qtv);
-    qtv->setStyleSheet(ui->comboBoxAxisName->styleSheet());
-    qtv->setFont(ui->comboBoxAxisName->font());
-    qtv->setCornerButtonEnabled(false);
-
-    ui->comboBoxRegion->setModel(regionModel);
-    ui->comboBoxRegion->setModelColumn(1);
-    qtv = new QTableView(ui->comboBoxRegion);
-    ui->comboBoxRegion->setView(qtv);
-    qtv->setStyleSheet(ui->comboBoxRegion->styleSheet());
-    qtv->setFont(ui->comboBoxRegion->font());
-    qtv->setCornerButtonEnabled(false);
-    qtv->hideColumn(0);
-
     ui->tableViewCommandBlock->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->tableViewCommandBlock->setSelectionBehavior(QAbstractItemView::SelectRows);
-    ui->tableViewCommandBlock->setModel(__commandBlockTable);
-    QList<TableModelCommandBlock::Headers> __headersGoing2Hide = {TableModelCommandBlock::COMMAND_BLOCK_ID,
-                                                                 TableModelCommandBlock::COMMAND_TYPE,
-                                                                 TableModelCommandBlock::AXIS_ID};
-    foreach (TableModelCommandBlock::Headers var, __headersGoing2Hide) {
+    ui->tableViewCommandBlock->setModel(__commandBlockTableFront);
+    QList<CommandBlock::DataBaseHeaders> __headersGoing2Hide = {COMMAND_BLOCK_ID,
+                                                                  COMMAND_TYPE,
+                                                                CommandBlock::AXIS_ID};
+    foreach (CommandBlock::DataBaseHeaders var, __headersGoing2Hide) {
         ui->tableViewCommandBlock->hideColumn(var);
     }
-
-    //!
-    connect(ui->comboBoxAxisName,SIGNAL(activated(int)),this,SLOT(onComboBoxIndexChanged()));
-    connect(ui->comboBoxRegion,SIGNAL(activated(int)),this,SLOT(onComboBoxIndexChanged()));
-    ui->comboBoxAxisName->setCurrentIndex(0);
-    ui->comboBoxRegion->setCurrentIndex(0);
-
-    //! Progress bar
-    ui->progressBarDataTransfer->setMinimum(0);
-    connect(__controller,&ControllerManualMode::operationPerformed,this,[this](){
-        if(__controller->CommitOption().Mode() == CommitBlock::MODE_EXE_COMMAND_BLOCK)
-            return; //ignorance
-        ui->progressBarDataTransfer->setValue(__bankTransfer->CurrentIndex()+1);
-    });
-
     //! Toogle mode
     connect(ui->pushButtonServoOn,&QPushButton::clicked,this,&FrontManaualMode::onOperationPerformed);
     connect(ui->pushButtonAlarmClear,&QPushButton::clicked,this,&FrontManaualMode::onOperationPerformed);
@@ -118,34 +87,25 @@ void FrontManaualMode::onBankOperationClicked()
 
     auto button = qobject_cast<QPushButton*>(sender());
 
-     //from model to ExtendCommandBlock
-    __commandBlock = __commandBlockTable->RowRecord(SelectedRowIndex()).value<ExtendedCommandBlock>();
+    QSqlRecord __record = __commandBlockTableFront->record(SelectedBlockIndex());
 
     if(button==ui->pushButtonCoordinateSet)
     {
         //setup field of coordinate
-        //
-        ui->tableViewCommandBlock->selectionModel()->selectedRows().first().row()
-        __commandBlock.Coordinate1(ui->textBrowserPositionFeedback->toPlainText().toFloat());
+        __record.setValue(QVariant::fromValue(COORD1).toString(),ui->textBrowserPositionFeedback->toPlainText().toFloat());
     }
     else if(button == ui->pushButtonParameterSet)
     {
         //setup field of parameters
-        __commandBlock.Speed(ui->textEditSpeedReference->toPlainText().toFloat());
-        __commandBlock.Acceralation(ui->textEditAcceralationTime->toPlainText().toFloat());
-        __commandBlock.Deceralation(ui->textEditDeceralationTime->toPlainText().toFloat());
-        __commandBlock.TorqueLimit(ui->textEditTorqueLimit->toPlainText().toFloat());
-    }
-    else if(button == ui->pushButtonBankExecution)
-    {
-        __commitOption.Mode(CommitBlock::MODE_EXE_COMMAND_BLOCK);
-        __controller->DataBlock(QVariant::fromValue(__commandBlock));
-        __controller->CommitOption(__commitOption);
-        emit __controller->operationTriggered();
+        __record.setValue(QVariant::fromValue(SPEED).toString(),ui->textEditSpeedReference->toPlainText().toFloat());
+        __record.setValue(QVariant::fromValue(ACC_TIME).toString(),ui->textEditAcceralationTime->toPlainText().toFloat());
+        __record.setValue(QVariant::fromValue(DEC_TIME).toString(),ui->textEditDeceralationTime->toPlainText().toFloat());
+        __record.setValue(QVariant::fromValue(TORQUE_LIMIT).toString(),ui->textEditTorqueLimit->toPlainText().toFloat());
     }
 
+
     //write back to model
-    __commandBlockTable->RowRecord(SelectedRowIndex(),QVariant::fromValue(__commandBlock));
+    __commandBlockTableFront->setRecord(SelectedBlockIndex(),__record);
 }
 
 //!
@@ -161,56 +121,67 @@ void FrontManaualMode::onManualOperationClicked()
         return;
 
     auto button = qobject_cast<QPushButton*>(sender());
-    setCommonParameters(); //
-    __commitOption.Mode(CommitBlock::MODE_EXE_COMMAND_BLOCK);
 
-    if(button == ui->pushButtonZret)
+    AbstractCommandBlock __commandBlock;
+
+    if(button == ui->pushButtonBankExecution)
     {
-        ZretCommandBlock* zcb = static_cast<ZretCommandBlock*>(&__commandBlock);
-        zcb->Direction(ui->radioButtonForward);
-        zcb->Method(DEC1_C_PULSE);
-        zcb->Offset(ui->textEditOffset->toPlainText().toFloat());
-        zcb->SpeedCreep(ui->textEditSpeedCreep->toPlainText().toFloat());
-        zcb->SpeedAppoach(ui->textEditSpeedApproach->toPlainText().toFloat());
-        zcb->CommandType(BCT_ZRET);
+        int __commandBlockId = __commandBlockTableFront->record(SelectedBlockIndex()).value(COMMAND_BLOCK_ID).toInt();
+        __commandBlock =
+                QVariant::fromValue(__commandBlockAdaptor->Record(__commandBlockId,AbstractSqlTableAdpater::KEY_NAMED_KEY,QVariant::fromValue(COMMAND_BLOCK_ID).toString())).value<AbstractCommandBlock>();
     }
-    else if(button == ui->pushButtonAbsolute)
+    else
     {
-        //setup coordiante
-        PosICommandBlock* pcb = static_cast<PosICommandBlock*>(&__commandBlock);
-        pcb->Coordinate1(ui->textEditCoordinateAbsolute->toPlainText().toFloat());
-        pcb->IsAbsoluteMode(true);
-        pcb->CommandType(BCT_POS_I);
-    }
-    else if(button == ui->pushButtonStepMinus ||
-            button == ui->pushButtonStepPlus)
-    {
-        float multi=1;
-        if(button==ui->pushButtonStepMinus)
-            multi=-1;
-        //setup coordiante
-        PosICommandBlock* pcb = static_cast<PosICommandBlock*>(&__commandBlock);
-        pcb->Coordinate1(ui->textEditCoordinateStep->toPlainText().toFloat()*multi);
-        pcb->IsAbsoluteMode(false);//relative moving mode
-        pcb->CommandType(BCT_POS_I);
-    }
-    else if(button == ui->pushButtonFeedForward ||
-            button == ui->pushButtonFeedBackward)
-    {
-        //setup coordiante
-        PosICommandBlock* pcb = static_cast<PosICommandBlock*>(&__commandBlock);
-        //Positive limit/Negtive limit
-        if(button==ui->pushButtonFeedForward)
-            pcb->Coordinate1(SelectedAxisValue(TableModelAxis::LIMIT_PLUS).toReal());
+        if(button == ui->pushButtonZret)
+        {
+            __commandBlock = ZretCommandBlock();
+            __commandBlock.Value(ZretCommandBlock::OFFSET_ZRET_DIRECTION,QVariant::fromValue(ui->radioButtonForward->isChecked()));
+            __commandBlock.Value(ZretCommandBlock::OFFSET_ZRET_METHOD,QVariant::fromValue(ui->comboBoxZrtMethod->view()->selectionModel()->selectedRows().first().row()));
+
+            __commandBlock.Value(ZretCommandBlock::OFFSET_ZRET_SPEED,ui->textEditOffset->toPlainText().toFloat());
+            __commandBlock.Value(ZretCommandBlock::OFFSET_ZRET_SPEED_APPROACH,ui->textEditSpeedApproach->toPlainText().toFloat());
+            __commandBlock.Value(ZretCommandBlock::OFFSET_ZRET_SPEED_CREEP,ui->textEditSpeedCreep->toPlainText().toFloat());
+        }
         else
-            pcb->Coordinate1(SelectedAxisValue(TableModelAxis::LIMIT_MINUS).toReal());
+        {
+            __commandBlock = PosCommandBlock();
 
+            if(button == ui->pushButtonAbsolute)
+            {
+                //setup coordiante
+                __commandBlock.Value(COORD1,ui->textEditCoordinateAbsolute->toPlainText().toFloat());
+                __commandBlock.Value(PosCommandBlock::OFFSET_POS_ABS_REL,QVariant::fromValue(true));
+            }
+            else if(button == ui->pushButtonStepMinus ||
+                    button == ui->pushButtonStepPlus)
+            {
+                //setup coordiante
+                __commandBlock.Value(PosCommandBlock::OFFSET_ECB_COORD1,
+                                     (ui->textEditCoordinateStep->toPlainText().toFloat()*
+                                     ((button==ui->pushButtonStepPlus) ? 1 : -1)));
+                __commandBlock.Value(PosCommandBlock::OFFSET_POS_ABS_REL,QVariant::fromValue(false) );//relative moving mode
+            }
+            else if(button == ui->pushButtonFeedForward ||
+                    button == ui->pushButtonFeedBackward)
+            {
+                //setup coordiante
+                //Positive limit/Negtive limit
+                __commandBlock.Value(PosCommandBlock::OFFSET_ECB_COORD1,
+                                     ((button==ui->pushButtonStepPlus) ?
+                                         SelectedAxisValue(AxisContextBlock::OFFSET_CONTEXT_LIMIT_PLUS) :
+                                         SelectedAxisValue(AxisContextBlock::OFFSET_CONTEXT_LIMIT_MINUS)));
+                __commandBlock.Value(PosCommandBlock::OFFSET_POS_ABS_REL,QVariant::fromValue(true));//Always in ABS
+            }
 
-        pcb->IsAbsoluteMode(true);//always in ABS
-        pcb->CommandType(BCT_POS_I);
-    }
+        }//Pos
+
+        setCommonParameters(__commandBlock);
+
+    }//
+
 
     //! trigger the sequence
+    __commitOption.Mode(CommitBlock::MODE_EXE_COMMAND_BLOCK);
     __controller->DataBlock(QVariant::fromValue(__commandBlock));
     __controller->CommitOption(__commitOption);
     emit __controller->operationTriggered();
@@ -220,7 +191,6 @@ void FrontManaualMode::onManualOperationClicked()
 //!
 void FrontManaualMode::onOperationPerformed()
 {
-    __commitOption.Mode(CommitBlock::MODE_EXE_AXIS);
     AxisOperationBlock __block;
 
     if(sender()==ui->pushButtonServoOn)
@@ -232,162 +202,59 @@ void FrontManaualMode::onOperationPerformed()
         __block.Operation(AxisMonitorBlock::OP_ALARM_CLEAR,true);
     }
 
+    __commitOption.Mode(CommitBlock::MODE_EXE_AXIS);
     __controller->CommitOption(__commitOption);
     __controller->DataBlock(QVariant::fromValue(__block));
     emit __controller->operationTriggered();
-
 }
 
-void FrontManaualMode::setCommonParameters()
+void FrontManaualMode::setCommonParameters(AbstractCommandBlock& __commandBlock)
 {
     //!
     //! Setup common parameters
     //! TODO , unsafe input
-    __commandBlock.ObjectId(SelectedAxisAddress());
+    __commandBlock.Value(CommandBlock::AXIS_ID,SelectedAxisValue(QVariant::fromValue(CommandBlock::AXIS_ID)));
 
-    __commandBlock.Speed(ui->textEditSpeedReference->toPlainText().toFloat()); // to units/sec
-    __commandBlock.Acceralation(ui->textEditAcceralationTime->toPlainText().toFloat()); // to ms
-    __commandBlock.Deceralation(ui->textEditDeceralationTime->toPlainText().toFloat()); // to ms
-    __commandBlock.TorqueLimit(ui->textEditTorqueLimit->toPlainText().toFloat()); // to 0.01%
-
-    __commandBlock.ControlWord(AbstractCommandBlock::IS_PARA_SETTED,false);
-    __commandBlock.ControlWord(AbstractCommandBlock::IS_RESET_POS_REFERENCE,false);
-
+    __commandBlock.Value(SPEED,ui->textEditSpeedReference->toPlainText().toFloat());//unit/sec
+    __commandBlock.Value(ACC_TIME,ui->textEditAcceralationTime->toPlainText().toFloat());//ms
+    __commandBlock.Value(DEC_TIME,ui->textEditDeceralationTime->toPlainText().toFloat());//ms
+    __commandBlock.Value(TORQUE_LIMIT,ui->textEditTorqueLimit->toPlainText().toFloat());// 0.01%
 
 }
 
 void FrontManaualMode::onTimerTimeout()
 {
-    AbstractDataBlock __adb = __controller->MonitorBlock();
-    AxisMonitorBlock* amb = reinterpret_cast<AxisMonitorBlock*>(&__adb);
+    AxisMonitorBlock amb = QVariant::fromValue(__controller->MonitorBlock()).value<AxisMonitorBlock>();
 
-    ui->textBrowserPositionReference->setText(QString::number(amb->PositionCommand()));
-    ui->textBrowserPositionFeedback->setText(QString::number(amb->PositionFeedback()));
-    ui->textBrowserSpeedFeedback->setText(QString::number(amb->SpeedFeedback()));
-    ui->textBrowserTorqueFeedback->setText(QString::number(amb->TorqueFeedback()));
+    ui->textBrowserPositionReference->setText(QString::number(amb.PositionCommand()));
+    ui->textBrowserPositionFeedback->setText(QString::number(amb.PositionFeedback()));
+    ui->textBrowserSpeedFeedback->setText(QString::number(amb.SpeedFeedback()));
+    ui->textBrowserTorqueFeedback->setText(QString::number(amb.TorqueFeedback()));
 
     //! Servo On/Alarm clear
-    utilities::colorChangeOver(ui->pushButtonServoOn, amb->Operation(AxisMonitorBlock::OP_SERVO_ON));
-    utilities::colorChangeOver(ui->pushButtonAlarmClear, amb->Operation(AxisMonitorBlock::OP_ALARM_CLEAR),Qt::red);
+    utilities::colorChangeOver(ui->pushButtonServoOn, amb.Operation(AxisMonitorBlock::OP_SERVO_ON));
+    utilities::colorChangeOver(ui->pushButtonAlarmClear, amb.Operation(AxisMonitorBlock::OP_ALARM_CLEAR),Qt::red);
     //! Servo ready/alarm
-    utilities::colorChangeOver(ui->labelServoReady,amb->RunStatus(AxisMonitorBlock::RS_SERVO_READY));
-    utilities::colorChangeOver(ui->labelAlarm,amb->Warning() > 0 || amb->Alarm() > 0,Qt::red);
-    ui->textBrowserWarning->setText(QString(amb->Warning()));
-    ui->textBrowseAlarm->setText(QString(amb->Alarm()));
+    utilities::colorChangeOver(ui->labelServoReady,amb.RunStatus(AxisMonitorBlock::RS_SERVO_READY));
+    utilities::colorChangeOver(ui->labelAlarm,amb.Warning() > 0 || amb.Alarm() > 0,Qt::red);
+    ui->textBrowserWarning->setText(QString(amb.Warning()));
+    ui->textBrowseAlarm->setText(QString(amb.Alarm()));
 }
 
-//!
-//! \brief FrontManaualMode::onComboBoxIndexChanged
-//!
-void FrontManaualMode::onComboBoxIndexChanged()
-{
-    auto* comboBox = static_cast<QComboBox*>(sender());
-
-    if(comboBox == ui->comboBoxAxisName)
-    {
-
-        //! filter out
-        __commandBlockTable->setFilter(tr("AXIS_ID=%2").arg(SelectedAxisAddress()));
-        //! change base-object-id
-        __commandBlock.ObjectId(SelectedAxisAddress());
-        //! change monitor axis id
-        __controller->onMonitorDeviceIndexChanged(static_cast<MODBUS_WORD>(SelectedAxisId()));
-
-
-    }
-    else if(comboBox == ui->comboBoxRegion)
-    {
-        QString regionKey = QVariant::fromValue(TableModelAxis::REGION).value<QString>();
-        int regionId = __regionTable->index(comboBox->currentIndex(),0).data().toUInt();
-
-        QString filterString = tr("%1=%2").arg(regionKey).arg(regionId);
-        __axisTable->setFilter(filterString);
-        //! reselect axis
-        ui->comboBoxAxisName->setCurrentIndex(0);
-    }
-
-}
-
-int FrontManaualMode::SelectedRowIndex() const
+int FrontManaualMode::SelectedBlockIndex() const
 {
     return ui->tableViewCommandBlock->selectionModel()->selectedRows().first().row();
 }
-MODBUS_WORD FrontManaualMode::SelectedAxisAddress() const
+QVariant FrontManaualMode::SelectedAxisValue(QVariant keyName) const
 {
-    return ui->comboBoxAxisName->model()->index(ui->comboBoxAxisName->currentIndex(),TableModelAxis::ADDRESS).data().value<MODBUS_WORD>();
-}
-MODBUS_WORD FrontManaualMode::SelectedAxisId() const
-{
-    return ui->comboBoxAxisName->model()->index(ui->comboBoxAxisName->currentIndex(),TableModelAxis::AXIS_ID).data().value<MODBUS_WORD>();
-}
-QVariant FrontManaualMode::SelectedAxisValue(TableModelAxis::Headers header) const
-{
-    return __axisTable->Value(ui->comboBoxAxisName->currentIndex(),header);
-}
-
-//!
-//! \brief FrontManaualMode::onSubmitted
-//! Commit unstaged records(Rows) into Model and underlying device(e.g PLC)
-void FrontManaualMode::onDataTransfer()
-{
-    //! Refuse
-    if(__controller->CurrentState()!=ControllerManualMode::STATE_IDLE)
-        return;
-
-    auto table = qobject_cast<QSqlTableModel*>(ui->tableViewCommandBlock->model());
-
-
-    if(sender()==ui->pushButtonSubmit)
-    {
-        //! Commit to database firstly , once fail (could not pass the contraint
-        //!  no need go further
-        //table->database().transaction();
-        if(table->submitAll())
-        {
-           // table->database().commit();
-            //! Start bank trunsation
-            table->setFilter(nullptr); //reset filter
-            __bankTransfer->DataBlockSelection(CommitBlock::SELECTION_COMMAND_BLOCK);
-            __bankTransfer->Direction(CommitBlock::MODE_DOWNLOAD_DATA_BLOCK);
-            __bankTransfer->onTransferData(); // mode , transfer all
-            //TODOS , optimization , transfer those rows edited
-        }
-        else
-        {
-            qDebug() << table->lastError().text();
-            //table->revertAll();
-            //table->database().rollback();
-        }
-    }
-    else if(sender()==ui->pushButtonUpdate)
-    {
-        table->setFilter(""); //reset filter
-        __bankTransfer->DataBlockSelection(CommitBlock::SELECTION_COMMAND_BLOCK);
-        __bankTransfer->Direction(CommitBlock::MODE_UPLOAD_DATA_BLOCK);
-        __bankTransfer->onTransferData();
-    }
-
-    //!Setup progress bar
-    ui->progressBarDataTransfer->setMaximum(__bankTransfer->Goal());
-    ui->progressBarDataTransfer->reset();
-}
-
-void FrontManaualMode::onSelectReset()
-{
-    if(sender()==ui->pushButtonSelectAllRegion)
-    {
-        __axisTable->setFilter(nullptr);
-    }
-    else if(sender()==ui->pushButtonSelectAllAxis)
-    {
-        __commandBlockTable->setFilter(nullptr);
-    }
+    return utilities::getSqlTableSelectedRecord(__axisTableFront,QVariant::fromValue(AxisBlock::AXIS_ID),
+                                                QVariant::fromValue(__selectedAxisId)).value(keyName.toString());
 }
 
 void FrontManaualMode::showEvent(QShowEvent *event)
 {
     __controller->MonitorDeviceCategrory(CommitBlock::SELECTION_AXIS);
-    __controller->onMonitorDeviceIndexChanged(static_cast<MODBUS_WORD>(SelectedAxisId()));
+    __controller->onMonitorDeviceIndexChanged(SelectedAxisValue(QVariant::fromValue(AxisBlock::AXIS_ID)).value<MODBUS_WORD>());
     //!
     QWidget::showEvent(event);
 }

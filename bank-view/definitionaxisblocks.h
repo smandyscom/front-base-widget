@@ -2,10 +2,9 @@
 #define AXISBLOCKSDEFINITION_H
 
 #include <definitionbasicblocks.h>
+#include <definitionauxiliarykeys.h>
 
-namespace AxisBlock {
-
-
+using namespace DEF_BASIC_DIMENSION;
 
 class AxisMonitorBlock : public AbstractDataBlock
 {
@@ -114,7 +113,8 @@ public:
     //!
     //! \brief positionCommand
     //! in 0.001mm
-    qreal PositionCommand() const { return *reinterpret_cast<const MODBUS_LONG*>(&reserved[OFFSET_MONITOR_POS_COMMAND]) * Length();}
+    qreal PositionCommand() const { return *reinterpret_cast<const MODBUS_LONG*>(&reserved[OFFSET_MONITOR_POS_COMMAND]) *
+                Dimension[LENGTH];}
     bool RunStatus(RUN_STATUS value)
     {
         return (reserved[OFFSET_MONITOR_RUN_STATUS] & value) > 0;
@@ -140,15 +140,18 @@ public:
     //!
     //! \brief positionFeedback
     //! in 0.001mm
-    qreal PositionFeedback() const {return *reinterpret_cast<const MODBUS_LONG*>(&reserved[OFFSET_MONITOR_POS_FEEDBACK]) * Length();}
+    qreal PositionFeedback() const {return *reinterpret_cast<const MODBUS_LONG*>(&reserved[OFFSET_MONITOR_POS_FEEDBACK]) *
+                Dimension[LENGTH];}
     //!
     //! \brief speedFeedback
     //! in 0.001mm/sec
-    qreal SpeedFeedback() const {return *reinterpret_cast<const MODBUS_LONG*>(&reserved[OFFSET_MONITOR_SPD_FEEDBACK]) * Length();}
+    qreal SpeedFeedback() const {return *reinterpret_cast<const MODBUS_LONG*>(&reserved[OFFSET_MONITOR_SPD_FEEDBACK]) *
+                Dimension[LENGTH];}
     //!
     //! \brief torqueFeedback
     //! in 0.01%
-    qreal TorqueFeedback() const {return *reinterpret_cast<const MODBUS_LONG*>(&reserved[OFFSET_MONITOR_TOR_FEEDBACK]) * TorquePercentage();}
+    qreal TorqueFeedback() const {return *reinterpret_cast<const MODBUS_LONG*>(&reserved[OFFSET_MONITOR_TOR_FEEDBACK]) *
+                Dimension[TORQUE_RATIO];}
 };
 Q_DECLARE_METATYPE(AxisMonitorBlock)
 
@@ -187,39 +190,18 @@ public:
         OFFSET_CONTEXT_POS_TOLERANCE=40,
     };
 
-    void MotionParameter(OffsetContext itemIndex,MODBUS_WORD value)
-    {
-        reserved[itemIndex] = value;
-    }
-    void MotionParameter(OffsetContext itemIndex,qreal value)
-    {
-        *(reinterpret_cast<MODBUS_LONG*>(&(reserved[itemIndex]))) = value / Length();
-    }
-    qreal MotionParameter(OffsetContext itemIndex) const
-    {
-        switch (itemIndex) {
-        case OFFSET_CONTEXT_ADDRESS:
-        case OFFSET_CONTEXT_AXIS_TYPE:
-            return reserved[itemIndex];
-            break;
-        default:
-            return *(reinterpret_cast<const MODBUS_LONG*>(&reserved[itemIndex]))*Length();
-            break;
-        }
-    }
-
     void Value(int key, QVariant value) Q_DECL_OVERRIDE
     {
         switch (key) {
         case OFFSET_CONTEXT_ADDRESS:
         case OFFSET_CONTEXT_AXIS_TYPE:
-            Data(key,value.value<MODBUS_WORD>());
+            setData(key,value.value<MODBUS_WORD>());
             break;
         case OFFSET_CONTEXT_LIMIT_PLUS:
         case OFFSET_CONTEXT_LIMIT_MINUS:
         case OFFSET_CONTEXT_SPEED_MAX:
         case OFFSET_CONTEXT_POS_TOLERANCE:
-            Data(key,value.value<MODBUS_LONG>());
+            setData(key,static_cast<MODBUS_LONG>(value.toReal() / Dimension[LENGTH]));
             break;
         default:
             AxisMonitorBlock::Value(key,value);
@@ -231,13 +213,13 @@ public:
         switch (key) {
         case OFFSET_CONTEXT_ADDRESS:
         case OFFSET_CONTEXT_AXIS_TYPE:
-            return Data<MODBUS_WORD>(key);
+            return getData<MODBUS_WORD>(key);
             break;
         case OFFSET_CONTEXT_LIMIT_PLUS:
         case OFFSET_CONTEXT_LIMIT_MINUS:
         case OFFSET_CONTEXT_SPEED_MAX:
         case OFFSET_CONTEXT_POS_TOLERANCE:
-            return Data<MODBUS_LONG>(key);
+            return QVariant::fromValue(getData<MODBUS_LONG>(key) * Dimension[LENGTH]);
             break;
         default:
             return AxisMonitorBlock::Value(key);
@@ -248,6 +230,8 @@ public:
 };
 Q_DECLARE_METATYPE(AxisContextBlock)
 
+namespace AxisBlock {
+Q_NAMESPACE
 enum DataBaseHeaders
 {
     AXIS_ID,
@@ -262,10 +246,8 @@ enum DataBaseHeaders
     POSITION_TOLERANCE = AxisContextBlock::OFFSET_CONTEXT_POS_TOLERANCE,
     SPEED_MAX = AxisContextBlock::OFFSET_CONTEXT_SPEED_MAX,
 };
-
 Q_ENUM_NS(DataBaseHeaders)
-
-
 }
+
 
 #endif // AXISBLOCKSDEFINITION_H

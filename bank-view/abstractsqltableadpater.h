@@ -6,7 +6,7 @@
 
 #include <QSqlRecord>
 #include <QSqlField>
-
+#include <QSqlIndex>
 #include <definitionbasicblocks.h>
 
 //!
@@ -17,6 +17,12 @@ class AbstractSqlTableAdpater : public QObject
 {
     Q_OBJECT
 public:
+    enum KeyType
+    {
+        KEY_ROW_ID,
+        KEY_NAMED_KEY
+    };
+
     //!
     //! \brief AbstractSqlTableAdpater
     //! \param parent
@@ -27,21 +33,22 @@ public:
         __model = qobject_cast<QSqlTableModel*>(this->parent());
     }
 
-    void Record(int row, const AbstractDataBlock& data)
+    void Record(int key,
+                const AbstractDataBlock& data,
+                KeyType keyType=KEY_ROW_ID,
+                const QString keyName="")
     {
-        __model->setRecord(row,data2Record(data));
+        __model->setRecord(select(key,keyType,keyName),data2Record(data));
+        __model->setFilter(nullptr); //resume all selection
     }
-    AbstractDataBlock Record(int row)
+    AbstractDataBlock Record(int key,
+                             KeyType keyType=KEY_ROW_ID,
+                             const QString keyName="")
     {
-        return record2Data(__model->record(row));
+        AbstractDataBlock result = record2Data(__model->record(select(key,keyType,keyName)));
+        __model->setFilter(nullptr); //resume all selection
+        return result;
     }
-protected:
-    QSqlTableModel* __model;
-    //!
-    //! \brief __headerList
-    //! Assume that QVariant carried Enum's Name-Value
-    QList<QVariant> __headerList;
-    AbstractDataBlock* __concreteTypeBlock;
 
     //!
     //! \brief record2Data
@@ -68,6 +75,30 @@ protected:
         return __record;
     }
 
+
+protected:
+    QSqlTableModel* __model;
+    //!
+    //! \brief __headerList
+    //! Assume that QVariant carried Enum's Name-Value
+    QList<QVariant> __headerList;
+    AbstractDataBlock* __concreteTypeBlock;
+
+
+    int select(int key,KeyType keyType=KEY_ROW_ID,const QString keyName=""){
+        switch (keyType) {
+        case KEY_ROW_ID:
+            return key;
+            break;
+        case KEY_NAMED_KEY:
+            __model->setFilter(QString("%1=%2").arg(keyName).arg(key));
+            return 0; //select first row
+            break;
+        default:
+            return 0;
+            break;
+        }
+    }
 };
 
 template<typename TypeOfDataBlock,typename TypeOfEnumHeader>

@@ -7,16 +7,21 @@
 #include <controllermanualmode.h>
 
 #include <frontbanktransfer.h>
-#include <frontiooverride.h>
 #include <frontsinglefilter.h>
 
 #include <junctionbankdatabase.h>
 
 #include <definitioncylinderblock.h>
+#include <definitionioattributes.h>
+
+#include <QSqlRecord>
 
 namespace Ui {
 class FrontCylinderPanel;
 }
+
+using namespace CylinderBlock;
+using namespace IoAttributes;
 
 class FrontCylinderPanel : public QWidget
 {
@@ -37,12 +42,12 @@ protected:
 private:
     Ui::FrontCylinderPanel *ui;
 
-    AbstractQVariantSqlTable* __cylinderTable;
+    QSqlRelationalTableModel* __cylinderTable;
 
     ControllerManualMode* __controller;
 
-    QList<TableModelCylinder::Offset> __inputFields;
-    QList<TableModelCylinder::Offset> __outputFields;
+    QList<DataBaseHeaders> __inputFields;
+    QList<DataBaseHeaders> __outputFields;
 
     QString generateFilterString(QString key,QList<QString> conditions);
 

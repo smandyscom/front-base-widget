@@ -1,6 +1,6 @@
 #include "tablemodeliooverride.h"
 TableModelIOOverride::TableModelIOOverride(QObject *parent) :
-    AbstractQVariantSqlTable(parent)
+    QSqlRelationalTableModel(parent)
 {
     __channel = ModbusChannel::Instance();
     //! Forced to inform View to update periodically
@@ -10,6 +10,14 @@ TableModelIOOverride::TableModelIOOverride(QObject *parent) :
     });
     __timer->start(100);
 }
+
+TableModelIOOverride::TableModelIOOverride(QSqlRelationalTableModel *source)
+{
+    setTable(source->tableName());
+    select();
+    TableModelIOOverride(source->parent());
+}
+
 //!
 //! \brief TableModelIOOverride::data
 //! \param idx
@@ -20,7 +28,7 @@ QVariant TableModelIOOverride::data(const QModelIndex &idx, int role) const
 {
     //!Base method
     if(!(idx.column()==NAME && role==Qt::BackgroundRole))
-        return QSqlRelationalTableModel::data(idx,role);
+        return QSqlTableModel::data(idx,role);
 
     //!Change color once the background role request comes
     if(__channel->Access<bool>(CurrentIndexAddress(idx.row())))

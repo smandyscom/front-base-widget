@@ -11,20 +11,20 @@ FrontCylinderPanel::FrontCylinderPanel(QWidget *parent) :
     __controller  = ControllerManualMode::Instance();
     //!
     __inputFields = {
-        TableModelCylinder::SEN_A_1,
-        TableModelCylinder::SEN_A_2,
-        TableModelCylinder::SEN_A_3,
-        TableModelCylinder::SEN_A_4,
-        TableModelCylinder::SEN_B_1,
-        TableModelCylinder::SEN_B_2,
-        TableModelCylinder::SEN_B_3,
-        TableModelCylinder::SEN_B_4,
+       SEN_A_1,
+       SEN_A_2,
+       SEN_A_3,
+       SEN_A_4,
+       SEN_B_1,
+       SEN_B_2,
+       SEN_B_3,
+       SEN_B_4,
                     };
     __outputFields = {
-        TableModelCylinder::ACT_A_1,
-        TableModelCylinder::ACT_A_2,
-        TableModelCylinder::ACT_B_1,
-        TableModelCylinder::ACT_B_2,
+        ACT_A_1,
+        ACT_A_2,
+        ACT_B_1,
+        ACT_B_2,
     };
     //! Loading widgets
     new FrontSingleFilter(__cylinderTable,
@@ -41,7 +41,7 @@ FrontCylinderPanel::FrontCylinderPanel(QWidget *parent) :
     ui->tableViewCylinder->setModel(__cylinderTable);
     ui->tableViewCylinder->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableViewCylinder->setSelectionMode(QAbstractItemView::SingleSelection);
-    connect(ui->tableViewCylinder,SIGNAL(clicked(QModelIndex)),this,SLOT(onViewSelectionChanged()));
+    connect(ui->tableViewCylinder,SIGNAL(activated(QModelIndex)),this,SLOT(onViewSelectionChanged()));
     //!
     //! \brief connect
     //!
@@ -66,18 +66,12 @@ void FrontCylinderPanel::onCylinderCommandClicked()
 {
     CommitBlock __cb;
     CylinderOperationBlock __cob;
+    QVariant command  = QVariant::fromValue((sender()==ui->pushButtonGoA?
+                                                static_cast<MODBUS_WORD>(CylinderOperationBlock::OP_COMMAND_A):
+                                                static_cast<MODBUS_WORD>(CylinderOperationBlock::OP_COMMAND_B)));
 
     __cb.Mode(CommitBlock::MODE_EXE_CYLINDER);
-
-    if(sender()==ui->pushButtonGoA)
-    {
-        __cob.CommandsOperation(CylinderOperationBlock::OP_COMMAND_A);
-    }
-    else if(sender()==ui->pushButtonGoB)
-    {
-        __cob.CommandsOperation(CylinderOperationBlock::OP_COMMAND_B);
-    }
-
+    __cob.Value(CylinderOperationBlock::OFFSET_OPERATION_COMMAND_CACHED,command);
     __controller->CommitOption(__cb);
     __controller->DataBlock(QVariant::fromValue(__cob));
     emit __controller->operationTriggered();
@@ -85,26 +79,25 @@ void FrontCylinderPanel::onCylinderCommandClicked()
 
 void FrontCylinderPanel::onViewSelectionChanged()
 {
-    QModelIndex __index = ui->tableViewCylinder->selectionModel()->selectedRows().first();
-    QSqlRecord __record = __cylinderTable->record(__index.row());
+    QSqlRecord __record = __cylinderTable->record(ui->tableViewCylinder->selectionModel()->selectedRows().first().row());
 
     QList<QString> __inputAddress;
     QList<QString> __outputAddress;
-    foreach (TableModelCylinder::Offset var, __inputFields) {
+    foreach (DataBaseHeaders var, __inputFields) {
         __inputAddress.append(__record.value(QVariant::fromValue(var).toString()).toString());
     }
-    foreach (TableModelCylinder::Offset var, __outputFields) {
+    foreach (DataBaseHeaders var, __outputFields) {
         __outputAddress.append(__record.value(QVariant::fromValue(var).toString()).toString());
     }
     //! Generate filter string
-    QString __inputFilterString = generateFilterString("PLC_ADDRESS",__inputAddress);
-    QString __outputFilterString = generateFilterString("PLC_ADDRESS",__outputAddress);
+    QString __inputFilterString = generateFilterString(QVariant::fromValue(IO_ATTR_PLC_ADDRESS).toString(),__inputAddress);
+    QString __outputFilterString = generateFilterString(QVariant::fromValue(IO_ATTR_PLC_ADDRESS).toString(),__outputAddress);
     //filter out inputs
     qobject_cast<QSqlTableModel*>(ui->tableViewInputs->model())->setFilter(__inputFilterString);
     qobject_cast<QSqlTableModel*>(ui->tableViewOutputs->model())->setFilter(__outputFilterString);
 
     //! Changeover monitor index
-    __currentViewIndex = __record.value(QVariant::fromValue(TableModelCylinder::CYL_ID).toString()).value<MODBUS_WORD>();
+    __currentViewIndex = __record.value(QVariant::fromValue(CYL_ID).toString()).value<MODBUS_WORD>();
     __controller->onMonitorDeviceIndexChanged(__currentViewIndex);
 }
 
@@ -127,15 +120,14 @@ QString FrontCylinderPanel::generateFilterString(QString key, QList<QString> con
 void FrontCylinderPanel::onTimerTimeout()
 {
     //! Update cylinder status
-    AbstractDataBlock adb = __controller->MonitorBlock();
-    CylinderMonitorBlock* cmb = reinterpret_cast<CylinderMonitorBlock*>(&adb);
+    CylinderMonitorBlock cmb = QVariant::fromValue(__controller->MonitorBlock()).value<CylinderMonitorBlock>();
     //! Show
-    utilities::colorChangeOver(ui->labelWarn,cmb->Bit(CylinderMonitorBlock::MOR_WARN),Qt::yellow);
-    utilities::colorChangeOver(ui->labelMonA,cmb->Bit(CylinderMonitorBlock::MOR_GROUP_A),Qt::green);
-    utilities::colorChangeOver(ui->labelMonB,cmb->Bit(CylinderMonitorBlock::MOR_GROUP_B),Qt::green);
-    utilities::colorChangeOver(ui->labelSuppress,cmb->Bit(CylinderMonitorBlock::CTL_SUPPRESS),Qt::red);
-    utilities::colorChangeOver(ui->labelTimeon,cmb->Bit(CylinderMonitorBlock::INT_TMR_ON),Qt::green);
-    utilities::colorChangeOver(ui->labelDone,cmb->Bit(CylinderMonitorBlock::MOR_DONE),Qt::green);
+    //utilities::colorChangeOver(ui->labelWarn,cmb.Value(CylinderMonitorBlock::OFFSET_MONITOR_MOR_WARN).toBool(),Qt::yellow);
+    //utilities::colorChangeOver(ui->labelMonA,cmb.Value(CylinderMonitorBlock::OFFSET_MONITOR_MOR_GROUP_A).toBool(),Qt::green);
+    //utilities::colorChangeOver(ui->labelMonB,cmb.Value(CylinderMonitorBlock::OFFSET_MONITOR_MOR_GROUP_B).toBool(),Qt::green);
+    //utilities::colorChangeOver(ui->labelSuppress,cmb.Value(CylinderMonitorBlock::OFFSET_MONITOR_CTL_SUPPRESS).toBool(),Qt::red);
+    //utilities::colorChangeOver(ui->labelTimeon,cmb.Value(CylinderMonitorBlock::OFFSET_MONITOR_INT_TMR_ON).toBool(),Qt::green);
+    //utilities::colorChangeOver(ui->labelDone,cmb.Value(CylinderMonitorBlock::OFFSET_MONITOR_MOR_DONE).toBool(),Qt::green);
 }
 
 void FrontCylinderPanel::showEvent(QShowEvent *event)

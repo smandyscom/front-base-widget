@@ -18,6 +18,12 @@
 
 #include <definitioncommandblock.h>
 #include <definitionaxisblocks.h>
+#include <definitionauxiliarykeys.h>
+
+#include <frontbanktransfer.h>
+#include <fronttwinfilter.h>
+
+#include <QSqlRecord>
 
 namespace Ui {
 class FrontManaualMode;
@@ -25,7 +31,7 @@ class FrontManaualMode;
 
 using namespace CommandBlock;
 using namespace AxisBlock;
-
+using namespace DEF_BASIC_DIMENSION;
 //!
 //! \brief The FrontManaualMode class
 //!
@@ -53,42 +59,35 @@ protected slots:
     //! Polling monitor status
     void onTimerTimeout();
 
-    void onComboBoxIndexChanged();
-    //!
-    //! \brief onSubmitted
-    //!
-    void onDataTransfer();
-
+    void onAxisSelectionChanged();
     void onOperationPerformed();
-
-    void onSelectReset();
 
 protected:
     void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
 
-    ExtendedCommandBlock __commandBlock;
     CommitBlock __commitOption;
     ControllerManualMode* __controller;
 
-    void setCommonParameters();
-
+    void setCommonParameters(AbstractCommandBlock &__commandBlock);
 
     Ui::FrontManaualMode *ui;
     QTimer* __timer;
 
-    int SelectedRowIndex() const;
-    MODBUS_WORD SelectedAxisAddress() const;
-    MODBUS_WORD SelectedAxisId() const;
-    QVariant SelectedAxisValue(TableModelAxis::Headers header) const;
+    int SelectedBlockIndex() const;
+    QVariant SelectedAxisValue(QVariant keyName) const;
+    MODBUS_WORD __selectedAxisId;
 
-    QSqlRelationalTableModel* __commandBlockTable;
-    QSqlRelationalTableModel* __axisTable;
+    //!
+    //! \brief __commandBlockTableFront
+    //! Front table , fully translated
+    QSqlRelationalTableModel* __commandBlockTableFront;
+    QSqlRelationalTableModel* __axisTableFront;
     QSqlRelationalTableModel* __regionTable;
 
+    AbstractSqlTableAdpater* __commandBlockAdaptor;
+    AbstractSqlTableAdpater* __axisAdaptor;
+
     ControllerBankTransfer* __bankTransfer;
-
-
-private slots:
 };
 
 #endif // FRONTMANAUALMODE_H

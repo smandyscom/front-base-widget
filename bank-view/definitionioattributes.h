@@ -1,0 +1,24 @@
+#ifndef DEFINITIONIOATTRIBUTES_H
+#define DEFINITIONIOATTRIBUTES_H
+
+#include <QObject>
+
+namespace IoAttributes {
+
+Q_NAMESPACE
+
+enum HeaderIOAttributes
+{
+    IO_ATTR_ID,
+    IO_ATTR_HAL_ADDRESS,
+    IO_ATTR_NAME,
+    IO_ATTR_REGION,
+    IO_ATTR_PLC_ADDRESS,
+    IO_ATTR_PHYSICAL_ADDRESS,
+    IO_ATTR_TERMINAL
+};
+Q_ENUM_NS(HeaderIOAttributes)
+
+}
+
+#endif // DEFINITIONIOATTRIBUTES_H

@@ -5,11 +5,11 @@
 #include <modbuschannel.h>
 #include <QColor>
 #include <QTimer>
-#include <abstractsqltableadpater.h>
+#include <QSqlRelationalTableModel>
 //!
 //! \brief The TableModelIOOverride class
 //! Override/Read the I/O data
-class TableModelIOOverride : public AbstractQVariantSqlTable
+class TableModelIOOverride : public QSqlRelationalTableModel
 {
     Q_OBJECT
 public:
@@ -25,6 +25,7 @@ public:
     };
     Q_ENUM(Header)
     explicit TableModelIOOverride(QObject *parent = nullptr);
+    explicit TableModelIOOverride(QSqlRelationalTableModel* source);
 
     //!
     //! \brief data

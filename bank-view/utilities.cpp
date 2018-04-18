@@ -30,3 +30,18 @@ void utilities::colorChangeOver(QWidget *target, bool value, Qt::GlobalColor tru
         __color = Qt::gray;
     target->setStyleSheet(QString("background-color : %1").arg(QVariant::fromValue(__color).value<QString>()));
 }
+
+void utilities::getSelectedValue(QTableView *target, const QString &keyName)
+{
+    QSqlTableModel* model = qobject_cast<QSqlTableModel*>(target->model());
+    return  model->record(target->selectionModel()->selectedRows().first()).value(keyName).toInt();
+}
+
+QSqlRecord utilities::getSqlTableSelectedRecord(QSqlTableModel *target, QVariant keyName, QVariant keyValue)
+{
+    QString origin = target->filter();
+    target->setFilter(QString("%1=\'%2\'").arg(keyName.toString()).arg(keyValue.toString()));
+    QSqlRecord result = target->record();
+    target->setFilter(origin);
+    return result;
+}
