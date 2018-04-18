@@ -4,6 +4,8 @@
 #include <definitionbasicblocks.h>
 #include <definitionauxiliarykeys.h>
 
+#include <abstractsqltableadpater.h>
+
 using namespace DEF_BASIC_DIMENSION;
 
 class AxisMonitorBlock : public AbstractDataBlock
@@ -247,6 +249,11 @@ enum DataBaseHeaders
     SPEED_MAX = AxisContextBlock::OFFSET_CONTEXT_SPEED_MAX,
 };
 Q_ENUM_NS(DataBaseHeaders)
+
+//!
+//! \brief Adaptor
+//! Initialize after data base initialized
+static AbstractSqlTableAdpater* Adaptor = nullptr;
 }
 
 

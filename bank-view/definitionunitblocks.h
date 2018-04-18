@@ -3,16 +3,7 @@
 
 #include<definitionbasicblocks.h>
 
-namespace UnitBlock {
-
-enum DataBaseHeaders
-{
-    ID,
-    REGION,
-};
-Q_ENUM_NS(DataBaseHeaders)
-
-}//namespace
+#include<abstractsqltableadpater.h>
 
 class UnitMonitorBlock:public AbstractDataBlock
 {
@@ -81,5 +72,17 @@ public:
 
 };
 Q_DECLARE_METATYPE(UnitContextBlock)
+
+namespace UnitBlock {
+Q_NAMESPACE
+enum DataBaseHeaders
+{
+    ID,
+};
+Q_ENUM_NS(DataBaseHeaders)
+
+static AbstractSqlTableAdpater* Adaptor;
+
+}//namespace
 
 #endif // UNITBLOCKSDEFINITION_H

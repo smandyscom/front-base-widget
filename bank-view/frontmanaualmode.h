@@ -59,7 +59,6 @@ protected slots:
     //! Polling monitor status
     void onTimerTimeout();
 
-    void onAxisSelectionChanged();
     void onOperationPerformed();
 
 protected:
@@ -85,9 +84,7 @@ protected:
     QSqlRelationalTableModel* __regionTable;
 
     AbstractSqlTableAdpater* __commandBlockAdaptor;
-    AbstractSqlTableAdpater* __axisAdaptor;
 
-    ControllerBankTransfer* __bankTransfer;
 };
 
 #endif // FRONTMANAUALMODE_H

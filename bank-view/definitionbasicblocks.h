@@ -90,7 +90,10 @@ public:
     {
         SELECTION_AXIS = 0,
         SELECTION_CYLINDER = 1,
+        SELECTION_SIGNAL,
+
         SELECTION_COMMAND_BLOCK = 2,
+
         SELECTION_UNIT = 3,
     };
     enum CommitMode : MODBUS_LONG
@@ -98,6 +101,9 @@ public:
         MODE_EXE_COMMAND_BLOCK=0,
         MODE_EXE_CYLINDER=1,
         MODE_EXE_AXIS=8,
+
+        MODE_EXE_UNIT,
+
         MODE_DOWNLOAD_DATA_BLOCK = 15, //PLC<-HMI
         MODE_UPLOAD_DATA_BLOCK = 16,   //PLC->HMI
     };

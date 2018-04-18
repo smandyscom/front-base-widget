@@ -20,7 +20,7 @@ enum Keys
 Q_ENUM_NS(Keys)
 Q_ENUM_NS(Headers)
 
-QMap<Keys,qreal> Dimension;
+static QMap<Keys,qreal> Dimension;
 
 }
 

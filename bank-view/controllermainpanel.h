@@ -39,7 +39,7 @@ public:
     }
     bool IsPause() const
     {
-        return __channel->Access<bool>(UnitMonitorBlock::TRIG_PAUSE);
+        return __channel->Access<bool>(UnitOperationBlock::TRIG_PAUSE);
     }
     void Initialize()
     {

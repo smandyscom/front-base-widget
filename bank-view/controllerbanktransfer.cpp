@@ -21,7 +21,7 @@ void ControllerBankTransfer::onTransferData(int rowIndex)
     if(rowIndex==BATCH_MODE)
     {
         __currentIndex = 0;
-        __goal = __adaptor->rowCount(); //batch mode activated
+        __goal = __adaptor->Model()->rowCount(); //batch mode activated
     }
     else
     {
@@ -42,7 +42,7 @@ void ControllerBankTransfer::onControllerOperationPerformed()
             __controller->CommitOption().Mode()!=CommitBlock::MODE_UPLOAD_DATA_BLOCK)
         return; //ignored
 
-    __adaptor->Record(__currentIndex,__controller->DataBlock().value<AbstractDataBlock>());
+    __adaptor->Record(__currentIndex,__controller->DataBlock<AbstractDataBlock>().value<AbstractDataBlock>());
     __currentIndex = __controller->CommitOption().Index()+1; //follow the current index
     //! Raise next operation if any
     if(__currentIndex < __goal)
@@ -63,7 +63,7 @@ void ControllerBankTransfer::transfer()
 {
     __commitOption.Index(__currentIndex);
     __controller->CommitOption(__commitOption);
-    __controller->DataBlock(__adaptor->Record(__currentIndex)); //Write-in anyway
+    __controller->DataBlock(QVariant::fromValue(__adaptor->Record(__currentIndex))); //Write-in anyway
     //! Wait until controller comes to right state
     while (__controller->CurrentState()!=ControllerManualMode::STATE_IDLE) {}
     emit __controller->operationTriggered();

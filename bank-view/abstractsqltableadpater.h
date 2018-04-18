@@ -75,6 +75,7 @@ public:
         return __record;
     }
 
+    QSqlTableModel* Model() const {return __model;}
 
 protected:
     QSqlTableModel* __model;

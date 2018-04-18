@@ -19,7 +19,7 @@ FrontManaualMode::FrontManaualMode(QSqlRelationalTableModel *wholeCommandBankMod
     ui->setupUi(this);
     //! Link
     __controller = ControllerManualMode::Instance();
-    __bankTransfer= ControllerBankTransfer::Instance();
+    __commandBlockAdaptor = CommandBlock::Adaptor;
     //! Resued widgets
     new FrontBankTransfer(CommitBlock::SELECTION_COMMAND_BLOCK,ui->widgetBankTransfer);
     FrontTwinFilter* __ftf = new FrontTwinFilter(wholeCommandBankModel,

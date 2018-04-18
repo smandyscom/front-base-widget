@@ -31,18 +31,17 @@ public:
     {
         //! Data tables
         WHOLE_AXIS,
-        WHOLE_COMMAND_BLOCKS,
         WHOLE_CYLINDERS,
         WHOLE_SIGNALS,
-
+        WHOLE_COMMAND_BLOCKS,
         WHOLE_UNITS,
-
+        //! Material
         WHOLE_MAT_DATA_SLOTN,
-
         //! Reference tables
         DEF_REGION,
         DEF_IS_ABS,
         DEF_MIII_ZRET_METHOD,
+        //! I/O Tables
         INPUT_ATTRIBUTES,
         OUTPUT_ATTRIBUTES,
     };

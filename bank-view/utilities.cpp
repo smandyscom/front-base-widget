@@ -1,6 +1,5 @@
 #include "utilities.h"
 
-
 utilities::utilities()
 {
 
@@ -31,10 +30,10 @@ void utilities::colorChangeOver(QWidget *target, bool value, Qt::GlobalColor tru
     target->setStyleSheet(QString("background-color : %1").arg(QVariant::fromValue(__color).value<QString>()));
 }
 
-void utilities::getSelectedValue(QTableView *target, const QString &keyName)
+int utilities::getSelectedValue(QTableView *target, const QString &keyName)
 {
     QSqlTableModel* model = qobject_cast<QSqlTableModel*>(target->model());
-    return  model->record(target->selectionModel()->selectedRows().first()).value(keyName).toInt();
+    return  model->record(target->selectionModel()->selectedRows().first().row()).value(keyName).toInt();
 }
 
 QSqlRecord utilities::getSqlTableSelectedRecord(QSqlTableModel *target, QVariant keyName, QVariant keyValue)

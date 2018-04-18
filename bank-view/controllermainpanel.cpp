@@ -5,7 +5,7 @@ ControllerMainPanel::ControllerMainPanel(QObject *parent) : QObject(parent)
     __channel = ModbusChannel::Instance();
 
     //! Very first shot
-    __channel->beginAccess<AbstractDataBlock>(ModbusDriverAddress(UnitMonitorBlock::LUID_PARENT));
+    __channel->beginAccess<AbstractDataBlock>(ModbusDriverAddress(UnitContextBlock::LUID_PARENT));
 
     //! Link
     connect(__channel,&ModbusChannel::raiseUpdateEvent,this,&ControllerMainPanel::onReply);
@@ -18,10 +18,10 @@ ControllerMainPanel::ControllerMainPanel(QObject *parent) : QObject(parent)
 void ControllerMainPanel::onReply(UpdateEvent *event)
 {
     switch (event->address) {
-    case UnitMonitorBlock::LUID_PARENT:
+    case UnitContextBlock::LUID_PARENT:
         QTimer::singleShot(100,this,[=](){
             //! Schedualing next polling
-            __channel->beginAccess<AbstractDataBlock>(ModbusDriverAddress(UnitMonitorBlock::LUID_PARENT));
+            __channel->beginAccess<AbstractDataBlock>(ModbusDriverAddress(UnitContextBlock::LUID_PARENT));
         });
         break;
     default:

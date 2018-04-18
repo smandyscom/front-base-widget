@@ -3,6 +3,7 @@
 
 #include <definitionbasicblocks.h>
 #include <definitionauxiliarykeys.h>
+
 #include <abstractsqltableadpater.h>
 
 using namespace DEF_BASIC_DIMENSION;
@@ -141,6 +142,8 @@ enum DataBaseHeaders
     SEN_B_4=CylinderContext::OFFSET_CONTEXT_SENSOR_B_4,
 };
 Q_ENUM_NS(DataBaseHeaders)
+
+static AbstractSqlTableAdpater* Adaptor= nullptr;
 
 }//namespace
 

@@ -46,8 +46,8 @@ private:
 
     ControllerManualMode* __controller;
 
-    QList<DataBaseHeaders> __inputFields;
-    QList<DataBaseHeaders> __outputFields;
+    QList<CylinderBlock::DataBaseHeaders> __inputFields;
+    QList<CylinderBlock::DataBaseHeaders> __outputFields;
 
     QString generateFilterString(QString key,QList<QString> conditions);
 

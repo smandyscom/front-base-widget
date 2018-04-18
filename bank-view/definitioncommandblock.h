@@ -4,6 +4,8 @@
 #include <definitionbasicblocks.h>
 #include <definitionauxiliarykeys.h>
 
+#include <abstractsqltableadpater.h>
+
 using namespace DEF_BASIC_DIMENSION;
 
 class AbstractCommandBlock : public AbstractDataBlock
@@ -227,6 +229,8 @@ enum DataBaseHeaders
     COORD3 = ExtendedCommandBlock::OFFSET_ECB_COORD3,
 };
 Q_ENUM_NS(DataBaseHeaders)
+
+static AbstractSqlTableAdpater* Adaptor;
 
 }//namespace
 
