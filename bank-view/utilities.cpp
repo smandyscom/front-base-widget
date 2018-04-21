@@ -44,3 +44,8 @@ QSqlRecord utilities::getSqlTableSelectedRecord(QSqlTableModel *target, QVariant
     target->setFilter(origin);
     return result;
 }
+
+QString utilities::generateFilterString(QVariant keyName, QVariant keyValue)
+{
+    return QString("%1=\'%2\'").arg(keyName.toString()).arg(keyValue.toString());
+}

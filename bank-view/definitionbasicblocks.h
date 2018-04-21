@@ -7,36 +7,39 @@ using namespace BaseLayer;
 #pragma pack(1)
 #define DATA_BLOCK_SIZE_IN_WORD_64 64
 #define DATA_BLOCK_SIZE_IN_WORD_128 128
+
+#define INVALID_INDEX -1
+
 class AbstractDataBlock
 {
 public:
     AbstractDataBlock()
     {
-        memset(reserved,0,sizeof(MODBUS_WORD) * DATA_BLOCK_SIZE_IN_WORD_64);
+        memset(reserved,0,sizeof(MODBUS_U_WORD) * DATA_BLOCK_SIZE_IN_WORD_64);
     }
 
-    virtual void Value(int key, QVariant value)
+    void Value(uint key, QVariant value)
     {
-        setData(key,value.value<MODBUS_WORD>());
+        setData(key,value.value<MODBUS_U_WORD>());
     }
     //!
     //! \brief Value
     //! \param index
     //! \return
     //! 64Bits
-    virtual QVariant Value(int key) const
+    QVariant Value(uint key) const
     {
         return QVariant::fromValue(reserved[key]);
     }
 
 protected:
-    MODBUS_WORD reserved[DATA_BLOCK_SIZE_IN_WORD_64];
+    MODBUS_U_WORD reserved[DATA_BLOCK_SIZE_IN_WORD_64];
 
     //!
     //! Generic write
     //! Long/Word/Bool
     template<typename T>
-    void setData(int key,const T& data)
+    inline void setData(uint key,const T& data)
     {
         memcpy(&reserved[key],&data,sizeof(T));
     }
@@ -44,30 +47,28 @@ protected:
     //! Genric read
     //!
     template<typename T>
-    T getData(int key) const
+    inline T getData(uint key) const
     {
         return *reinterpret_cast<const T*>(&reserved[key]);
     }
-    void Bit(int key,bool value)
+    inline void Bit(uint key,bool value)
     {
         //!
         //! \brief mask
-        //! TODO
-        MODBUS_WORD mask = key;
+        ModbusDriverAddress __address(key);
 
         if(value)
-            reserved[key&0xffff] |= mask;
+            reserved[__address.getRegisterAddress()] |= __address.toBitwiseMask();
         else
-            reserved[key] &= ~mask;
+            reserved[__address.getRegisterAddress()] &= ~__address.toBitwiseMask();
     }
-    bool Bit(int key) const
+    inline bool Bit(uint key) const
     {
         //!
         //! \brief mask
-        //! TODO
-        MODBUS_WORD mask = key;
+        ModbusDriverAddress __address(key);
 
-        return (reserved[key] & mask) > 0;
+        return (reserved[__address.getRegisterAddress()] & __address.toBitwiseMask()) > 0;
     }
 };
 Q_DECLARE_METATYPE(AbstractDataBlock)
@@ -75,7 +76,7 @@ Q_DECLARE_METATYPE(AbstractDataBlock)
 
 
 
-typedef MODBUS_LONG CommitDataBlockIndex ;
+typedef MODBUS_U_LONG CommitDataBlockIndex ;
 
 //!
 //! \brief The CommitBlock class
@@ -86,7 +87,7 @@ public:
     //!
     //! \brief The CommitSelection enum
     //! Data block selection
-    enum CommitDataBlockSelection : MODBUS_LONG
+    enum CommitDataBlockSelection : MODBUS_U_LONG
     {
         SELECTION_AXIS = 0,
         SELECTION_CYLINDER = 1,
@@ -96,7 +97,7 @@ public:
 
         SELECTION_UNIT = 3,
     };
-    enum CommitMode : MODBUS_LONG
+    enum CommitMode : MODBUS_U_LONG
     {
         MODE_EXE_COMMAND_BLOCK=0,
         MODE_EXE_CYLINDER=1,
@@ -133,7 +134,7 @@ class IoMonitorOverrideBlock
 {
 public:
 protected:
-    MODBUS_WORD reserved[8];
+    MODBUS_U_WORD reserved[8];
 };
 Q_DECLARE_METATYPE(IoMonitorOverrideBlock)
 

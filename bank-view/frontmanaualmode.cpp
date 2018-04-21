@@ -25,11 +25,11 @@ FrontManaualMode::FrontManaualMode(QSqlRelationalTableModel *wholeCommandBankMod
     FrontTwinFilter* __ftf = new FrontTwinFilter(wholeCommandBankModel,
                                                 QVariant::fromValue(CommandBlock::AXIS_ID),
                                                 wholeAxisBankModel,
-                                                QVariant::fromValue(REGION),
+                                                QVariant::fromValue(AxisBlock::REGION),
                                                 regionModel,
                                                 ui->widgetFilter);
     connect(__ftf,&FrontTwinFilter::primarySelected,[=](QVariant key){
-        __selectedAxisId = key.value<MODBUS_WORD>();
+        __selectedAxisId = key.value<MODBUS_U_WORD>();
         __controller->onMonitorDeviceIndexChanged(__selectedAxisId);
     });
     //!setup
@@ -60,8 +60,8 @@ FrontManaualMode::FrontManaualMode(QSqlRelationalTableModel *wholeCommandBankMod
     ui->tableViewCommandBlock->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->tableViewCommandBlock->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableViewCommandBlock->setModel(__commandBlockTableFront);
-    QList<CommandBlock::DataBaseHeaders> __headersGoing2Hide = {COMMAND_BLOCK_ID,
-                                                                  COMMAND_TYPE,
+    QList<CommandBlock::DataBaseHeaders> __headersGoing2Hide = {CommandBlock::ID,
+                                                                CommandBlock::COMMAND_TYPE,
                                                                 CommandBlock::AXIS_ID};
     foreach (CommandBlock::DataBaseHeaders var, __headersGoing2Hide) {
         ui->tableViewCommandBlock->hideColumn(var);
@@ -69,6 +69,12 @@ FrontManaualMode::FrontManaualMode(QSqlRelationalTableModel *wholeCommandBankMod
     //! Toogle mode
     connect(ui->pushButtonServoOn,&QPushButton::clicked,this,&FrontManaualMode::onOperationPerformed);
     connect(ui->pushButtonAlarmClear,&QPushButton::clicked,this,&FrontManaualMode::onOperationPerformed);
+
+    //! Map
+    __browserMap[ui->textBrowserPositionReference] = AxisMonitorBlock::OFFSET_MONITOR_POS_COMMAND;
+    __browserMap[ui->textBrowserPositionFeedback] = AxisMonitorBlock::OFFSET_MONITOR_POS_FEEDBACK;
+    __browserMap[ui->textBrowserSpeedFeedback] = AxisMonitorBlock::OFFSET_MONITOR_SPD_FEEDBACK;
+    __browserMap[ui->textBrowserTorqueFeedback] = AxisMonitorBlock::OFFSET_MONITOR_TOR_FEEDBACK;
 }
 
 FrontManaualMode::~FrontManaualMode()
@@ -126,9 +132,11 @@ void FrontManaualMode::onManualOperationClicked()
 
     if(button == ui->pushButtonBankExecution)
     {
-        int __commandBlockId = __commandBlockTableFront->record(SelectedBlockIndex()).value(COMMAND_BLOCK_ID).toInt();
+        int __commandBlockId = __commandBlockTableFront->record(SelectedBlockIndex()).value(CommandBlock::ID).toInt();
         __commandBlock =
-                QVariant::fromValue(__commandBlockAdaptor->Record(__commandBlockId,AbstractSqlTableAdpater::KEY_NAMED_KEY,QVariant::fromValue(COMMAND_BLOCK_ID).toString())).value<AbstractCommandBlock>();
+                QVariant::fromValue(__commandBlockAdaptor->Record(__commandBlockId,
+                                                                  AbstractSqlTableAdpater::KEY_NAMED_KEY,
+                                                                  QVariant::fromValue(CommandBlock::ID).toString())).value<AbstractCommandBlock>();
     }
     else
     {
@@ -192,16 +200,19 @@ void FrontManaualMode::onManualOperationClicked()
 void FrontManaualMode::onOperationPerformed()
 {
     AxisOperationBlock __block;
+    ModbusDriverAddress __address;
+    __address.setRegisterAddress(AxisOperationBlock::OFFSET_OPEATION_OPERATION);
 
     if(sender()==ui->pushButtonServoOn)
     {
-        __block.Operation(AxisMonitorBlock::OP_SERVO_ON,true);
+        __address.setBitIndex(AxisMonitorBlock::OP_SERVO_ON);
     }
     else if(sender()==ui->pushButtonAlarmClear)
     {
-        __block.Operation(AxisMonitorBlock::OP_ALARM_CLEAR,true);
+        __address.setBitIndex(AxisMonitorBlock::OP_ALARM_CLEAR);
     }
 
+    __block.Value(__address.getAddress(),true);
     __commitOption.Mode(CommitBlock::MODE_EXE_AXIS);
     __controller->CommitOption(__commitOption);
     __controller->DataBlock(QVariant::fromValue(__block));
@@ -226,19 +237,24 @@ void FrontManaualMode::onTimerTimeout()
 {
     AxisMonitorBlock amb = QVariant::fromValue(__controller->MonitorBlock()).value<AxisMonitorBlock>();
 
-    ui->textBrowserPositionReference->setText(QString::number(amb.PositionCommand()));
-    ui->textBrowserPositionFeedback->setText(QString::number(amb.PositionFeedback()));
-    ui->textBrowserSpeedFeedback->setText(QString::number(amb.SpeedFeedback()));
-    ui->textBrowserTorqueFeedback->setText(QString::number(amb.TorqueFeedback()));
-
+    foreach (QWidget* var, __browserMap.keys()) {
+        qobject_cast<QTextBrowser*>(var)->setText(QString::number(amb.Value(__browserMap[var]).toReal()));
+    }
     //! Servo On/Alarm clear
-    utilities::colorChangeOver(ui->pushButtonServoOn, amb.Operation(AxisMonitorBlock::OP_SERVO_ON));
-    utilities::colorChangeOver(ui->pushButtonAlarmClear, amb.Operation(AxisMonitorBlock::OP_ALARM_CLEAR),Qt::red);
+    ModbusDriverAddress __address;
+    __address.setRegisterAddress(AxisMonitorBlock::OFFSET_MONITOR_OPERATION);
+
+    __address.setBitIndex(AxisMonitorBlock::OP_SERVO_ON);
+    utilities::colorChangeOver(ui->pushButtonServoOn, amb.Value(__address.getAddress()).toBool());
+    __address.setBitIndex(AxisMonitorBlock::OP_ALARM_CLEAR);
+    utilities::colorChangeOver(ui->pushButtonAlarmClear, amb.Value(__address.getAddress()).toBool(),Qt::red);
     //! Servo ready/alarm
-    utilities::colorChangeOver(ui->labelServoReady,amb.RunStatus(AxisMonitorBlock::RS_SERVO_READY));
-    utilities::colorChangeOver(ui->labelAlarm,amb.Warning() > 0 || amb.Alarm() > 0,Qt::red);
-    ui->textBrowserWarning->setText(QString(amb.Warning()));
-    ui->textBrowseAlarm->setText(QString(amb.Alarm()));
+    __address.setRegisterAddress(AxisMonitorBlock::OFFSET_MONITOR_RUN_STATUS);
+    __address.setBitIndex(AxisMonitorBlock::RS_SERVO_READY);
+    utilities::colorChangeOver(ui->labelServoReady,amb.Value(__address.getAddress()).toBool(),Qt::red);
+    //! Alarm/Warning details
+    //ui->textBrowserWarning->setText(QString(amb.Warning()));
+    //ui->textBrowseAlarm->setText(QString(amb.Alarm()));
 }
 
 int FrontManaualMode::SelectedBlockIndex() const
@@ -247,14 +263,14 @@ int FrontManaualMode::SelectedBlockIndex() const
 }
 QVariant FrontManaualMode::SelectedAxisValue(QVariant keyName) const
 {
-    return utilities::getSqlTableSelectedRecord(__axisTableFront,QVariant::fromValue(AxisBlock::AXIS_ID),
+    return utilities::getSqlTableSelectedRecord(__axisTableFront,QVariant::fromValue(AxisBlock::ID),
                                                 QVariant::fromValue(__selectedAxisId)).value(keyName.toString());
 }
 
 void FrontManaualMode::showEvent(QShowEvent *event)
 {
     __controller->MonitorDeviceCategrory(CommitBlock::SELECTION_AXIS);
-    __controller->onMonitorDeviceIndexChanged(SelectedAxisValue(QVariant::fromValue(AxisBlock::AXIS_ID)).value<MODBUS_WORD>());
+    __controller->onMonitorDeviceIndexChanged(SelectedAxisValue(QVariant::fromValue(AxisBlock::ID)).value<MODBUS_U_WORD>());
     //!
     QWidget::showEvent(event);
 }

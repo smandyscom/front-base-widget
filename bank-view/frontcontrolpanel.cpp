@@ -33,7 +33,7 @@ void frontControlPanel::onTimerTimeout()
     ui->pushButtonErrorReset->setEnabled(__controller->ErrorCode()!=0);
     //!Show error
     ui->textBrowserErrorDescription->setText(QString::number(__controller->ErrorCode()));
-    ui->textBrowserErrorCode->setText(QString::number(__controller->ErrorCateGrory()));
+    ui->textBrowserErrorCode->setText(QString::number(__controller->ErrorCategrory()));
     ui->textBrowserErrorPart->setText(QString::number(__controller->ErrorDeviceIndex()));
     //!TODO
 }

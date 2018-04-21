@@ -55,17 +55,17 @@ void ModbusChannel::__commit(ModbusDriverAddress address, const QVariant value)
     case QVariant::Bool:
     {
         //make sure readout a word
-        MODBUS_WORD temp=0;
+        MODBUS_S_WORD temp=0;
         writeInData.setValue(temp);
 
         __update(address,writeInData);
         // handling signal bit
         if(value.value<bool>())
             //set
-            writeInData.setValue(static_cast<MODBUS_WORD>(writeInData.value<quint16>() | address.toBitwiseMask()));
+            writeInData.setValue(static_cast<MODBUS_U_WORD>(writeInData.value<MODBUS_U_WORD>() | address.toBitwiseMask()));
         else
             //unset
-            writeInData.setValue(static_cast<MODBUS_WORD>(writeInData.value<quint16>() & (~address.toBitwiseMask())));
+            writeInData.setValue(static_cast<MODBUS_U_WORD>(writeInData.value<MODBUS_U_WORD>() & (~address.toBitwiseMask())));
         break;
     }
     default:

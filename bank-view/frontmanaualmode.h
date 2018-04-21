@@ -74,10 +74,8 @@ protected:
 
     int SelectedBlockIndex() const;
     QVariant SelectedAxisValue(QVariant keyName) const;
-    MODBUS_WORD __selectedAxisId;
+    MODBUS_U_WORD __selectedAxisId;
 
-    //!
-    //! \brief __commandBlockTableFront
     //! Front table , fully translated
     QSqlRelationalTableModel* __commandBlockTableFront;
     QSqlRelationalTableModel* __axisTableFront;
@@ -85,6 +83,7 @@ protected:
 
     AbstractSqlTableAdpater* __commandBlockAdaptor;
 
+    QMap<QWidget*,AxisMonitorBlock::OffsetMonitor> __browserMap;
 };
 
 #endif // FRONTMANAUALMODE_H

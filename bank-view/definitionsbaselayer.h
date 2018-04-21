@@ -9,9 +9,15 @@
 
 namespace BaseLayer {
 
-#define MODBUS_WORD qint16
-#define MODBUS_LONG qint32
-#define MODBUS_QUAD qint64
+#define MODBUS_S_WORD qint16
+#define MODBUS_U_WORD quint16
+
+#define MODBUS_S_LONG qint32
+#define MODBUS_U_LONG quint32
+
+#define MODBUS_S_QUAD qint64
+#define MODBUS_U_QUAD quint64
+
 #define MODBUS_ADDRESS quint16
 
 //!

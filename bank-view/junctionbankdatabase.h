@@ -39,7 +39,14 @@ public:
         WHOLE_MAT_DATA_SLOTN,
         //! Reference tables
         DEF_REGION,
-        DEF_IS_ABS,
+        DEF_EXT_CTRL_BIT_0,
+        DEF_UNIT_TYPE,
+        DEF_COMMAND_TYPE,
+        DEF_BASIC_DIMENSION,
+        DEF_AXIS_TYPE,
+        DEF_AUTH,
+        //! MIII tables
+        DEF_MIII_WARN_ALARM,
         DEF_MIII_ZRET_METHOD,
         //! I/O Tables
         INPUT_ATTRIBUTES,

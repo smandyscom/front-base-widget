@@ -73,7 +73,7 @@ public:
     {
         return __channel->Access<AbstractDataBlock>(ModbusDriverAddress(MONITOR_BLOCK_HEAD));
     }
-    void MonitorDeviceCategrory(MODBUS_WORD value)
+    void MonitorDeviceCategrory(MODBUS_U_WORD value)
     {
         emit requireWriteData(ModbusDriverAddress(ControllerManualMode::MON_CATEGRORY),QVariant::fromValue(value));
     }
@@ -85,7 +85,7 @@ public slots:
     void onInterrupted() {
         emit requireWriteData(ModbusDriverAddress(ControllerManualMode::ENGAGED_HMI),QVariant::fromValue(false));
     }
-    void onMonitorDeviceIndexChanged(MODBUS_WORD objectId){
+    void onMonitorDeviceIndexChanged(MODBUS_U_WORD objectId){
         emit requireWriteData(ModbusDriverAddress(ControllerManualMode::MON_DEVICE_INDEX),QVariant::fromValue(objectId));
     }
 signals:

@@ -41,7 +41,7 @@ FrontCylinderPanel::FrontCylinderPanel(QWidget *parent) :
     ui->tableViewCylinder->setModel(__cylinderTable);
     ui->tableViewCylinder->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableViewCylinder->setSelectionMode(QAbstractItemView::SingleSelection);
-    connect(ui->tableViewCylinder,SIGNAL(activated(QModelIndex)),this,SLOT(onViewSelectionChanged()));
+    connect(ui->tableViewCylinder,SIGNAL(clicked(QModelIndex)),this,SLOT(onViewSelectionChanged()));
     //!
     //! \brief connect
     //!
@@ -54,6 +54,20 @@ FrontCylinderPanel::FrontCylinderPanel(QWidget *parent) :
     __timer = new QTimer(this);
     connect(__timer,SIGNAL(timeout()),this,SLOT(onTimerTimeout()));
     __timer->start();
+    //! Map
+    __labelAddressMap[ui->labelDone] = CylinderMonitorBlock::MOR_DONE;
+    __labelAddressMap[ui->labelMonA] = CylinderMonitorBlock::MOR_GROUP_A;
+    __labelAddressMap[ui->labelMonB] = CylinderMonitorBlock::MOR_GROUP_B;
+    __labelAddressMap[ui->labelSuppress] = CylinderMonitorBlock::MOR_DONE;
+    __labelAddressMap[ui->labelTimeon] = CylinderMonitorBlock::INT_TMR_ON;
+    __labelAddressMap[ui->labelWarn] = CylinderMonitorBlock::MOR_WARN;
+
+    __labelColorMap[ui->labelDone] = Qt::yellow;
+    __labelColorMap[ui->labelMonA] = Qt::green;
+    __labelColorMap[ui->labelMonB] = Qt::green;
+    __labelColorMap[ui->labelSuppress] = Qt::red;
+    __labelColorMap[ui->labelTimeon] = Qt::green;
+    __labelColorMap[ui->labelWarn] = Qt::green;
 }
 
 
@@ -67,8 +81,8 @@ void FrontCylinderPanel::onCylinderCommandClicked()
     CommitBlock __cb;
     CylinderOperationBlock __cob;
     QVariant command  = QVariant::fromValue((sender()==ui->pushButtonGoA?
-                                                static_cast<MODBUS_WORD>(CylinderOperationBlock::OP_COMMAND_A):
-                                                static_cast<MODBUS_WORD>(CylinderOperationBlock::OP_COMMAND_B)));
+                                                 static_cast<MODBUS_U_WORD>(CylinderOperationBlock::OP_COMMAND_A):
+                                                 static_cast<MODBUS_U_WORD>(CylinderOperationBlock::OP_COMMAND_B)));
 
     __cb.Mode(CommitBlock::MODE_EXE_CYLINDER);
     __cob.Value(CylinderOperationBlock::OFFSET_OPERATION_COMMAND_CACHED,command);
@@ -90,14 +104,14 @@ void FrontCylinderPanel::onViewSelectionChanged()
         __outputAddress.append(__record.value(QVariant::fromValue(var).toString()).toString());
     }
     //! Generate filter string
-    QString __inputFilterString = generateFilterString(QVariant::fromValue(IO_ATTR_PLC_ADDRESS).toString(),__inputAddress);
-    QString __outputFilterString = generateFilterString(QVariant::fromValue(IO_ATTR_PLC_ADDRESS).toString(),__outputAddress);
+    QString __inputFilterString = generateFilterString(QVariant::fromValue(PLC_ADDRESS).toString(),__inputAddress);
+    QString __outputFilterString = generateFilterString(QVariant::fromValue(PLC_ADDRESS).toString(),__outputAddress);
     //filter out inputs
     qobject_cast<QSqlTableModel*>(ui->tableViewInputs->model())->setFilter(__inputFilterString);
     qobject_cast<QSqlTableModel*>(ui->tableViewOutputs->model())->setFilter(__outputFilterString);
 
     //! Changeover monitor index
-    __currentViewIndex = __record.value(QVariant::fromValue(CYL_ID).toString()).value<MODBUS_WORD>();
+    __currentViewIndex =  __record.value(QVariant::fromValue(CylinderBlock::ID).toString()).value<MODBUS_S_WORD>();
     __controller->onMonitorDeviceIndexChanged(__currentViewIndex);
 }
 
@@ -122,6 +136,12 @@ void FrontCylinderPanel::onTimerTimeout()
     //! Update cylinder status
     CylinderMonitorBlock cmb = QVariant::fromValue(__controller->MonitorBlock()).value<CylinderMonitorBlock>();
     //! Show
+    ModbusDriverAddress __address;
+    __address.setRegisterAddress(CylinderMonitorBlock::OFFSET_MONITOR_STATUS_WORD);
+    foreach (QWidget* var, __labelAddressMap.keys()) {
+        __address.setBitIndex(__labelAddressMap[var]);
+        utilities::colorChangeOver(var,cmb.Value(__address.getAddress()).toBool(),__labelColorMap[var]);
+    }
     //utilities::colorChangeOver(ui->labelWarn,cmb.Value(CylinderMonitorBlock::OFFSET_MONITOR_MOR_WARN).toBool(),Qt::yellow);
     //utilities::colorChangeOver(ui->labelMonA,cmb.Value(CylinderMonitorBlock::OFFSET_MONITOR_MOR_GROUP_A).toBool(),Qt::green);
     //utilities::colorChangeOver(ui->labelMonB,cmb.Value(CylinderMonitorBlock::OFFSET_MONITOR_MOR_GROUP_B).toBool(),Qt::green);

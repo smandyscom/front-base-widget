@@ -27,6 +27,7 @@ public:
 
 signals:
     void primarySelected(QVariant primaryKey);
+    void secondarySelected(QVariant secondaryKey);
 protected slots:
     void onSelectionChanged(int i);
     void onSelectAll();
@@ -34,12 +35,12 @@ private:
     Ui::FrontTwinFilter *ui;
 
     QSqlRelationalTableModel* __dataTable;
-    QString __key1;
+    QVariant __key1;
     //!
     //! \brief __primaryTable
     //! Load to
     QSqlRelationalTableModel* __primaryTable;
-    QString __key2;
+    QVariant __key2;
     //!
     //! \brief __secondaryTable
     //!

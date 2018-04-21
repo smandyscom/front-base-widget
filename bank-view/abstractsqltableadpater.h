@@ -9,6 +9,8 @@
 #include <QSqlIndex>
 #include <definitionbasicblocks.h>
 
+#define FIRST_COLUMN 0
+
 //!
 //! \brief The AbstractSqlTableAdpater class
 //! Used to adapting SqlRecord into/from AbstractDataBlock
@@ -58,7 +60,8 @@ public:
     virtual AbstractDataBlock record2Data(const QSqlRecord& record)
     {
         foreach (QVariant var, __headerList) {
-            __concreteTypeBlock->Value(var.toInt(),record.value(var.toString()));
+            if(var.toInt() != INVALID_INDEX)
+                __concreteTypeBlock->Value(var.toInt(),record.value(var.toString()));
         }
 
         return *__concreteTypeBlock;
@@ -69,7 +72,8 @@ public:
         *__concreteTypeBlock = data;
 
         foreach (QVariant var, __headerList) {
-            __record.setValue(var.toString(),__concreteTypeBlock->Value(var.toInt()));
+            if(var.toInt() != INVALID_INDEX)
+                __record.setValue(var.toString(),__concreteTypeBlock->Value(var.toInt()));
         }
 
         return __record;

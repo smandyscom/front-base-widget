@@ -45,7 +45,8 @@ SOURCES += \
     frontsinglefilter.cpp \
     fronttwinfilter.cpp \
     controllermainpanel.cpp \
-    tablemodeliooverride.cpp
+    tablemodeliooverride.cpp \
+    controllermaterialtransfer.cpp
 
 HEADERS += \
     modbussetupwidget.h \
@@ -76,7 +77,8 @@ HEADERS += \
     tablemodeliooverride.h \
     abstractsqltableadpater.h \
     definitionioattributes.h \
-    definitionauxiliarykeys.h
+    definitionauxiliarykeys.h \
+    controllermaterialtransfer.h
 
 unix {
     target.path = /usr/lib

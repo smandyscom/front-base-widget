@@ -11,149 +11,129 @@ using namespace DEF_BASIC_DIMENSION;
 class AxisMonitorBlock : public AbstractDataBlock
 {
 public:
-    enum OPERATION : quint16
+    enum OPERATION
     {
-        OP_SERVO_ON=0x0001,
-        OP_MACHINE_LOCK=0x0002,
-        OP_RESERVED0=0x0004,
-        OP_RESERVED1=0x0008,
-        OP_LATCH_DETECTION_REQUEST=0x0010,
-        OP_RESERVED2=0x0020,
-        OP_POSMAX_RESET=0x0040,
-        OP_ABS_INFINITE_POS_LOAD=0x0080,
-        OP_POSTIVE_EXT_TORQUE_LIMIT_INPUT=0x0100,
-        OP_NEGTIVE_EXT_TORQUE_LIMIT_INPUT=0x0200,
-        OP_RESERVERD3=0x0400,
-        OP_RESET_INTEGRATION=0x0800,
-        OP_RESET_NETWORK=0x1000,
-        OP_LATCH_COMPLETED_CLEAR=0x2000,
-        OP_RESET_COMM=0x4000,
-        OP_ALARM_CLEAR=0x8000,
+        OP_SERVO_ON=0,
+        OP_MACHINE_LOCK,
+        OP_RESERVED0,
+        OP_RESERVED1,
+        OP_LATCH_DETECTION_REQUEST,
+        OP_RESERVED2,
+        OP_POSMAX_RESET,
+        OP_ABS_INFINITE_POS_LOAD,
+        OP_POSTIVE_EXT_TORQUE_LIMIT_INPUT,
+        OP_NEGTIVE_EXT_TORQUE_LIMIT_INPUT,
+        OP_RESERVERD3,
+        OP_RESET_INTEGRATION,
+        OP_RESET_NETWORK,
+        OP_LATCH_COMPLETED_CLEAR,
+        OP_RESET_COMM,
+        OP_ALARM_CLEAR,
     };
-    enum WARNINGS : MODBUS_LONG
+    enum WARNINGS
     {
-        WARN_EXCESS_DEVIATION=0x0001,
-        WARN_SETTING_PARA_ERROR=0x0002,
-        WARN_FIXED_PARA_ERROR=0x0004,
-        WARN_SERVO_ERROR=0x0008,
-        WARN_MOTION_COMMAND_ERROR=0x0010,
-        WARN_RESERVED0=0x0020,
-        WARN_POT=0x0040,
-        WARN_NOT=0x0080,
-        WARN_SERVO_ON_INCOMPLETE=0x0100,
-        WARN_SERVO_COMM_WARNING=0x0200,
-        WARN_SERVO_STOP=0x0400,
+        WARN_EXCESS_DEVIATION=0,
+        WARN_SETTING_PARA_ERROR,
+        WARN_FIXED_PARA_ERROR,
+        WARN_SERVO_ERROR,
+        WARN_MOTION_COMMAND_ERROR,
+        WARN_RESERVED0,
+        WARN_POT,
+        WARN_NOT,
+        WARN_SERVO_ON_INCOMPLETE,
+        WARN_SERVO_COMM_WARNING,
+        WARN_SERVO_STOP,
     };
-    enum ALARMS : MODBUS_LONG
+    enum ALARMS
     {
-        ALM_SERVO_ERROR=0x0001,
-        ALM_POT=0x0002,
-        ALM_NOT=0x0004,
-        ALM_PSOT=0x0008,
-        ALM_NSOT=0x0010,
-        ALM_SERVO_OFF=0x0020,
-        ALM_POSITION_TIMEOUT=0x0040,
-        ALM_EXCESS_POSITION_TRAVEL_DISTANCE=0x0080,
-        ALM_EXCESS_SPEED=0x0100,
-        ALM_EXCESS_DEVIATION=0x0200,
-        ALM_FILTER_TYPE_CHANGE_ERROR=0x0400,
-        ALM_FILTER_TIME_CONSTANT_CHANGE_ERROR=0x0800,
-        ALM_ZERO_POINT_UNSET=0x2000,
+        ALM_SERVO_ERROR=0,
+        ALM_POT,
+        ALM_NOT,
+        ALM_PSOT,
+        ALM_NSOT,
+        ALM_SERVO_OFF,
+        ALM_POSITION_TIMEOUT,
+        ALM_EXCESS_POSITION_TRAVEL_DISTANCE,
+        ALM_EXCESS_SPEED,
+        ALM_EXCESS_DEVIATION,
+        ALM_FILTER_TYPE_CHANGE_ERROR,
+        ALM_FILTER_TIME_CONSTANT_CHANGE_ERROR,
+        ALM_ZERO_POINT_UNSET,
     };
-    enum COMMAND_STATUS : MODBUS_WORD
+    enum COMMAND_STATUS
     {
-        CS_BUSY=0x0001,
-        CS_HOLDL=0x0002,
-        CS_FAIL=0x0008,
-        CS_COMPLETE=0x0100,
+        CS_BUSY=0,
+        CS_HOLDL,
+        CS_FAIL,
+        CS_COMPLETE,
     };
-    enum RUN_STATUS : MODBUS_WORD
+    enum RUN_STATUS
     {
-        RS_SERVO_READY=0x0001,
-        RS_SERVO_ON=0x0002,
-        RS_SYS_BUSY=0x0004,
-        RS_SERVO_BUSY=0x0008,
-        RS_LATCH_MODE=0x0010,
+        RS_SERVO_READY=0,
+        RS_SERVO_ON,
+        RS_SYS_BUSY,
+        RS_SERVO_BUSY,
+        RS_LATCH_MODE,
     };
-    enum POS_STATUS : MODBUS_WORD
+    enum POS_STATUS
     {
-        PS_DEN=0x0001,
-        PS_POSCOMP=0x0002,
-        PS_LCOMP=0x0004,
-        PS_NEAR=0x0008,
-        PS_ZERO=0x0010,
-        PS_ZRNC=0x0020,
-        PS_MLKL=0x0040,
-        PS_ABSLDE=0x0100,
-        PS_POSMAX=0x0200,
+        PS_DEN=0,
+        PS_POSCOMP,
+        PS_LCOMP,
+        PS_NEAR,
+        PS_ZERO,
+        PS_ZRNC,
+        PS_MLKL,
+        PS_ABSLDE,
+        PS_POSMAX,
     };
     enum OffsetMonitor
-    {
-        OFFSET_MONITOR_OPERATION=0,
-        OFFSET_MONITOR_POS_COMMAND=2,
-        OFFSET_MONITOR_RUN_STATUS=4,
+    {                
         OFFSET_MONITOR_TMR_ALM_COUNT_VALUE=5,
+        OFFSET_MONITOR_TMR_FOCUS_COUNT_VALUE=11,
+        //! Bit status
+        OFFSET_MONITOR_OPERATION=0,
+        OFFSET_MONITOR_RUN_STATUS=4,
         OFFSET_MONITOR_WARNINGS=6,
         OFFSET_MONITOR_ALARMS=8,
-        OFFSET_MONITOR_COMMAND_STATUS=10,
-        OFFSET_MONITOR_TMR_FOCUS_COUNT_VALUE=11,
+        OFFSET_MONITOR_COMMAND_STATUS=10,   
         OFFSET_MONITOR_POS_STATUS=12,
+        //! Numeric
+        OFFSET_MONITOR_POS_COMMAND=2,
         OFFSET_MONITOR_POS_FEEDBACK=14,
         OFFSET_MONITOR_SPD_FEEDBACK=16,
         OFFSET_MONITOR_TOR_FEEDBACK=18,
     };
 
     //!
-    //! \brief Operation
-    //! \param value
+    //! \brief Value
+    //! \param key
     //! \return
-    //!
-    bool Operation(OPERATION value) const
+    //! Readonly
+    QVariant Value(uint key) const
     {
-        return (reserved[OFFSET_MONITOR_OPERATION] & value) > 0;
+        switch (key) {
+        case OFFSET_MONITOR_TMR_ALM_COUNT_VALUE:
+        case OFFSET_MONITOR_TMR_FOCUS_COUNT_VALUE:
+            return QVariant::fromValue(getData<MODBUS_U_WORD>(key) * Dimension[TIME]);
+            break;
+        case OFFSET_MONITOR_WARNINGS:
+        case OFFSET_MONITOR_ALARMS:
+            return QVariant::fromValue(getData<MODBUS_U_LONG>(key));
+            break;
+        case OFFSET_MONITOR_POS_COMMAND:
+        case OFFSET_MONITOR_POS_FEEDBACK:
+        case OFFSET_MONITOR_SPD_FEEDBACK:
+            return QVariant::fromValue(getData<MODBUS_S_LONG>(key) * Dimension[LENGTH]);
+            break;
+        case OFFSET_MONITOR_TOR_FEEDBACK:
+            return QVariant::fromValue(getData<MODBUS_S_LONG>(key) * Dimension[TORQUE_RATIO]);
+            break;
+        default:
+            return QVariant::fromValue(Bit(key));
+            break;
+        }
     }
-    //!
-    //! \brief positionCommand
-    //! in 0.001mm
-    qreal PositionCommand() const { return *reinterpret_cast<const MODBUS_LONG*>(&reserved[OFFSET_MONITOR_POS_COMMAND]) *
-                Dimension[LENGTH];}
-    bool RunStatus(RUN_STATUS value)
-    {
-        return (reserved[OFFSET_MONITOR_RUN_STATUS] & value) > 0;
-    }
-    WARNINGS Warning() const
-    {
-        return WARNINGS(*reinterpret_cast<const MODBUS_LONG*>(&reserved[OFFSET_MONITOR_WARNINGS]));
-    }
-    ALARMS Alarm() const
-    {
-        return ALARMS(*reinterpret_cast<const MODBUS_LONG*>(&reserved[OFFSET_MONITOR_ALARMS]));
-    }
-    bool CommandStatus(COMMAND_STATUS value) const
-    {
-        return (reserved[OFFSET_MONITOR_COMMAND_STATUS] & value) > 0;
-    }
-    bool PositionStatus(POS_STATUS value) const
-    {
-        return (reserved[OFFSET_MONITOR_POS_STATUS] & value) > 0;
-    }
-
-
-    //!
-    //! \brief positionFeedback
-    //! in 0.001mm
-    qreal PositionFeedback() const {return *reinterpret_cast<const MODBUS_LONG*>(&reserved[OFFSET_MONITOR_POS_FEEDBACK]) *
-                Dimension[LENGTH];}
-    //!
-    //! \brief speedFeedback
-    //! in 0.001mm/sec
-    qreal SpeedFeedback() const {return *reinterpret_cast<const MODBUS_LONG*>(&reserved[OFFSET_MONITOR_SPD_FEEDBACK]) *
-                Dimension[LENGTH];}
-    //!
-    //! \brief torqueFeedback
-    //! in 0.01%
-    qreal TorqueFeedback() const {return *reinterpret_cast<const MODBUS_LONG*>(&reserved[OFFSET_MONITOR_TOR_FEEDBACK]) *
-                Dimension[TORQUE_RATIO];}
 };
 Q_DECLARE_METATYPE(AxisMonitorBlock)
 
@@ -162,23 +142,23 @@ Q_DECLARE_METATYPE(AxisMonitorBlock)
 //! Extend operation control ability
 class AxisOperationBlock : public AxisMonitorBlock
 {
+public:
     enum OffsetOperation
     {
         OFFSET_OPEATION_OPERATION=24,
     };
-
-public:
-    void Operation(OPERATION bit,bool value)
+    QVariant Value(uint key) const
     {
-        if(value)
-            reserved[OFFSET_OPEATION_OPERATION] |= bit;
-        else
-            reserved[OFFSET_OPEATION_OPERATION] &= ~bit;
+        return AxisMonitorBlock::Value(key);
+    }
+    void Value(uint key,QVariant value)
+    {
+        Bit(key,value.toBool());
     }
 };
 Q_DECLARE_METATYPE(AxisOperationBlock)
 
-class AxisContextBlock : public AxisMonitorBlock
+class AxisContextBlock : public AxisOperationBlock
 {
 
 public:
@@ -192,36 +172,36 @@ public:
         OFFSET_CONTEXT_POS_TOLERANCE=40,
     };
 
-    void Value(int key, QVariant value) Q_DECL_OVERRIDE
+    void Value(uint key, QVariant value)
     {
         switch (key) {
         case OFFSET_CONTEXT_ADDRESS:
         case OFFSET_CONTEXT_AXIS_TYPE:
-            setData(key,value.value<MODBUS_WORD>());
+            setData(key,value.value<MODBUS_U_WORD>());
             break;
         case OFFSET_CONTEXT_LIMIT_PLUS:
         case OFFSET_CONTEXT_LIMIT_MINUS:
         case OFFSET_CONTEXT_SPEED_MAX:
         case OFFSET_CONTEXT_POS_TOLERANCE:
-            setData(key,static_cast<MODBUS_LONG>(value.toReal() / Dimension[LENGTH]));
+            setData(key,static_cast<MODBUS_S_LONG>(value.toReal() / Dimension[LENGTH]));
             break;
         default:
-            AxisMonitorBlock::Value(key,value);
+            AxisOperationBlock::Value(key,value);
             break;
         }
     }
-    QVariant Value(int key) const Q_DECL_OVERRIDE
+    QVariant Value(uint key) const
     {
         switch (key) {
         case OFFSET_CONTEXT_ADDRESS:
         case OFFSET_CONTEXT_AXIS_TYPE:
-            return getData<MODBUS_WORD>(key);
+            return getData<MODBUS_U_WORD>(key);
             break;
         case OFFSET_CONTEXT_LIMIT_PLUS:
         case OFFSET_CONTEXT_LIMIT_MINUS:
         case OFFSET_CONTEXT_SPEED_MAX:
         case OFFSET_CONTEXT_POS_TOLERANCE:
-            return QVariant::fromValue(getData<MODBUS_LONG>(key) * Dimension[LENGTH]);
+            return QVariant::fromValue(getData<MODBUS_S_LONG>(key) * Dimension[LENGTH]);
             break;
         default:
             return AxisMonitorBlock::Value(key);
@@ -236,10 +216,10 @@ namespace AxisBlock {
 Q_NAMESPACE
 enum DataBaseHeaders
 {
-    AXIS_ID,
-    REGION,
-    NAME,
-    COMMENT,
+    ID=-1,
+    REGION=-1,
+    NAME=-1,
+    COMMENT=-1,
     //! Data
     ADDRESS = AxisContextBlock::OFFSET_CONTEXT_ADDRESS,
     TYPE = AxisContextBlock::OFFSET_CONTEXT_AXIS_TYPE,

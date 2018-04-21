@@ -52,7 +52,7 @@ public:
     bool IsInitialized() const
     {
         //! = Controller state on H100
-        return __channel->Access<MODBUS_WORD>(ModbusDriverAddress(UnitMonitorBlock::STATE)) == 0x100;
+        return __channel->Access<MODBUS_U_WORD>(ModbusDriverAddress(UnitMonitorBlock::STATE)) == 0x100;
     }
     //!
     //! \brief ErrorReset
@@ -62,17 +62,17 @@ public:
         return __channel->Access<bool>(ModbusDriverAddress(ERROR_RESET_BIT),true);
     }
 
-    MODBUS_QUAD ErrorCode() const
+    MODBUS_U_QUAD ErrorCode() const
     {
-        return __channel->Access<MODBUS_QUAD>(ModbusDriverAddress(ERROR_CODE));
+        return __channel->Access<MODBUS_U_QUAD>(ModbusDriverAddress(ERROR_CODE));
     }
-    MODBUS_WORD ErrorCateGrory() const
+    MODBUS_U_WORD ErrorCategrory() const
     {
-        return __channel->Access<MODBUS_WORD>(ModbusDriverAddress(ERROR_CATEGRORY));
+        return __channel->Access<MODBUS_U_WORD>(ModbusDriverAddress(ERROR_CATEGRORY));
     }
-    MODBUS_WORD ErrorDeviceIndex() const
+    MODBUS_U_WORD ErrorDeviceIndex() const
     {
-        return __channel->Access<MODBUS_WORD>(ModbusDriverAddress(ERROR_DEVICE_INDEX));
+        return __channel->Access<MODBUS_U_WORD>(ModbusDriverAddress(ERROR_DEVICE_INDEX));
     }
 
     static ControllerMainPanel* Instance();

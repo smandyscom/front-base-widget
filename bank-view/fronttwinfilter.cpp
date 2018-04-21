@@ -10,9 +10,9 @@ FrontTwinFilter::FrontTwinFilter(QSqlRelationalTableModel *dataTable,
     QWidget(parent),
     ui(new Ui::FrontTwinFilter),
     __dataTable(dataTable),
-    __key1(key1.toString()),
+    __key1(key1),
     __primaryTable(primaryTable),
-    __key2(key2.toString()),
+    __key2(key2),
     __secondaryTable(secondaryTable)
 {
     ui->setupUi(this);
@@ -22,14 +22,18 @@ FrontTwinFilter::FrontTwinFilter(QSqlRelationalTableModel *dataTable,
     ui->comboBoxPrimary->setModel(__primaryTable);
     __manipulateMap[ui->pushButtonPrimarySelectAll] = __dataTable;
     __manipulateMap[ui->pushButtonSecondary] = __primaryTable;
+    __manipulateMap[ui->comboBoxPrimary] = __primaryTable;
+    __manipulateMap[ui->comboBoxSecondary] = __secondaryTable;
     //!
     QList<QComboBox*> __list = {ui->comboBoxPrimary,
                                 ui->comboBoxSecondary};
     foreach (QComboBox* var, __list) {
-        QSqlRelationalTableModel* __model = qobject_cast<QSqlRelationalTableModel*>(var->model());
-        var->setModel(__model);
-        var->setView(new QTableView(var));
+        var->setModel(__manipulateMap[var]);
+        QTableView* qtv = new QTableView(var);
+        var->setView(qtv);
         connect(var,SIGNAL(currentIndexChanged(int)),this,SLOT(onSelectionChanged(int)));
+        var->setModelColumn(1);
+        var->setCurrentIndex(0);
     }
     //!
     QList<QPushButton*> __buttonList = {ui->pushButtonPrimarySelectAll,
@@ -51,18 +55,20 @@ void FrontTwinFilter::onSelectionChanged(int i)
 
     if(sender() == ui->comboBoxPrimary)
     {
-        value = __primaryTable->record(i).value(__primaryTable->primaryKey().name());
-        __dataTable->setFilter(QString("%1=\'%2\'").arg(__key1).arg(value.toString()));
+        value = __primaryTable->record(i).value(FIRST_COLUMN);
+        __dataTable->setFilter(utilities::generateFilterString(__key1,value));
 
         emit primarySelected(value);
     }
     else if(sender() == ui->comboBoxSecondary)
     {
-        value = __secondaryTable->record(i).value(__secondaryTable->primaryKey().name());
-        __primaryTable->setFilter(QString("%1=\'%2\'").arg(__key2).arg(value.toString()));
+        value = __secondaryTable->record(i).value(FIRST_COLUMN);
+        __primaryTable->setFilter(utilities::generateFilterString(__key2,
+                                                                  value));
+        emit secondarySelected(value);
     }
 }
 void FrontTwinFilter::onSelectAll()
 {
-    __manipulateMap[qobject_cast<QWidget*>(sender())]->select();
+    __manipulateMap[qobject_cast<QWidget*>(sender())]->setFilter(nullptr);
 }

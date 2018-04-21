@@ -16,37 +16,39 @@ public:
         OFFSET_MONITOR_STATUS_WORD=0,
         OFFSET_MONITOR_LAST_COMMAND=2,
         OFFSET_MONITOR_TMR_COUNT_VALUE=3,
+    };
+    enum Status
+    {
         //! Bit
-        OFFSET_MONITOR_MOR_WARN=0x0001 + OFFSET_MONITOR_STATUS_WORD,
-        OFFSET_MONITOR_MOR_GROUP_A=0x0002+ OFFSET_MONITOR_STATUS_WORD,
-        OFFSET_MONITOR_MOR_GROUP_B=0x0004+ OFFSET_MONITOR_STATUS_WORD,
-        OFFSET_MONITOR_CTL_SUPPRESS=0x0008+ OFFSET_MONITOR_STATUS_WORD,
-        OFFSET_MONITOR_INT_TMR_ON=0x0010+ OFFSET_MONITOR_STATUS_WORD,
-        OFFSET_MONITOR_MOR_DONE=0x0020+ OFFSET_MONITOR_STATUS_WORD,
+        MOR_WARN=0,
+        MOR_GROUP_A,
+        MOR_GROUP_B,
+        CTL_SUPPRESS,
+        INT_TMR_ON,
+        MOR_DONE,
     };
 
-    enum Operation : MODBUS_WORD
+    enum Operation
     {
         OP_NO_COMMAND=0,
         OP_COMMAND_A=1,
         OP_COMMAND_B=2,
     };
 
-    QVariant Value(int index) const Q_DECL_OVERRIDE
+    //!
+    //! \brief Value
+    //! \param index
+    //! \return
+    //! Readonly
+    QVariant Value(uint key) const
     {
-        switch (index) {
+        switch (key) {
         case OFFSET_MONITOR_TMR_COUNT_VALUE:
-            return QVariant::fromValue(getData<MODBUS_WORD>(index) * Dimension[TIME]);
-        case OFFSET_MONITOR_MOR_WARN:
-        case OFFSET_MONITOR_MOR_GROUP_A:
-        case OFFSET_MONITOR_MOR_GROUP_B:
-        case OFFSET_MONITOR_CTL_SUPPRESS:
-        case OFFSET_MONITOR_INT_TMR_ON:
-        case OFFSET_MONITOR_MOR_DONE:
-            return QVariant::fromValue(Bit(index));
-            break;
+            return QVariant::fromValue(getData<MODBUS_U_WORD>(key) * Dimension[TIME]);
+        case OFFSET_MONITOR_LAST_COMMAND:
+            return QVariant::fromValue(getData<MODBUS_U_WORD>(key));
         default:
-            return AbstractDataBlock::Value(index);
+            return QVariant::fromValue(Bit(key));
             break;
         }
     }
@@ -61,16 +63,22 @@ public:
         OFFSET_OPERATION_COMMAND_CACHED=1,
     };
 
-    void Value(int index,QVariant value) Q_DECL_OVERRIDE
+    //!
+    //! \brief Value
+    //! \param index
+    //! \param value
+    //! Write-only
+    void Value(uint key,QVariant value)
     {
-        AbstractDataBlock::Value(index,value);
+        AbstractDataBlock::Value(key,value);
     }
-    QVariant Value(int index) const Q_DECL_OVERRIDE
+    QVariant Value(uint key) const
     {
-        return CylinderMonitorBlock::Value(index);
+        return CylinderMonitorBlock::Value(key);
     }
 };
 Q_DECLARE_METATYPE(CylinderOperationBlock)
+
 class CylinderContext: public CylinderOperationBlock
 {
 public:
@@ -93,22 +101,22 @@ public:
         OFFSET_CONTEXT_SENSOR_B_4=31,
     };
 
-    void Value(int index, QVariant value) Q_DECL_OVERRIDE
+    void Value(uint index, QVariant value)
     {
         switch (index) {
         case OFFSET_CONTEXT_TMR_SET_VALUE:
-            setData(index,static_cast<MODBUS_WORD>(value.toReal() / Dimension[TIME]));
+            setData(index,static_cast<MODBUS_U_WORD>(value.toReal() / Dimension[TIME]));
             break;
         default:
             CylinderOperationBlock::Value(index,value);
             break;
         }
     }
-    QVariant Value(int index) const Q_DECL_OVERRIDE
+    QVariant Value(uint index) const
     {
         switch (index) {
         case OFFSET_CONTEXT_TMR_SET_VALUE:
-            return QVariant::fromValue(getData<MODBUS_WORD>(index) * Dimension[TIME]);
+            return QVariant::fromValue(getData<MODBUS_U_WORD>(index) * Dimension[TIME]);
             break;
         default:
             return CylinderOperationBlock::Value(index);
@@ -123,7 +131,7 @@ namespace CylinderBlock {
 Q_NAMESPACE
 enum DataBaseHeaders
 {
-    CYL_ID = 0xFFFF,
+    ID = -1,
     //! Data
     TIMER_SET=CylinderContext::OFFSET_CONTEXT_TMR_SET_VALUE,
     A_SENSOR_USED_COUNT=CylinderContext::OFFSET_CONTEXT_A_SENSOR_USED_COUNT,
@@ -169,10 +177,8 @@ public:
        *__concreteTypeBlock =  AbstractSqlTableAdpater::record2Data(record);
 
         //! Calculating sensor usage
-        MODBUS_WORD counter=0;
-
-
-        //! Sensor A used
+        MODBUS_U_WORD counter=0;
+        //!Sensor A used
         counter = 0;
         QList<CylinderContext::OffsetContext> __addressAList = {
             CylinderContext::OFFSET_CONTEXT_SENSOR_A_1,

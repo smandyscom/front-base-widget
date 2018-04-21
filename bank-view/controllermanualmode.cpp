@@ -9,7 +9,7 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
 
     //! Very first shot
     __channel->beginAccess<AbstractDataBlock>(ModbusDriverAddress(MONITOR_BLOCK_HEAD));
-    __channel->beginAccess<MODBUS_WORD>(ModbusDriverAddress(STATUS_WORD));
+    __channel->beginAccess<MODBUS_U_WORD>(ModbusDriverAddress(STATUS_WORD));
     __channel->beginAccess<IoMonitorOverrideBlock>(ModbusDriverAddress(IO_MON_OVERRIDE));
     //!
     //! \brief s1
@@ -110,7 +110,7 @@ void ControllerManualMode::onReply(UpdateEvent *event)
     {
         QTimer::singleShot(5,this,[this](){
             //Schedual the next polling
-            __channel->beginAccess<MODBUS_WORD>(ModbusDriverAddress(STATUS_WORD));
+            __channel->beginAccess<MODBUS_U_WORD>(ModbusDriverAddress(STATUS_WORD));
         });
         break;
     }

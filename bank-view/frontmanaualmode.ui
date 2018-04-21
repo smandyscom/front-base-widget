@@ -66,6 +66,21 @@
        <string>Control Panel</string>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout">
+       <property name="spacing">
+        <number>3</number>
+       </property>
+       <property name="leftMargin">
+        <number>3</number>
+       </property>
+       <property name="topMargin">
+        <number>3</number>
+       </property>
+       <property name="rightMargin">
+        <number>3</number>
+       </property>
+       <property name="bottomMargin">
+        <number>3</number>
+       </property>
        <item>
         <widget class="QFrame" name="frameDatabseParameter">
          <property name="sizePolicy">
@@ -83,8 +98,18 @@
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
            <layout class="QHBoxLayout" name="horizontalLayoutDatabase">
+            <property name="spacing">
+             <number>3</number>
+            </property>
             <item>
-             <widget class="QWidget" name="widgetFilter" native="true"/>
+             <widget class="QWidget" name="widgetFilter" native="true">
+              <property name="minimumSize">
+               <size>
+                <width>250</width>
+                <height>110</height>
+               </size>
+              </property>
+             </widget>
             </item>
             <item>
              <widget class="QPushButton" name="pushButtonBankExecution">

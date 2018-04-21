@@ -53,8 +53,10 @@ private:
 
     QTimer* __timer;
 
-    MODBUS_WORD __currentViewIndex;
+    MODBUS_U_WORD __currentViewIndex;
 
+    QMap<QWidget*,CylinderMonitorBlock::Status> __labelAddressMap;
+    QMap<QWidget*,Qt::GlobalColor> __labelColorMap;
 };
 
 #endif // FRONTCYLINDERPANEL_H

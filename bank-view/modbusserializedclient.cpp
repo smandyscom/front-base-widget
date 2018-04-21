@@ -79,7 +79,10 @@ void ModbusSerializedClient::onDriverStateChanged(QModbusDevice::State state)
         __timer->start();
         break;
     case QModbusDevice::UnconnectedState:
-        __driver->connectDevice();
+        //! Reconnect
+        QTimer::singleShot(1000,[=](){
+            __driver->connectDevice();
+        });
     default:
         break;
     }
