@@ -38,10 +38,14 @@ int utilities::getSelectedValue(QTableView *target, const QString &keyName)
 
 QSqlRecord utilities::getSqlTableSelectedRecord(QSqlTableModel *target, QVariant keyName, QVariant keyValue)
 {
-    QString origin = target->filter();
-    target->setFilter(generateFilterString(trimNamespace(keyName),trimNamespace(keyValue)));
-    QSqlRecord result = target->record(0);
-    target->setFilter(origin);
+    //QString origin = target->filter();
+    QSqlTableModel __dup;
+    __dup.setTable(target->tableName());
+    __dup.select();
+
+    __dup.setFilter(generateFilterString(trimNamespace(keyName),trimNamespace(keyValue)));
+    QSqlRecord result = __dup.record(0);
+    //target->setFilter(origin);
     return result;
 }
 

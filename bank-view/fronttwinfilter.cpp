@@ -29,10 +29,13 @@ FrontTwinFilter::FrontTwinFilter(QSqlRelationalTableModel *dataTable,
                                 ui->comboBoxSecondary};
     foreach (QComboBox* var, __list) {
         var->setModel(__manipulateMap[var]);
-        QTableView* qtv = new QTableView(var);
-        var->setView(qtv);
+        QListView* qtv = new QListView(var);
+        var->setView(qtv);     
+        //! Hide all but NAME
+        int __nameColumnIndex = __manipulateMap[var]->fieldIndex("NAME");
+
         connect(var,SIGNAL(currentIndexChanged(int)),this,SLOT(onSelectionChanged(int)));
-        var->setModelColumn(1);
+        var->setModelColumn(__nameColumnIndex);
         var->setCurrentIndex(0);
     }
     //!

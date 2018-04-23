@@ -5,7 +5,7 @@
 
 #include <QSqlTableModel>
 #include <QTableView>
-
+#include <QListView>
 namespace Ui {
 class FrontSingleFilter;
 }

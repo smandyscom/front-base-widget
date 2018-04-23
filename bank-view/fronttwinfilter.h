@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QList>
 #include <QTableView>
+#include <QListView>
 #include <QMap>
 
 #include <abstractsqltableadpater.h>

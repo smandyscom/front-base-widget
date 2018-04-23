@@ -217,10 +217,10 @@ namespace AxisBlock {
 Q_NAMESPACE
 enum DataBaseHeaders
 {
-    ID=-1,
-    REGION=-1,
-    NAME=-1,
-    COMMENT=-1,
+    ID=BASE_INDEX-1,
+    REGION=BASE_INDEX-2,
+    NAME=BASE_INDEX-3,
+    COMMENT=BASE_INDEX-4,
     //! Data
     ADDRESS = AxisContextBlock::OFFSET_CONTEXT_ADDRESS,
     TYPE = AxisContextBlock::OFFSET_CONTEXT_AXIS_TYPE,

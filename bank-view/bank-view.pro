@@ -47,7 +47,9 @@ SOURCES += \
     controllermainpanel.cpp \
     tablemodeliooverride.cpp \
     controllermaterialtransfer.cpp \
-    definitionbasickblocks.cpp
+    definitionbasickblocks.cpp \
+    frontaxispanel.cpp \
+    frontunitpanel.cpp
 
 HEADERS += \
     modbussetupwidget.h \
@@ -79,7 +81,9 @@ HEADERS += \
     abstractsqltableadpater.h \
     definitionioattributes.h \
     definitionauxiliarykeys.h \
-    controllermaterialtransfer.h
+    controllermaterialtransfer.h \
+    frontaxispanel.h \
+    frontunitpanel.h
 
 unix {
     target.path = /usr/lib
@@ -95,4 +99,6 @@ FORMS += \
     frontcylinderpanel.ui \
     frontbanktransfer.ui \
     fronttwinfilter.ui \
-    frontsinglefilter.ui
+    frontsinglefilter.ui \
+    frontaxispanel.ui \
+    frontunitpanel.ui

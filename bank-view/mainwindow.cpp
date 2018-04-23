@@ -64,10 +64,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ControllerBankTransfer::Instance()->Adaptor(CommitBlock::SELECTION_UNIT,CommandBlock::Adaptor);
 
     //! Basic Dimension intialization
-    Dimension = new QMap<Keys,qreal>();
+    AbstractDataBlock::Dimension = new QMap<Keys,qreal>();
     QList<QVariant> __keys = utilities::listupEnumVariant<Keys>();
     foreach (QVariant var, __keys) {
-        Dimension->insert(var.value<Keys>(),
+        AbstractDataBlock::Dimension->insert(var.value<Keys>(),
                 utilities::getSqlTableSelectedRecord(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_BASIC_DIMENSION),
                                                      QVariant::fromValue(__KEY),
                                                      var).value(QVariant::fromValue(__VALUE).toString()).toReal());
@@ -78,11 +78,17 @@ MainWindow::MainWindow(QWidget *parent) :
                                                  JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_AXIS),
                                                  JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_REGION),
                                                  ui->tabManual);
-    FrontIoOverride* fio = new FrontIoOverride(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::OUTPUT_ATTRIBUTES),
-                                               JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::INPUT_ATTRIBUTES),
+    FrontIoOverride* fio = new FrontIoOverride(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::INPUT_ATTRIBUTES),
+                                               JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::OUTPUT_ATTRIBUTES),
                                                JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_REGION),
                                                ui->tabIO);
     FrontCylinderPanel* fcp = new FrontCylinderPanel(ui->tabCylinder);
+    FrontAxisPanel* fap = new FrontAxisPanel(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_AXIS),
+                                             JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_REGION),
+                                             ui->tabAxis);
+    FrontUnitPanel* fup = new FrontUnitPanel(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_UNITS),
+                                             JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_REGION),
+                                             ui->tabUnit);
 
     //! Connect controller and channel
     ControllerManualMode* __controller =  ControllerManualMode::Instance();

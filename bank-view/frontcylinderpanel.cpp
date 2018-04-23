@@ -143,12 +143,6 @@ void FrontCylinderPanel::onTimerTimeout()
         __address.setBitIndex(__labelAddressMap[var]);
         utilities::colorChangeOver(var,cmb.Value(__address.getAddress()).toBool(),__labelColorMap[var]);
     }
-    //utilities::colorChangeOver(ui->labelWarn,cmb.Value(CylinderMonitorBlock::OFFSET_MONITOR_MOR_WARN).toBool(),Qt::yellow);
-    //utilities::colorChangeOver(ui->labelMonA,cmb.Value(CylinderMonitorBlock::OFFSET_MONITOR_MOR_GROUP_A).toBool(),Qt::green);
-    //utilities::colorChangeOver(ui->labelMonB,cmb.Value(CylinderMonitorBlock::OFFSET_MONITOR_MOR_GROUP_B).toBool(),Qt::green);
-    //utilities::colorChangeOver(ui->labelSuppress,cmb.Value(CylinderMonitorBlock::OFFSET_MONITOR_CTL_SUPPRESS).toBool(),Qt::red);
-    //utilities::colorChangeOver(ui->labelTimeon,cmb.Value(CylinderMonitorBlock::OFFSET_MONITOR_INT_TMR_ON).toBool(),Qt::green);
-    //utilities::colorChangeOver(ui->labelDone,cmb.Value(CylinderMonitorBlock::OFFSET_MONITOR_MOR_DONE).toBool(),Qt::green);
 }
 
 void FrontCylinderPanel::showEvent(QShowEvent *event)

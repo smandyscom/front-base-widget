@@ -23,13 +23,6 @@ Q_ENUM_NS(Headers)
 
 
 }
-class BasicDimension
-{
-public:
-    name() {}
-    static QMap<DEF_BASIC_DIMENSION::Keys,qreal> *Dimension;
-};
-
 
 namespace DEF_REGION {
 Q_NAMESPACE

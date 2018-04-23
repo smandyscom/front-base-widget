@@ -23,7 +23,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>HSAL Inspection</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTabWidget" name="tabWidget">
@@ -57,7 +57,7 @@
      <enum>QTabWidget::Rounded</enum>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <property name="iconSize">
      <size>
@@ -71,6 +71,11 @@
     <widget class="QWidget" name="tabMain">
      <attribute name="title">
       <string>Main</string>
+     </attribute>
+    </widget>
+    <widget class="QWidget" name="tabHistory">
+     <attribute name="title">
+      <string>History</string>
      </attribute>
     </widget>
     <widget class="QWidget" name="tabManual">
@@ -96,6 +101,11 @@
     <widget class="QWidget" name="tabUnit">
      <attribute name="title">
       <string>Unit</string>
+     </attribute>
+    </widget>
+    <widget class="QWidget" name="tabSignal">
+     <attribute name="title">
+      <string>Signal</string>
      </attribute>
     </widget>
    </widget>

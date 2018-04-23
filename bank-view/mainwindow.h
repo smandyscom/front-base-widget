@@ -11,6 +11,9 @@
 #include <frontcylinderpanel.h>
 #include <frontcontrolpanel.h>
 
+#include <frontaxispanel.h>
+#include <frontunitpanel.h>
+
 #include <QMap>
 
 namespace Ui {

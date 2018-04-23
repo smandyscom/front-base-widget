@@ -77,9 +77,9 @@ class ExtendedCommandBlock : public AbstractCommandBlock
 public:
     enum Offset
     {
-        OFFSET_CONTROL_WORD=10,
+        OFFSET_CONTROL_WORD=16,
 
-        OFFSET_ECB_RESERVE_WORD =16,
+        OFFSET_ECB_RESERVE_WORD =17,
         OFFSET_ECB_COORD1 = 18,
         OFFSET_ECB_COORD2 = 20,
         OFFSET_ECB_COORD3 = 22,
@@ -104,12 +104,6 @@ public:
         case OFFSET_ECB_COORD2:
         case OFFSET_ECB_COORD3:
         {
-            qreal __q = value.toReal();
-            qreal __v = Dimension->value(LENGTH);
-            //__v = Dimension[TIME];
-            //__v = Dimension.value(LENGTH);
-            //__v = Dimension[DEF_BASIC_DIMENSION::LENGTH];
-            //MODBUS_S_LONG s = static_cast<MODBUS_S_LONG>(value.toReal() / Dimension[LENGTH]);
             setData(key, static_cast<MODBUS_S_LONG>(value.toReal() / Dimension->value(LENGTH)));
             break;
         }
@@ -214,9 +208,9 @@ namespace CommandBlock {
 //! The Header map (NAME,OFFSET VALUE)
 enum DataBaseHeaders
 {
-    ID=INVALID_INDEX,
-    NAME=INVALID_INDEX,
-    COMMENT=INVALID_INDEX,
+    ID=BASE_INDEX-1,
+    NAME=BASE_INDEX-2,
+    COMMENT=BASE_INDEX-3,
     //! Data
     COMMAND_TYPE = AbstractCommandBlock::OFFSET_ACB_COMMAND_TYPE,
     AXIS_ID = AbstractCommandBlock::OFFSET_ACB_AXIS_ID,

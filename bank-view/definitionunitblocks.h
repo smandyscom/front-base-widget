@@ -83,6 +83,8 @@ Q_NAMESPACE
 enum DataBaseHeaders
 {
     ID,
+    NAME,
+    LSID_BASE,
 };
 Q_ENUM_NS(DataBaseHeaders)
 

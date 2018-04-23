@@ -49,9 +49,10 @@ FrontManaualMode::FrontManaualMode(QSqlRelationalTableModel *wholeCommandBankMod
     connect(ui->pushButtonFeedForward,SIGNAL(released()),__controller,SLOT(onInterrupted()));
     connect(ui->pushButtonFeedBackward,SIGNAL(released()),__controller,SLOT(onInterrupted()));
 
+    connect(ui->pushButtonBankExecution,SIGNAL(clicked(bool)),this,SLOT(onManualOperationClicked()));
+
     connect(ui->pushButtonCoordinateSet,SIGNAL(clicked(bool)),this,SLOT(onBankOperationClicked()));
     connect(ui->pushButtonParameterSet,SIGNAL(clicked(bool)),this,SLOT(onBankOperationClicked()));
-    connect(ui->pushButtonBankExecution,SIGNAL(clicked(bool)),this,SLOT(onBankOperationClicked()));
     //!
     __timer = new QTimer(this);
     connect(__timer,SIGNAL(timeout()),this,SLOT(onTimerTimeout()));
@@ -140,17 +141,9 @@ void FrontManaualMode::onManualOperationClicked()
     }
     else
     {
-        //! Set Address
-        __commandBlock.Value(AbstractCommandBlock::OFFSET_ACB_AXIS_ID,
-                             utilities::getSqlTableSelectedRecord(__axisTableFront,
-                                                                  QVariant::fromValue(ID),
-                                                                  __selectedAxisId)
-                             .value(utilities::trimNamespace(QVariant::fromValue(AxisBlock::ADDRESS))));
-
         if(button == ui->pushButtonZret)
         {
             ZretCommandBlock __zcb;
-            *static_cast<AbstractCommandBlock*>(&__zcb) = __commandBlock;
 
             __zcb.Value(ZretCommandBlock::OFFSET_ZRET_DIRECTION,QVariant::fromValue(ui->radioButtonForward->isChecked()));
             __zcb.Value(ZretCommandBlock::OFFSET_ZRET_METHOD,QVariant::fromValue(ui->comboBoxZrtMethod->view()->selectionModel()->selectedRows().first().row()));
@@ -164,7 +157,6 @@ void FrontManaualMode::onManualOperationClicked()
         else
         {
             PosCommandBlock __pcb;
-            *static_cast<AbstractCommandBlock*>(&__pcb) = __commandBlock;
 
             if(button == ui->pushButtonAbsolute)
             {
@@ -187,9 +179,9 @@ void FrontManaualMode::onManualOperationClicked()
                 //setup coordiante
                 //Positive limit/Negtive limit
                 __pcb.Value(PosCommandBlock::OFFSET_ECB_COORD1,
-                                     ((button==ui->pushButtonStepPlus) ?
-                                         SelectedAxisValue(AxisContextBlock::OFFSET_CONTEXT_LIMIT_PLUS) :
-                                         SelectedAxisValue(AxisContextBlock::OFFSET_CONTEXT_LIMIT_MINUS)));
+                                     ((button==ui->pushButtonFeedForward) ?
+                                         SelectedAxisValue(QVariant::fromValue(AxisBlock::LIMIT_PLUS)) :
+                                         SelectedAxisValue(QVariant::fromValue(AxisBlock::LIMIT_MINUS))));
                 __pcb.Value(PosCommandBlock::OFFSET_POS_ABS_REL,QVariant::fromValue(true));//Always in ABS
             }
 
@@ -197,11 +189,10 @@ void FrontManaualMode::onManualOperationClicked()
 
         }//Pos
 
+
         setCommonParameters(__commandBlock);
 
     }//
-
-
     //! trigger the sequence
     __commitOption.Mode(CommitBlock::MODE_EXE_COMMAND_BLOCK);
     __controller->DataBlock(QVariant::fromValue(static_cast<CellDataBlock>(__commandBlock)));
@@ -238,7 +229,12 @@ void FrontManaualMode::setCommonParameters(AbstractCommandBlock& __commandBlock)
     //!
     //! Setup common parameters
     //! TODO , unsafe input
-    __commandBlock.Value(CommandBlock::AXIS_ID,SelectedAxisValue(QVariant::fromValue(CommandBlock::AXIS_ID)));
+    //! Set Address
+    __commandBlock.Value(AbstractCommandBlock::OFFSET_ACB_AXIS_ID,
+                         utilities::getSqlTableSelectedRecord(__axisTableFront,
+                                                              QVariant::fromValue(ID),
+                                                              __selectedAxisId)
+                         .value(utilities::trimNamespace(QVariant::fromValue(AxisBlock::ADDRESS))));
 
     __commandBlock.Value(SPEED,ui->textEditSpeedReference->toPlainText().toFloat());//unit/sec
     __commandBlock.Value(ACC_TIME,ui->textEditAcceralationTime->toPlainText().toFloat());//ms
@@ -249,7 +245,8 @@ void FrontManaualMode::setCommonParameters(AbstractCommandBlock& __commandBlock)
 
 void FrontManaualMode::onTimerTimeout()
 {
-    AxisMonitorBlock amb = QVariant::fromValue(__controller->MonitorBlock()).value<AxisMonitorBlock>();
+    AxisMonitorBlock amb;
+    *static_cast<CellDataBlock*>(&amb) = __controller->MonitorBlock();
 
     foreach (QWidget* var, __browserMap.keys()) {
         qobject_cast<QTextBrowser*>(var)->setText(QString::number(amb.Value(__browserMap[var]).toReal()));
@@ -278,13 +275,14 @@ int FrontManaualMode::SelectedBlockIndex() const
 QVariant FrontManaualMode::SelectedAxisValue(QVariant keyName) const
 {
     return utilities::getSqlTableSelectedRecord(__axisTableFront,QVariant::fromValue(AxisBlock::ID),
-                                                QVariant::fromValue(__selectedAxisId)).value(keyName.toString());
+                                                QVariant::fromValue(__selectedAxisId))
+            .value(utilities::trimNamespace(keyName));
 }
 
 void FrontManaualMode::showEvent(QShowEvent *event)
 {
     __controller->MonitorDeviceCategrory(CommitBlock::SELECTION_AXIS);
-    __controller->onMonitorDeviceIndexChanged(SelectedAxisValue(QVariant::fromValue(AxisBlock::ID)).value<MODBUS_U_WORD>());
+    __controller->onMonitorDeviceIndexChanged(__selectedAxisId);
     //!
     QWidget::showEvent(event);
 }

@@ -60,7 +60,7 @@ public:
     virtual AbstractDataBlock record2Data(const QSqlRecord& record)
     {
         foreach (QVariant var, __headerList) {
-            if(var.toInt() != INVALID_INDEX)
+            if(var.toInt() < BASE_INDEX)
                 __concreteTypeBlock->Value(var.toUInt(),record.value(var.toString()));
         }
 
@@ -72,7 +72,7 @@ public:
         *__concreteTypeBlock = data; //value assign only , keep vPtr as same
 
         foreach (QVariant var, __headerList) {
-            if(var.toInt() != INVALID_INDEX)
+            if(var.toInt() < BASE_INDEX)
                 __record.setValue(var.toString(),__concreteTypeBlock->Value(var.toInt()));
         }
 

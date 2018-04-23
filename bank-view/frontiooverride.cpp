@@ -13,23 +13,16 @@ FrontIoOverride::FrontIoOverride(QSqlRelationalTableModel *inputTable,
 {
     ui->setupUi(this);
     //!
-    QList<QComboBox*> __comboxes = {ui->comboBoxInputsFilter,
-                                    ui->comboBoxOutputsFilter};
-    //!
-    foreach (QComboBox* var, __comboxes) {
-        QTableView* qtv = new QTableView(var);
-        var->setView(qtv);
-        var->setModel(regionTable);
-        var->setModelColumn(1);
-        qtv->hideColumn(0);
-        connect(var,SIGNAL(currentIndexChanged(int)),this,SLOT(onComboxCurrentIndexChanged()));
-    }
-    //!
-    QList<QPushButton*> __buttons = {ui->pushButtonInputsSelectAllRegion,
-                                     ui->pushButtonOutputsSelectAllRegion};
-    foreach (QPushButton* var, __buttons) {
-        connect(var,&QPushButton::clicked,this,&FrontIoOverride::onSelectAll);
-    }
+    new FrontSingleFilter(inputTable,
+                          regionTable,
+                          utilities::trimNamespace(QVariant::fromValue(TableModelIOOverride::REGION)),
+                          utilities::trimNamespace(QVariant::fromValue(TableModelIOOverride::NAME)),
+                          ui->widgetInputFilter);
+    new FrontSingleFilter(outputTable,
+                          regionTable,
+                          utilities::trimNamespace(QVariant::fromValue(TableModelIOOverride::REGION)),
+                          utilities::trimNamespace(QVariant::fromValue(TableModelIOOverride::NAME)),
+                          ui->widgetOutputFilter);
     //!
     QList<QTableView*> __views = {ui->tableViewInputs,
                                  ui->tableViewOutputs};
@@ -47,40 +40,6 @@ FrontIoOverride::FrontIoOverride(QSqlRelationalTableModel *inputTable,
         ModbusDriverAddress address = ModbusDriverAddress(__outputTable->index(index.row(),TableModelIOOverride::HAL_ADDRESS).data().toInt());
         ModbusChannel::Instance()->Access<bool>(address,!ModbusChannel::Instance()->Access<bool>(address));
     });
-}
-//!
-//! \brief FrontIoOverride::onComboxCurrentIndexChanged
-//!
-void FrontIoOverride::onComboxCurrentIndexChanged()
-{
-    QComboBox* cb = qobject_cast<QComboBox*>(sender());
-    QString regionKey = QVariant::fromValue(TableModelIOOverride::REGION).value<QString>();
-    uint regionId = __regionTable->index(cb->currentIndex(),0).data().toUInt();
-
-    QString filterString = tr("%1=%2").arg(regionKey).arg(regionId);
-
-    if(sender()==ui->comboBoxInputsFilter)
-    {
-        __inputTable->setFilter(filterString);
-    }
-    else if(sender()==ui->comboBoxOutputsFilter)
-    {
-        __outputTable->setFilter(filterString);
-    }
-}
-//!
-//! \brief FrontIoOverride::onSelectAll
-//!
-void FrontIoOverride::onSelectAll()
-{
-    if(sender()==ui->pushButtonInputsSelectAllRegion)
-    {
-        __inputTable->setFilter(nullptr);
-    }
-    else if(sender()==ui->pushButtonOutputsSelectAllRegion)
-    {
-        __outputTable->setFilter(nullptr);
-    }
 }
 
 

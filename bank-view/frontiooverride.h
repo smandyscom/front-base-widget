@@ -5,6 +5,11 @@
 #include <QSqlRelationalTableModel>
 #include <tablemodeliooverride.h>
 #include <modbuschannel.h>
+
+#include <frontsinglefilter.h>
+
+#include <utilities.h>
+
 namespace Ui {
 class FrontIoOverride;
 }
@@ -21,9 +26,6 @@ public:
                              QSqlRelationalTableModel *regionTable,
                              QWidget *parent = 0);
     ~FrontIoOverride();
-protected slots:
-    void onComboxCurrentIndexChanged();
-    void onSelectAll();
 private:
     Ui::FrontIoOverride *ui;
 

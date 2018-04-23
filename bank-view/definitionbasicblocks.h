@@ -11,7 +11,7 @@ using namespace BaseLayer;
 #define DATA_BLOCK_SIZE_IN_WORD_64 64
 #define DATA_BLOCK_SIZE_IN_WORD_128 128
 
-#define INVALID_INDEX -1
+#define BASE_INDEX 0
 
 //!
 //! \brief The CellDataBlock class
