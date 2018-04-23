@@ -30,7 +30,6 @@ class FrontManaualMode;
 }
 
 using namespace CommandBlock;
-using namespace AxisBlock;
 using namespace DEF_BASIC_DIMENSION;
 //!
 //! \brief The FrontManaualMode class

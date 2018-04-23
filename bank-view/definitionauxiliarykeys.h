@@ -20,9 +20,16 @@ enum Keys
 Q_ENUM_NS(Keys)
 Q_ENUM_NS(Headers)
 
-static QMap<Keys,qreal> Dimension;
+
 
 }
+class BasicDimension
+{
+public:
+    name() {}
+    static QMap<DEF_BASIC_DIMENSION::Keys,qreal> *Dimension;
+};
+
 
 namespace DEF_REGION {
 Q_NAMESPACE

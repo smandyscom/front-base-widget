@@ -38,14 +38,14 @@ public:
     void Record(int key,
                 const AbstractDataBlock& data,
                 KeyType keyType=KEY_ROW_ID,
-                const QString keyName="")
+                const QVariant keyName=QVariant::fromValue(0))
     {
         __model->setRecord(select(key,keyType,keyName),data2Record(data));
         __model->setFilter(nullptr); //resume all selection
     }
     AbstractDataBlock Record(int key,
                              KeyType keyType=KEY_ROW_ID,
-                             const QString keyName="")
+                             const QVariant keyName=QVariant::fromValue(0))
     {
         AbstractDataBlock result = record2Data(__model->record(select(key,keyType,keyName)));
         __model->setFilter(nullptr); //resume all selection
@@ -61,7 +61,7 @@ public:
     {
         foreach (QVariant var, __headerList) {
             if(var.toInt() != INVALID_INDEX)
-                __concreteTypeBlock->Value(var.toInt(),record.value(var.toString()));
+                __concreteTypeBlock->Value(var.toUInt(),record.value(var.toString()));
         }
 
         return *__concreteTypeBlock;
@@ -69,7 +69,7 @@ public:
     virtual QSqlRecord data2Record(const AbstractDataBlock& data)
     {
         QSqlRecord __record = __model->record(); //get empty records as reference
-        *__concreteTypeBlock = data;
+        *__concreteTypeBlock = data; //value assign only , keep vPtr as same
 
         foreach (QVariant var, __headerList) {
             if(var.toInt() != INVALID_INDEX)
@@ -90,13 +90,13 @@ protected:
     AbstractDataBlock* __concreteTypeBlock;
 
 
-    int select(int key,KeyType keyType=KEY_ROW_ID,const QString keyName=""){
+    int select(int key,KeyType keyType,const QVariant keyName){
         switch (keyType) {
         case KEY_ROW_ID:
             return key;
             break;
         case KEY_NAMED_KEY:
-            __model->setFilter(QString("%1=%2").arg(keyName).arg(key));
+            __model->setFilter(utilities::generateFilterString(keyName,QVariant::fromValue(key)));
             return 0; //select first row
             break;
         default:
@@ -113,9 +113,11 @@ public:
     GenericSqlTableAdapter<TypeOfDataBlock,TypeOfEnumHeader>(QObject* parent=nullptr) :
     AbstractSqlTableAdpater(parent)
     {
-        __concreteTypeBlock = new TypeOfDataBlock();
+        __concreteTypeBlock = &__dataBlock;
         __headerList = utilities::listupEnumVariant<TypeOfEnumHeader>();
     }
+protected:
+    TypeOfDataBlock __dataBlock;
 };
 
 #endif // ABSTRACTQVARIANTSQLTABLE_H

@@ -39,13 +39,18 @@ int utilities::getSelectedValue(QTableView *target, const QString &keyName)
 QSqlRecord utilities::getSqlTableSelectedRecord(QSqlTableModel *target, QVariant keyName, QVariant keyValue)
 {
     QString origin = target->filter();
-    target->setFilter(QString("%1=\'%2\'").arg(keyName.toString()).arg(keyValue.toString()));
-    QSqlRecord result = target->record();
+    target->setFilter(generateFilterString(trimNamespace(keyName),trimNamespace(keyValue)));
+    QSqlRecord result = target->record(0);
     target->setFilter(origin);
     return result;
 }
 
 QString utilities::generateFilterString(QVariant keyName, QVariant keyValue)
 {
-    return QString("%1=\'%2\'").arg(keyName.toString()).arg(keyValue.toString());
+    return QString("%1=\'%2\'").arg(trimNamespace(keyName)).arg(trimNamespace(keyValue));
+}
+
+QString utilities::trimNamespace(QVariant key)
+{
+    return key.toString().split("::").last();
 }

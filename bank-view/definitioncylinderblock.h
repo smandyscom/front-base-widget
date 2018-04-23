@@ -8,7 +8,8 @@
 
 using namespace DEF_BASIC_DIMENSION;
 
-class CylinderMonitorBlock : public AbstractDataBlock
+class CylinderMonitorBlock :
+        public AbstractDataBlock
 {
 public:
     enum OffsetMonitor
@@ -40,11 +41,11 @@ public:
     //! \param index
     //! \return
     //! Readonly
-    QVariant Value(uint key) const
+    QVariant Value(uint key) const Q_DECL_OVERRIDE
     {
         switch (key) {
         case OFFSET_MONITOR_TMR_COUNT_VALUE:
-            return QVariant::fromValue(getData<MODBUS_U_WORD>(key) * Dimension[TIME]);
+            return QVariant::fromValue(getData<MODBUS_U_WORD>(key) * Dimension->value(TIME));
         case OFFSET_MONITOR_LAST_COMMAND:
             return QVariant::fromValue(getData<MODBUS_U_WORD>(key));
         default:
@@ -52,7 +53,10 @@ public:
             break;
         }
     }
-
+    void Value(uint key,QVariant value ) Q_DECL_OVERRIDE
+    {
+        AbstractDataBlock::Value(key,value);
+    }
 };
 Q_DECLARE_METATYPE(CylinderMonitorBlock)
 class CylinderOperationBlock: public CylinderMonitorBlock
@@ -68,11 +72,11 @@ public:
     //! \param index
     //! \param value
     //! Write-only
-    void Value(uint key,QVariant value)
+    void Value(uint key,QVariant value) Q_DECL_OVERRIDE
     {
         AbstractDataBlock::Value(key,value);
     }
-    QVariant Value(uint key) const
+    QVariant Value(uint key) const Q_DECL_OVERRIDE
     {
         return CylinderMonitorBlock::Value(key);
     }
@@ -101,22 +105,50 @@ public:
         OFFSET_CONTEXT_SENSOR_B_4=31,
     };
 
-    void Value(uint index, QVariant value)
+    void Value(uint index, QVariant value) Q_DECL_OVERRIDE
     {
         switch (index) {
         case OFFSET_CONTEXT_TMR_SET_VALUE:
-            setData(index,static_cast<MODBUS_U_WORD>(value.toReal() / Dimension[TIME]));
+            setData(index,static_cast<MODBUS_U_WORD>(value.toReal() / Dimension->value(TIME)));
+            break;
+        case OFFSET_CONTEXT_ACT_A_1:
+        case OFFSET_CONTEXT_ACT_A_2:
+        case OFFSET_CONTEXT_ACT_B_1:
+        case OFFSET_CONTEXT_ACT_B_2:
+        case OFFSET_CONTEXT_SENSOR_A_1:
+        case OFFSET_CONTEXT_SENSOR_A_2:
+        case OFFSET_CONTEXT_SENSOR_A_3:
+        case OFFSET_CONTEXT_SENSOR_A_4:
+        case OFFSET_CONTEXT_SENSOR_B_1:
+        case OFFSET_CONTEXT_SENSOR_B_2:
+        case OFFSET_CONTEXT_SENSOR_B_3:
+        case OFFSET_CONTEXT_SENSOR_B_4:
+            setData(index,value.value<MODBUS_U_WORD>());
             break;
         default:
             CylinderOperationBlock::Value(index,value);
             break;
         }
     }
-    QVariant Value(uint index) const
+    QVariant Value(uint index) const Q_DECL_OVERRIDE
     {
         switch (index) {
         case OFFSET_CONTEXT_TMR_SET_VALUE:
-            return QVariant::fromValue(getData<MODBUS_U_WORD>(index) * Dimension[TIME]);
+            return QVariant::fromValue(getData<MODBUS_U_WORD>(index) * Dimension->value(TIME));
+            break;
+        case OFFSET_CONTEXT_ACT_A_1:
+        case OFFSET_CONTEXT_ACT_A_2:
+        case OFFSET_CONTEXT_ACT_B_1:
+        case OFFSET_CONTEXT_ACT_B_2:
+        case OFFSET_CONTEXT_SENSOR_A_1:
+        case OFFSET_CONTEXT_SENSOR_A_2:
+        case OFFSET_CONTEXT_SENSOR_A_3:
+        case OFFSET_CONTEXT_SENSOR_A_4:
+        case OFFSET_CONTEXT_SENSOR_B_1:
+        case OFFSET_CONTEXT_SENSOR_B_2:
+        case OFFSET_CONTEXT_SENSOR_B_3:
+        case OFFSET_CONTEXT_SENSOR_B_4:
+            return QVariant::fromValue(getData<MODBUS_U_WORD>(index));
             break;
         default:
             return CylinderOperationBlock::Value(index);
@@ -165,7 +197,7 @@ public:
     CylinderSqlTableAdaptor(QObject* parent=nullptr):
         AbstractSqlTableAdpater(parent)
     {
-        __concreteTypeBlock = new CylinderContext();
+        __concreteTypeBlock = &__block;
         __headerList = utilities::listupEnumVariant<CylinderBlock::DataBaseHeaders>();
 
         __headerList.removeOne(QVariant::fromValue(CylinderBlock::A_SENSOR_USED_COUNT));
@@ -208,6 +240,9 @@ public:
 
         return *__concreteTypeBlock;
     }
+
+protected:
+    CylinderContext __block;
 };
 
 

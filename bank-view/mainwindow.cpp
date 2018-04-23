@@ -13,6 +13,8 @@
 
 #include<QSqlRecord>
 
+using namespace DEF_BASIC_DIMENSION;
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -62,14 +64,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ControllerBankTransfer::Instance()->Adaptor(CommitBlock::SELECTION_UNIT,CommandBlock::Adaptor);
 
     //! Basic Dimension intialization
-    QList<QVariant> __keys = utilities::listupEnumVariant<DEF_BASIC_DIMENSION::Keys>();
+    Dimension = new QMap<Keys,qreal>();
+    QList<QVariant> __keys = utilities::listupEnumVariant<Keys>();
     foreach (QVariant var, __keys) {
-        DEF_BASIC_DIMENSION::Dimension[var.value<DEF_BASIC_DIMENSION::Keys>()] =
+        Dimension->insert(var.value<Keys>(),
                 utilities::getSqlTableSelectedRecord(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_BASIC_DIMENSION),
-                                                     QVariant::fromValue(DEF_BASIC_DIMENSION::__KEY),
-                                                     var).value(DEF_BASIC_DIMENSION::__VALUE).toReal();
+                                                     QVariant::fromValue(__KEY),
+                                                     var).value(QVariant::fromValue(__VALUE).toString()).toReal());
     }
-
     //! Initialize FrontManaul panel
     frontControlPanel* fcp2 = new frontControlPanel(ui->tabMain);
     FrontManaualMode* fmm = new FrontManaualMode(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_COMMAND_BLOCKS),

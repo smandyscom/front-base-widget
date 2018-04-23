@@ -8,7 +8,8 @@
 
 using namespace DEF_BASIC_DIMENSION;
 
-class AbstractCommandBlock : public AbstractDataBlock
+class AbstractCommandBlock :
+        public AbstractDataBlock
 {
 public:
     enum Offset
@@ -29,18 +30,18 @@ public:
         BCT_POS_III=65,
     };
 
-    void Value(uint key, QVariant value)
+    void Value(uint key, QVariant value) Q_DECL_OVERRIDE
     {
         switch (key) {
         case OFFSET_ACB_SPD:
-            setData(key,static_cast<MODBUS_S_LONG>(value.value<MODBUS_S_LONG>()* Dimension[LENGTH]));
+            setData(key,static_cast<MODBUS_S_LONG>(value.toReal() / Dimension->value(LENGTH)));
             break;
         case OFFSET_ACB_ACC_T:
         case OFFSET_ACB_DEC_T:
-            setData(key,static_cast<MODBUS_U_LONG>(value.value<MODBUS_S_LONG>() * Dimension[TIME]));
+            setData(key,static_cast<MODBUS_U_LONG>(value.toReal() / Dimension->value(TIME)));
             break;
         case OFFSET_ACB_TOR_LIMIT:
-            setData(key,static_cast<MODBUS_U_LONG>(value.value<MODBUS_S_LONG>() * Dimension[TORQUE_RATIO]));
+            setData(key,static_cast<MODBUS_U_LONG>(value.toReal() / Dimension->value(TORQUE_RATIO)));
             break;
         default:
             AbstractDataBlock::Value(key,value);
@@ -48,18 +49,18 @@ public:
         }
     }
 
-    QVariant Value(uint key) const
+    QVariant Value(uint key) const Q_DECL_OVERRIDE
     {
         switch (key) {
         case OFFSET_ACB_SPD:
-            return QVariant::fromValue(getData<MODBUS_S_LONG>(key) * Dimension[LENGTH]);
+            return QVariant::fromValue(Dimension->value(LENGTH) * getData<MODBUS_S_LONG>(key));
             break;
         case OFFSET_ACB_ACC_T:
         case OFFSET_ACB_DEC_T:
-            return QVariant::fromValue(getData<MODBUS_U_LONG>(key) * Dimension[TIME]);
+            return QVariant::fromValue(Dimension->value(TIME) * getData<MODBUS_U_LONG>(key));
             break;
         case OFFSET_ACB_TOR_LIMIT:
-            return QVariant::fromValue(getData<MODBUS_U_LONG>(key) * Dimension[TORQUE_RATIO]);
+            return QVariant::fromValue(Dimension->value(TORQUE_RATIO) * getData<MODBUS_U_LONG>(key));
             break;
         default:
             return QVariant::fromValue(key);
@@ -78,17 +79,17 @@ public:
     {
         OFFSET_CONTROL_WORD=10,
 
-        OFFSET_ECB_RESERVE_WORD,
-        OFFSET_ECB_COORD1,
-        OFFSET_ECB_COORD2,
-        OFFSET_ECB_COORD3,
+        OFFSET_ECB_RESERVE_WORD =16,
+        OFFSET_ECB_COORD1 = 18,
+        OFFSET_ECB_COORD2 = 20,
+        OFFSET_ECB_COORD3 = 22,
 
     };
     enum ControlBits
     {
         //! Bit
-        OFFSET_ECB_CONTROL_BIT_0=0,
-        OFFSET_ECB_CONTROL_BIT_1,
+        OFFSET_ECB_CONTROL_BIT_0=0x00000+OFFSET_CONTROL_WORD,
+        OFFSET_ECB_CONTROL_BIT_1=0x10000+OFFSET_CONTROL_WORD,
     };
 
     ExtendedCommandBlock() : AbstractCommandBlock()
@@ -96,30 +97,39 @@ public:
         AbstractCommandBlock::Value(OFFSET_ACB_COMMAND_TYPE,BCT_NOP);
     }
 
-    void Value(uint key, QVariant value)
+    void Value(uint key, QVariant value) Q_DECL_OVERRIDE
     {
         switch (key) {
         case OFFSET_ECB_COORD1:
         case OFFSET_ECB_COORD2:
         case OFFSET_ECB_COORD3:
-            setData(key, static_cast<MODBUS_S_LONG>(value.value<MODBUS_S_LONG>() * Dimension[LENGTH]));
+        {
+            qreal __q = value.toReal();
+            qreal __v = Dimension->value(LENGTH);
+            //__v = Dimension[TIME];
+            //__v = Dimension.value(LENGTH);
+            //__v = Dimension[DEF_BASIC_DIMENSION::LENGTH];
+            //MODBUS_S_LONG s = static_cast<MODBUS_S_LONG>(value.toReal() / Dimension[LENGTH]);
+            setData(key, static_cast<MODBUS_S_LONG>(value.toReal() / Dimension->value(LENGTH)));
             break;
+        }
         case OFFSET_ECB_CONTROL_BIT_0:
         case OFFSET_ECB_CONTROL_BIT_1:
             Bit(key,value.toBool());
+            break;
         default:
             AbstractCommandBlock::Value(key,value);
             break;
         }
     }
 
-    QVariant Value(uint key) const
+    QVariant Value(uint key) const Q_DECL_OVERRIDE
     {
         switch (key) {
         case OFFSET_ECB_COORD1:
         case OFFSET_ECB_COORD2:
         case OFFSET_ECB_COORD3:
-            return QVariant::fromValue(getData<MODBUS_S_LONG>(key) * Dimension[LENGTH]);
+            return QVariant::fromValue(getData<MODBUS_S_LONG>(key) * Dimension->value(LENGTH));
             break;
         case OFFSET_ECB_CONTROL_BIT_0:
         case OFFSET_ECB_CONTROL_BIT_1:
@@ -161,6 +171,7 @@ public:
         OFFSET_ZRET_DIRECTION = OFFSET_ECB_CONTROL_BIT_0,
         OFFSET_ZRET_METHOD = OFFSET_ECB_RESERVE_WORD,
         OFFSET_ZRET_SPEED=OFFSET_ACB_SPD,
+        OFFSET_ZRET_OFFSET = OFFSET_ECB_COORD1,
         OFFSET_ZRET_SPEED_APPROACH = OFFSET_ECB_COORD2,
         OFFSET_ZRET_SPEED_CREEP = OFFSET_ECB_COORD3
     };

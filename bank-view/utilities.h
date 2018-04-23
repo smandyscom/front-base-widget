@@ -52,6 +52,8 @@ public:
     static int getSelectedValue(QTableView* target,const QString& keyName);
     static QSqlRecord getSqlTableSelectedRecord(QSqlTableModel* target,QVariant keyName,QVariant keyValue);
     static QString generateFilterString(QVariant keyName,QVariant keyValue);
+
+    static QString trimNamespace(QVariant key);
 };
 
 #endif // UTILITIES_H

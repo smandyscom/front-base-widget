@@ -1,6 +1,9 @@
 #ifndef BASICBLOCKSDEFINITION_H
 #define BASICBLOCKSDEFINITION_H
+
 #include <definitionsbaselayer.h>
+#include <definitionauxiliarykeys.h>
+
 #include <utilities.h>
 using namespace BaseLayer;
 
@@ -10,7 +13,21 @@ using namespace BaseLayer;
 
 #define INVALID_INDEX -1
 
-class AbstractDataBlock
+//!
+//! \brief The CellDataBlock class
+//! Pure storage
+//template<int size>
+class CellDataBlock
+{
+public:
+    CellDataBlock() {}
+protected:
+    MODBUS_U_WORD reserved[DATA_BLOCK_SIZE_IN_WORD_64];
+};
+Q_DECLARE_METATYPE(CellDataBlock)
+
+//template<int size>
+class AbstractDataBlock : public CellDataBlock
 {
 public:
     AbstractDataBlock()
@@ -18,7 +35,7 @@ public:
         memset(reserved,0,sizeof(MODBUS_U_WORD) * DATA_BLOCK_SIZE_IN_WORD_64);
     }
 
-    void Value(uint key, QVariant value)
+    virtual void Value(uint key, QVariant value)
     {
         setData(key,value.value<MODBUS_U_WORD>());
     }
@@ -27,13 +44,15 @@ public:
     //! \param index
     //! \return
     //! 64Bits
-    QVariant Value(uint key) const
+    virtual QVariant Value(uint key) const
     {
         return QVariant::fromValue(reserved[key]);
     }
 
+    static QMap<DEF_BASIC_DIMENSION::Keys,qreal> *Dimension;
+
 protected:
-    MODBUS_U_WORD reserved[DATA_BLOCK_SIZE_IN_WORD_64];
+    //MODBUS_U_WORD reserved[DATA_BLOCK_SIZE_IN_WORD_64];
 
     //!
     //! Generic write

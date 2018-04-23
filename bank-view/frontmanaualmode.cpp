@@ -132,54 +132,68 @@ void FrontManaualMode::onManualOperationClicked()
 
     if(button == ui->pushButtonBankExecution)
     {
-        int __commandBlockId = __commandBlockTableFront->record(SelectedBlockIndex()).value(CommandBlock::ID).toInt();
-        __commandBlock =
-                QVariant::fromValue(__commandBlockAdaptor->Record(__commandBlockId,
-                                                                  AbstractSqlTableAdpater::KEY_NAMED_KEY,
-                                                                  QVariant::fromValue(CommandBlock::ID).toString())).value<AbstractCommandBlock>();
+        int __commandBlockId = __commandBlockTableFront->record(SelectedBlockIndex()).value(QVariant::fromValue(ID).toString()).toInt();
+        *static_cast<AbstractDataBlock*>(&__commandBlock) =
+                __commandBlockAdaptor->Record(__commandBlockId,
+                                              AbstractSqlTableAdpater::KEY_NAMED_KEY,
+                                              QVariant::fromValue(CommandBlock::ID));
     }
     else
     {
+        //! Set Address
+        __commandBlock.Value(AbstractCommandBlock::OFFSET_ACB_AXIS_ID,
+                             utilities::getSqlTableSelectedRecord(__axisTableFront,
+                                                                  QVariant::fromValue(ID),
+                                                                  __selectedAxisId)
+                             .value(utilities::trimNamespace(QVariant::fromValue(AxisBlock::ADDRESS))));
+
         if(button == ui->pushButtonZret)
         {
-            __commandBlock = ZretCommandBlock();
-            __commandBlock.Value(ZretCommandBlock::OFFSET_ZRET_DIRECTION,QVariant::fromValue(ui->radioButtonForward->isChecked()));
-            __commandBlock.Value(ZretCommandBlock::OFFSET_ZRET_METHOD,QVariant::fromValue(ui->comboBoxZrtMethod->view()->selectionModel()->selectedRows().first().row()));
+            ZretCommandBlock __zcb;
+            *static_cast<AbstractCommandBlock*>(&__zcb) = __commandBlock;
 
-            __commandBlock.Value(ZretCommandBlock::OFFSET_ZRET_SPEED,ui->textEditOffset->toPlainText().toFloat());
-            __commandBlock.Value(ZretCommandBlock::OFFSET_ZRET_SPEED_APPROACH,ui->textEditSpeedApproach->toPlainText().toFloat());
-            __commandBlock.Value(ZretCommandBlock::OFFSET_ZRET_SPEED_CREEP,ui->textEditSpeedCreep->toPlainText().toFloat());
+            __zcb.Value(ZretCommandBlock::OFFSET_ZRET_DIRECTION,QVariant::fromValue(ui->radioButtonForward->isChecked()));
+            __zcb.Value(ZretCommandBlock::OFFSET_ZRET_METHOD,QVariant::fromValue(ui->comboBoxZrtMethod->view()->selectionModel()->selectedRows().first().row()));
+
+            __zcb.Value(ZretCommandBlock::OFFSET_ZRET_SPEED,ui->textEditOffset->toPlainText().toFloat());
+            __zcb.Value(ZretCommandBlock::OFFSET_ZRET_SPEED_APPROACH,ui->textEditSpeedApproach->toPlainText().toFloat());
+            __zcb.Value(ZretCommandBlock::OFFSET_ZRET_SPEED_CREEP,ui->textEditSpeedCreep->toPlainText().toFloat());
+
+            __commandBlock = static_cast<AbstractCommandBlock>(__zcb);
         }
         else
         {
-            __commandBlock = PosCommandBlock();
+            PosCommandBlock __pcb;
+            *static_cast<AbstractCommandBlock*>(&__pcb) = __commandBlock;
 
             if(button == ui->pushButtonAbsolute)
             {
                 //setup coordiante
-                __commandBlock.Value(COORD1,ui->textEditCoordinateAbsolute->toPlainText().toFloat());
-                __commandBlock.Value(PosCommandBlock::OFFSET_POS_ABS_REL,QVariant::fromValue(true));
+                __pcb.Value(COORD1,ui->textEditCoordinateAbsolute->toPlainText().toFloat());
+                __pcb.Value(PosCommandBlock::OFFSET_POS_ABS_REL,QVariant::fromValue(true));
             }
             else if(button == ui->pushButtonStepMinus ||
                     button == ui->pushButtonStepPlus)
             {
                 //setup coordiante
-                __commandBlock.Value(PosCommandBlock::OFFSET_ECB_COORD1,
+                __pcb.Value(PosCommandBlock::OFFSET_ECB_COORD1,
                                      (ui->textEditCoordinateStep->toPlainText().toFloat()*
                                      ((button==ui->pushButtonStepPlus) ? 1 : -1)));
-                __commandBlock.Value(PosCommandBlock::OFFSET_POS_ABS_REL,QVariant::fromValue(false) );//relative moving mode
+                __pcb.Value(PosCommandBlock::OFFSET_POS_ABS_REL,QVariant::fromValue(false) );//relative moving mode
             }
             else if(button == ui->pushButtonFeedForward ||
                     button == ui->pushButtonFeedBackward)
             {
                 //setup coordiante
                 //Positive limit/Negtive limit
-                __commandBlock.Value(PosCommandBlock::OFFSET_ECB_COORD1,
+                __pcb.Value(PosCommandBlock::OFFSET_ECB_COORD1,
                                      ((button==ui->pushButtonStepPlus) ?
                                          SelectedAxisValue(AxisContextBlock::OFFSET_CONTEXT_LIMIT_PLUS) :
                                          SelectedAxisValue(AxisContextBlock::OFFSET_CONTEXT_LIMIT_MINUS)));
-                __commandBlock.Value(PosCommandBlock::OFFSET_POS_ABS_REL,QVariant::fromValue(true));//Always in ABS
+                __pcb.Value(PosCommandBlock::OFFSET_POS_ABS_REL,QVariant::fromValue(true));//Always in ABS
             }
+
+            __commandBlock = static_cast<AbstractCommandBlock>(__pcb);
 
         }//Pos
 
@@ -190,7 +204,7 @@ void FrontManaualMode::onManualOperationClicked()
 
     //! trigger the sequence
     __commitOption.Mode(CommitBlock::MODE_EXE_COMMAND_BLOCK);
-    __controller->DataBlock(QVariant::fromValue(__commandBlock));
+    __controller->DataBlock(QVariant::fromValue(static_cast<CellDataBlock>(__commandBlock)));
     __controller->CommitOption(__commitOption);
     emit __controller->operationTriggered();
 }
@@ -215,7 +229,7 @@ void FrontManaualMode::onOperationPerformed()
     __block.Value(__address.getAddress(),true);
     __commitOption.Mode(CommitBlock::MODE_EXE_AXIS);
     __controller->CommitOption(__commitOption);
-    __controller->DataBlock(QVariant::fromValue(__block));
+    __controller->DataBlock(QVariant::fromValue(static_cast<CellDataBlock>(__block)));
     emit __controller->operationTriggered();
 }
 

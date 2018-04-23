@@ -63,7 +63,7 @@ void ControllerBankTransfer::transfer()
 {
     __commitOption.Index(__currentIndex);
     __controller->CommitOption(__commitOption);
-    __controller->DataBlock(QVariant::fromValue(__adaptor->Record(__currentIndex))); //Write-in anyway
+    __controller->DataBlock(QVariant::fromValue(static_cast<CellDataBlock>( __adaptor->Record(__currentIndex)))); //Write-in anyway
     //! Wait until controller comes to right state
     while (__controller->CurrentState()!=ControllerManualMode::STATE_IDLE) {}
     emit __controller->operationTriggered();

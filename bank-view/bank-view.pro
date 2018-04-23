@@ -46,7 +46,8 @@ SOURCES += \
     fronttwinfilter.cpp \
     controllermainpanel.cpp \
     tablemodeliooverride.cpp \
-    controllermaterialtransfer.cpp
+    controllermaterialtransfer.cpp \
+    definitionbasickblocks.cpp
 
 HEADERS += \
     modbussetupwidget.h \

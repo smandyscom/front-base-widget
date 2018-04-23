@@ -64,14 +64,17 @@ public:
     //! \param value
     //! Unpack and write in
     void DataBlock(QVariant value){__channel->Access(ModbusDriverAddress(DATA_BLOCK_HEAD),value);}
+    //!
+    //!
+    //!
     template<typename T>
     QVariant DataBlock() const
     {
         return QVariant::fromValue(__channel->Access<T>(ModbusDriverAddress(DATA_BLOCK_HEAD)));
     }
-    AbstractDataBlock MonitorBlock() const
+    CellDataBlock MonitorBlock() const
     {
-        return __channel->Access<AbstractDataBlock>(ModbusDriverAddress(MONITOR_BLOCK_HEAD));
+        return __channel->Access<CellDataBlock>(ModbusDriverAddress(MONITOR_BLOCK_HEAD));
     }
     void MonitorDeviceCategrory(MODBUS_U_WORD value)
     {

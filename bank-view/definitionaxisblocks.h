@@ -8,7 +8,8 @@
 
 using namespace DEF_BASIC_DIMENSION;
 
-class AxisMonitorBlock : public AbstractDataBlock
+class AxisMonitorBlock :
+        public AbstractDataBlock
 {
 public:
     enum OPERATION
@@ -110,12 +111,12 @@ public:
     //! \param key
     //! \return
     //! Readonly
-    QVariant Value(uint key) const
+    QVariant Value(uint key) const Q_DECL_OVERRIDE
     {
         switch (key) {
         case OFFSET_MONITOR_TMR_ALM_COUNT_VALUE:
         case OFFSET_MONITOR_TMR_FOCUS_COUNT_VALUE:
-            return QVariant::fromValue(getData<MODBUS_U_WORD>(key) * Dimension[TIME]);
+            return QVariant::fromValue(getData<MODBUS_U_WORD>(key) * Dimension->value(TIME));
             break;
         case OFFSET_MONITOR_WARNINGS:
         case OFFSET_MONITOR_ALARMS:
@@ -124,10 +125,10 @@ public:
         case OFFSET_MONITOR_POS_COMMAND:
         case OFFSET_MONITOR_POS_FEEDBACK:
         case OFFSET_MONITOR_SPD_FEEDBACK:
-            return QVariant::fromValue(getData<MODBUS_S_LONG>(key) * Dimension[LENGTH]);
+            return QVariant::fromValue(getData<MODBUS_S_LONG>(key) * Dimension->value(LENGTH));
             break;
         case OFFSET_MONITOR_TOR_FEEDBACK:
-            return QVariant::fromValue(getData<MODBUS_S_LONG>(key) * Dimension[TORQUE_RATIO]);
+            return QVariant::fromValue(getData<MODBUS_S_LONG>(key) * Dimension->value(TORQUE_RATIO));
             break;
         default:
             return QVariant::fromValue(Bit(key));
@@ -147,11 +148,11 @@ public:
     {
         OFFSET_OPEATION_OPERATION=24,
     };
-    QVariant Value(uint key) const
+    QVariant Value(uint key) const Q_DECL_OVERRIDE
     {
         return AxisMonitorBlock::Value(key);
     }
-    void Value(uint key,QVariant value)
+    void Value(uint key,QVariant value) Q_DECL_OVERRIDE
     {
         Bit(key,value.toBool());
     }
@@ -172,7 +173,7 @@ public:
         OFFSET_CONTEXT_POS_TOLERANCE=40,
     };
 
-    void Value(uint key, QVariant value)
+    void Value(uint key, QVariant value) Q_DECL_OVERRIDE
     {
         switch (key) {
         case OFFSET_CONTEXT_ADDRESS:
@@ -183,14 +184,14 @@ public:
         case OFFSET_CONTEXT_LIMIT_MINUS:
         case OFFSET_CONTEXT_SPEED_MAX:
         case OFFSET_CONTEXT_POS_TOLERANCE:
-            setData(key,static_cast<MODBUS_S_LONG>(value.toReal() / Dimension[LENGTH]));
+            setData(key,static_cast<MODBUS_S_LONG>(value.toReal() / Dimension->value(LENGTH)));
             break;
         default:
             AxisOperationBlock::Value(key,value);
             break;
         }
     }
-    QVariant Value(uint key) const
+    QVariant Value(uint key) const Q_DECL_OVERRIDE
     {
         switch (key) {
         case OFFSET_CONTEXT_ADDRESS:
@@ -201,7 +202,7 @@ public:
         case OFFSET_CONTEXT_LIMIT_MINUS:
         case OFFSET_CONTEXT_SPEED_MAX:
         case OFFSET_CONTEXT_POS_TOLERANCE:
-            return QVariant::fromValue(getData<MODBUS_S_LONG>(key) * Dimension[LENGTH]);
+            return QVariant::fromValue(getData<MODBUS_S_LONG>(key) * Dimension->value(LENGTH));
             break;
         default:
             return AxisMonitorBlock::Value(key);

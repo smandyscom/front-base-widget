@@ -8,7 +8,8 @@
 
 #include<abstractsqltableadpater.h>
 
-class SignalMonitor : public AbstractDataBlock
+class SignalMonitor :
+        public AbstractDataBlock
 {
 public:
 };

@@ -5,7 +5,8 @@
 
 #include<abstractsqltableadpater.h>
 
-class UnitMonitorBlock:public AbstractDataBlock
+class UnitMonitorBlock:
+        public AbstractDataBlock
 {
 public:
     enum OffsetMonitor
@@ -59,7 +60,7 @@ public:
         LSID_COUNT=7,
     };
 
-    void Value(uint key, QVariant value)
+    void Value(uint key, QVariant value) Q_DECL_OVERRIDE
     {
         switch (key) {
         case LUID_PARENT:

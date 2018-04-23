@@ -58,7 +58,7 @@ FrontCylinderPanel::FrontCylinderPanel(QWidget *parent) :
     __labelAddressMap[ui->labelDone] = CylinderMonitorBlock::MOR_DONE;
     __labelAddressMap[ui->labelMonA] = CylinderMonitorBlock::MOR_GROUP_A;
     __labelAddressMap[ui->labelMonB] = CylinderMonitorBlock::MOR_GROUP_B;
-    __labelAddressMap[ui->labelSuppress] = CylinderMonitorBlock::MOR_DONE;
+    __labelAddressMap[ui->labelSuppress] = CylinderMonitorBlock::CTL_SUPPRESS;
     __labelAddressMap[ui->labelTimeon] = CylinderMonitorBlock::INT_TMR_ON;
     __labelAddressMap[ui->labelWarn] = CylinderMonitorBlock::MOR_WARN;
 
@@ -87,7 +87,7 @@ void FrontCylinderPanel::onCylinderCommandClicked()
     __cb.Mode(CommitBlock::MODE_EXE_CYLINDER);
     __cob.Value(CylinderOperationBlock::OFFSET_OPERATION_COMMAND_CACHED,command);
     __controller->CommitOption(__cb);
-    __controller->DataBlock(QVariant::fromValue(__cob));
+    __controller->DataBlock(QVariant::fromValue(static_cast<CellDataBlock>(__cob)));
     emit __controller->operationTriggered();
 }
 
@@ -134,7 +134,8 @@ QString FrontCylinderPanel::generateFilterString(QString key, QList<QString> con
 void FrontCylinderPanel::onTimerTimeout()
 {
     //! Update cylinder status
-    CylinderMonitorBlock cmb = QVariant::fromValue(__controller->MonitorBlock()).value<CylinderMonitorBlock>();
+    CylinderMonitorBlock cmb;
+    *static_cast<CellDataBlock*>(&cmb) = __controller->MonitorBlock();
     //! Show
     ModbusDriverAddress __address;
     __address.setRegisterAddress(CylinderMonitorBlock::OFFSET_MONITOR_STATUS_WORD);
