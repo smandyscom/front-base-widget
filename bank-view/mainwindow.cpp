@@ -45,23 +45,14 @@ MainWindow::MainWindow(QWidget *parent) :
     //! Intialize Database
     JunctionBankDatabase::DatabaseName("base.db");
     JunctionBankDatabase::Instance()->onInitialize();
-    //! Initialize Adaptors
-    AxisBlock::Adaptor = new GenericSqlTableAdapter<AxisContextBlock,AxisBlock::DataBaseHeaders>(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_AXIS));
-    CylinderBlock::Adaptor = new CylinderSqlTableAdaptor(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_CYLINDERS));
-    SignalBlock::Adaptor = new GenericSqlTableAdapter<SignalContext,SignalBlock::DataBaseHeaders>(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_SIGNALS));
-
-    CommandBlock::Adaptor = new GenericSqlTableAdapter<ExtendedCommandBlock,CommandBlock::DataBaseHeaders>(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_COMMAND_BLOCKS));
-
-    UnitBlock::Adaptor = new GenericSqlTableAdapter<UnitContextBlock,UnitBlock::DataBaseHeaders>(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_UNITS));
-
     //! Link
-    ControllerBankTransfer::Instance()->Adaptor(CommitBlock::SELECTION_AXIS,AxisBlock::Adaptor);
-    ControllerBankTransfer::Instance()->Adaptor(CommitBlock::SELECTION_CYLINDER,CylinderBlock::Adaptor);
-    ControllerBankTransfer::Instance()->Adaptor(CommitBlock::SELECTION_SIGNAL,SignalBlock::Adaptor);
+    ControllerBankTransfer::Instance()->Adaptor(CommitBlock::SELECTION_AXIS,new GenericSqlTableAdapter<AxisContextBlock,AxisBlock::DataBaseHeaders>(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_AXIS)));
+    ControllerBankTransfer::Instance()->Adaptor(CommitBlock::SELECTION_CYLINDER,new CylinderSqlTableAdaptor(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_CYLINDERS)));
+    ControllerBankTransfer::Instance()->Adaptor(CommitBlock::SELECTION_SIGNAL,new GenericSqlTableAdapter<SignalContext,SignalBlock::DataBaseHeaders>(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_SIGNALS)));
 
-    ControllerBankTransfer::Instance()->Adaptor(CommitBlock::SELECTION_COMMAND_BLOCK,CommandBlock::Adaptor);
+    ControllerBankTransfer::Instance()->Adaptor(CommitBlock::SELECTION_COMMAND_BLOCK,new GenericSqlTableAdapter<ExtendedCommandBlock,CommandBlock::DataBaseHeaders>(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_COMMAND_BLOCKS)));
 
-    ControllerBankTransfer::Instance()->Adaptor(CommitBlock::SELECTION_UNIT,CommandBlock::Adaptor);
+    ControllerBankTransfer::Instance()->Adaptor(CommitBlock::SELECTION_UNIT,new GenericSqlTableAdapter<UnitContextBlock,UnitBlock::DataBaseHeaders>(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_UNITS)));
 
     //! Basic Dimension intialization
     AbstractDataBlock::Dimension = new QMap<Keys,qreal>();

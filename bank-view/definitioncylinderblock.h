@@ -183,7 +183,6 @@ enum DataBaseHeaders
 };
 Q_ENUM_NS(DataBaseHeaders)
 
-static AbstractSqlTableAdpater* Adaptor= nullptr;
 
 }//namespace
 

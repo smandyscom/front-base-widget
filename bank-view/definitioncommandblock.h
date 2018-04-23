@@ -208,12 +208,13 @@ namespace CommandBlock {
 //! The Header map (NAME,OFFSET VALUE)
 enum DataBaseHeaders
 {
-    ID=BASE_INDEX-1,
-    NAME=BASE_INDEX-2,
-    COMMENT=BASE_INDEX-3,
+    ID=INVALID_INDEX-1,
+    NAME=INVALID_INDEX-2,
+    COMMENT=INVALID_INDEX-3,
+    AXIS_ID=INVALID_INDEX-4,
     //! Data
     COMMAND_TYPE = AbstractCommandBlock::OFFSET_ACB_COMMAND_TYPE,
-    AXIS_ID = AbstractCommandBlock::OFFSET_ACB_AXIS_ID,
+    AXIS_ADDRESS = AbstractCommandBlock::OFFSET_ACB_AXIS_ID,
     SPEED = AbstractCommandBlock::OFFSET_ACB_SPD,
     ACC_TIME = AbstractCommandBlock::OFFSET_ACB_ACC_T,
     DEC_TIME = AbstractCommandBlock::OFFSET_ACB_DEC_T,
@@ -227,7 +228,6 @@ enum DataBaseHeaders
 };
 Q_ENUM_NS(DataBaseHeaders)
 
-static AbstractSqlTableAdpater* Adaptor;
 
 }//namespace
 

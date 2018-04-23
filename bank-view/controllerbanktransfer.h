@@ -39,6 +39,11 @@ public:
     {
         __adaptorMap[key] = value;
     }
+    AbstractSqlTableAdpater* Adaptor(CommitBlock::CommitDataBlockSelection key) const
+    {
+        return __adaptorMap[key];
+    }
+
     void DataBlockSelection(CommitBlock::CommitDataBlockSelection value)
     {
         __adaptor = __adaptorMap[value];

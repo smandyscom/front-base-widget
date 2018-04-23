@@ -217,10 +217,10 @@ namespace AxisBlock {
 Q_NAMESPACE
 enum DataBaseHeaders
 {
-    ID=BASE_INDEX-1,
-    REGION=BASE_INDEX-2,
-    NAME=BASE_INDEX-3,
-    COMMENT=BASE_INDEX-4,
+    ID=INVALID_INDEX-1,
+    REGION=INVALID_INDEX-2,
+    NAME=INVALID_INDEX-3,
+    COMMENT=INVALID_INDEX-4,
     //! Data
     ADDRESS = AxisContextBlock::OFFSET_CONTEXT_ADDRESS,
     TYPE = AxisContextBlock::OFFSET_CONTEXT_AXIS_TYPE,
@@ -231,10 +231,6 @@ enum DataBaseHeaders
 };
 Q_ENUM_NS(DataBaseHeaders)
 
-//!
-//! \brief Adaptor
-//! Initialize after data base initialized
-static AbstractSqlTableAdpater* Adaptor = nullptr;
 }
 
 

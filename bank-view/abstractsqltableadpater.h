@@ -9,6 +9,8 @@
 #include <QSqlIndex>
 #include <definitionbasicblocks.h>
 
+#include <utilities.h>
+
 #define FIRST_COLUMN 0
 
 //!
@@ -32,7 +34,10 @@ public:
     AbstractSqlTableAdpater(QObject* parent=nullptr) :
         QObject(parent)
     {
-        __model = qobject_cast<QSqlTableModel*>(this->parent());
+        //!duplication
+        __model = new QSqlTableModel(this);
+        __model->setTable(qobject_cast<QSqlTableModel*>(this->parent())->tableName());
+        __model->select();
     }
 
     void Record(int key,
@@ -41,14 +46,14 @@ public:
                 const QVariant keyName=QVariant::fromValue(0))
     {
         __model->setRecord(select(key,keyType,keyName),data2Record(data));
-        __model->setFilter(nullptr); //resume all selection
+        __model->setFilter(nullptr);
     }
     AbstractDataBlock Record(int key,
                              KeyType keyType=KEY_ROW_ID,
                              const QVariant keyName=QVariant::fromValue(0))
     {
         AbstractDataBlock result = record2Data(__model->record(select(key,keyType,keyName)));
-        __model->setFilter(nullptr); //resume all selection
+        __model->setFilter(nullptr);
         return result;
     }
 
@@ -60,8 +65,9 @@ public:
     virtual AbstractDataBlock record2Data(const QSqlRecord& record)
     {
         foreach (QVariant var, __headerList) {
-            if(var.toInt() < BASE_INDEX)
-                __concreteTypeBlock->Value(var.toUInt(),record.value(var.toString()));
+            if(var.toInt() > INVALID_INDEX)
+                __concreteTypeBlock->Value(var.toUInt(),
+                                           record.value(utilities::trimNamespace(var)));
         }
 
         return *__concreteTypeBlock;
@@ -72,8 +78,9 @@ public:
         *__concreteTypeBlock = data; //value assign only , keep vPtr as same
 
         foreach (QVariant var, __headerList) {
-            if(var.toInt() < BASE_INDEX)
-                __record.setValue(var.toString(),__concreteTypeBlock->Value(var.toInt()));
+            if(var.toInt() > INVALID_INDEX)
+                __record.setValue(utilities::trimNamespace(var),
+                                  __concreteTypeBlock->Value(var.toInt()));
         }
 
         return __record;

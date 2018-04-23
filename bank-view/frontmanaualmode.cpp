@@ -19,7 +19,7 @@ FrontManaualMode::FrontManaualMode(QSqlRelationalTableModel *wholeCommandBankMod
     ui->setupUi(this);
     //! Link
     __controller = ControllerManualMode::Instance();
-    __commandBlockAdaptor = CommandBlock::Adaptor;
+    __commandBlockAdaptor = ControllerBankTransfer::Instance()->Adaptor(CommitBlock::SELECTION_COMMAND_BLOCK);
     //! Resued widgets
     new FrontBankTransfer(CommitBlock::SELECTION_COMMAND_BLOCK,ui->widgetBankTransfer);
     FrontTwinFilter* __ftf = new FrontTwinFilter(wholeCommandBankModel,
@@ -133,6 +133,8 @@ void FrontManaualMode::onManualOperationClicked()
 
     if(button == ui->pushButtonBankExecution)
     {
+        if(!ui->tableViewCommandBlock->selectionModel()->hasSelection())
+            return;
         int __commandBlockId = __commandBlockTableFront->record(SelectedBlockIndex()).value(QVariant::fromValue(ID).toString()).toInt();
         *static_cast<AbstractDataBlock*>(&__commandBlock) =
                 __commandBlockAdaptor->Record(__commandBlockId,
