@@ -15,19 +15,20 @@
 //!  Control Pause/Error Reset
 //!  TODOS
 //!  need data base to translate error messages
+
 class ControllerMainPanel : public QObject
 {
     Q_OBJECT
 public:
     enum MainPanelContext
     {
-        ERROR_RESET_BIT=0x03000018,
-        ERROR_CATEGRORY=0x300001A,
-        ERROR_DEVICE_INDEX=0x300001B,
-        ERROR_CODE=0x300001C,
+        ERROR_RESET_BIT=0x03000020,
         MANUAL_CONTROL_WORD=0x03000020,
-        MANUAL_TOGGLE_PAUSE=0x03000020,
-        MANUAL_TOGGLE_INIT=0x03010020,
+        MANUAL_TOGGLE_PAUSE=0x03010020,
+        MANUAL_TOGGLE_INIT=0x03020020,
+        ERROR_DEVICE_INDEX=0x03000022,
+        ERROR_CATEGRORY=0x03000024,
+        ERROR_CODE=0x03000026,
     };
     Q_ENUM(MainPanelContext)
 
@@ -39,7 +40,9 @@ public:
     }
     bool IsPause() const
     {
-        return __channel->Access<bool>(UnitOperationBlock::TRIG_PAUSE);
+        ModbusDriverAddress __address(UnitOperationBlock::OFFSET_UOB_STATE_PAUSE);
+        __address.setChannel(3);
+        return __channel->Access<bool>(__address);
     }
     void Initialize()
     {
@@ -52,7 +55,9 @@ public:
     bool IsInitialized() const
     {
         //! = Controller state on H100
-        return __channel->Access<MODBUS_U_WORD>(ModbusDriverAddress(UnitMonitorBlock::STATE)) == 0x100;
+        ModbusDriverAddress __address(UnitOperationBlock::OFFSET_MONITOR_STATE);
+        __address.setChannel(3);
+        return __channel->Access<MODBUS_U_WORD>(__address) == 0x100;
     }
     //!
     //! \brief ErrorReset
