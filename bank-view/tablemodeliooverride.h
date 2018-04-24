@@ -24,7 +24,6 @@ public:
         TERMINAL
     };
     Q_ENUM(Header)
-    explicit TableModelIOOverride(QObject *parent = nullptr);
     explicit TableModelIOOverride(QSqlRelationalTableModel* source);
 
     //!

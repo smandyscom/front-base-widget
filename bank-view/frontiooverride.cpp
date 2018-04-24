@@ -27,8 +27,8 @@ FrontIoOverride::FrontIoOverride(QSqlRelationalTableModel *inputTable,
     QList<QTableView*> __views = {ui->tableViewInputs,
                                  ui->tableViewOutputs};
 
-    ui->tableViewInputs->setModel(inputTable);
-    ui->tableViewOutputs->setModel(outputTable);
+    ui->tableViewInputs->setModel(__inputTable);
+    ui->tableViewOutputs->setModel(__outputTable);
     foreach (QTableView* view, __views) {
         view->hideColumn(TableModelIOOverride::ID);
         view->hideColumn(TableModelIOOverride::HAL_ADDRESS);
@@ -37,7 +37,8 @@ FrontIoOverride::FrontIoOverride(QSqlRelationalTableModel *inputTable,
     }
     //!
     connect(ui->tableViewOutputs,&QTableView::clicked,[=](QModelIndex index){
-        ModbusDriverAddress address = ModbusDriverAddress(__outputTable->index(index.row(),TableModelIOOverride::HAL_ADDRESS).data().toInt());
+        ModbusDriverAddress address(__outputTable->record(index.row())
+                                    .value(utilities::trimNamespace(QVariant::fromValue(TableModelIOOverride::HAL_ADDRESS))).toUInt());
         ModbusChannel::Instance()->Access<bool>(address,!ModbusChannel::Instance()->Access<bool>(address));
     });
 }

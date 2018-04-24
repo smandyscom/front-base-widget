@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>365</width>
-    <height>206</height>
+    <height>92</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -25,7 +25,7 @@
      <x>0</x>
      <y>0</y>
      <width>362</width>
-     <height>211</height>
+     <height>91</height>
     </rect>
    </property>
    <property name="title">
@@ -49,47 +49,14 @@
     </property>
     <item>
      <layout class="QVBoxLayout" name="verticalLayout">
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayoutTransfer">
-        <item>
-         <widget class="QLabel" name="label">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>100</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>200</width>
-            <height>100</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>Transfering:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QTextBrowser" name="textBrowserDataBlockSelection">
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>30</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
+      <property name="spacing">
+       <number>3</number>
+      </property>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayoutProgress">
+        <property name="spacing">
+         <number>3</number>
+        </property>
         <item>
          <widget class="QLabel" name="label_2">
           <property name="sizePolicy">
@@ -107,7 +74,7 @@
           <property name="maximumSize">
            <size>
             <width>200</width>
-            <height>100</height>
+            <height>25</height>
            </size>
           </property>
           <property name="text">
@@ -117,6 +84,12 @@
         </item>
         <item>
          <widget class="QTextBrowser" name="textBrowserProgress">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="maximumSize">
            <size>
             <width>16777215</width>
@@ -125,29 +98,35 @@
           </property>
          </widget>
         </item>
+        <item>
+         <widget class="QProgressBar" name="progressBar">
+          <property name="value">
+           <number>24</number>
+          </property>
+         </widget>
+        </item>
        </layout>
-      </item>
-      <item>
-       <widget class="QProgressBar" name="progressBar">
-        <property name="value">
-         <number>24</number>
-        </property>
-       </widget>
       </item>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
          <widget class="QPushButton" name="pushButtonDownload">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="minimumSize">
            <size>
             <width>0</width>
-            <height>50</height>
+            <height>30</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
             <width>16777215</width>
-            <height>50</height>
+            <height>30</height>
            </size>
           </property>
           <property name="toolTip">
@@ -160,16 +139,22 @@
         </item>
         <item>
          <widget class="QPushButton" name="pushButtonUpload">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="minimumSize">
            <size>
             <width>0</width>
-            <height>50</height>
+            <height>25</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
             <width>16777215</width>
-            <height>50</height>
+            <height>30</height>
            </size>
           </property>
           <property name="toolTip">

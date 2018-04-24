@@ -1,7 +1,13 @@
 #include "tablemodeliooverride.h"
-TableModelIOOverride::TableModelIOOverride(QObject *parent) :
-    QSqlRelationalTableModel(parent)
+
+TableModelIOOverride::TableModelIOOverride(QSqlRelationalTableModel *source):
+    QSqlRelationalTableModel(source->parent())
 {
+    //!
+    //!
+    setTable(source->tableName());
+    select();
+
     __channel = ModbusChannel::Instance();
     //! Forced to inform View to update periodically
     __timer = new QTimer(this);
@@ -9,13 +15,6 @@ TableModelIOOverride::TableModelIOOverride(QObject *parent) :
        emit dataChanged(index(0,0),index(rowCount(),columnCount()));
     });
     __timer->start(100);
-}
-
-TableModelIOOverride::TableModelIOOverride(QSqlRelationalTableModel *source)
-{
-    setTable(source->tableName());
-    select();
-    TableModelIOOverride(source->parent());
 }
 
 //!

@@ -64,6 +64,9 @@ public:
     //! Assume that header list could be on-and-onto data block
     virtual AbstractDataBlock record2Data(const QSqlRecord& record)
     {
+        //! clear all data
+        *__concreteTypeBlock = AbstractDataBlock();
+
         foreach (QVariant var, __headerList) {
             if(var.toInt() > INVALID_INDEX)
                 __concreteTypeBlock->Value(var.toUInt(),
