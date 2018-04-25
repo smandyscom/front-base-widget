@@ -89,13 +89,13 @@ public:
         OFFSET_CONTEXT_LSID_COUNT=7,
         //! Extension fields
         OFFSET_CONTEXT_F16=16,
-        OFFSET_CONTEXT_F18,
-        OFFSET_CONTEXT_F20,
-        OFFSET_CONTEXT_F22,
-        OFFSET_CONTEXT_F24,
-        OFFSET_CONTEXT_F26,
-        OFFSET_CONTEXT_F28,
-        OFFSET_CONTEXT_F30,
+        OFFSET_CONTEXT_F18=18,
+        OFFSET_CONTEXT_F20=20,
+        OFFSET_CONTEXT_F22=22,
+        OFFSET_CONTEXT_F24=24,
+        OFFSET_CONTEXT_F26=26,
+        OFFSET_CONTEXT_F28=28,
+        OFFSET_CONTEXT_F30=30,
     };
 
     void Value(uint key, QVariant value) Q_DECL_OVERRIDE
@@ -111,6 +111,7 @@ public:
         case OFFSET_CONTEXT_F20:
         case OFFSET_CONTEXT_F22:
         case OFFSET_CONTEXT_F24:
+        case OFFSET_CONTEXT_F26:
         case OFFSET_CONTEXT_F28:
         case OFFSET_CONTEXT_F30:
             setData(key,value.value<MODBUS_U_LONG>());
@@ -133,6 +134,7 @@ public:
         case OFFSET_CONTEXT_F20:
         case OFFSET_CONTEXT_F22:
         case OFFSET_CONTEXT_F24:
+        case OFFSET_CONTEXT_F26:
         case OFFSET_CONTEXT_F28:
         case OFFSET_CONTEXT_F30:
             return getData<MODBUS_U_LONG>(key);

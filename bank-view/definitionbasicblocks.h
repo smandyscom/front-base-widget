@@ -114,7 +114,7 @@ public:
 
         SELECTION_COMMAND_BLOCK = 4,
 
-        SELECTION_UNIT = 3,
+        SELECTION_UNIT = 5,
     };
     enum CommitMode : MODBUS_U_LONG
     {
