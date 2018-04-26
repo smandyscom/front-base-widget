@@ -76,6 +76,18 @@ FrontManaualMode::FrontManaualMode(QSqlRelationalTableModel *wholeCommandBankMod
     __browserMap[ui->textBrowserPositionFeedback] = AxisMonitorBlock::OFFSET_MONITOR_POS_FEEDBACK;
     __browserMap[ui->textBrowserSpeedFeedback] = AxisMonitorBlock::OFFSET_MONITOR_SPD_FEEDBACK;
     __browserMap[ui->textBrowserTorqueFeedback] = AxisMonitorBlock::OFFSET_MONITOR_TOR_FEEDBACK;
+    //! Interlock
+    __busyInterlock = {
+        ui->tabWidgetCommandPanel,
+        ui->pushButtonBankExecution,
+        ui->pushButtonServoOn,
+        ui->pushButtonAlarmClear
+    };
+    __hasSelectionInterlock = {
+        ui->pushButtonCoordinateSet,
+        ui->pushButtonParameterSet,
+        ui->pushButtonBankExecution
+    };
 }
 
 FrontManaualMode::~FrontManaualMode()
@@ -87,11 +99,6 @@ FrontManaualMode::~FrontManaualMode()
 //!
 void FrontManaualMode::onBankOperationClicked()
 {
-    if(!ui->tableViewCommandBlock->selectionModel()->hasSelection())
-        return;
-    if(__controller->CurrentState()!=ControllerManualMode::STATE_IDLE)
-        return;
-
     auto button = qobject_cast<QPushButton*>(sender());
 
     QSqlRecord __record = __commandBlockTableFront->record(SelectedBlockIndex());
@@ -123,10 +130,6 @@ void FrontManaualMode::onBankOperationClicked()
 //! 3. STOP
 void FrontManaualMode::onManualOperationClicked()
 {
-    //! Command refused
-    if(__controller->CurrentState()!=ControllerManualMode::STATE_IDLE)
-        return;
-
     auto button = qobject_cast<QPushButton*>(sender());
 
     AbstractCommandBlock __commandBlock;
@@ -268,6 +271,14 @@ void FrontManaualMode::onTimerTimeout()
     //! Alarm/Warning details
     //ui->textBrowserWarning->setText(QString(amb.Warning()));
     //ui->textBrowseAlarm->setText(QString(amb.Alarm()));
+    //! Interlocks (Selection
+    foreach (QWidget* var, __hasSelectionInterlock) {
+        var->setEnabled(ui->tableViewCommandBlock->selectionModel()->hasSelection());
+    }
+    //! Interlocks (Busy
+    foreach (QWidget* var, __busyInterlock) {
+        var->setEnabled(__controller->CurrentState() == ControllerManualMode::STATE_IDLE);
+    }
 }
 
 int FrontManaualMode::SelectedBlockIndex() const

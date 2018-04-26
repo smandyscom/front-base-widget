@@ -59,3 +59,14 @@ ModbusDriverAddress::ModbusDriverAddress(const ModbusDriverAddress &address)
     registerTypeBitIndex = &reinterpret_cast<quint8*>(&this->address)[2];
     registerAddress = &reinterpret_cast<quint16*>(&this->address)[0];
 }
+
+ModbusDriverAddress::ModbusDriverAddress(quint8 channel, quint8 bitIndex, quint16 ___registerAddress)
+{
+    channelAddress = &reinterpret_cast<quint8*>(&this->address)[3]; //highest byte
+    registerTypeBitIndex = &reinterpret_cast<quint8*>(&this->address)[2];
+    registerAddress = &reinterpret_cast<quint16*>(&this->address)[0];
+    //
+    setChannel(channel);
+    setBitIndex(bitIndex);
+    setRegisterAddress(___registerAddress);
+}

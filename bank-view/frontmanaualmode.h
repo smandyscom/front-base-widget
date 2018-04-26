@@ -83,6 +83,9 @@ protected:
     AbstractSqlTableAdpater* __commandBlockAdaptor;
 
     QMap<QWidget*,AxisMonitorBlock::OffsetMonitor> __browserMap;
+
+    QList<QWidget*> __hasSelectionInterlock;
+    QList<QWidget*> __busyInterlock;
 };
 
 #endif // FRONTMANAUALMODE_H

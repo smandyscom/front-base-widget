@@ -68,6 +68,11 @@ FrontCylinderPanel::FrontCylinderPanel(QWidget *parent) :
     __labelColorMap[ui->labelSuppress] = Qt::red;
     __labelColorMap[ui->labelTimeon] = Qt::green;
     __labelColorMap[ui->labelWarn] = Qt::green;
+    //! Interlock
+    __busyInterlock = {
+        ui->pushButtonGoA,
+        ui->pushButtonGoB
+    }
 }
 
 
@@ -142,6 +147,10 @@ void FrontCylinderPanel::onTimerTimeout()
     foreach (QWidget* var, __labelAddressMap.keys()) {
         __address.setBitIndex(__labelAddressMap[var]);
         utilities::colorChangeOver(var,cmb.Value(__address.getAddress()).toBool(),__labelColorMap[var]);
+    }
+    //! Interlock
+    foreach (QWidget* var, __busyInterlock) {
+        var->setEnabled(__controller->CurrentState()==ControllerManualMode::STATE_IDLE);
     }
 }
 

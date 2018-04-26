@@ -74,6 +74,7 @@ public:
     //! \param address
     //! copy constructor
     ModbusDriverAddress(const ModbusDriverAddress& address);
+    ModbusDriverAddress(quint8 channel,quint8 bitIndex,quint16 registerAddress);
 
     QModbusDataUnit::RegisterType getRegisterType() const{
         return QModbusDataUnit::RegisterType(*registerTypeBitIndex>>4);

@@ -33,9 +33,6 @@ public:
 protected slots:
     void onCylinderCommandClicked();
     void onViewSelectionChanged();
-    //!
-    //! \brief onTimerTimeout
-    //!
     void onTimerTimeout();
 protected:
     void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
@@ -57,6 +54,8 @@ private:
 
     QMap<QWidget*,CylinderMonitorBlock::Status> __labelAddressMap;
     QMap<QWidget*,Qt::GlobalColor> __labelColorMap;
+
+    QList<QWidget*> __busyInterlock;
 };
 
 #endif // FRONTCYLINDERPANEL_H
