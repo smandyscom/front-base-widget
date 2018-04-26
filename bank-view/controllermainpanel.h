@@ -29,6 +29,8 @@ public:
         ERROR_DEVICE_INDEX=0x03000022,
         ERROR_CATEGRORY=0x03000024,
         ERROR_CODE=0x03000026,
+
+        OFFSET_CONTEXT_LUID_PARENT = 0x03000000+UnitContextBlock::OFFSET_CONTEXT_LUID_PARENT,
     };
     Q_ENUM(MainPanelContext)
 
@@ -90,6 +92,8 @@ protected:
     explicit ControllerMainPanel(QObject *parent = nullptr);
 
     ModbusChannel* __channel;
+    ModbusDriverAddress __monitorBaseAddress;
+
 
     static ControllerMainPanel* __instace;
 };

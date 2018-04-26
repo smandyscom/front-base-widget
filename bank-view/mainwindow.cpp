@@ -80,6 +80,9 @@ MainWindow::MainWindow(QWidget *parent) :
     FrontUnitPanel* fup = new FrontUnitPanel(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_UNITS),
                                              JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_REGION),
                                              ui->tabUnit);
+    FrontSignalPanel* fsp = new FrontSignalPanel(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_SIGNALS),
+                                             JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_REGION),
+                                             ui->tabSignal);
 
     //! Connect controller and channel
     ControllerManualMode* __controller =  ControllerManualMode::Instance();

@@ -49,7 +49,8 @@ SOURCES += \
     controllermaterialtransfer.cpp \
     definitionbasickblocks.cpp \
     frontaxispanel.cpp \
-    frontunitpanel.cpp
+    frontunitpanel.cpp \
+    frontsignalpanel.cpp
 
 HEADERS += \
     modbussetupwidget.h \
@@ -83,7 +84,8 @@ HEADERS += \
     definitionauxiliarykeys.h \
     controllermaterialtransfer.h \
     frontaxispanel.h \
-    frontunitpanel.h
+    frontunitpanel.h \
+    frontsignalpanel.h
 
 unix {
     target.path = /usr/lib
@@ -101,4 +103,5 @@ FORMS += \
     fronttwinfilter.ui \
     frontsinglefilter.ui \
     frontaxispanel.ui \
-    frontunitpanel.ui
+    frontunitpanel.ui \
+    frontsignalpanel.ui

@@ -6,13 +6,21 @@
 
 #include <QModbusTcpClient>
 
-#include <frontmanaualmode.h>
+
 #include <frontiooverride.h>
-#include <frontcylinderpanel.h>
-#include <frontcontrolpanel.h>
 
 #include <frontaxispanel.h>
+#include <frontcylinderpanel.h>
+#include <frontsignalpanel.h>
+
+#include <frontmanaualmode.h>
+
 #include <frontunitpanel.h>
+
+#include <frontcontrolpanel.h>
+
+
+
 
 #include <QMap>
 
