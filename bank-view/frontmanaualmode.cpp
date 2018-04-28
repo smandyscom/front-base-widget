@@ -278,7 +278,7 @@ void FrontManaualMode::onTimerTimeout()
     }
     //! Interlocks (Busy
     foreach (QWidget* var, __busyInterlock) {
-        var->setEnabled(__controller->CurrentState() == ControllerManualMode::STATE_IDLE);
+        var->setEnabled(__controller->IsManualModeActiavted());
     }
 }
 

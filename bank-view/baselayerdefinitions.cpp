@@ -20,15 +20,17 @@ bool ValueTransition::eventTest(QEvent *event)
 
     UpdateEvent* ue = static_cast<UpdateEvent*>(event);
 
-    if ((ue->address & 0xffff) != (address & 0xffff))
+    //! Match channel and register address
+    if ((ue->address & 0xff00ffff) != (address & 0xff00ffff))
         return false; //not cared address
 
+    bool logic = (ue->value.value<qint16>() & bitMask) > 0;
     switch (detection) {
     case BIT_STATE_ON:
-         return (ue->value.value<qint16>() & bitMask) > 0;
+         return logic;
         break;
     case BIT_STATE_OFF:
-        return (ue->value.value<qint16>() & bitMask) == 0;
+        return !logic;
         break;
     case VALUE_UPDATED:
         return true;

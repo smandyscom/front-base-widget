@@ -31,28 +31,29 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
         connect(s,&QState::entered,this,[this](){
             //! trigger read action
             __currentState = __stateMap.key(qobject_cast<QState*>(sender()));
-            //qDebug() << QVariant::fromValue(__currentState).value<QString>();
         });
     }
 
     //!
     //! s0
-    ValueTransition* engagedPLCOn = new ValueTransition(ModbusDriverAddress(ENGAGED_PLC),ValueTransition::BIT_STATE_ON);
+    ValueTransition* engagedPLCOn = new ValueTransition(ModbusDriverAddress(ENGAGED_SEMI_AUTO),ValueTransition::BIT_STATE_ON);
     engagedPLCOn->setTargetState(s1);
     s0->addTransition(engagedPLCOn);
 
     //!
     //! s1
-    //ValueTransition* engagedPLCOff = new ValueTransition(ModbusDriverAddress(ENGAGED_PLC),ValueTransition::BIT_STATE_OFF);
-    //engagedPLCOff->setTargetState(s0);
-    //s1->addTransition(engagedPLCOff);
+    ValueTransition* engagedPLCOff = new ValueTransition(ModbusDriverAddress(ENGAGED_SEMI_AUTO),ValueTransition::BIT_STATE_OFF);
+    engagedPLCOff->setTargetState(s0);
+    s1->addTransition(engagedPLCOff);
     s1->addTransition(this,SIGNAL(operationTriggered()),s2);// when user triggered
 
     connect(s1,&QState::exited,[this](){
-        //!
         //! commit block if need
-        emit requireWriteData(ModbusDriverAddress(ENGAGED_HMI),QVariant::fromValue(true));
-        emit requireWriteData(ModbusDriverAddress(RUN),QVariant::fromValue(true));//set Run on
+        //! Exit by triggered
+        if(__channel->Access<bool>(ModbusDriverAddress(ENGAGED_SEMI_AUTO))){
+            emit requireWriteData(ModbusDriverAddress(ENGAGED_HMI),QVariant::fromValue(true));
+            emit requireWriteData(ModbusDriverAddress(RUN),QVariant::fromValue(true));//set Run on
+        }
     });
     //!
     //! s2

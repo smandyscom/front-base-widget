@@ -16,8 +16,21 @@ frontControlPanel::frontControlPanel(QWidget *parent) :
     __timer = new QTimer(this);
     connect(__timer,SIGNAL(timeout()),this,SLOT(onTimerTimeout()));
     __timer->start();
-
-
+    //!
+    __manualInterlock = {
+        ui->pushButtonClear,
+        ui->pushButtonInitialize,
+        ui->pushButtonPause
+    };
+    __autoInterlock = {
+        ui->radioButtonAuto,
+        ui->radioButtonManual,
+    };
+    //!
+    connect(ui->radioButtonAuto,SIGNAL(toggled(bool)),this,SLOT(onCheckedChanged()));
+    connect(ui->radioButtonManual,SIGNAL(toggled(bool)),this,SLOT(onCheckedChanged()));
+    //!
+    connect(__controller,&ControllerMainPanel::stateChanged,this,&frontControlPanel::onStateChanged);
 }
 
 frontControlPanel::~frontControlPanel()
@@ -35,5 +48,23 @@ void frontControlPanel::onTimerTimeout()
     ui->textBrowserErrorDescription->setText(QString::number(__controller->ErrorCode()));
     ui->textBrowserErrorCode->setText(QString::number(__controller->ErrorCategrory()));
     ui->textBrowserErrorPart->setText(QString::number(__controller->ErrorDeviceIndex()));
-    //!TODO
+    //!
+    foreach (QWidget* var, __manualInterlock) {
+        var->setEnabled(__controller->CurrentState() != ControllerMainPanel::STATE_MANUAL);
+    }
+    foreach (QWidget* var, __autoInterlock) {
+        var->setEnabled(__controller->CurrentState() != ControllerMainPanel::STATE_AUTO);
+    }
+}
+
+void frontControlPanel::onCheckedChanged()
+{
+    __controller->Manual(ui->radioButtonManual->isChecked());
+}
+
+void frontControlPanel::onStateChanged(ControllerMainPanel::MainStates currentState)
+{
+    if(!ui->radioButtonManual->isChecked() &&
+            currentState==ControllerMainPanel::STATE_MANUAL)
+        ui->radioButtonManual->setChecked(true);
 }

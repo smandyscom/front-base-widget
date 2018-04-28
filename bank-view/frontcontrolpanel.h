@@ -21,11 +21,16 @@ public:
 
 protected slots:
     void onTimerTimeout();
+    void onCheckedChanged();
+    void onStateChanged(ControllerMainPanel::MainStates currentState);
 private:
     Ui::frontControlPanel *ui;
 
     ControllerMainPanel* __controller;
     QTimer* __timer;
+
+    QList<QWidget*> __manualInterlock;
+    QList<QWidget*> __autoInterlock;
 };
 
 #endif // FRONTCONTROLPANEL_H

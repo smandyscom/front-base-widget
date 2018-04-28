@@ -29,8 +29,9 @@ public:
     enum ManualContext : quint32
     {
         STATUS_WORD=0x02000000,
-        ENGAGED_PLC=0x02000000,
+        ENGAGED_SEMI_AUTO=0x02000000,
         DONE=0x02010000,
+        ENGAGED_MANUAL = 0x02020000,
         ENGAGED_HMI=0x02000020,
         RUN=0x02010020,
         MON_CATEGRORY=0x02000028,
@@ -82,6 +83,23 @@ public:
     }
 
     ManualState CurrentState() const { return __currentState;}
+
+    //!
+    //! \brief IsChannelActivated
+    //! \return
+    //!
+    bool IsSemiAutoActivated() const
+    {
+        return __currentState == STATE_IDLE;
+    }
+    //!
+    //! \brief IsManualModeActiavted
+    //! \return
+    //!
+    bool IsManualModeActiavted() const
+    {
+        return IsSemiAutoActivated() && __channel->Access<bool>(ModbusDriverAddress(ENGAGED_MANUAL));
+    }
 
     static ControllerManualMode* Instance();
 public slots:

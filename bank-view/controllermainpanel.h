@@ -26,6 +26,7 @@ public:
         MANUAL_CONTROL_WORD=0x03000020,
         MANUAL_TOGGLE_PAUSE=0x03010020,
         MANUAL_TOGGLE_INIT=0x03020020,
+        MANUAL_TOOGLE_MANUAL=0x03030020,
         ERROR_DEVICE_INDEX=0x03000022,
         ERROR_CATEGRORY=0x03000024,
         ERROR_CODE=0x03000026,
@@ -33,13 +34,27 @@ public:
         OFFSET_CONTEXT_LUID_PARENT = 0x03000000+UnitContextBlock::OFFSET_CONTEXT_LUID_PARENT,
     };
     Q_ENUM(MainPanelContext)
-
+    enum MainStates
+    {
+        STATE_AUTO,
+        STATE_SEMI_AUTO,
+        STATE_MANUAL,
+    };
+    Q_ENUM(MainStates)
 
     //! Send one shot command
     void Pause()
     {
         __channel->Access<bool>(ModbusDriverAddress(MANUAL_TOGGLE_PAUSE),true);
     }
+    void Manual(bool value)
+    {
+        //!Reject
+        if(!IsPause())
+            return;
+        __channel->Access(ModbusDriverAddress(MANUAL_TOOGLE_MANUAL),value);
+    }
+
     bool IsPause() const
     {
         ModbusDriverAddress __address(UnitOperationBlock::OFFSET_UOB_STATE_PAUSE);
@@ -82,9 +97,28 @@ public:
         return __channel->Access<MODBUS_U_WORD>(ModbusDriverAddress(ERROR_DEVICE_INDEX));
     }
 
+    MainStates CurrentState()
+    {
+        MainStates __state;
+        if(!IsPause())
+            __state = STATE_AUTO;
+        else
+        {
+            if(__channel->Access<bool>(ModbusDriverAddress(MANUAL_TOOGLE_MANUAL)))
+                __state = STATE_MANUAL;
+            else
+                __state =  STATE_SEMI_AUTO;
+        }
+
+        if(__lastState!=__state)
+            emit stateChanged(__state);
+        __lastState = __state;
+        return __state;
+    }
+
     static ControllerMainPanel* Instance();
 signals:
-
+    void stateChanged(MainStates currentState);
 public slots:
 protected slots:
     void onReply(UpdateEvent* event);
@@ -94,7 +128,7 @@ protected:
     ModbusChannel* __channel;
     ModbusDriverAddress __monitorBaseAddress;
 
-
+    MainStates __lastState;
     static ControllerMainPanel* __instace;
 };
 
