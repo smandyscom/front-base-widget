@@ -50,9 +50,7 @@ SOURCES += \
     definitionbasickblocks.cpp \
     frontaxispanel.cpp \
     frontunitpanel.cpp \
-    frontsignalpanel.cpp \
-    baselayerdefinitions.cpp
-
+    frontsignalpanel.cpp
 HEADERS += \
     modbussetupwidget.h \
     utilities.h \

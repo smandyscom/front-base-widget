@@ -78,7 +78,8 @@ FrontManaualMode::FrontManaualMode(QSqlRelationalTableModel *wholeCommandBankMod
     __browserMap[ui->textBrowserTorqueFeedback] = AxisMonitorBlock::OFFSET_MONITOR_TOR_FEEDBACK;
     //! Interlock
     __busyInterlock = {
-        ui->tabWidgetCommandPanel,
+        ui->frameHome,
+        ui->framePosition,
         ui->pushButtonBankExecution,
         ui->pushButtonServoOn,
         ui->pushButtonAlarmClear

@@ -72,7 +72,7 @@ FrontCylinderPanel::FrontCylinderPanel(QWidget *parent) :
     __busyInterlock = {
         ui->pushButtonGoA,
         ui->pushButtonGoB
-    }
+    };
 }
 
 
