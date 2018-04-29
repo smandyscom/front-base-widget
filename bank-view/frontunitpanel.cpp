@@ -3,7 +3,8 @@
 
 FrontUnitPanel::FrontUnitPanel(QSqlRelationalTableModel *unitTable, QSqlRelationalTableModel *regionTable, QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::FrontUnitPanel)
+    ui(new Ui::FrontUnitPanel),
+    __unitTable(unitTable)
 {
     ui->setupUi(this);
     //!
@@ -85,8 +86,12 @@ void FrontUnitPanel::onTimerTimeout()
     ui->textBrowserTickTime->setText(umb.Value(UnitMonitorBlock::OFFSET_MONITOR_WORKING_TIMER_CACHE).toString());
     //! Interlock
     foreach (QWidget* var, __busyInterlock) {
-        var->setEnabled(__controller->CurrentState()==ControllerManualMode::STATE_IDLE);
+        var->setEnabled(__controller->IsSemiAutoActivated() &&
+                        ui->tableViewUnit->selectionModel()->hasSelection());
     }
+    //! Once on working , cannot override to off
+    ui->pushButtonWorking->setEnabled(ui->pushButtonWorking->isEnabled() &&
+                                      !umb.Value(__statusShowMap[ui->pushButtonWorking].first.getAddress()).toBool());
 }
 
 void FrontUnitPanel::onCommandClick()
@@ -97,6 +102,7 @@ void FrontUnitPanel::onCommandClick()
     //!Fetch last status
     UnitMonitorBlock umb;
     *static_cast<CellDataBlock*>(&umb) = __controller->MonitorBlock();
+    *static_cast<CellDataBlock*>(&uob) = __controller->MonitorBlock();//update latest value
     //! Flip
     uob.Value(__controlMap[__button].getAddress(),
             QVariant::fromValue(!umb.Value(__controlMap[__button].getAddress()).toBool()));

@@ -5,6 +5,9 @@
 
 #include<abstractsqltableadpater.h>
 
+#include<definitionauxiliarykeys.h>
+using namespace DEF_BASIC_DIMENSION;
+
 class UnitMonitorBlock:
         public AbstractDataBlock
 {
@@ -41,7 +44,7 @@ public:
             return AbstractDataBlock::Value(key);
             break;
         case OFFSET_MONITOR_WORKING_TIMER_CACHE:
-            return QVariant::fromValue(getData<MODBUS_U_LONG>(key));
+            return QVariant::fromValue(getData<MODBUS_U_LONG>(key) * Dimension->value(TIME));
             break;
         default:
             return QVariant::fromValue(Bit(key));
