@@ -52,8 +52,6 @@ public:
     static QMap<DEF_BASIC_DIMENSION::Keys,qreal> *Dimension;
 
 protected:
-    //MODBUS_U_WORD reserved[DATA_BLOCK_SIZE_IN_WORD_64];
-
     //!
     //! Generic write
     //! Long/Word/Bool

@@ -1,25 +1,22 @@
 #include "frontiooverride.h"
 #include "ui_frontiooverride.h"
 
-FrontIoOverride::FrontIoOverride(QSqlRelationalTableModel *inputTable,
-                                 QSqlRelationalTableModel *outputTable,
-                                 QSqlRelationalTableModel *regionTable,
-                                 QWidget *parent) :
+FrontIoOverride::FrontIoOverride(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FrontIoOverride),
-    __inputTable(new TableModelIOOverride(inputTable)),
-    __outputTable(new TableModelIOOverride(outputTable)),
-    __regionTable(regionTable)
+    __inputTable(new TableModelIOOverride(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::INPUT_ATTRIBUTES))),
+    __outputTable(new TableModelIOOverride(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::OUTPUT_ATTRIBUTES))),
+    __regionTable(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_REGION))
 {
     ui->setupUi(this);
     //!
-    new FrontSingleFilter(inputTable,
-                          regionTable,
+    new FrontSingleFilter(__inputTable,
+                          __regionTable,
                           utilities::trimNamespace(QVariant::fromValue(TableModelIOOverride::REGION)),
                           utilities::trimNamespace(QVariant::fromValue(TableModelIOOverride::NAME)),
                           ui->widgetInputFilter);
-    new FrontSingleFilter(outputTable,
-                          regionTable,
+    new FrontSingleFilter(__outputTable,
+                          __regionTable,
                           utilities::trimNamespace(QVariant::fromValue(TableModelIOOverride::REGION)),
                           utilities::trimNamespace(QVariant::fromValue(TableModelIOOverride::NAME)),
                           ui->widgetOutputFilter);

@@ -16,10 +16,10 @@
   <widget class="QGroupBox" name="groupBox">
    <property name="geometry">
     <rect>
-     <x>290</x>
-     <y>20</y>
+     <x>300</x>
+     <y>90</y>
      <width>551</width>
-     <height>511</height>
+     <height>311</height>
     </rect>
    </property>
    <property name="title">
@@ -28,34 +28,6 @@
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
      <layout class="QVBoxLayout" name="verticalLayout">
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayoutCode">
-        <item>
-         <widget class="QLabel" name="label_2">
-          <property name="text">
-           <string>Code</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QTextBrowser" name="textBrowserErrorCode"/>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayoutPart">
-        <item>
-         <widget class="QLabel" name="label_3">
-          <property name="text">
-           <string>Part</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QTextBrowser" name="textBrowserErrorPart"/>
-        </item>
-       </layout>
-      </item>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayoutDescription">
         <item>
@@ -99,7 +71,7 @@
    <property name="title">
     <string>Status</string>
    </property>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -154,7 +126,7 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>0</x>

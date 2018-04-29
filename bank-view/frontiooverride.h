@@ -7,6 +7,7 @@
 #include <modbuschannel.h>
 
 #include <frontsinglefilter.h>
+#include <junctionbankdatabase.h>
 
 #include <utilities.h>
 
@@ -21,10 +22,7 @@ class FrontIoOverride : public QWidget
     Q_OBJECT
 
 public:
-    explicit FrontIoOverride(QSqlRelationalTableModel *inputTable,
-                             QSqlRelationalTableModel *outputTable,
-                             QSqlRelationalTableModel *regionTable,
-                             QWidget *parent = 0);
+    explicit FrontIoOverride(QWidget *parent = 0);
     ~FrontIoOverride();
 private:
     Ui::FrontIoOverride *ui;

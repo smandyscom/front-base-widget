@@ -39,10 +39,7 @@ class FrontManaualMode : public QWidget
     Q_OBJECT
 
 public:
-    explicit FrontManaualMode(QSqlRelationalTableModel *wholeCommandBankModel,
-                              QSqlRelationalTableModel *wholeAxisBankModel,
-                              QSqlRelationalTableModel *regionModel,
-                              QWidget *parent = 0);
+    explicit FrontManaualMode(QWidget *parent = 0);
     ~FrontManaualMode();
 protected slots:
     //!
@@ -76,8 +73,8 @@ protected:
     MODBUS_U_WORD __selectedAxisId;
 
     //! Front table , fully translated
-    QSqlRelationalTableModel* __commandBlockTableFront;
-    QSqlRelationalTableModel* __axisTableFront;
+    QSqlRelationalTableModel* __commandBlockTable;
+    QSqlRelationalTableModel* __axisTable;
     QSqlRelationalTableModel* __regionTable;
 
     AbstractSqlTableAdpater* __commandBlockAdaptor;

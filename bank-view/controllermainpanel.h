@@ -4,8 +4,12 @@
 #include <QObject>
 
 #include <modbuschannel.h>
+
 #include <definitionsbaselayer.h>
 #include <definitionunitblocks.h>
+#include <definitionauxiliarykeys.h>
+
+#include <junctionbankdatabase.h>
 
 #include <QTimer>
 
@@ -15,6 +19,8 @@
 //!  Control Pause/Error Reset
 //!  TODOS
 //!  need data base to translate error messages
+
+using namespace HEADER_STRUCTURE;
 
 class ControllerMainPanel : public QObject
 {
@@ -97,6 +103,13 @@ public:
         return __channel->Access<MODBUS_U_WORD>(ModbusDriverAddress(ERROR_DEVICE_INDEX));
     }
 
+    bool IsError() const
+    {
+        return (ErrorCode()!=0);
+    }
+    QString ErrorDevice() const;
+    QString ErrorDescription() const;
+
     MainStates CurrentState()
     {
         MainStates __state;
@@ -128,7 +141,20 @@ protected:
     ModbusChannel* __channel;
     ModbusDriverAddress __monitorBaseAddress;
 
+    HEADER_STRUCTURE::Headers __key;
+    QSqlTableModel* __deviceTable;
+    //!
+    //! \brief __deviceMap
+    //! Key , Device categrory
+    QMap<MODBUS_S_WORD,QSqlTableModel*> __deviceMap;
+    //!
+    //! \brief __errorDescriptionMap
+    //! Key 1: Device categrory
+    //! Key 2: Error Code
+    QMap<MODBUS_S_WORD,QSqlTableModel*> __errorCodeMap;
+
     MainStates __lastState;
+    bool __lastIsError;
     static ControllerMainPanel* __instace;
 };
 

@@ -11,6 +11,8 @@
 #include <definitionsignalblock.h>
 #include <utilities.h>
 
+#include <junctionbankdatabase.h>
+
 namespace Ui {
 class FrontSignalPanel;
 }
@@ -20,9 +22,7 @@ class FrontSignalPanel : public QWidget
     Q_OBJECT
 
 public:
-    explicit FrontSignalPanel(QSqlRelationalTableModel *signalTable,
-                              QSqlRelationalTableModel *regionTable,
-                              QWidget *parent = 0);
+    explicit FrontSignalPanel(QWidget *parent = 0);
     ~FrontSignalPanel();
 
 private:

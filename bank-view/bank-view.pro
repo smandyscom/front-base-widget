@@ -30,9 +30,7 @@ SOURCES += \
     enumcomboboxdynamic.cpp \
     modbuschannel.cpp \
     modbusserializedclient.cpp \
-    baselayerdefinitions.cpp \
     controllermanualmode.cpp \
-    basicblocksdefinition.cpp \
     frontmanaualmode.cpp \
     junctionbankdatabase.cpp \
     controllerbanktransfer.cpp \
@@ -47,10 +45,12 @@ SOURCES += \
     controllermainpanel.cpp \
     tablemodeliooverride.cpp \
     controllermaterialtransfer.cpp \
-    definitionbasickblocks.cpp \
     frontaxispanel.cpp \
     frontunitpanel.cpp \
-    frontsignalpanel.cpp
+    frontsignalpanel.cpp \
+    definitionbasicblocks.cpp \
+    definitionsbaselayer.cpp \
+    definitionauxiliarykeys.cpp
 HEADERS += \
     modbussetupwidget.h \
     utilities.h \

@@ -13,6 +13,7 @@
 
 #include <definitioncylinderblock.h>
 #include <definitionioattributes.h>
+#include <definitionauxiliarykeys.h>
 
 #include <QSqlRecord>
 
@@ -40,6 +41,7 @@ private:
     Ui::FrontCylinderPanel *ui;
 
     QSqlRelationalTableModel* __cylinderTable;
+    QSqlRelationalTableModel* __headerTable;
 
     ControllerManualMode* __controller;
 

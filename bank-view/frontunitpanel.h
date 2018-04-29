@@ -14,6 +14,8 @@
 #include <definitionunitblocks.h>
 #include <utilities.h>
 
+#include <junctionbankdatabase.h>
+
 namespace Ui {
 class FrontUnitPanel;
 }
@@ -25,9 +27,7 @@ class FrontUnitPanel : public QWidget
     Q_OBJECT
 
 public:
-    explicit FrontUnitPanel(QSqlRelationalTableModel *axisTable,
-                            QSqlRelationalTableModel *regionTable,
-                            QWidget *parent = 0);
+    explicit FrontUnitPanel(QWidget *parent = 0);
     ~FrontUnitPanel();
 protected slots:
     void onCommandClick();

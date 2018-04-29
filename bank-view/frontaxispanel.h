@@ -11,6 +11,8 @@
 #include <definitionaxisblocks.h>
 #include <utilities.h>
 
+#include <junctionbankdatabase.h>
+
 namespace Ui {
 class FrontAxisPanel;
 }
@@ -20,9 +22,7 @@ class FrontAxisPanel : public QWidget
     Q_OBJECT
 
 public:
-    explicit FrontAxisPanel(QSqlRelationalTableModel *axisTable,
-                            QSqlRelationalTableModel *regionTable,
-                            QWidget *parent = 0);
+    explicit FrontAxisPanel(QWidget *parent = 0);
     ~FrontAxisPanel();
 
 private:

@@ -6,15 +6,12 @@
 #include <QPalette>
 #include <utilities.h>
 #include <QApplication>
-FrontManaualMode::FrontManaualMode(QSqlRelationalTableModel *wholeCommandBankModel,
-                                   QSqlRelationalTableModel *wholeAxisBankModel,
-                                   QSqlRelationalTableModel *regionModel,
-                                   QWidget *parent) :
+FrontManaualMode::FrontManaualMode(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FrontManaualMode),
-    __commandBlockTableFront(wholeCommandBankModel),
-    __axisTableFront(wholeAxisBankModel),
-    __regionTable(regionModel)
+    __commandBlockTable(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_COMMAND_BLOCKS)),
+    __axisTable(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_AXIS)),
+    __regionTable(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_REGION))
 {
     ui->setupUi(this);
     //! Link
@@ -22,11 +19,11 @@ FrontManaualMode::FrontManaualMode(QSqlRelationalTableModel *wholeCommandBankMod
     __commandBlockAdaptor = ControllerBankTransfer::Instance()->Adaptor(CommitBlock::SELECTION_COMMAND_BLOCK);
     //! Resued widgets
     new FrontBankTransfer(CommitBlock::SELECTION_COMMAND_BLOCK,ui->widgetBankTransfer);
-    FrontTwinFilter* __ftf = new FrontTwinFilter(wholeCommandBankModel,
+    FrontTwinFilter* __ftf = new FrontTwinFilter(__commandBlockTable,
                                                 QVariant::fromValue(CommandBlock::AXIS_ID),
-                                                wholeAxisBankModel,
+                                                __axisTable,
                                                 QVariant::fromValue(AxisBlock::REGION),
-                                                regionModel,
+                                                __regionTable,
                                                 ui->widgetFilter);
     connect(__ftf,&FrontTwinFilter::primarySelected,[=](QVariant key){
         __selectedAxisId = key.value<MODBUS_U_WORD>();
@@ -60,13 +57,9 @@ FrontManaualMode::FrontManaualMode(QSqlRelationalTableModel *wholeCommandBankMod
 
     ui->tableViewCommandBlock->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->tableViewCommandBlock->setSelectionBehavior(QAbstractItemView::SelectRows);
-    ui->tableViewCommandBlock->setModel(__commandBlockTableFront);
-    QList<CommandBlock::DataBaseHeaders> __headersGoing2Hide = {CommandBlock::ID,
-                                                                CommandBlock::COMMAND_TYPE,
-                                                                CommandBlock::AXIS_ID};
-    foreach (CommandBlock::DataBaseHeaders var, __headersGoing2Hide) {
-        ui->tableViewCommandBlock->hideColumn(var);
-    }
+    ui->tableViewCommandBlock->setModel(__commandBlockTable);
+    HEADER_STRUCTURE::HeaderRender::renderViewHeader(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::HEADER_COMMAND_BLOCKS),
+                                                     ui->tableViewCommandBlock);
     //! Toogle mode
     connect(ui->pushButtonServoOn,&QPushButton::clicked,this,&FrontManaualMode::onOperationPerformed);
     connect(ui->pushButtonAlarmClear,&QPushButton::clicked,this,&FrontManaualMode::onOperationPerformed);
@@ -102,7 +95,7 @@ void FrontManaualMode::onBankOperationClicked()
 {
     auto button = qobject_cast<QPushButton*>(sender());
 
-    QSqlRecord __record = __commandBlockTableFront->record(SelectedBlockIndex());
+    QSqlRecord __record = __commandBlockTable->record(SelectedBlockIndex());
 
     if(button==ui->pushButtonCoordinateSet)
     {
@@ -120,7 +113,7 @@ void FrontManaualMode::onBankOperationClicked()
 
 
     //write back to model
-    __commandBlockTableFront->setRecord(SelectedBlockIndex(),__record);
+    __commandBlockTable->setRecord(SelectedBlockIndex(),__record);
 }
 
 //!
@@ -139,7 +132,7 @@ void FrontManaualMode::onManualOperationClicked()
     {
         if(!ui->tableViewCommandBlock->selectionModel()->hasSelection())
             return;
-        int __commandBlockId = __commandBlockTableFront->record(SelectedBlockIndex()).value(QVariant::fromValue(ID).toString()).toInt();
+        int __commandBlockId = __commandBlockTable->record(SelectedBlockIndex()).value(QVariant::fromValue(ID).toString()).toInt();
         *static_cast<AbstractDataBlock*>(&__commandBlock) =
                 __commandBlockAdaptor->Record(__commandBlockId,
                                               AbstractSqlTableAdpater::KEY_NAMED_KEY,
@@ -237,7 +230,7 @@ void FrontManaualMode::setCommonParameters(AbstractCommandBlock& __commandBlock)
     //! TODO , unsafe input
     //! Set Address
     __commandBlock.Value(AbstractCommandBlock::OFFSET_ACB_AXIS_ID,
-                         utilities::getSqlTableSelectedRecord(__axisTableFront,
+                         utilities::getSqlTableSelectedRecord(__axisTable,
                                                               QVariant::fromValue(ID),
                                                               __selectedAxisId)
                          .value(utilities::trimNamespace(QVariant::fromValue(AxisBlock::ADDRESS))));
@@ -288,7 +281,7 @@ int FrontManaualMode::SelectedBlockIndex() const
 }
 QVariant FrontManaualMode::SelectedAxisValue(QVariant keyName) const
 {
-    return utilities::getSqlTableSelectedRecord(__axisTableFront,QVariant::fromValue(AxisBlock::ID),
+    return utilities::getSqlTableSelectedRecord(__axisTable,QVariant::fromValue(AxisBlock::ID),
                                                 QVariant::fromValue(__selectedAxisId))
             .value(utilities::trimNamespace(keyName));
 }

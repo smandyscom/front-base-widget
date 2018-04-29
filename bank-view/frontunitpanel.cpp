@@ -1,22 +1,22 @@
 #include "frontunitpanel.h"
 #include "ui_frontunitpanel.h"
 
-FrontUnitPanel::FrontUnitPanel(QSqlRelationalTableModel *unitTable, QSqlRelationalTableModel *regionTable, QWidget *parent) :
+FrontUnitPanel::FrontUnitPanel(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FrontUnitPanel),
-    __unitTable(unitTable)
+    __unitTable(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_UNITS))
 {
     ui->setupUi(this);
     //!
-    new FrontSingleFilter(unitTable,
-                          regionTable,
+    new FrontSingleFilter(__unitTable,
+                          JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_REGION),
                           utilities::trimNamespace(QVariant::fromValue(UnitBlock::LSID_BASE)),
                           utilities::trimNamespace(QVariant::fromValue(UnitBlock::NAME)),
                           ui->widgetFilter);
     new FrontBankTransfer(CommitBlock::SELECTION_UNIT,
                           ui->widgetTransfer);
     //!
-    ui->tableViewUnit->setModel(unitTable);
+    ui->tableViewUnit->setModel(__unitTable);
     ui->tableViewUnit->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableViewUnit->setSelectionMode(QAbstractItemView::SingleSelection);
     connect(ui->tableViewUnit,SIGNAL(clicked(QModelIndex)),this,SLOT(onViewSelectionChanged()));
@@ -55,6 +55,9 @@ FrontUnitPanel::FrontUnitPanel(QSqlRelationalTableModel *unitTable, QSqlRelation
         ui->pushButtonWorking,
         ui->pushButtonPause
     };
+    //!
+    HEADER_STRUCTURE::HeaderRender::renderViewHeader(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::HEADER_UNIT),
+                                                     ui->tableViewUnit);
 }
 
 FrontUnitPanel::~FrontUnitPanel()

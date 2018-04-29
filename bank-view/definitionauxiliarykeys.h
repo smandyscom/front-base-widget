@@ -3,6 +3,14 @@
 
 #include <QObject>
 #include <QMap>
+
+#include <QTableView>
+#include <QHeaderView>
+#include <QSqlRecord>
+#include <QSqlTableModel>
+
+#include <utilities.h>
+
 namespace DEF_BASIC_DIMENSION {
 Q_NAMESPACE
 enum Headers
@@ -34,5 +42,25 @@ enum Headers
 Q_ENUM_NS(Headers)
 }
 
+namespace HEADER_STRUCTURE {
+Q_NAMESPACE
+enum Headers
+{
+    ID,
+    NAME,
+    en_US,
+    zh_TW,
+};
+Q_ENUM_NS(Headers)
+
+class HeaderRender
+{
+public:
+    HeaderRender() {}
+
+    static void renderViewHeader(QSqlTableModel* reference,QTableView* view,Headers key=zh_TW);
+};
+
+}
 
 #endif // DEFINITIONAUXILIARYKEYS_H

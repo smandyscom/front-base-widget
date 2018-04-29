@@ -11,6 +11,18 @@ ControllerMainPanel::ControllerMainPanel(QObject *parent) : QObject(parent)
 
     //! Link
     connect(__channel,&ModbusChannel::raiseUpdateEvent,this,&ControllerMainPanel::onReply);
+    //!
+    __deviceMap[CommitBlock::SELECTION_AXIS] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_AXIS);
+    __deviceMap[CommitBlock::SELECTION_CYLINDER] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_CYLINDERS);
+    __deviceMap[CommitBlock::SELECTION_UNIT] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_UNITS);
+
+    __errorCodeMap[CommitBlock::SELECTION_AXIS] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::ERROR_CODE_AXIS);
+    __errorCodeMap[CommitBlock::SELECTION_CYLINDER] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::ERROR_CODE_CYLINDER);
+    __errorCodeMap[CommitBlock::SELECTION_UNIT] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::ERROR_CODE_UNIT);
+
+    __deviceTable = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_OBJECT_TYPE);
+    //!
+    __key = zh_TW;
 }
 
 //!
@@ -36,6 +48,43 @@ ControllerMainPanel* ControllerMainPanel::Instance()
     if(__instace ==nullptr)
         __instace = new ControllerMainPanel();
     return __instace;
+}
+
+QString ControllerMainPanel::ErrorDevice() const
+{
+    QSqlRecord __recordIndex =
+            __deviceMap[ErrorCategrory()]->record(ErrorDeviceIndex());
+
+    QSqlRecord __recordDevice =
+            utilities::getSqlTableSelectedRecord(__deviceTable,
+                                                 QVariant::fromValue(ID),
+                                                 QVariant::fromValue(ErrorCategrory()));
+
+    return QString("%1,%2,%3")
+            .arg(__recordDevice.value(QVariant::fromValue(__key).toString()).toString())
+            .arg(__recordIndex.value(QVariant::fromValue(NAME).toString()).toString())
+            .arg(__recordIndex.value(QVariant::fromValue(__key).toString()).toString());
+}
+QString ControllerMainPanel::ErrorDescription() const
+{
+    MODBUS_U_QUAD __code = ErrorCode();
+    MODBUS_U_LONG __lower = (reinterpret_cast<MODBUS_U_LONG*>(&__code))[0];
+    MODBUS_U_LONG __higher = (reinterpret_cast<MODBUS_U_LONG*>(&__code))[1];
+
+    QString __lowerDescription =
+            utilities::getSqlTableSelectedRecord(__errorCodeMap[ErrorCategrory()],
+            QVariant::fromValue(ID),
+            QVariant::fromValue(__lower))
+            .value(QVariant::fromValue(__key).toString()).toString();
+    QString __higherDescription =
+            utilities::getSqlTableSelectedRecord(__errorCodeMap[ErrorCategrory()],
+            QVariant::fromValue(ID),
+            QVariant::fromValue(__higher))
+            .value(QVariant::fromValue(__key).toString()).toString();
+
+    return QString("%1\n%2")
+            .arg(__lowerDescription)
+            .arg(__higherDescription);
 }
 
 ControllerMainPanel* ControllerMainPanel::__instace = nullptr;

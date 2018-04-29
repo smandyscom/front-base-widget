@@ -54,6 +54,8 @@ public:
     static QString generateFilterString(QVariant keyName,QVariant keyValue);
 
     static QString trimNamespace(QVariant key);
+
+
 };
 
 #endif // UTILITIES_H

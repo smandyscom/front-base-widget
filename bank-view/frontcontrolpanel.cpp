@@ -12,6 +12,10 @@ frontControlPanel::frontControlPanel(QWidget *parent) :
     connect(ui->pushButtonPause,&QPushButton::clicked,__controller,&ControllerMainPanel::Pause);
     connect(ui->pushButtonInitialize,&QPushButton::clicked,__controller,&ControllerMainPanel::Initialize);
     connect(ui->pushButtonErrorReset,&QPushButton::clicked,__controller,&ControllerMainPanel::ErrorReset);
+    connect(ui->pushButtonErrorReset,&QPushButton::clicked,[=](){
+       ui->textBrowserErrorDescription->clear();
+       ui->pushButtonErrorReset->setEnabled(false);
+    });
     //! Timer activated
     __timer = new QTimer(this);
     connect(__timer,SIGNAL(timeout()),this,SLOT(onTimerTimeout()));
@@ -43,11 +47,12 @@ void frontControlPanel::onTimerTimeout()
     //!Update
     utilities::colorChangeOver(ui->pushButtonPause,__controller->IsPause(),Qt::yellow);
     ui->pushButtonInitialize->setEnabled(__controller->IsInitialized());
-    ui->pushButtonErrorReset->setEnabled(__controller->ErrorCode()!=0);
-    //!Show error
-    ui->textBrowserErrorDescription->setText(QString::number(__controller->ErrorCode()));
-    ui->textBrowserErrorCode->setText(QString::number(__controller->ErrorCategrory()));
-    ui->textBrowserErrorPart->setText(QString::number(__controller->ErrorDeviceIndex()));
+    if(__controller->IsError() && !ui->pushButtonErrorReset->isEnabled())
+        ui->textBrowserErrorDescription->setText(QString("%1\n%2")
+                                                 .arg(__controller->ErrorDevice())
+                                                 .arg(__controller->ErrorDescription()));
+    ui->pushButtonErrorReset->setEnabled(__controller->IsError());
+
     //!
     foreach (QWidget* var, __manualInterlock) {
         var->setEnabled(__controller->CurrentState() != ControllerMainPanel::STATE_MANUAL);

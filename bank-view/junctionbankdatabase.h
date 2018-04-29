@@ -29,6 +29,8 @@ public:
     //! Those tables this application relied on
     enum TableNames
     {
+        //!
+        DEF_OBJECT_TYPE,
         //! Data tables
         WHOLE_AXIS,
         WHOLE_CYLINDERS,
@@ -45,12 +47,22 @@ public:
         DEF_BASIC_DIMENSION,
         DEF_AXIS_TYPE,
         DEF_AUTH,
+        //! ERROR CODES
+        ERROR_CODE_AXIS,
+        ERROR_CODE_CYLINDER,
+        ERROR_CODE_UNIT,
         //! MIII tables
-        DEF_MIII_WARN_ALARM,
         DEF_MIII_ZRET_METHOD,
         //! I/O Tables
         INPUT_ATTRIBUTES,
         OUTPUT_ATTRIBUTES,
+        //! Header
+        HEADER_AXIS,
+        HEADER_CYLINDERS,
+        HEADER_SIGNALS,
+        HEADER_COMMAND_BLOCKS,
+        HEADER_UNIT,
+        HEADER_IO,
     };
     Q_ENUM(TableNames)
 
@@ -59,9 +71,13 @@ public:
     static void DatabaseName(QString value){ __databaseName = value;}
     static QString DatabaseName(){return __databaseName;}
 
-    QSqlRelationalTableModel* TableMap(TableNames value) const
+    QSqlRelationalTableModel* TableMap(TableNames value)
     {
-        return __tableMap[value].second;
+        QSqlRelationalTableModel* result = new QSqlRelationalTableModel(this);
+        result->setEditStrategy(QSqlTableModel::OnFieldChange);
+        result->setTable(__tableMap[value].second->tableName());
+        result->select();
+        return result;
     }
 
 signals:

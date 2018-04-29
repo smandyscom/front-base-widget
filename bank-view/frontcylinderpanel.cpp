@@ -4,7 +4,8 @@
 FrontCylinderPanel::FrontCylinderPanel(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FrontCylinderPanel),
-    __cylinderTable(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_CYLINDERS))
+    __cylinderTable(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_CYLINDERS)),
+    __headerTable(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::HEADER_CYLINDERS))
 {
     ui->setupUi(this);
     //!
@@ -42,6 +43,7 @@ FrontCylinderPanel::FrontCylinderPanel(QWidget *parent) :
     ui->tableViewCylinder->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableViewCylinder->setSelectionMode(QAbstractItemView::SingleSelection);
     connect(ui->tableViewCylinder,SIGNAL(clicked(QModelIndex)),this,SLOT(onViewSelectionChanged()));
+    HEADER_STRUCTURE::HeaderRender::renderViewHeader(__headerTable,ui->tableViewCylinder);
     //!
     //! \brief connect
     //!

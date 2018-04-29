@@ -65,24 +65,12 @@ MainWindow::MainWindow(QWidget *parent) :
     }
     //! Initialize FrontManaul panel
     frontControlPanel* fcp2 = new frontControlPanel(ui->tabMain);
-    FrontManaualMode* fmm = new FrontManaualMode(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_COMMAND_BLOCKS),
-                                                 JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_AXIS),
-                                                 JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_REGION),
-                                                 ui->tabManual);
-    FrontIoOverride* fio = new FrontIoOverride(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::INPUT_ATTRIBUTES),
-                                               JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::OUTPUT_ATTRIBUTES),
-                                               JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_REGION),
-                                               ui->tabIO);
+    FrontManaualMode* fmm = new FrontManaualMode(ui->tabManual);
+    FrontIoOverride* fio = new FrontIoOverride(ui->tabIO);
     FrontCylinderPanel* fcp = new FrontCylinderPanel(ui->tabCylinder);
-    FrontAxisPanel* fap = new FrontAxisPanel(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_AXIS),
-                                             JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_REGION),
-                                             ui->tabAxis);
-    FrontUnitPanel* fup = new FrontUnitPanel(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_UNITS),
-                                             JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_REGION),
-                                             ui->tabUnit);
-    FrontSignalPanel* fsp = new FrontSignalPanel(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_SIGNALS),
-                                             JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_REGION),
-                                             ui->tabSignal);
+    FrontAxisPanel* fap = new FrontAxisPanel(ui->tabAxis);
+    FrontUnitPanel* fup = new FrontUnitPanel(ui->tabUnit);
+    FrontSignalPanel* fsp = new FrontSignalPanel(ui->tabSignal);
 
     //! Connect controller and channel
     ControllerManualMode* __controller =  ControllerManualMode::Instance();
