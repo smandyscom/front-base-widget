@@ -67,9 +67,9 @@
     </rect>
    </property>
    <property name="title">
-    <string>Control</string>
+    <string>控制</string>
    </property>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -88,7 +88,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Pause</string>
+        <string>暫停/解暫停</string>
        </property>
       </widget>
      </item>
@@ -101,7 +101,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Working</string>
+        <string>工作致能</string>
        </property>
       </widget>
      </item>
@@ -114,7 +114,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Enable step</string>
+        <string>步進致能</string>
        </property>
       </widget>
      </item>
@@ -127,7 +127,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Step</string>
+        <string>步進觸發</string>
        </property>
       </widget>
      </item>
@@ -144,9 +144,9 @@
     </rect>
    </property>
    <property name="title">
-    <string>Monitor</string>
+    <string>狀態監視</string>
    </property>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -170,7 +170,7 @@
           </size>
          </property>
          <property name="text">
-          <string>State</string>
+          <string>當前狀態</string>
          </property>
         </widget>
        </item>
@@ -206,7 +206,7 @@
           </size>
          </property>
          <property name="text">
-          <string>Next state</string>
+          <string>目標狀態</string>
          </property>
         </widget>
        </item>
@@ -242,7 +242,7 @@
           </size>
          </property>
          <property name="text">
-          <string>Tick time</string>
+          <string>循環時間</string>
          </property>
         </widget>
        </item>

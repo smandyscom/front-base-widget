@@ -37,7 +37,7 @@
          <item>
           <widget class="QPushButton" name="pushButtonPrimarySelectAll">
            <property name="text">
-            <string>Select All</string>
+            <string>選擇全部</string>
            </property>
           </widget>
          </item>
@@ -49,7 +49,7 @@
     <item>
      <widget class="QGroupBox" name="groupBoxRegion">
       <property name="title">
-       <string>Region</string>
+       <string>區域</string>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
@@ -60,7 +60,7 @@
          <item>
           <widget class="QPushButton" name="pushButtonSecondary">
            <property name="text">
-            <string>Select All</string>
+            <string>選擇全部</string>
            </property>
           </widget>
          </item>

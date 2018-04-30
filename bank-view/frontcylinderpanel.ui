@@ -38,7 +38,7 @@
        </size>
       </property>
       <property name="title">
-       <string>Parameters</string>
+       <string>參數</string>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_5">
        <item>
@@ -86,7 +86,7 @@
       <item>
        <widget class="QGroupBox" name="groupBoxControl">
         <property name="title">
-         <string>Control</string>
+         <string>手動控制</string>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_4">
          <property name="leftMargin">
@@ -125,42 +125,42 @@ gridline-color: rgb(0, 0, 0);</string>
              <item>
               <widget class="QLabel" name="labelWarn">
                <property name="text">
-                <string>Warning</string>
+                <string>未到位警告</string>
                </property>
               </widget>
              </item>
              <item>
               <widget class="QLabel" name="labelMonA">
                <property name="text">
-                <string>Group A</string>
+                <string>軟點到位</string>
                </property>
               </widget>
              </item>
              <item>
               <widget class="QLabel" name="labelMonB">
                <property name="text">
-                <string>Group B</string>
+                <string>動點到位</string>
                </property>
               </widget>
              </item>
              <item>
               <widget class="QLabel" name="labelSuppress">
                <property name="text">
-                <string>Suppress</string>
+                <string>警告忽略</string>
                </property>
               </widget>
              </item>
              <item>
               <widget class="QLabel" name="labelTimeon">
                <property name="text">
-                <string>Timer on</string>
+                <string>延時觸發</string>
                </property>
               </widget>
              </item>
              <item>
               <widget class="QLabel" name="labelDone">
                <property name="text">
-                <string>Done</string>
+                <string>到位</string>
                </property>
               </widget>
              </item>
@@ -183,7 +183,7 @@ gridline-color: rgb(0, 0, 0);</string>
                 </size>
                </property>
                <property name="text">
-                <string>&lt;&lt;</string>
+                <string>縮回(軟點</string>
                </property>
               </widget>
              </item>
@@ -202,7 +202,7 @@ gridline-color: rgb(0, 0, 0);</string>
                 </size>
                </property>
                <property name="text">
-                <string>&gt;&gt;</string>
+                <string>伸出(動點</string>
                </property>
               </widget>
              </item>

@@ -57,7 +57,7 @@
      <enum>QTabWidget::Rounded</enum>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>7</number>
     </property>
     <property name="iconSize">
      <size>
@@ -70,42 +70,42 @@
     </property>
     <widget class="QWidget" name="tabMain">
      <attribute name="title">
-      <string>Main</string>
+      <string>主畫面</string>
      </attribute>
     </widget>
     <widget class="QWidget" name="tabHistory">
      <attribute name="title">
-      <string>History</string>
+      <string>歷史</string>
      </attribute>
     </widget>
     <widget class="QWidget" name="tabManual">
      <attribute name="title">
-      <string>Manual</string>
+      <string>伺服參數</string>
      </attribute>
     </widget>
     <widget class="QWidget" name="tabCylinder">
      <attribute name="title">
-      <string>Cylinder</string>
+      <string>汽缸參數</string>
      </attribute>
     </widget>
     <widget class="QWidget" name="tabIO">
      <attribute name="title">
-      <string>I/O</string>
+      <string>I/O狀態</string>
      </attribute>
     </widget>
     <widget class="QWidget" name="tabAxis">
      <attribute name="title">
-      <string>Axis</string>
+      <string>軸參數</string>
      </attribute>
     </widget>
     <widget class="QWidget" name="tabUnit">
      <attribute name="title">
-      <string>Unit</string>
+      <string>單站控制</string>
      </attribute>
     </widget>
     <widget class="QWidget" name="tabSignal">
      <attribute name="title">
-      <string>Signal</string>
+      <string>信號監視</string>
      </attribute>
     </widget>
    </widget>

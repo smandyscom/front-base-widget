@@ -69,7 +69,7 @@ FrontCylinderPanel::FrontCylinderPanel(QWidget *parent) :
     __labelColorMap[ui->labelMonB] = Qt::green;
     __labelColorMap[ui->labelSuppress] = Qt::red;
     __labelColorMap[ui->labelTimeon] = Qt::green;
-    __labelColorMap[ui->labelWarn] = Qt::green;
+    __labelColorMap[ui->labelWarn] = Qt::red;
     //! Interlock
     __busyInterlock = {
         ui->pushButtonGoA,

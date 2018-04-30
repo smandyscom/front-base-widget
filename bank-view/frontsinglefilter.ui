@@ -29,7 +29,7 @@
     </rect>
    </property>
    <property name="title">
-    <string>Filter</string>
+    <string>過濾器</string>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
@@ -64,7 +64,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Select all</string>
+         <string>選擇全部</string>
         </property>
        </widget>
       </item>
