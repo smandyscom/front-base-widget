@@ -4,6 +4,7 @@
 #include <definitionbasicblocks.h>
 #include <definitioncommandblock.h>
 
+
 int main(int argc, char *argv[])
 {
     qreal __qreal = 10/0.001;
@@ -44,6 +45,7 @@ int main(int argc, char *argv[])
     sz = sizeof(AbstractDataBlock);
     sz = sizeof(ExtendedCommandBlock);
 
+    qputenv("QT_IM_MODULE",QByteArray("qtvirtualkeyboard"));
     QApplication a(argc, argv);
     MainWindow w;
     w.show();
