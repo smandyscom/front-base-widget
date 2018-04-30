@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="title">
-    <string>Error</string>
+    <string>警報</string>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
@@ -33,7 +33,7 @@
         <item>
          <widget class="QLabel" name="label">
           <property name="text">
-           <string>Description</string>
+           <string>錯誤描述</string>
           </property>
          </widget>
         </item>
@@ -51,7 +51,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Reset</string>
+         <string>錯誤重置</string>
         </property>
        </widget>
       </item>
@@ -86,7 +86,7 @@
        <item>
         <widget class="QLabel" name="labelInletCount">
          <property name="text">
-          <string>Inlet count</string>
+          <string>入料數</string>
          </property>
         </widget>
        </item>
@@ -100,7 +100,7 @@
        <item>
         <widget class="QLabel" name="labelOutletCount">
          <property name="text">
-          <string>Outlet count</string>
+          <string>出料數</string>
          </property>
         </widget>
        </item>
@@ -114,7 +114,7 @@
        <item>
         <widget class="QLabel" name="label_4">
          <property name="text">
-          <string>Cycle time</string>
+          <string>循環時間</string>
          </property>
         </widget>
        </item>
@@ -169,7 +169,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>Initialize</string>
+           <string>機台初始化</string>
           </property>
          </widget>
         </item>
@@ -182,7 +182,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>Pause</string>
+           <string>暫停/解除暫停</string>
           </property>
          </widget>
         </item>
@@ -195,7 +195,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>Clear</string>
+           <string>清料</string>
           </property>
          </widget>
         </item>
@@ -208,7 +208,7 @@
       <item>
        <widget class="QRadioButton" name="radioButtonAuto">
         <property name="text">
-         <string>Auto</string>
+         <string>手動</string>
         </property>
         <property name="checked">
          <bool>true</bool>
@@ -218,7 +218,7 @@
       <item>
        <widget class="QRadioButton" name="radioButtonManual">
         <property name="text">
-         <string>Manual</string>
+         <string>自動</string>
         </property>
        </widget>
       </item>
