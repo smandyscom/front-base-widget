@@ -101,26 +101,6 @@
          <item>
           <layout class="QVBoxLayout" name="verticalLayoutControl">
            <item>
-            <widget class="QWidget" name="widgetBankTransfer" native="true">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>210</height>
-              </size>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">border-color: rgb(0, 0, 0);
-gridline-color: rgb(0, 0, 0);</string>
-             </property>
-            </widget>
-           </item>
-           <item>
             <layout class="QHBoxLayout" name="horizontalLayoutStatus">
              <item>
               <widget class="QLabel" name="labelWarn">

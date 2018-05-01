@@ -226,6 +226,16 @@
     </item>
    </layout>
   </widget>
+  <widget class="QWidget" name="widgetTransfer" native="true">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>430</y>
+     <width>271</width>
+     <height>141</height>
+    </rect>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

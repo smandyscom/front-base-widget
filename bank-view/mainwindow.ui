@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1280</width>
-    <height>768</height>
+    <height>960</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,7 +19,7 @@
   <property name="maximumSize">
    <size>
     <width>1280</width>
-    <height>768</height>
+    <height>960</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -32,11 +32,11 @@
       <x>0</x>
       <y>0</y>
       <width>1280</width>
-      <height>711</height>
+      <height>880</height>
      </rect>
     </property>
     <property name="sizePolicy">
-     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
       <horstretch>0</horstretch>
       <verstretch>0</verstretch>
      </sizepolicy>
@@ -44,7 +44,7 @@
     <property name="maximumSize">
      <size>
       <width>1280</width>
-      <height>768</height>
+      <height>960</height>
      </size>
     </property>
     <property name="layoutDirection">
@@ -93,11 +93,6 @@
       <string>I/O狀態</string>
      </attribute>
     </widget>
-    <widget class="QWidget" name="tabAxis">
-     <attribute name="title">
-      <string>軸參數</string>
-     </attribute>
-    </widget>
     <widget class="QWidget" name="tabUnit">
      <attribute name="title">
       <string>單站控制</string>
@@ -106,6 +101,11 @@
     <widget class="QWidget" name="tabSignal">
      <attribute name="title">
       <string>信號監視</string>
+     </attribute>
+    </widget>
+    <widget class="QWidget" name="tabConfiguration">
+     <attribute name="title">
+      <string>組態傳輸</string>
      </attribute>
     </widget>
    </widget>

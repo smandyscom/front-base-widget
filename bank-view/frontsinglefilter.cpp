@@ -1,36 +1,41 @@
 #include "frontsinglefilter.h"
 #include "ui_frontsinglefilter.h"
 
-FrontSingleFilter::FrontSingleFilter(QSqlTableModel *dataTable,
-                                     QSqlTableModel *primaryTable,
-                                     QString key,
-                                     QString showColumn,
-                                     QWidget *parent) :
+FrontSingleFilter::FrontSingleFilter(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::FrontSingleFilter),
-    __dataTable(dataTable),
-    __key(key)
+    ui(new Ui::FrontSingleFilter)
 {
     ui->setupUi(this);
     //!
-    ui->comboBoxPrimary->setModel(primaryTable);
-    ui->comboBoxPrimary->setView(new QListView(ui->comboBoxPrimary));
-    ui->comboBoxPrimary->setModelColumn(primaryTable->fieldIndex(showColumn));
-
-    connect(ui->comboBoxPrimary,SIGNAL(activated(int)),this,SLOT(onSelectedIndexChanged(int)));
+    __dataKey = QString("REGION"); //default
+    ui->labelPrimary->setText(__dataKey.toString());
     //!
+    connect(ui->comboBoxPrimary,SIGNAL(activated(int)),this,SLOT(onSelectedIndexChanged(int)));
     connect(ui->pushButtonSelectAll,SIGNAL(clicked(bool)),this,SLOT(onSelectAll()));
     //!
-    ui->labelPrimary->setText(__key);
 }
 
 void FrontSingleFilter::onSelectedIndexChanged(int i)
 {
-    __dataTable->setFilter(tr("%1=%2").arg(__key).arg(i));
+    QSqlTableModel* __primaryTable = reinterpret_cast<QSqlTableModel*>(ui->comboBoxPrimary->model());
+    int id = __primaryTable->record(i).value(QVariant::fromValue(ID).toString()).toInt();
+
+   __dataTable->setFilter( utilities::generateFilterString(__dataKey,QVariant::fromValue(id)));
 }
 
 void FrontSingleFilter::onSelectAll()
 {
     __dataTable->setFilter(nullptr);
     __dataTable->select();
+}
+
+void FrontSingleFilter::PrimaryTable(QSqlTableModel *model, QVariant showKey)
+{
+    utilities::linkQComboBoxAndModel(ui->comboBoxPrimary,model,showKey);
+}
+
+void FrontSingleFilter::DataKey(QVariant key)
+{
+    __dataKey = key;
+    ui->labelPrimary->setText(__dataKey.toString());
 }

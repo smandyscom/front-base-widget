@@ -16,9 +16,8 @@ FrontManaualMode::FrontManaualMode(QWidget *parent) :
     ui->setupUi(this);
     //! Link
     __controller = ControllerManualMode::Instance();
-    __commandBlockAdaptor = ControllerBankTransfer::Instance()->Adaptor(CommitBlock::SELECTION_COMMAND_BLOCK);
+    __commandBlockAdaptor = ControllerBankTransfer::Adaptor(CommitBlock::SELECTION_COMMAND_BLOCK);
     //! Resued widgets
-    new FrontBankTransfer(CommitBlock::SELECTION_COMMAND_BLOCK,ui->widgetBankTransfer);
     FrontTwinFilter* __ftf = new FrontTwinFilter(__commandBlockTable,
                                                 QVariant::fromValue(CommandBlock::AXIS_ID),
                                                 __axisTable,
@@ -53,7 +52,7 @@ FrontManaualMode::FrontManaualMode(QWidget *parent) :
     //!
     __timer = new QTimer(this);
     connect(__timer,SIGNAL(timeout()),this,SLOT(onTimerTimeout()));
-    __timer->start(100);//every 100 ms update once
+    __timer->start();//every 100 ms update once
 
     ui->tableViewCommandBlock->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->tableViewCommandBlock->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -132,7 +131,9 @@ void FrontManaualMode::onManualOperationClicked()
     {
         if(!ui->tableViewCommandBlock->selectionModel()->hasSelection())
             return;
-        int __commandBlockId = __commandBlockTable->record(SelectedBlockIndex()).value(QVariant::fromValue(ID).toString()).toInt();
+        int __commandBlockId = __commandBlockTable->record(SelectedBlockIndex())
+                .value(utilities::trimNamespace(QVariant::fromValue(CommandBlock::ID)))
+                .toInt();
         *static_cast<AbstractDataBlock*>(&__commandBlock) =
                 __commandBlockAdaptor->Record(__commandBlockId,
                                               AbstractSqlTableAdpater::KEY_NAMED_KEY,
@@ -231,7 +232,7 @@ void FrontManaualMode::setCommonParameters(AbstractCommandBlock& __commandBlock)
     //! Set Address
     __commandBlock.Value(AbstractCommandBlock::OFFSET_ACB_AXIS_ID,
                          utilities::getSqlTableSelectedRecord(__axisTable,
-                                                              QVariant::fromValue(ID),
+                                                              utilities::trimNamespace(QVariant::fromValue(CommandBlock::ID)),
                                                               __selectedAxisId)
                          .value(utilities::trimNamespace(QVariant::fromValue(AxisBlock::ADDRESS))));
 
@@ -261,7 +262,9 @@ void FrontManaualMode::onTimerTimeout()
     //! Servo ready/alarm
     __address.setRegisterAddress(AxisMonitorBlock::OFFSET_MONITOR_RUN_STATUS);
     __address.setBitIndex(AxisMonitorBlock::RS_SERVO_READY);
-    utilities::colorChangeOver(ui->labelServoReady,amb.Value(__address.getAddress()).toBool(),Qt::red);
+    utilities::colorChangeOver(ui->labelServoReady,amb.Value(__address.getAddress()).toBool(),
+                               Qt::green,
+                               Qt::red);
     //! Alarm/Warning details
     //ui->textBrowserWarning->setText(QString(amb.Warning()));
     //ui->textBrowseAlarm->setText(QString(amb.Alarm()));

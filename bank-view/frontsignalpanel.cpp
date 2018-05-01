@@ -7,13 +7,9 @@ FrontSignalPanel::FrontSignalPanel(QWidget *parent) :
 {
     ui->setupUi(this);
     //!
-    new FrontSingleFilter(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_SIGNALS),
-                          JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_REGION),
-                          utilities::trimNamespace(QVariant::fromValue(SignalBlock::REGION)),
-                          utilities::trimNamespace(QVariant::fromValue(SignalBlock::NAME)),
-                          ui->widgetFilter);
-    new FrontBankTransfer(CommitBlock::SELECTION_SIGNAL,
-                          ui->widgetTransfer);
+    FrontSingleFilter* __fsf = new FrontSingleFilter(ui->widgetFilter);
+    __fsf->DataTable(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_SIGNALS));
+    __fsf->PrimaryTable(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_REGION));
     //!
     ui->tableViewSignal->setModel(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_SIGNALS));
     //!

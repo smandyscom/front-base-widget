@@ -8,29 +8,17 @@ ControllerBankTransfer::ControllerBankTransfer(QObject *parent) :
     __controller = ControllerManualMode::Instance();
 
     connect(__controller,SIGNAL(operationPerformed()),this,SLOT(onControllerOperationPerformed()));
-
-    __currentIndex = !PROCESSING;
 }
 
-void ControllerBankTransfer::onTransferData(int rowIndex)
+void ControllerBankTransfer::onTransferData()
 {
     if(__commitOption.Mode()!=CommitBlock::MODE_DOWNLOAD_DATA_BLOCK &&
             __commitOption.Mode() != CommitBlock::MODE_UPLOAD_DATA_BLOCK)
         return; // invalid mode
 
-    if(rowIndex==BATCH_MODE)
-    {
-        __currentIndex = 0;
-        __goal = __adaptor->Model()->rowCount(); //batch mode activated
-    }
-    else
-    {
-        __currentIndex = rowIndex;
-        __goal = __currentIndex+1; //single mode
-    }
-
     //!Raise asynchrons operation
     QtConcurrent::run(this,&ControllerBankTransfer::transfer);
+    emit dataTransfering(__tasksQueue.head());
 }
 
 //!
@@ -42,38 +30,57 @@ void ControllerBankTransfer::onControllerOperationPerformed()
             __controller->CommitOption().Mode()!=CommitBlock::MODE_UPLOAD_DATA_BLOCK)
         return; //ignored
 
-    __adaptor->Record(__currentIndex,__controller->DataBlock<AbstractDataBlock>().value<AbstractDataBlock>());
-    __currentIndex = __controller->CommitOption().Index()+1; //follow the current index
-    //! Raise next operation if any
-    if(__currentIndex < __goal)
-    {
+    TransferTask __task = __tasksQueue.dequeue();
 
-        QtConcurrent::run(this,&ControllerBankTransfer::transfer);
-    }
-    else
+    __adaptorMap[__task.first]->
+            Record(__task.second,__controller->DataBlock<AbstractDataBlock>().value<AbstractDataBlock>());
+
+    if(__tasksQueue.isEmpty())
     {
         emit dataTransfered();
         return; //no next trigger
     }
 
-    emit dataTransfering();
+    //! Raise next operation
+    QtConcurrent::run(this,&ControllerBankTransfer::transfer);
+    emit dataTransfering(__tasksQueue.head());
 }
 
 void ControllerBankTransfer::transfer()
 {
-    __commitOption.Index(__currentIndex);
+    //! Following task instruction
+    TransferTask __task = __tasksQueue.head();
+    __commitOption.Selection(__task.first);
+    __commitOption.Index(__task.second);
+    //! Setup option
     __controller->CommitOption(__commitOption);
-    __controller->DataBlock(QVariant::fromValue(static_cast<CellDataBlock>( __adaptor->Record(__currentIndex)))); //Write-in anyway
+    //! Setup data pack
+    __controller->DataBlock(QVariant::fromValue(static_cast<CellDataBlock>(__adaptorMap[__task.first]->Record(__task.second)))); //Write-in anyway
     //! Wait until controller comes to right state
     while (__controller->CurrentState()!=ControllerManualMode::STATE_IDLE) {}
     emit __controller->operationTriggered();
 }
 
-ControllerBankTransfer* ControllerBankTransfer::Instance()
+void ControllerBankTransfer::PutTask(TransferTask task)
 {
-    if(__instance==nullptr)
-        __instance = new ControllerBankTransfer();
-    return __instance;
+    switch (task.second) {
+    case BATCH_ALL_MODE:
+    {
+        //! Populating
+        for(int i=0;i<__adaptorMap[task.first]->Model()->rowCount();i++)
+            __tasksQueue.enqueue(TransferTask(task.first,i));
+        break;
+    }
+    case BATCH_PRESCHEDUALED_MODE:
+        //! Do nothing , let following procedure wipe out all things in queue
+        if(__tasksQueue.isEmpty())
+            return; //nothing to do
+        break;
+    default:
+        //! Singal mode (Positive index
+        __tasksQueue.enqueue(task);
+        break;
+    }
 }
 
-ControllerBankTransfer* ControllerBankTransfer::__instance = nullptr;
+QMap<CommitBlock::CommitDataBlockSelection,AbstractSqlTableAdpater*> ControllerBankTransfer::__adaptorMap;

@@ -10,6 +10,8 @@
 #include <QColor>
 #include <QPalette>
 #include <QTableView>
+#include <QComboBox>
+#include <QListView>
 
 #include <QSqlTableModel>
 #include <QSqlRecord>
@@ -47,7 +49,7 @@ public:
     static KeyValueCollection model2KeyValuePairs(const QAbstractItemModel &model);
 
     static int sizeOf(QVariant value);
-    static void colorChangeOver(QWidget* target,bool value,Qt::GlobalColor trueColor=Qt::green);
+    static void colorChangeOver(QWidget* target, bool value, Qt::GlobalColor trueColor=Qt::green, Qt::GlobalColor falseColor=Qt::gray);
 
     static int getSelectedValue(QTableView* target,const QString& keyName);
     static QSqlRecord getSqlTableSelectedRecord(QSqlTableModel* target,QVariant keyName,QVariant keyValue);
@@ -55,7 +57,9 @@ public:
 
     static QString trimNamespace(QVariant key);
 
-
+    static void linkQComboBoxAndModel(QComboBox* comboBox,
+                                      QSqlTableModel *model,
+                                      QVariant showKey = QString("NAME"));
 };
 
 #endif // UTILITIES_H

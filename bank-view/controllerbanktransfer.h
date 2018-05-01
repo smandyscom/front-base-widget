@@ -11,6 +11,7 @@
 #include <controllermanualmode.h>
 #include <abstractsqltableadpater.h>
 
+typedef QPair<CommitBlock::CommitDataBlockSelection,int> TransferTask;
 //!
 //! \brief The ControllerBankManager class
 //! Charge the operation about transfer from/to PLC
@@ -20,67 +21,57 @@ class ControllerBankTransfer : public QObject
 public:
     enum ModeAndStatus
     {
-        BATCH_MODE=-1,
+        //! Mode
+        BATCH_ALL_MODE=-1,
+        BATCH_PRESCHEDUALED_MODE=-2,
+        //! Status
         PROCESSING=-1,
     };
     Q_ENUM(ModeAndStatus)
 
-
-
-    int Goal() const {return __goal;}
-    int CurrentIndex() const {return __currentIndex;}
+    //! Status
+    int RestTasksCount() const {return __tasksQueue.count();}
     bool IsProcessing() const {
-        return __currentIndex == PROCESSING ||
+        return !__tasksQueue.isEmpty() ||
                 __controller->CurrentState()!=ControllerManualMode::STATE_IDLE;
     }
-    qreal Progress() const { return (__currentIndex+1)/__goal;}
-
-    void Adaptor(CommitBlock::CommitDataBlockSelection key,AbstractSqlTableAdpater* value)
+    //! Linkage and configuration
+    static void Adaptor(CommitBlock::CommitDataBlockSelection key,AbstractSqlTableAdpater* value)
     {
         __adaptorMap[key] = value;
     }
-    AbstractSqlTableAdpater* Adaptor(CommitBlock::CommitDataBlockSelection key) const
+    static AbstractSqlTableAdpater* Adaptor(CommitBlock::CommitDataBlockSelection key)
     {
         return __adaptorMap[key];
     }
 
-    void DataBlockSelection(CommitBlock::CommitDataBlockSelection value)
-    {
-        __adaptor = __adaptorMap[value];
-        __commitOption.Selection(value);
-    }
-    CommitBlock::CommitDataBlockSelection DataBlockSelection() const
-    {
-        return __commitOption.Selection();
-    }
     void Direction(CommitBlock::CommitMode value)
     {
         __commitOption.Mode(value);
     }
 
-    static ControllerBankTransfer* Instance();
+    void PutTask(TransferTask task);
+
+
+    explicit ControllerBankTransfer(QObject *parent = nullptr);
 
 signals:
     void dataTransfered();
-    void dataTransfering();
+    void dataTransfering(TransferTask task);
 public slots:
     //!
     //! \brief onTransferData
     //! \param mode
     //! \param rowIndex non -1, single mode, -1 ,batch mode
     //!
-    void onTransferData(int rowIndex = BATCH_MODE);
+    void onTransferData();
 protected slots:
     void onControllerOperationPerformed();
 protected:
-    explicit ControllerBankTransfer(QObject *parent = nullptr);
-
-    int __currentIndex;
-    int __goal;
 
     CommitBlock __commitOption;
 
-    QMap<CommitBlock::CommitDataBlockSelection,AbstractSqlTableAdpater*> __adaptorMap;
+    static QMap<CommitBlock::CommitDataBlockSelection,AbstractSqlTableAdpater*> __adaptorMap;
 
     AbstractSqlTableAdpater* __adaptor;
     //!
@@ -89,8 +80,8 @@ protected:
     ControllerManualMode* __controller;
 
     void transfer();
+    QQueue<TransferTask> __tasksQueue;
 
-    static ControllerBankTransfer* __instance;
 };
 
 #endif // CONTROLLERBANKMANAGER_H

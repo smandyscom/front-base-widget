@@ -28,16 +28,12 @@ FrontCylinderPanel::FrontCylinderPanel(QWidget *parent) :
         ACT_B_2,
     };
     //! Loading widgets
-    new FrontSingleFilter(__cylinderTable,
-                          JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_REGION),
-                          "REGION",
-                          "NAME",
-                          ui->widgetFilter);
-    new FrontBankTransfer(CommitBlock::SELECTION_CYLINDER,
-                          ui->widgetBankTransfer);
+    FrontSingleFilter* __fsf =  new FrontSingleFilter(ui->widgetFilter);
+    __fsf->DataTable(__cylinderTable);
+    __fsf->PrimaryTable(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_REGION));
     //!
-    ui->tableViewInputs->setModel(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::INPUT_ATTRIBUTES));
-    ui->tableViewOutputs->setModel(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::OUTPUT_ATTRIBUTES));
+    ui->tableViewInputs->setModel(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_INPUTS));
+    ui->tableViewOutputs->setModel(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_OUTPUTS));
     //!
     ui->tableViewCylinder->setModel(__cylinderTable);
     ui->tableViewCylinder->setSelectionBehavior(QAbstractItemView::SelectRows);

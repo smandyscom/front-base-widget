@@ -6,6 +6,12 @@
 #include <QSqlTableModel>
 #include <QTableView>
 #include <QListView>
+
+#include <utilities.h>
+#include <definitionauxiliarykeys.h>
+
+using namespace HEADER_STRUCTURE;
+
 namespace Ui {
 class FrontSingleFilter;
 }
@@ -14,15 +20,14 @@ class FrontSingleFilter : public QWidget
 {
     Q_OBJECT
 public:
-    explicit FrontSingleFilter(QSqlTableModel* dataTable,
-                               QSqlTableModel* primaryTable,
-                               QString key = "REGION",
-                               QString showColumn = "NAME",
-                               QWidget *parent = nullptr);
+    explicit FrontSingleFilter(QWidget *parent = nullptr);
 
-signals:
-
-public slots:
+    void PrimaryTable(QSqlTableModel* model,QVariant column = QString("zh_TW"));
+    void DataTable(QSqlTableModel* model)
+    {
+        __dataTable = model;
+    }
+    void DataKey(QVariant key);
 protected slots:
     void onSelectedIndexChanged(int i);
     void onSelectAll();
@@ -30,7 +35,7 @@ protected:
      Ui::FrontSingleFilter *ui;
 
     QSqlTableModel* __dataTable;
-    QString __key;
+    QVariant __dataKey;
 };
 
 #endif // FRONTSINGLEFILTER_H

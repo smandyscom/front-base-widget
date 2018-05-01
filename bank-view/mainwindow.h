@@ -8,8 +8,7 @@
 
 
 #include <frontiooverride.h>
-
-#include <frontaxispanel.h>
+#include <frontconfigurationtransfer.h>
 #include <frontcylinderpanel.h>
 #include <frontsignalpanel.h>
 

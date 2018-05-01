@@ -8,13 +8,9 @@ FrontUnitPanel::FrontUnitPanel(QWidget *parent) :
 {
     ui->setupUi(this);
     //!
-    new FrontSingleFilter(__unitTable,
-                          JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_REGION),
-                          utilities::trimNamespace(QVariant::fromValue(UnitBlock::LSID_BASE)),
-                          utilities::trimNamespace(QVariant::fromValue(UnitBlock::NAME)),
-                          ui->widgetFilter);
-    new FrontBankTransfer(CommitBlock::SELECTION_UNIT,
-                          ui->widgetTransfer);
+    FrontSingleFilter* __fsf = new FrontSingleFilter(ui->widgetFilter);
+    __fsf->DataTable(__unitTable);
+    __fsf->PrimaryTable(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_REGION));
     //!
     ui->tableViewUnit->setModel(__unitTable);
     ui->tableViewUnit->setSelectionBehavior(QAbstractItemView::SelectRows);

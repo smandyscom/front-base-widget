@@ -46,12 +46,12 @@ SOURCES += \
     controllermainpanel.cpp \
     tablemodeliooverride.cpp \
     controllermaterialtransfer.cpp \
-    frontaxispanel.cpp \
     frontunitpanel.cpp \
     frontsignalpanel.cpp \
     definitionbasicblocks.cpp \
     definitionsbaselayer.cpp \
-    definitionauxiliarykeys.cpp
+    definitionauxiliarykeys.cpp \
+    frontconfigurationtransfer.cpp
 HEADERS += \
     modbussetupwidget.h \
     utilities.h \
@@ -83,9 +83,9 @@ HEADERS += \
     definitionioattributes.h \
     definitionauxiliarykeys.h \
     controllermaterialtransfer.h \
-    frontaxispanel.h \
     frontunitpanel.h \
-    frontsignalpanel.h
+    frontsignalpanel.h \
+    frontconfigurationtransfer.h
 
 unix {
     target.path = /usr/lib
@@ -102,6 +102,6 @@ FORMS += \
     frontbanktransfer.ui \
     fronttwinfilter.ui \
     frontsinglefilter.ui \
-    frontaxispanel.ui \
     frontunitpanel.ui \
-    frontsignalpanel.ui
+    frontsignalpanel.ui \
+    frontconfigurationtransfer.ui

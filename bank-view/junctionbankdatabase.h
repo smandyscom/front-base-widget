@@ -54,8 +54,8 @@ public:
         //! MIII tables
         DEF_MIII_ZRET_METHOD,
         //! I/O Tables
-        INPUT_ATTRIBUTES,
-        OUTPUT_ATTRIBUTES,
+        WHOLE_INPUTS,
+        WHOLE_OUTPUTS,
         //! Header
         HEADER_AXIS,
         HEADER_CYLINDERS,

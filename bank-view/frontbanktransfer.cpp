@@ -2,17 +2,20 @@
 #include "ui_frontbanktransfer.h"
 #include <QList>
 
-FrontBankTransfer::FrontBankTransfer(CommitBlock::CommitDataBlockSelection selection, QWidget *parent) :
+FrontBankTransfer::FrontBankTransfer(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::FrontBankTransfer),
-    __selection(selection)
+    ui(new Ui::FrontBankTransfer)
 {
     ui->setupUi(this);
-    __transfer = ControllerBankTransfer::Instance();
+    __controllerTransfer = new ControllerBankTransfer(this);
+
+    __titlePrefix = ui->groupBox->title();
 
     //!Push button
-    QList<QPushButton*> __list = {ui->pushButtonUpload,
-                                  ui->pushButtonDownload};
+    QList<QPushButton*> __list = {
+        ui->pushButtonUpload,
+        ui->pushButtonDownload
+    };
 
     foreach (QPushButton* var, __list) {
         connect(var,SIGNAL(clicked(bool)),this,SLOT(onButtonClicked()));
@@ -23,39 +26,41 @@ FrontBankTransfer::FrontBankTransfer(CommitBlock::CommitDataBlockSelection selec
         ui->pushButtonUpload
     };
     //!Progress bar
-    connect(__transfer,&ControllerBankTransfer::dataTransfering,[=](){
-        ui->textBrowserProgress->setText(tr("%1/%2").arg(__transfer->CurrentIndex()+1).arg(__transfer->Goal()));
-        ui->progressBar->setValue(__transfer->CurrentIndex()+1);
+    connect(__controllerTransfer,&ControllerBankTransfer::dataTransfering,[=](){
+        ui->textBrowserProgress->setText(QString(__controllerTransfer->RestTasksCount()));
+        ui->progressBar->setValue(__controllerTransfer->RestTasksCount());
     });
+    connect(__controllerTransfer,&ControllerBankTransfer::dataTransfering,this,&FrontBankTransfer::onTransfering);
 
     //!Launch
     __timer = new QTimer(this);
     connect(__timer,SIGNAL(timeout()),this,SLOT(onScanning()));
-    __timer->start(100);
+    __timer->start();
 }
 
 void FrontBankTransfer::onButtonClicked()
 {
     if(sender()==ui->pushButtonUpload)
     {
-        __transfer->Direction(CommitBlock::MODE_UPLOAD_DATA_BLOCK);
+        __controllerTransfer->Direction(CommitBlock::MODE_UPLOAD_DATA_BLOCK);
     }
     else if(sender()==ui->pushButtonDownload)
     {
-        __transfer->Direction(CommitBlock::MODE_DOWNLOAD_DATA_BLOCK);
+        __controllerTransfer->Direction(CommitBlock::MODE_DOWNLOAD_DATA_BLOCK);
     }
-    __transfer->DataBlockSelection(__selection);
-    __transfer->onTransferData();
+    //! Configure and run
+    __controllerTransfer->PutTask(TransferTask(__selection,ControllerBankTransfer::BATCH_ALL_MODE));
+    __controllerTransfer->onTransferData();
 
     //!Setup progress bar
-    ui->progressBar->setMaximum(__transfer->Goal());
+    ui->progressBar->setMaximum(0);
     ui->progressBar->reset();
 }
 void FrontBankTransfer::onScanning()
 {
     //!Forbidden to control when processing
     foreach (QWidget* var, __interlockedList) {
-        var->setEnabled(!__transfer->IsProcessing());
+        var->setEnabled(!__controllerTransfer->IsProcessing());
     }
 }
 
@@ -63,3 +68,23 @@ FrontBankTransfer::~FrontBankTransfer()
 {
     delete ui;
 }
+
+void FrontBankTransfer::Selection(CommitBlock::CommitDataBlockSelection value)
+{
+    __selection = value;
+
+}
+void FrontBankTransfer::onTransfering(TransferTask task)
+{
+    //! Change over current selection visual
+    ui->groupBox->setTitle(QString("%1:%2,%3")
+                           .arg(__titlePrefix)
+                           .arg(utilities::getSqlTableSelectedRecord(ObjectTable,
+                                                                     QVariant::fromValue(ID),
+                                                                     QVariant::fromValue(static_cast<int>(task.first)))
+                                .value(QVariant::fromValue(zh_TW).toString())
+                                .toString())
+                           .arg(task.second));
+}
+
+QSqlTableModel* FrontBankTransfer::ObjectTable = nullptr;

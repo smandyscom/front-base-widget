@@ -22,11 +22,13 @@ int utilities::sizeOf(QVariant value)
     return QMetaType::sizeOf(QMetaType::type(value.typeName()));
 }
 
-void utilities::colorChangeOver(QWidget *target, bool value, Qt::GlobalColor trueColor)
+void utilities::colorChangeOver(QWidget *target, bool value,
+                                Qt::GlobalColor trueColor,
+                                Qt::GlobalColor falseColor)
 {
     Qt::GlobalColor __color = trueColor;
     if(!value)
-        __color = Qt::gray;
+        __color = falseColor;
     target->setStyleSheet(QString("background-color : %1").arg(QVariant::fromValue(__color).value<QString>()));
 }
 
@@ -57,4 +59,14 @@ QString utilities::generateFilterString(QVariant keyName, QVariant keyValue)
 QString utilities::trimNamespace(QVariant key)
 {
     return key.toString().split("::").last();
+}
+
+void utilities::linkQComboBoxAndModel(QComboBox *comboBox, QSqlTableModel *model, QVariant showKey)
+{
+    comboBox->setModel(model);
+    QListView* qtv = new QListView(comboBox);
+    comboBox->setView(qtv);
+    //! Show key column only
+    comboBox->setModelColumn(model->fieldIndex(showKey.toString()));
+    comboBox->setCurrentIndex(0);
 }
