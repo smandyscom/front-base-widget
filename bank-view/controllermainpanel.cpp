@@ -23,6 +23,9 @@ ControllerMainPanel::ControllerMainPanel(QObject *parent) : QObject(parent)
     __deviceTable = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_OBJECT_TYPE);
     //!
     __key = zh_TW;
+    //!
+    __controllerTransfer = new ControllerBankTransfer(this);
+    connect(__controllerTransfer,SIGNAL(dataTransfered()),this,SLOT(onDataTransfered()));
 }
 
 //!
@@ -85,6 +88,17 @@ QString ControllerMainPanel::ErrorDescription() const
     return QString("%1\n%2")
             .arg(__lowerDescription)
             .arg(__higherDescription);
+}
+
+void ControllerMainPanel::onDataChanged(TransferTask task)
+{
+    __controllerTransfer->PutTask(task);
+}
+
+void ControllerMainPanel::onDataTransfered()
+{
+    //! Turns into auto mode
+    __channel->Access(ModbusDriverAddress(MANUAL_TOOGLE_MANUAL),false);
 }
 
 ControllerMainPanel* ControllerMainPanel::__instace = nullptr;

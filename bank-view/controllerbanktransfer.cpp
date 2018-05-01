@@ -7,7 +7,10 @@ ControllerBankTransfer::ControllerBankTransfer(QObject *parent) :
     __commitOption.Selection(CommitBlock::SELECTION_COMMAND_BLOCK);
     __controller = ControllerManualMode::Instance();
 
-    connect(__controller,SIGNAL(operationPerformed()),this,SLOT(onControllerOperationPerformed()));
+    connect(this,&ControllerBankTransfer::dataTransfered,[=](){
+       //! cut link after done
+       disconnect(__controller,SIGNAL(operationPerformed()),this,SLOT(onControllerOperationPerformed()));
+    });
 }
 
 void ControllerBankTransfer::onTransferData()
@@ -16,7 +19,16 @@ void ControllerBankTransfer::onTransferData()
             __commitOption.Mode() != CommitBlock::MODE_UPLOAD_DATA_BLOCK)
         return; // invalid mode
 
-    //!Raise asynchrons operation
+    //! connect before operation
+    connect(__controller,SIGNAL(operationPerformed()),this,SLOT(onControllerOperationPerformed()));
+
+    if(__tasksQueue.isEmpty())
+    {
+        emit dataTransfered();
+        return;
+    }
+
+     //!Raise asynchrons operation
     QtConcurrent::run(this,&ControllerBankTransfer::transfer);
     emit dataTransfering(__tasksQueue.head());
 }
@@ -78,7 +90,9 @@ void ControllerBankTransfer::PutTask(TransferTask task)
         break;
     default:
         //! Singal mode (Positive index
-        __tasksQueue.enqueue(task);
+        //! Find if repeated
+        if(!__tasksQueue.contains(task))
+            __tasksQueue.enqueue(task);
         break;
     }
 }

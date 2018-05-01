@@ -23,6 +23,7 @@ protected slots:
     void onTimerTimeout();
     void onCheckedChanged();
     void onStateChanged(ControllerMainPanel::MainStates currentState);
+
 private:
     Ui::frontControlPanel *ui;
 

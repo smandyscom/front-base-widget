@@ -73,6 +73,9 @@ MainWindow::MainWindow(QWidget *parent) :
     FrontUnitPanel* fup = new FrontUnitPanel(ui->tabUnit);
     FrontSignalPanel* fsp = new FrontSignalPanel(ui->tabSignal);
     FrontConfigurationTransfer* fct = new FrontConfigurationTransfer(ui->tabConfiguration);
+    //! Connect data changed
+    connect(fmm,&FrontManaualMode::dataChanged,ControllerMainPanel::Instance(),&ControllerMainPanel::onDataChanged);
+    connect(fcp,&FrontCylinderPanel::dataChanged,ControllerMainPanel::Instance(),&ControllerMainPanel::onDataChanged);
     //! Connect controller and channel
     ControllerManualMode* __controller =  ControllerManualMode::Instance();
     ModbusChannel* __channel = ModbusChannel::Instance();

@@ -31,6 +31,8 @@ class FrontCylinderPanel : public QWidget
 public:
     explicit FrontCylinderPanel(QWidget *parent = 0);
     ~FrontCylinderPanel();
+signals:
+    void dataChanged(TransferTask task);
 protected slots:
     void onCylinderCommandClicked();
     void onViewSelectionChanged();

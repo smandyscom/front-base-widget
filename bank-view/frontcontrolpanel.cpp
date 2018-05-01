@@ -35,6 +35,11 @@ frontControlPanel::frontControlPanel(QWidget *parent) :
     connect(ui->radioButtonManual,SIGNAL(toggled(bool)),this,SLOT(onCheckedChanged()));
     //!
     connect(__controller,&ControllerMainPanel::stateChanged,this,&frontControlPanel::onStateChanged);
+    //!
+    connect(__controller->ControllerTransfer(),&ControllerBankTransfer::dataTransfering,[=](TransferTask task){
+        //!
+        ui->progressBarSync->setValue(ui->progressBarSync->value()+1);
+    });
 }
 
 frontControlPanel::~frontControlPanel()
@@ -60,11 +65,16 @@ void frontControlPanel::onTimerTimeout()
     foreach (QWidget* var, __autoInterlock) {
         var->setEnabled(__controller->CurrentState() != ControllerMainPanel::STATE_AUTO);
     }
+    //!
+    ui->textBrowserSyncCount->setText(QString::number(__controller->ControllerTransfer()->RestTasksCount()));
 }
 
 void frontControlPanel::onCheckedChanged()
 {
     __controller->Manual(ui->radioButtonManual->isChecked());
+    //!
+    ui->progressBarSync->setMaximum(__controller->ControllerTransfer()->RestTasksCount());
+    ui->progressBarSync->reset();
 }
 
 void frontControlPanel::onStateChanged(ControllerMainPanel::MainStates currentState)

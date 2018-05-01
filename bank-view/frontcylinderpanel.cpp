@@ -71,6 +71,19 @@ FrontCylinderPanel::FrontCylinderPanel(QWidget *parent) :
         ui->pushButtonGoA,
         ui->pushButtonGoB
     };
+    //!
+    connect(__cylinderTable,&QSqlRelationalTableModel::dataChanged,[=](const QModelIndex &topLeft,
+            const QModelIndex &bottomRight,
+            const QVector<int> &roles = QVector<int>()){
+        //!
+        TransferTask __task;
+        __task.first = CommitBlock::SELECTION_CYLINDER;
+        //! Turns into absolute row index
+        __task.second =  __cylinderTable->record( topLeft.row())
+                .value(QVariant::fromValue(CylinderBlock::ID).toString())
+                .toInt();
+        emit dataChanged(__task);
+    });
 }
 
 

@@ -41,6 +41,8 @@ class FrontManaualMode : public QWidget
 public:
     explicit FrontManaualMode(QWidget *parent = 0);
     ~FrontManaualMode();
+signals:
+    void dataChanged(TransferTask task);
 protected slots:
     //!
     //! \brief onButtonBankSetClick

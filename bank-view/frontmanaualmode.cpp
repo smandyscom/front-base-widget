@@ -81,6 +81,19 @@ FrontManaualMode::FrontManaualMode(QWidget *parent) :
         ui->pushButtonParameterSet,
         ui->pushButtonBankExecution
     };
+    //! Forward dataChanged
+    connect(__commandBlockTable,&QSqlRelationalTableModel::dataChanged,[=](const QModelIndex &topLeft,
+            const QModelIndex &bottomRight,
+            const QVector<int> &roles = QVector<int>()){
+        //!
+        TransferTask __task;
+        __task.first = CommitBlock::SELECTION_COMMAND_BLOCK;
+        //! Turns into absolute row index
+        __task.second =  __commandBlockTable->record( topLeft.row())
+                .value(QVariant::fromValue(CommandBlock::ID).toString())
+                .toInt();
+        emit dataChanged(__task);
+    });
 }
 
 FrontManaualMode::~FrontManaualMode()

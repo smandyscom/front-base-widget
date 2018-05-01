@@ -28,7 +28,7 @@ FrontBankTransfer::FrontBankTransfer(QWidget *parent) :
     //!Progress bar
     connect(__controllerTransfer,&ControllerBankTransfer::dataTransfering,[=](){
         ui->textBrowserProgress->setText(QString(__controllerTransfer->RestTasksCount()));
-        ui->progressBar->setValue(__controllerTransfer->RestTasksCount());
+        ui->progressBar->setValue(ui->progressBar->value()+1);
     });
     connect(__controllerTransfer,&ControllerBankTransfer::dataTransfering,this,&FrontBankTransfer::onTransfering);
 
@@ -53,7 +53,7 @@ void FrontBankTransfer::onButtonClicked()
     __controllerTransfer->onTransferData();
 
     //!Setup progress bar
-    ui->progressBar->setMaximum(0);
+    ui->progressBar->setMaximum(__controllerTransfer->RestTasksCount());
     ui->progressBar->reset();
 }
 void FrontBankTransfer::onScanning()

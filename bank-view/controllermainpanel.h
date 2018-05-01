@@ -11,6 +11,8 @@
 
 #include <junctionbankdatabase.h>
 
+#include <controllerbanktransfer.h>
+
 #include <QTimer>
 
 //!
@@ -58,6 +60,14 @@ public:
         //!Reject
         if(!IsPause())
             return;
+
+        //! Manual->SemiAuto , clear all task
+        if(!value)
+        {
+            __controllerTransfer->Direction(CommitBlock::MODE_DOWNLOAD_DATA_BLOCK);
+            __controllerTransfer->onTransferData();
+        }
+
         __channel->Access(ModbusDriverAddress(MANUAL_TOOGLE_MANUAL),value);
     }
 
@@ -129,12 +139,19 @@ public:
         return __state;
     }
 
+    const ControllerBankTransfer* ControllerTransfer() const
+    {
+        return __controllerTransfer;
+    }
+
     static ControllerMainPanel* Instance();
 signals:
     void stateChanged(MainStates currentState);
 public slots:
+    void onDataChanged(TransferTask task);
 protected slots:
     void onReply(UpdateEvent* event);
+    void onDataTransfered();
 protected:
     explicit ControllerMainPanel(QObject *parent = nullptr);
 
@@ -155,6 +172,9 @@ protected:
 
     MainStates __lastState;
     bool __lastIsError;
+
+    ControllerBankTransfer* __controllerTransfer;
+
     static ControllerMainPanel* __instace;
 };
 
