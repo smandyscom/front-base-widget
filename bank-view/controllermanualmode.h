@@ -32,6 +32,7 @@ public:
         ENGAGED_SEMI_AUTO=0x02000000,
         DONE=0x02010000,
         ENGAGED_MANUAL = 0x02020000,
+        INITIALIZED = 0x02030000,
         ENGAGED_HMI=0x02000020,
         RUN=0x02010020,
         MON_CATEGRORY=0x02000028,
@@ -99,6 +100,10 @@ public:
     bool IsManualModeActiavted() const
     {
         return IsSemiAutoActivated() && __channel->Access<bool>(ModbusDriverAddress(ENGAGED_MANUAL));
+    }
+    bool IsControllerInitialized() const
+    {
+        return __channel->Access<bool>(ModbusDriverAddress(INITIALIZED));
     }
 
     static ControllerManualMode* Instance();

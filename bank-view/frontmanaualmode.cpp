@@ -74,7 +74,8 @@ FrontManaualMode::FrontManaualMode(QWidget *parent) :
         ui->framePosition,
         ui->pushButtonBankExecution,
         ui->pushButtonServoOn,
-        ui->pushButtonAlarmClear
+        ui->pushButtonAlarmClear,
+        ui->tableViewCommandBlock
     };
     __hasSelectionInterlock = {
         ui->pushButtonCoordinateSet,
@@ -283,7 +284,8 @@ void FrontManaualMode::onTimerTimeout()
     //ui->textBrowseAlarm->setText(QString(amb.Alarm()));
     //! Interlocks (Selection
     foreach (QWidget* var, __hasSelectionInterlock) {
-        var->setEnabled(ui->tableViewCommandBlock->selectionModel()->hasSelection());
+        var->setEnabled(__controller->IsManualModeActiavted() &&
+                    ui->tableViewCommandBlock->selectionModel()->hasSelection());
     }
     //! Interlocks (Busy
     foreach (QWidget* var, __busyInterlock) {

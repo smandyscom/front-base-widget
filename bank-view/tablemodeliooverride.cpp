@@ -26,7 +26,7 @@ TableModelIOOverride::TableModelIOOverride(QSqlRelationalTableModel *source):
 QVariant TableModelIOOverride::data(const QModelIndex &idx, int role) const
 {
     //!Base method
-    if(!(idx.column()==NAME && role==Qt::BackgroundRole))
+    if(!(idx.column()== fieldIndex(QVariant::fromValue(NAME).toString()) && role==Qt::BackgroundRole))
         return QSqlTableModel::data(idx,role);
 
     //!Change color once the background role request comes
@@ -43,5 +43,6 @@ QVariant TableModelIOOverride::data(const QModelIndex &idx, int role) const
 //!
 ModbusDriverAddress TableModelIOOverride::CurrentIndexAddress(int rowIndex) const
 {
-    return ModbusDriverAddress(index(rowIndex,HAL_ADDRESS).data().toUInt());
+    return ModbusDriverAddress(index(rowIndex,
+                                     fieldIndex(QVariant::fromValue(HAL_ADDRESS).toString())).data().toUInt());
 }

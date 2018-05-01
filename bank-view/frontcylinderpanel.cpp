@@ -4,41 +4,23 @@
 FrontCylinderPanel::FrontCylinderPanel(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FrontCylinderPanel),
-    __cylinderTable(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_CYLINDERS)),
     __headerTable(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::HEADER_CYLINDERS))
 {
     ui->setupUi(this);
     //!
-    __controller  = ControllerManualMode::Instance();
+    __cylinderTable = new TableModelCylinderVisual(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_CYLINDERS));
+
     //!
-    __inputFields = {
-       SEN_A_1,
-       SEN_A_2,
-       SEN_A_3,
-       SEN_A_4,
-       SEN_B_1,
-       SEN_B_2,
-       SEN_B_3,
-       SEN_B_4,
-                    };
-    __outputFields = {
-        ACT_A_1,
-        ACT_A_2,
-        ACT_B_1,
-        ACT_B_2,
-    };
+    __controller  = ControllerManualMode::Instance();
     //! Loading widgets
     FrontSingleFilter* __fsf =  new FrontSingleFilter(ui->widgetFilter);
     __fsf->DataTable(__cylinderTable);
     __fsf->PrimaryTable(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_REGION));
-    //!
-    ui->tableViewInputs->setModel(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_INPUTS));
-    ui->tableViewOutputs->setModel(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_OUTPUTS));
-    //!
+   //!
     ui->tableViewCylinder->setModel(__cylinderTable);
-    ui->tableViewCylinder->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->tableViewCylinder->setSelectionBehavior(QAbstractItemView::SelectItems);
     ui->tableViewCylinder->setSelectionMode(QAbstractItemView::SingleSelection);
-    connect(ui->tableViewCylinder,SIGNAL(clicked(QModelIndex)),this,SLOT(onViewSelectionChanged()));
+    connect(ui->tableViewCylinder,&QTableView::clicked,this,&FrontCylinderPanel::onViewSelectionChanged);
     HEADER_STRUCTURE::HeaderRender::renderViewHeader(__headerTable,ui->tableViewCylinder);
     //!
     //! \brief connect
@@ -69,7 +51,8 @@ FrontCylinderPanel::FrontCylinderPanel(QWidget *parent) :
     //! Interlock
     __busyInterlock = {
         ui->pushButtonGoA,
-        ui->pushButtonGoB
+        ui->pushButtonGoB,
+        ui->tableViewCylinder,
     };
     //!
     connect(__cylinderTable,&QSqlRelationalTableModel::dataChanged,[=](const QModelIndex &topLeft,
@@ -107,46 +90,14 @@ void FrontCylinderPanel::onCylinderCommandClicked()
     emit __controller->operationTriggered();
 }
 
-void FrontCylinderPanel::onViewSelectionChanged()
+void FrontCylinderPanel::onViewSelectionChanged(QModelIndex index)
 {
-    QSqlRecord __record = __cylinderTable->record(ui->tableViewCylinder->selectionModel()->selectedRows().first().row());
-
-    QList<QString> __inputAddress;
-    QList<QString> __outputAddress;
-    foreach (DataBaseHeaders var, __inputFields) {
-        __inputAddress.append(__record.value(QVariant::fromValue(var).toString()).toString());
-    }
-    foreach (DataBaseHeaders var, __outputFields) {
-        __outputAddress.append(__record.value(QVariant::fromValue(var).toString()).toString());
-    }
-    //! Generate filter string
-    QString __inputFilterString = generateFilterString(QVariant::fromValue(PLC_ADDRESS).toString(),__inputAddress);
-    QString __outputFilterString = generateFilterString(QVariant::fromValue(PLC_ADDRESS).toString(),__outputAddress);
-    //filter out inputs
-    qobject_cast<QSqlTableModel*>(ui->tableViewInputs->model())->setFilter(__inputFilterString);
-    qobject_cast<QSqlTableModel*>(ui->tableViewOutputs->model())->setFilter(__outputFilterString);
-
+    QSqlRecord __record = __cylinderTable->record(index.row());
     //! Changeover monitor index
     __currentViewIndex =  __record.value(QVariant::fromValue(CylinderBlock::ID).toString()).value<MODBUS_S_WORD>();
     __controller->onMonitorDeviceIndexChanged(__currentViewIndex);
 }
 
-QString FrontCylinderPanel::generateFilterString(QString key, QList<QString> conditions)
-{
-    int i=0;
-    QString result;
-    while (i<conditions.count()-1) {
-        if(conditions[i] != "")
-            result.append(tr("%1=\'%2\' OR ").arg(key).arg(conditions[i]));
-        i++;
-    }
-    if(conditions[conditions.count()-1] != "")
-        result.append(tr("%1=\'%2\'").arg(key).arg(conditions[conditions.count()-1]));
-    else
-        result.append(tr("%1=\'%2\'").arg(key).arg(0));
-
-    return result;
-}
 void FrontCylinderPanel::onTimerTimeout()
 {
     //! Update cylinder status

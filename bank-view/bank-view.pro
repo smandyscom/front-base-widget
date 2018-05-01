@@ -51,7 +51,8 @@ SOURCES += \
     definitionbasicblocks.cpp \
     definitionsbaselayer.cpp \
     definitionauxiliarykeys.cpp \
-    frontconfigurationtransfer.cpp
+    frontconfigurationtransfer.cpp \
+    tablemodelcylindervisual.cpp
 HEADERS += \
     modbussetupwidget.h \
     utilities.h \
@@ -85,7 +86,8 @@ HEADERS += \
     controllermaterialtransfer.h \
     frontunitpanel.h \
     frontsignalpanel.h \
-    frontconfigurationtransfer.h
+    frontconfigurationtransfer.h \
+    tablemodelcylindervisual.h
 
 unix {
     target.path = /usr/lib

@@ -15,6 +15,10 @@
 #include <definitionioattributes.h>
 #include <definitionauxiliarykeys.h>
 
+#include <tablemodeliooverride.h>
+#include <tablemodelcylindervisual.h>
+
+
 #include <QSqlRecord>
 
 namespace Ui {
@@ -35,7 +39,7 @@ signals:
     void dataChanged(TransferTask task);
 protected slots:
     void onCylinderCommandClicked();
-    void onViewSelectionChanged();
+    void onViewSelectionChanged(QModelIndex index);
     void onTimerTimeout();
 protected:
     void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
@@ -46,11 +50,6 @@ private:
     QSqlRelationalTableModel* __headerTable;
 
     ControllerManualMode* __controller;
-
-    QList<CylinderBlock::DataBaseHeaders> __inputFields;
-    QList<CylinderBlock::DataBaseHeaders> __outputFields;
-
-    QString generateFilterString(QString key,QList<QString> conditions);
 
     QTimer* __timer;
 

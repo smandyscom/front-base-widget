@@ -90,6 +90,7 @@ void FrontUnitPanel::onTimerTimeout()
     //! Interlock
     foreach (QWidget* var, __busyInterlock) {
         var->setEnabled(__controller->IsSemiAutoActivated() &&
+                        __controller->IsControllerInitialized() &&
                         ui->tableViewUnit->selectionModel()->hasSelection());
     }
     //! Once on working , cannot override to off
