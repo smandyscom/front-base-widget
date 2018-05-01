@@ -36,11 +36,15 @@ FrontUnitPanel::FrontUnitPanel(QWidget *parent) :
     __statusShowMap[ui->pushButtonStep] = VisualAspect(ModbusDriverAddress(UnitOperationBlock::OFFSET_UOB_TRIG_STEP),Qt::green);
     __statusShowMap[ui->pushButtonWorking] = VisualAspect(ModbusDriverAddress(UnitOperationBlock::OFFSET_UOB_WORKING_OVERRIDE),Qt::green);
     __statusShowMap[ui->pushButtonPause] = VisualAspect(ModbusDriverAddress(UnitOperationBlock::OFFSET_UOB_STATE_PAUSE),Qt::yellow);
+    __statusShowMap[ui->pushButtonMaterial] = VisualAspect(ModbusDriverAddress(UnitOperationBlock::OFFSET_UOB_MATERIAL_OVERRIDE),Qt::green);
+
     //!
     __controlMap[ui->pushButtonEnableStep] = ModbusDriverAddress(UnitOperationBlock::OFFSET_UOB_EN_STEP);
     __controlMap[ui->pushButtonStep] = ModbusDriverAddress(UnitOperationBlock::OFFSET_UOB_TRIG_STEP);
     __controlMap[ui->pushButtonWorking] = ModbusDriverAddress(UnitOperationBlock::OFFSET_UOB_WORKING_OVERRIDE);
     __controlMap[ui->pushButtonPause] = ModbusDriverAddress(UnitOperationBlock::OFFSET_UOB_STATE_PAUSE);
+    __controlMap[ui->pushButtonMaterial] = ModbusDriverAddress(UnitOperationBlock::OFFSET_UOB_MATERIAL_OVERRIDE);
+
     foreach (QPushButton* var, __controlMap.keys()) {
         connect(var,SIGNAL(clicked(bool)),this,SLOT(onCommandClick()));
     }
