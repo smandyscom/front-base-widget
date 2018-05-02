@@ -60,7 +60,6 @@ FrontManaualMode::FrontManaualMode(QWidget *parent) :
     ui->tableViewCommandBlock->setModel(__commandBlockTable);
     HEADER_STRUCTURE::HeaderRender::renderViewHeader(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::HEADER_COMMAND_BLOCKS),
                                                      ui->tableViewCommandBlock);
-    ui->tableViewCommandBlock->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     //! Toogle mode
     connect(ui->pushButtonServoOn,&QPushButton::clicked,this,&FrontManaualMode::onOperationPerformed);
     connect(ui->pushButtonAlarmClear,&QPushButton::clicked,this,&FrontManaualMode::onOperationPerformed);
@@ -289,8 +288,6 @@ void FrontManaualMode::onTimerTimeout()
     ui->textBrowserAlarmWarning->setText(QString("%1\%2")
                                          .arg(utilities::getSqlTableSelectedRecord(__errorTable,QVariant::fromValue(HEADER_STRUCTURE::ID),amb.Value(AxisMonitorBlock::OFFSET_MONITOR_WARNINGS)).value(QVariant::fromValue(zh_TW).toString()).toString())
                                          .arg(utilities::getSqlTableSelectedRecord(__errorTable,QVariant::fromValue(HEADER_STRUCTURE::ID),amb.Value(AxisMonitorBlock::OFFSET_MONITOR_ALARMS).toUInt() + UINT_MAX).value(QVariant::fromValue(zh_TW).toString()).toString()));
-    //ui->textBrowserWarning->setText(QString(amb.Warning()));
-    //ui->textBrowseAlarm->setText(QString(amb.Alarm()));
     //! Interlocks (Selection
     foreach (QWidget* var, __hasSelectionInterlock) {
         var->setEnabled(__controller->IsManualModeActiavted() &&

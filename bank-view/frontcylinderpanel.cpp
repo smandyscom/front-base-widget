@@ -21,7 +21,10 @@ FrontCylinderPanel::FrontCylinderPanel(QWidget *parent) :
     ui->tableViewCylinder->setSelectionBehavior(QAbstractItemView::SelectItems);
     ui->tableViewCylinder->setSelectionMode(QAbstractItemView::SingleSelection);
     connect(ui->tableViewCylinder,&QTableView::clicked,this,&FrontCylinderPanel::onViewSelectionChanged);
-    HEADER_STRUCTURE::HeaderRender::renderViewHeader(__headerTable,ui->tableViewCylinder);
+    HEADER_STRUCTURE::HeaderRender::renderViewHeader(__headerTable,
+                                                     ui->tableViewCylinder,
+                                                     zh_TW,
+                                                     false);
     //!
     //! \brief connect
     //!

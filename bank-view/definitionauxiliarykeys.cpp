@@ -7,7 +7,10 @@
 //! \param view
 //! \param key
 //! Show those key-defined column only
-void HEADER_STRUCTURE::HeaderRender::renderViewHeader(QSqlTableModel *reference, QTableView *view, Headers key)
+void HEADER_STRUCTURE::HeaderRender::renderViewHeader(QSqlTableModel *reference,
+                                                      QTableView *view,
+                                                      Headers key,
+                                                      bool isStrech)
 {
     //! Hide all
     for(int i=0;i<view->model()->columnCount();i++)
@@ -21,4 +24,6 @@ void HEADER_STRUCTURE::HeaderRender::renderViewHeader(QSqlTableModel *reference,
                                      Qt::Horizontal,
                                      __record.value(QVariant::fromValue(key).toString()));
     }
+    if(isStrech)
+        view->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }

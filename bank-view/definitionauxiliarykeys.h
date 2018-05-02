@@ -58,7 +58,7 @@ class HeaderRender
 public:
     HeaderRender() {}
 
-    static void renderViewHeader(QSqlTableModel* reference,QTableView* view,Headers key=zh_TW);
+    static void renderViewHeader(QSqlTableModel* reference, QTableView* view, Headers key=zh_TW, bool isStrech = true);
 };
 
 }
