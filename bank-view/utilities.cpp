@@ -63,6 +63,7 @@ QString utilities::trimNamespace(QVariant key)
 
 void utilities::linkQComboBoxAndModel(QComboBox *comboBox, QSqlTableModel *model, QVariant showKey)
 {
+    comboBox->clear();
     comboBox->setModel(model);
     QListView* qtv = new QListView(comboBox);
     comboBox->setView(qtv);

@@ -16,7 +16,6 @@ FrontTwinFilter::FrontTwinFilter(QSqlRelationalTableModel *dataTable,
     __secondaryTable(secondaryTable)
 {
     ui->setupUi(this);
-
     //!
     ui->comboBoxSecondary->setModel(__secondaryTable);
     ui->comboBoxPrimary->setModel(__primaryTable);
@@ -28,11 +27,12 @@ FrontTwinFilter::FrontTwinFilter(QSqlRelationalTableModel *dataTable,
     QList<QComboBox*> __list = {ui->comboBoxPrimary,
                                 ui->comboBoxSecondary};
     foreach (QComboBox* var, __list) {
+        var->clear();
         var->setModel(__manipulateMap[var]);
         QListView* qtv = new QListView(var);
         var->setView(qtv);     
         //! Hide all but NAME
-        int __nameColumnIndex = __manipulateMap[var]->fieldIndex("NAME");
+        int __nameColumnIndex = __manipulateMap[var]->fieldIndex("zh_TW");
 
         connect(var,SIGNAL(currentIndexChanged(int)),this,SLOT(onSelectionChanged(int)));
         var->setModelColumn(__nameColumnIndex);

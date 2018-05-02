@@ -11,7 +11,8 @@ FrontManaualMode::FrontManaualMode(QWidget *parent) :
     ui(new Ui::FrontManaualMode),
     __commandBlockTable(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_COMMAND_BLOCKS)),
     __axisTable(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_AXIS)),
-    __regionTable(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_REGION))
+    __regionTable(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_REGION)),
+    __errorTable(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::ERROR_CODE_AXIS))
 {
     ui->setupUi(this);
     //! Link
@@ -59,15 +60,16 @@ FrontManaualMode::FrontManaualMode(QWidget *parent) :
     ui->tableViewCommandBlock->setModel(__commandBlockTable);
     HEADER_STRUCTURE::HeaderRender::renderViewHeader(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::HEADER_COMMAND_BLOCKS),
                                                      ui->tableViewCommandBlock);
+    ui->tableViewCommandBlock->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     //! Toogle mode
     connect(ui->pushButtonServoOn,&QPushButton::clicked,this,&FrontManaualMode::onOperationPerformed);
     connect(ui->pushButtonAlarmClear,&QPushButton::clicked,this,&FrontManaualMode::onOperationPerformed);
 
     //! Map
-    __browserMap[ui->textBrowserPositionReference] = AxisMonitorBlock::OFFSET_MONITOR_POS_COMMAND;
-    __browserMap[ui->textBrowserPositionFeedback] = AxisMonitorBlock::OFFSET_MONITOR_POS_FEEDBACK;
-    __browserMap[ui->textBrowserSpeedFeedback] = AxisMonitorBlock::OFFSET_MONITOR_SPD_FEEDBACK;
-    __browserMap[ui->textBrowserTorqueFeedback] = AxisMonitorBlock::OFFSET_MONITOR_TOR_FEEDBACK;
+    __lcdMap[ui->lcdNumberPositionReference] = AxisMonitorBlock::OFFSET_MONITOR_POS_COMMAND;
+    __lcdMap[ui->lcdNumberPositionFeedback] = AxisMonitorBlock::OFFSET_MONITOR_POS_FEEDBACK;
+    __lcdMap[ui->lcdNumberSpeedFeedback] = AxisMonitorBlock::OFFSET_MONITOR_SPD_FEEDBACK;
+    __lcdMap[ui->lcdNumberTorqueFeedback] = AxisMonitorBlock::OFFSET_MONITOR_TOR_FEEDBACK;
     //! Interlock
     __busyInterlock = {
         ui->frameHome,
@@ -95,6 +97,10 @@ FrontManaualMode::FrontManaualMode(QWidget *parent) :
                 .toInt();
         emit dataChanged(__task);
     });
+    //!
+    utilities::linkQComboBoxAndModel(ui->comboBoxZrtMethod,
+                                     JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_MIII_ZRET_METHOD),
+                                     QVariant::fromValue(en_US));
 }
 
 FrontManaualMode::~FrontManaualMode()
@@ -113,15 +119,15 @@ void FrontManaualMode::onBankOperationClicked()
     if(button==ui->pushButtonCoordinateSet)
     {
         //setup field of coordinate
-        __record.setValue(QVariant::fromValue(COORD1).toString(),ui->textBrowserPositionFeedback->toPlainText().toFloat());
+        __record.setValue(QVariant::fromValue(COORD1).toString(),ui->lcdNumberPositionFeedback->value());
     }
     else if(button == ui->pushButtonParameterSet)
     {
         //setup field of parameters
-        __record.setValue(QVariant::fromValue(SPEED).toString(),ui->textEditSpeedReference->toPlainText().toFloat());
-        __record.setValue(QVariant::fromValue(ACC_TIME).toString(),ui->textEditAcceralationTime->toPlainText().toFloat());
-        __record.setValue(QVariant::fromValue(DEC_TIME).toString(),ui->textEditDeceralationTime->toPlainText().toFloat());
-        __record.setValue(QVariant::fromValue(TORQUE_LIMIT).toString(),ui->textEditTorqueLimit->toPlainText().toFloat());
+        __record.setValue(QVariant::fromValue(SPEED).toString(),ui->doubleSpinBoxSpeedReference->value());
+        __record.setValue(QVariant::fromValue(ACC_TIME).toString(),ui->doubleSpinBoxAccerlation->value());
+        __record.setValue(QVariant::fromValue(DEC_TIME).toString(),ui->doubleSpinBoxDecerlation->value());
+        __record.setValue(QVariant::fromValue(TORQUE_LIMIT).toString(),ui->doubleSpinBoxTorque->value());
     }
 
 
@@ -175,7 +181,7 @@ void FrontManaualMode::onManualOperationClicked()
             if(button == ui->pushButtonAbsolute)
             {
                 //setup coordiante
-                __pcb.Value(COORD1,ui->textEditCoordinateAbsolute->toPlainText().toFloat());
+                __pcb.Value(COORD1,ui->doubleSpinBoxCoordinate->value());
                 __pcb.Value(PosCommandBlock::OFFSET_POS_ABS_REL,QVariant::fromValue(true));
             }
             else if(button == ui->pushButtonStepMinus ||
@@ -183,7 +189,7 @@ void FrontManaualMode::onManualOperationClicked()
             {
                 //setup coordiante
                 __pcb.Value(PosCommandBlock::OFFSET_ECB_COORD1,
-                                     (ui->textEditCoordinateStep->toPlainText().toFloat()*
+                                     (ui->doubleSpinBoxStep->value()*
                                      ((button==ui->pushButtonStepPlus) ? 1 : -1)));
                 __pcb.Value(PosCommandBlock::OFFSET_POS_ABS_REL,QVariant::fromValue(false) );//relative moving mode
             }
@@ -250,10 +256,10 @@ void FrontManaualMode::setCommonParameters(AbstractCommandBlock& __commandBlock)
                                                               __selectedAxisId)
                          .value(utilities::trimNamespace(QVariant::fromValue(AxisBlock::ADDRESS))));
 
-    __commandBlock.Value(SPEED,ui->textEditSpeedReference->toPlainText().toFloat());//unit/sec
-    __commandBlock.Value(ACC_TIME,ui->textEditAcceralationTime->toPlainText().toFloat());//ms
-    __commandBlock.Value(DEC_TIME,ui->textEditDeceralationTime->toPlainText().toFloat());//ms
-    __commandBlock.Value(TORQUE_LIMIT,ui->textEditTorqueLimit->toPlainText().toFloat());// 0.01%
+    __commandBlock.Value(SPEED,ui->doubleSpinBoxSpeedReference->value());//unit/sec
+    __commandBlock.Value(ACC_TIME,ui->doubleSpinBoxAccerlation->value());//ms
+    __commandBlock.Value(DEC_TIME,ui->doubleSpinBoxDecerlation->value());//ms
+    __commandBlock.Value(TORQUE_LIMIT,ui->doubleSpinBoxTorque->value());// 0.01%
 
 }
 
@@ -262,8 +268,8 @@ void FrontManaualMode::onTimerTimeout()
     AxisMonitorBlock amb;
     *static_cast<CellDataBlock*>(&amb) = __controller->MonitorBlock();
 
-    foreach (QWidget* var, __browserMap.keys()) {
-        qobject_cast<QTextBrowser*>(var)->setText(QString::number(amb.Value(__browserMap[var]).toReal()));
+    foreach (QWidget* var, __lcdMap.keys()) {
+        qobject_cast<QLCDNumber*>(var)->display(amb.Value(__lcdMap[var]).toReal());
     }
     //! Servo On/Alarm clear
     ModbusDriverAddress __address;
@@ -280,6 +286,9 @@ void FrontManaualMode::onTimerTimeout()
                                Qt::green,
                                Qt::red);
     //! Alarm/Warning details
+    ui->textBrowserAlarmWarning->setText(QString("%1\%2")
+                                         .arg(utilities::getSqlTableSelectedRecord(__errorTable,QVariant::fromValue(HEADER_STRUCTURE::ID),amb.Value(AxisMonitorBlock::OFFSET_MONITOR_WARNINGS)).value(QVariant::fromValue(zh_TW).toString()).toString())
+                                         .arg(utilities::getSqlTableSelectedRecord(__errorTable,QVariant::fromValue(HEADER_STRUCTURE::ID),amb.Value(AxisMonitorBlock::OFFSET_MONITOR_ALARMS).toUInt() + UINT_MAX).value(QVariant::fromValue(zh_TW).toString()).toString()));
     //ui->textBrowserWarning->setText(QString(amb.Warning()));
     //ui->textBrowseAlarm->setText(QString(amb.Alarm()));
     //! Interlocks (Selection

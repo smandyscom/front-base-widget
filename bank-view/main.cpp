@@ -45,6 +45,8 @@ int main(int argc, char *argv[])
     sz = sizeof(AbstractDataBlock);
     sz = sizeof(ExtendedCommandBlock);
 
+    uint __mask = 0x0001 << 5;
+
     qputenv("QT_IM_MODULE",QByteArray("qtvirtualkeyboard"));
     QApplication a(argc, argv);
     MainWindow w;

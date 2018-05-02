@@ -58,6 +58,11 @@ FrontCylinderPanel::FrontCylinderPanel(QWidget *parent) :
     connect(__cylinderTable,&QSqlRelationalTableModel::dataChanged,[=](const QModelIndex &topLeft,
             const QModelIndex &bottomRight,
             const QVector<int> &roles = QVector<int>()){
+
+        if(roles.count() >0)
+            if(roles.first() == Qt::BackgroundColorRole)
+                return; //background color changed only
+
         //!
         TransferTask __task;
         __task.first = CommitBlock::SELECTION_CYLINDER;

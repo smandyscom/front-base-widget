@@ -78,10 +78,11 @@ protected:
     QSqlRelationalTableModel* __commandBlockTable;
     QSqlRelationalTableModel* __axisTable;
     QSqlRelationalTableModel* __regionTable;
+    QSqlRelationalTableModel* __errorTable;
 
     AbstractSqlTableAdpater* __commandBlockAdaptor;
 
-    QMap<QWidget*,AxisMonitorBlock::OffsetMonitor> __browserMap;
+    QMap<QWidget*,AxisMonitorBlock::OffsetMonitor> __lcdMap;
 
     QList<QWidget*> __hasSelectionInterlock;
     QList<QWidget*> __busyInterlock;

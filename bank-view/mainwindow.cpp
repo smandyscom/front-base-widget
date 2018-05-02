@@ -71,7 +71,6 @@ MainWindow::MainWindow(QWidget *parent) :
     FrontIoOverride* fio = new FrontIoOverride(ui->tabIO);
     FrontCylinderPanel* fcp = new FrontCylinderPanel(ui->tabCylinder);
     FrontUnitPanel* fup = new FrontUnitPanel(ui->tabUnit);
-    FrontSignalPanel* fsp = new FrontSignalPanel(ui->tabSignal);
     FrontConfigurationTransfer* fct = new FrontConfigurationTransfer(ui->tabConfiguration);
     //! Connect data changed
     connect(fmm,&FrontManaualMode::dataChanged,ControllerMainPanel::Instance(),&ControllerMainPanel::onDataChanged);
@@ -86,7 +85,6 @@ MainWindow::MainWindow(QWidget *parent) :
         __channel->Access(address,data);
     });
     connect(__channel,SIGNAL(raiseUpdateEvent(UpdateEvent*)),this,SLOT(onRaiseUpdateEvent(UpdateEvent*)));
-
 }
 
 MainWindow::~MainWindow()

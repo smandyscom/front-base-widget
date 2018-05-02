@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1261</width>
-    <height>880</height>
+    <height>865</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -15,6 +15,11 @@
     <width>16777215</width>
     <height>910</height>
    </size>
+  </property>
+  <property name="font">
+   <font>
+    <pointsize>16</pointsize>
+   </font>
   </property>
   <property name="windowTitle">
    <string>Form</string>
@@ -25,10 +30,13 @@
      <x>0</x>
      <y>0</y>
      <width>1261</width>
-     <height>881</height>
+     <height>861</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_6">
+    <property name="spacing">
+     <number>0</number>
+    </property>
     <item>
      <widget class="QGroupBox" name="groupBoxParameters">
       <property name="minimumSize">
@@ -38,11 +46,29 @@
        </size>
       </property>
       <property name="title">
-       <string>參數</string>
+       <string/>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_5">
+       <property name="spacing">
+        <number>3</number>
+       </property>
+       <property name="leftMargin">
+        <number>3</number>
+       </property>
+       <property name="topMargin">
+        <number>3</number>
+       </property>
+       <property name="rightMargin">
+        <number>3</number>
+       </property>
+       <property name="bottomMargin">
+        <number>3</number>
+       </property>
        <item>
         <layout class="QVBoxLayout" name="verticalLayout">
+         <property name="spacing">
+          <number>3</number>
+         </property>
          <item>
           <widget class="QTableView" name="tableViewCylinder">
            <property name="minimumSize">
@@ -51,12 +77,21 @@
              <height>150</height>
             </size>
            </property>
+           <property name="font">
+            <font>
+             <family>MS Shell Dlg 2</family>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <attribute name="verticalHeaderVisible">
+            <bool>false</bool>
+           </attribute>
           </widget>
          </item>
          <item>
           <widget class="QWidget" name="widgetFilter" native="true">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -64,13 +99,13 @@
            <property name="minimumSize">
             <size>
              <width>0</width>
-             <height>140</height>
+             <height>100</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
              <width>16777215</width>
-             <height>200</height>
+             <height>100</height>
             </size>
            </property>
           </widget>
@@ -83,12 +118,18 @@
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <property name="spacing">
+       <number>0</number>
+      </property>
       <item>
        <widget class="QGroupBox" name="groupBoxControl">
         <property name="title">
-         <string>手動控制</string>
+         <string/>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_4">
+         <property name="spacing">
+          <number>3</number>
+         </property>
          <property name="leftMargin">
           <number>3</number>
          </property>

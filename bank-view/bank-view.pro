@@ -47,7 +47,6 @@ SOURCES += \
     tablemodeliooverride.cpp \
     controllermaterialtransfer.cpp \
     frontunitpanel.cpp \
-    frontsignalpanel.cpp \
     definitionbasicblocks.cpp \
     definitionsbaselayer.cpp \
     definitionauxiliarykeys.cpp \
@@ -85,7 +84,6 @@ HEADERS += \
     definitionauxiliarykeys.h \
     controllermaterialtransfer.h \
     frontunitpanel.h \
-    frontsignalpanel.h \
     frontconfigurationtransfer.h \
     tablemodelcylindervisual.h
 
@@ -105,5 +103,4 @@ FORMS += \
     fronttwinfilter.ui \
     frontsinglefilter.ui \
     frontunitpanel.ui \
-    frontsignalpanel.ui \
     frontconfigurationtransfer.ui

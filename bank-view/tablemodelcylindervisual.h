@@ -61,6 +61,7 @@ protected:
     //! //! key , IO-Name
     //! //! value ,IO-HalAddress
     QMap<int,int> __map;
+    QVector<int> __backGroundColorRole;
 };
 
 #endif // TABLEMODELCYLINDERVISUAL_H

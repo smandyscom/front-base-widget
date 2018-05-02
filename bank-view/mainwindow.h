@@ -10,7 +10,6 @@
 #include <frontiooverride.h>
 #include <frontconfigurationtransfer.h>
 #include <frontcylinderpanel.h>
-#include <frontsignalpanel.h>
 
 #include <frontmanaualmode.h>
 

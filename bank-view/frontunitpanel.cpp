@@ -8,9 +8,9 @@ FrontUnitPanel::FrontUnitPanel(QWidget *parent) :
 {
     ui->setupUi(this);
     //!
-    FrontSingleFilter* __fsf = new FrontSingleFilter(ui->widgetFilter);
-    __fsf->DataTable(__unitTable);
-    __fsf->PrimaryTable(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_REGION));
+    //FrontSingleFilter* __fsf = new FrontSingleFilter(ui->widgetFilter);
+    //__fsf->DataTable(__unitTable);
+    //__fsf->PrimaryTable(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_REGION));
     //!
     ui->tableViewUnit->setModel(__unitTable);
     ui->tableViewUnit->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -32,11 +32,12 @@ FrontUnitPanel::FrontUnitPanel(QWidget *parent) :
     __statusShowMap[ui->labelCondition6] = VisualAspect(ModbusDriverAddress(0,UnitMonitorBlock::BIT_7_TEMP_CONDITION_7,UnitMonitorBlock::OFFSET_MONITOR_TRANSITION_WORD),Qt::green);
     __statusShowMap[ui->labelCondition7] = VisualAspect(ModbusDriverAddress(0,UnitMonitorBlock::BIT_8_TEMP_CONDITION_8,UnitMonitorBlock::OFFSET_MONITOR_TRANSITION_WORD),Qt::green);
 
-    __statusShowMap[ui->pushButtonEnableStep] = VisualAspect(ModbusDriverAddress(UnitOperationBlock::OFFSET_UOB_EN_STEP),Qt::green);
+    __statusShowMap[ui->pushButtonEnableStep] = VisualAspect(ModbusDriverAddress(UnitOperationBlock::OFFSET_UOB_EN_STEP),Qt::magenta);
     __statusShowMap[ui->pushButtonStep] = VisualAspect(ModbusDriverAddress(UnitOperationBlock::OFFSET_UOB_TRIG_STEP),Qt::green);
-    __statusShowMap[ui->pushButtonWorking] = VisualAspect(ModbusDriverAddress(UnitOperationBlock::OFFSET_UOB_WORKING_OVERRIDE),Qt::green);
+    __statusShowMap[ui->pushButtonWorking] = VisualAspect(ModbusDriverAddress(UnitOperationBlock::OFFSET_UOB_WORKING_OVERRIDE),Qt::cyan);
     __statusShowMap[ui->pushButtonPause] = VisualAspect(ModbusDriverAddress(UnitOperationBlock::OFFSET_UOB_STATE_PAUSE),Qt::yellow);
     __statusShowMap[ui->pushButtonMaterial] = VisualAspect(ModbusDriverAddress(UnitOperationBlock::OFFSET_UOB_MATERIAL_OVERRIDE),Qt::green);
+    __statusShowMap[ui->pushButtonByPass] = VisualAspect(ModbusDriverAddress(UnitOperationBlock::OFFSET_UOB_IS_BYPASSED),Qt::blue);
 
     //!
     __controlMap[ui->pushButtonEnableStep] = ModbusDriverAddress(UnitOperationBlock::OFFSET_UOB_EN_STEP);
@@ -44,6 +45,7 @@ FrontUnitPanel::FrontUnitPanel(QWidget *parent) :
     __controlMap[ui->pushButtonWorking] = ModbusDriverAddress(UnitOperationBlock::OFFSET_UOB_WORKING_OVERRIDE);
     __controlMap[ui->pushButtonPause] = ModbusDriverAddress(UnitOperationBlock::OFFSET_UOB_STATE_PAUSE);
     __controlMap[ui->pushButtonMaterial] = ModbusDriverAddress(UnitOperationBlock::OFFSET_UOB_MATERIAL_OVERRIDE);
+    __controlMap[ui->pushButtonByPass] = ModbusDriverAddress(UnitOperationBlock::OFFSET_UOB_IS_BYPASSED);
 
     foreach (QPushButton* var, __controlMap.keys()) {
         connect(var,SIGNAL(clicked(bool)),this,SLOT(onCommandClick()));
@@ -53,7 +55,8 @@ FrontUnitPanel::FrontUnitPanel(QWidget *parent) :
         ui->pushButtonEnableStep,
         ui->pushButtonStep,
         ui->pushButtonWorking,
-        ui->pushButtonPause
+        ui->pushButtonPause,
+        ui->pushButtonMaterial
     };
     //!
     HEADER_STRUCTURE::HeaderRender::renderViewHeader(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::HEADER_UNIT),
@@ -84,9 +87,9 @@ void FrontUnitPanel::onTimerTimeout()
                                    __statusShowMap[var].second);
     }
     //!Numeric
-    ui->textBrowserState->setText(QString("0x%1").arg(QString::number(umb.Value(UnitMonitorBlock::OFFSET_MONITOR_STATE).toUInt(),16)));
-    ui->textBrowserNextState->setText(QString("0x%1").arg(QString::number(umb.Value(UnitMonitorBlock::OFFSET_MONITOR_NEXT_STATE).toUInt(),16)));
-    ui->textBrowserTickTime->setText(umb.Value(UnitMonitorBlock::OFFSET_MONITOR_WORKING_TIMER_CACHE).toString());
+    ui->lcdNumberState->display(umb.Value(UnitMonitorBlock::OFFSET_MONITOR_STATE).toInt());
+    ui->lcdNumberNextState->display(umb.Value(UnitMonitorBlock::OFFSET_MONITOR_NEXT_STATE).toInt());
+    ui->lcdNumberCycleTime->display(umb.Value(UnitMonitorBlock::OFFSET_MONITOR_WORKING_TIMER_CACHE).toReal());
     //! Interlock
     foreach (QWidget* var, __busyInterlock) {
         var->setEnabled(__controller->IsSemiAutoActivated() &&

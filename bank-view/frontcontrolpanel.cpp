@@ -50,7 +50,7 @@ frontControlPanel::~frontControlPanel()
 void frontControlPanel::onTimerTimeout()
 {
     //!Update
-    utilities::colorChangeOver(ui->pushButtonPause,__controller->IsPause(),Qt::yellow);
+    utilities::colorChangeOver(ui->pushButtonPause,__controller->IsPause(),Qt::green,Qt::red);
     ui->pushButtonInitialize->setEnabled(__controller->IsInitialized());
     if(__controller->IsError() && !ui->pushButtonErrorReset->isEnabled())
         ui->textBrowserErrorDescription->setText(QString("%1\n%2")
@@ -66,7 +66,7 @@ void frontControlPanel::onTimerTimeout()
         var->setEnabled(__controller->CurrentState() != ControllerMainPanel::STATE_AUTO);
     }
     //!
-    ui->textBrowserSyncCount->setText(QString::number(__controller->ControllerTransfer()->RestTasksCount()));
+    ui->lcdNumberSyncCounter->display(__controller->ControllerTransfer()->RestTasksCount());
 }
 
 void frontControlPanel::onCheckedChanged()

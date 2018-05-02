@@ -3,6 +3,8 @@
 TableModelCylinderVisual::TableModelCylinderVisual(QSqlRelationalTableModel *source) :
     QSqlRelationalTableModel(source->parent())
 {
+    //!
+    __backGroundColorRole.append(Qt::BackgroundColorRole);
     //! Copy its selection
     setTable(source->tableName());
     select();
@@ -11,7 +13,7 @@ TableModelCylinderVisual::TableModelCylinderVisual(QSqlRelationalTableModel *sou
     //! Forced to inform View to update periodically
     __timer = new QTimer(this);
     connect(__timer,&QTimer::timeout,[=](){
-       emit dataChanged(index(0,0),index(rowCount(),columnCount()));
+       emit dataChanged(index(0,0),index(rowCount(),columnCount()),__backGroundColorRole);
     });
     __timer->start();
     //! Build map according to column name
