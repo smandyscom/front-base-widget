@@ -22,14 +22,22 @@ public:
     };
     enum WordOutBits
     {
-        BIT_0_DEBOUNCED_ON=0,
-        BIT_1_DEBOUNCED_OFF,
-        BIT_2_RAW,
+        BIT_0_DEBOUNCED_ON=0x00000+OFFSET_MONITOR_WORD_OUT,
+        BIT_1_DEBOUNCED_OFF=0x10000+OFFSET_MONITOR_WORD_OUT,
+        BIT_2_RAW=0x20000+OFFSET_MONITOR_WORD_OUT,
     };
 
     QVariant Value(uint key) const Q_DECL_OVERRIDE
     {
-        return QVariant::fromValue(Bit(key));
+        switch (key) {
+        case OFFSET_MONITOR_WIDTH_ON_COUNT:
+        case OFFSET_MONITOR_WIDTH_OFF_COUNT:
+            return QVariant::fromValue(getData<MODBUS_U_WORD>(key) * Dimension->value(TIME));
+            break;
+        default:
+            return QVariant::fromValue(Bit(key));
+            break;
+        }
     }
 };
 Q_DECLARE_METATYPE(SignalMonitor)

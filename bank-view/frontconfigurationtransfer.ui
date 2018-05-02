@@ -7,8 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>1260</width>
-    <height>706</height>
+    <height>865</height>
    </rect>
+  </property>
+  <property name="font">
+   <font>
+    <pointsize>16</pointsize>
+   </font>
   </property>
   <property name="windowTitle">
    <string>Form</string>
@@ -19,28 +24,57 @@
      <x>10</x>
      <y>10</y>
      <width>841</width>
-     <height>691</height>
+     <height>851</height>
     </rect>
    </property>
+   <attribute name="verticalHeaderVisible">
+    <bool>false</bool>
+   </attribute>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>860</x>
      <y>10</y>
      <width>381</width>
-     <height>301</height>
+     <height>851</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QComboBox" name="comboBoxItemSelection"/>
+     <widget class="QComboBox" name="comboBoxItemSelection">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>550</width>
+        <height>100</height>
+       </size>
+      </property>
+     </widget>
     </item>
     <item>
-     <widget class="QWidget" name="widgetFilter" native="true"/>
+     <widget class="QWidget" name="widgetFilter" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+     </widget>
     </item>
     <item>
      <widget class="QWidget" name="widgetTransfer" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="styleSheet">
        <string notr="true">border-color: rgb(0, 0, 0);</string>
       </property>
@@ -48,6 +82,12 @@
     </item>
     <item>
      <widget class="QPushButton" name="pushButtonTransferAll">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="text">
        <string>傳輸全部</string>
       </property>
