@@ -21,15 +21,15 @@ TableModelCylinderVisual::TableModelCylinderVisual(QSqlRelationalTableModel *sou
     __columnPairQVariant[QVariant::fromValue(ACT_B_1_N)] = QVariant::fromValue(ACT_B_1_H);
     __columnPairQVariant[QVariant::fromValue(ACT_B_2_N)] = QVariant::fromValue(ACT_B_2_H);
 
-    __columnPairQVariant[QVariant::fromValue(SEN_B_1_N)] = QVariant::fromValue(SEN_B_1_N);
-    __columnPairQVariant[QVariant::fromValue(SEN_B_2_N)] = QVariant::fromValue(SEN_B_2_N);
-    __columnPairQVariant[QVariant::fromValue(SEN_B_3_N)] = QVariant::fromValue(SEN_B_3_N);
-    __columnPairQVariant[QVariant::fromValue(SEN_B_4_N)] = QVariant::fromValue(SEN_B_4_N);
+    __columnPairQVariant[QVariant::fromValue(SEN_B_1_N)] = QVariant::fromValue(SEN_B_1_H);
+    __columnPairQVariant[QVariant::fromValue(SEN_B_2_N)] = QVariant::fromValue(SEN_B_2_H);
+    __columnPairQVariant[QVariant::fromValue(SEN_B_3_N)] = QVariant::fromValue(SEN_B_3_H);
+    __columnPairQVariant[QVariant::fromValue(SEN_B_4_N)] = QVariant::fromValue(SEN_B_4_H);
 
-    __columnPairQVariant[QVariant::fromValue(SEN_A_1_N)] = QVariant::fromValue(SEN_A_1_N);
-    __columnPairQVariant[QVariant::fromValue(SEN_A_2_N)] = QVariant::fromValue(SEN_A_2_N);
-    __columnPairQVariant[QVariant::fromValue(SEN_A_3_N)] = QVariant::fromValue(SEN_A_3_N);
-    __columnPairQVariant[QVariant::fromValue(SEN_A_4_N)] = QVariant::fromValue(SEN_A_4_N);
+    __columnPairQVariant[QVariant::fromValue(SEN_A_1_N)] = QVariant::fromValue(SEN_A_1_H);
+    __columnPairQVariant[QVariant::fromValue(SEN_A_2_N)] = QVariant::fromValue(SEN_A_2_H);
+    __columnPairQVariant[QVariant::fromValue(SEN_A_3_N)] = QVariant::fromValue(SEN_A_3_H);
+    __columnPairQVariant[QVariant::fromValue(SEN_A_4_N)] = QVariant::fromValue(SEN_A_4_H);
 
 
     foreach (QVariant nameColumn, __columnPairQVariant.keys()) {

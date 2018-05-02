@@ -64,5 +64,6 @@ void FrontConfigurationTransfer::onTransferAll()
     foreach (CommitBlock::CommitDataBlockSelection var, __list) {
         __controllerTransfer->PutTask(TransferTask(var,ControllerBankTransfer::BATCH_ALL_MODE));
     }
+    __controllerTransfer->Direction(CommitBlock::MODE_DOWNLOAD_DATA_BLOCK);
     __controllerTransfer->onTransferData();
 }

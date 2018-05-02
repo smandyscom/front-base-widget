@@ -70,10 +70,10 @@ public:
     };
     enum RUN_STATUS
     {
-        RS_SERVO_READY=0,
+        RS_DRIVER_READY=0,
         RS_SERVO_ON,
-        RS_SYS_BUSY,
-        RS_SERVO_BUSY,
+        RS_DRIVER_BUSY,
+        RS_SERVO_READY,
         RS_LATCH_MODE,
     };
     enum POS_STATUS
