@@ -12,10 +12,9 @@ frontControlPanel::frontControlPanel(QWidget *parent) :
     connect(ui->pushButtonPause,&QPushButton::clicked,__controller,&ControllerMainPanel::Pause);
     connect(ui->pushButtonInitialize,&QPushButton::clicked,__controller,&ControllerMainPanel::Initialize);
     connect(ui->pushButtonErrorReset,&QPushButton::clicked,__controller,&ControllerMainPanel::ErrorReset);
-    connect(ui->pushButtonErrorReset,&QPushButton::clicked,[=](){
-       ui->textBrowserErrorDescription->clear();
-       ui->pushButtonErrorReset->setEnabled(false);
-    });
+    connect(ui->pushButtonErrorIgnore,&QPushButton::clicked,__controller,&ControllerMainPanel::ErrorIgnore);
+    connect(ui->pushButtonClear,&QPushButton::clicked,__controller,&ControllerMainPanel::Clear);
+
     //! Timer activated
     __timer = new QTimer(this);
     connect(__timer,SIGNAL(timeout()),this,SLOT(onTimerTimeout()));
@@ -35,6 +34,7 @@ frontControlPanel::frontControlPanel(QWidget *parent) :
     connect(ui->radioButtonManual,SIGNAL(toggled(bool)),this,SLOT(onCheckedChanged()));
     //!
     connect(__controller,&ControllerMainPanel::stateChanged,this,&frontControlPanel::onStateChanged);
+    connect(__controller,&ControllerMainPanel::errorChanged,this,&frontControlPanel::onErrorChanged);
     //!
     connect(__controller->ControllerTransfer(),&ControllerBankTransfer::dataTransfering,[=](TransferTask task){
         //!
@@ -50,14 +50,9 @@ frontControlPanel::~frontControlPanel()
 void frontControlPanel::onTimerTimeout()
 {
     //!Update
-    utilities::colorChangeOver(ui->pushButtonPause,__controller->IsPause(),Qt::green,Qt::red);
-    ui->pushButtonInitialize->setEnabled(__controller->IsInitialized());
-    if(__controller->IsError() && !ui->pushButtonErrorReset->isEnabled())
-        ui->textBrowserErrorDescription->setText(QString("%1\n%2")
-                                                 .arg(__controller->ErrorDevice())
-                                                 .arg(__controller->ErrorDescription()));
-    ui->pushButtonErrorReset->setEnabled(__controller->IsError());
-
+    utilities::colorChangeOver(ui->pushButtonPause,__controller->IsPause(),Qt::red,Qt::green);
+    ui->pushButtonInitialize->setEnabled(__controller->IsNotInitializing());
+    ui->pushButtonClear->setEnabled(!__controller->IsClear());
     //!
     foreach (QWidget* var, __manualInterlock) {
         var->setEnabled(__controller->CurrentState() != ControllerMainPanel::STATE_MANUAL);
@@ -67,6 +62,19 @@ void frontControlPanel::onTimerTimeout()
     }
     //!
     ui->lcdNumberSyncCounter->display(__controller->ControllerTransfer()->RestTasksCount());
+    //! Show aux datas
+    //! InletCount
+    //! OutletCount
+    //! OKCount
+    //! NGCount
+    //! CYCTIME
+    ui->lcdNumberInletCount->display(__controller->Data(ControllerMainPanel::MON_DATA_0).toInt());
+    ui->lcdNumberOutletCount->display(__controller->Data(ControllerMainPanel::MON_DATA_1).toInt());
+    ui->lcdNumberOKCount->display(__controller->Data(ControllerMainPanel::MON_DATA_2).toInt());
+    ui->lcdNumberNgCount->display(__controller->Data(ControllerMainPanel::MON_DATA_3).toInt());
+
+    ui->lcdNumberCycleTime->display(__controller->Data(ControllerMainPanel::MON_DATA_4).toReal());
+
 }
 
 void frontControlPanel::onCheckedChanged()
@@ -82,4 +90,19 @@ void frontControlPanel::onStateChanged(ControllerMainPanel::MainStates currentSt
     if(!ui->radioButtonManual->isChecked() &&
             currentState==ControllerMainPanel::STATE_MANUAL)
         ui->radioButtonManual->setChecked(true);
+}
+
+void frontControlPanel::onErrorChanged(bool currentError)
+{
+    //!enable buttons
+    ui->pushButtonErrorReset->setEnabled(currentError);
+    ui->pushButtonErrorIgnore->setEnabled(currentError &&
+                                          (__controller->ErrorCategrory() == CommitBlock::SELECTION_CYLINDER));
+    //! given message
+    if(currentError)
+        ui->textBrowserErrorDescription->setText(QString("%1\n%2")
+                                                 .arg(__controller->ErrorDevice())
+                                                 .arg(__controller->ErrorDescription()));
+    else
+        ui->textBrowserErrorDescription->clear();
 }

@@ -30,14 +30,27 @@ class ControllerMainPanel : public QObject
 public:
     enum MainPanelContext
     {
+        //! Operations
         ERROR_RESET_BIT=0x03000020,
         MANUAL_CONTROL_WORD=0x03000020,
         MANUAL_TOGGLE_PAUSE=0x03010020,
         MANUAL_TOGGLE_INIT=0x03020020,
         MANUAL_TOOGLE_MANUAL=0x03030020,
+        ERROR_IGNORE_BIT=0x03040020,
+        MANUAL_TOOGLE_CLEAR=0x03050020,
+        //! Monitors
         ERROR_DEVICE_INDEX=0x03000022,
         ERROR_CATEGRORY=0x03000024,
         ERROR_CODE=0x03000026,
+
+        MON_DATA_0 = 0x03000030,
+        MON_DATA_1= 0x03000032,
+        MON_DATA_2= 0x03000034,
+        MON_DATA_3= 0x03000036,
+        MON_DATA_4= 0x03000038,
+        MON_DATA_5= 0x0300003A,
+        MON_DATA_6= 0x0300003C,
+        MON_DATA_7= 0x0300003E,
 
         OFFSET_CONTEXT_LUID_PARENT = 0x03000000+UnitContextBlock::OFFSET_CONTEXT_LUID_PARENT,
     };
@@ -85,19 +98,36 @@ public:
     //! \brief IsInitialize
     //! \return
     //! is in auto run routine
-    bool IsInitialized() const
+    bool IsNotInitializing() const
     {
         //! = Controller state on H100
         ModbusDriverAddress __address(UnitOperationBlock::OFFSET_MONITOR_STATE);
         __address.setChannel(3);
-        return __channel->Access<MODBUS_U_WORD>(__address) == 0x100;
+        return __channel->Access<MODBUS_U_WORD>(__address) == 0x100 ||
+                __channel->Access<MODBUS_S_WORD>(__address) == 0;
     }
     //!
     //! \brief ErrorReset
     //!
     void ErrorReset()
     {
-        return __channel->Access<bool>(ModbusDriverAddress(ERROR_RESET_BIT),true);
+        __channel->Access<bool>(ModbusDriverAddress(ERROR_RESET_BIT),true);
+    }
+    //!
+    //! \brief ErrorIgnore
+    //! Given another error reset decision
+    void ErrorIgnore()
+    {
+        __channel->Access<bool>(ModbusDriverAddress(ERROR_IGNORE_BIT),true);
+    }
+
+    void Clear()
+    {
+        __channel->Access<bool>(ModbusDriverAddress(MANUAL_TOOGLE_CLEAR),true);
+    }
+    bool IsClear() const
+    {
+        return __channel->Access<bool>(ModbusDriverAddress(MANUAL_TOOGLE_CLEAR));
     }
 
     MODBUS_U_QUAD ErrorCode() const
@@ -113,10 +143,6 @@ public:
         return __channel->Access<MODBUS_U_WORD>(ModbusDriverAddress(ERROR_DEVICE_INDEX));
     }
 
-    bool IsError() const
-    {
-        return (ErrorCode()!=0);
-    }
     QString ErrorDevice() const;
     QString ErrorDescription() const;
 
@@ -139,6 +165,23 @@ public:
         return __state;
     }
 
+    QVariant Data(uint key) const
+    {
+        MODBUS_U_LONG value = __channel->Access<MODBUS_U_LONG>(ModbusDriverAddress(key));
+
+        switch (key) {
+        case MON_DATA_4:
+        case MON_DATA_5:
+        case MON_DATA_6:
+        case MON_DATA_7:
+            return QVariant::fromValue(value * AbstractDataBlock::Dimension->value(TIME));
+            break;
+        default:
+            return QVariant::fromValue(value);
+            break;
+        }
+    }
+
     const ControllerBankTransfer* ControllerTransfer() const
     {
         return __controllerTransfer;
@@ -147,6 +190,7 @@ public:
     static ControllerMainPanel* Instance();
 signals:
     void stateChanged(MainStates currentState);
+    void errorChanged(bool currentError);
 public slots:
     void onDataChanged(TransferTask task);
 protected slots:
@@ -171,7 +215,7 @@ protected:
     QMap<MODBUS_S_WORD,QSqlTableModel*> __errorCodeMap;
 
     MainStates __lastState;
-    bool __lastIsError;
+    bool __lastError;
 
     ControllerBankTransfer* __controllerTransfer;
 

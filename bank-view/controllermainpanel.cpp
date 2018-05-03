@@ -40,6 +40,13 @@ void ControllerMainPanel::onReply(UpdateEvent *event)
             //! Schedualing next polling
             __channel->beginAccess<AbstractDataBlock>(__monitorBaseAddress);
         });
+        //!
+        //! Error detection
+        //!
+        if((ErrorCode()!=0) != __lastError)
+            emit errorChanged((ErrorCode()!=0));
+        __lastError = (ErrorCode()!=0);
+
         break;
     default:
         break;

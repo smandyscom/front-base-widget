@@ -248,6 +248,19 @@
            </property>
           </widget>
          </item>
+         <item>
+          <widget class="QPushButton" name="pushButtonErrorIgnore">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>錯誤忽略</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
       </layout>
