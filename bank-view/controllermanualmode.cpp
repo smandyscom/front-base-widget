@@ -91,7 +91,7 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
     connect(__channel,SIGNAL(raiseUpdateEvent(UpdateEvent*)),this,SLOT(onReply(UpdateEvent*)));
 
     //!
-    setInitialState(s1);
+    setInitialState(s0);
     start();
 }
 

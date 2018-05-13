@@ -85,7 +85,8 @@ HEADERS += \
     controllermaterialtransfer.h \
     frontunitpanel.h \
     frontconfigurationtransfer.h \
-    tablemodelcylindervisual.h
+    tablemodelcylindervisual.h \
+    definitionslotblock.h
 
 unix {
     target.path = /usr/lib
