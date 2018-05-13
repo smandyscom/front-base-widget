@@ -1,3 +1,4 @@
+
 #include "controllerbanktransfer.h"
 
 ControllerBankTransfer::ControllerBankTransfer(QObject *parent) :
