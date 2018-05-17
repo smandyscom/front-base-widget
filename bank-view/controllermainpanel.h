@@ -194,7 +194,7 @@ signals:
 public slots:
     void onDataChanged(TransferTask task);
 protected slots:
-    void onReply(UpdateEvent* event);
+    void onReply();
     void onDataTransfered();
 protected:
     explicit ControllerMainPanel(QObject *parent = nullptr);

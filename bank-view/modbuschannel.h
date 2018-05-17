@@ -66,12 +66,30 @@ public:
     static void Channels(QList<ModbusSerializedClient*> value);
     static QList<ModbusSerializedClient*> Channels();
 
+    //!
+    //! \brief EventSocket
+    //! \return
+    //! Generate a event entity for stateMachines
+    //! since stateMachine would consume a entity after processed
+    //! each stateMachine need to connect to this socket
+    UpdateEvent* EventSocket()
+    {
+        return new UpdateEvent(__cachedReplyAddress,__cachedReplyValue);
+    }
+    ModbusDriverAddress CachedReplyAddress() const
+    {
+        return __cachedReplyAddress;
+    }
+    QVariant CachedReplyValue() const
+    {
+        return __cachedReplyValue;
+    }
 signals:
     //!
     //! \brief raiseUpdateEvent
     //! \param event
     //! The event source ready to connect with QStateMachine
-    void raiseUpdateEvent(UpdateEvent* event);
+    void readReply();
 
 protected slots:
     //!
@@ -116,6 +134,9 @@ protected:
 
     explicit ModbusChannel(QList<ModbusSerializedClient*> clientList,
                            QObject *parent = nullptr);
+
+    ModbusDriverAddress __cachedReplyAddress;
+    QVariant __cachedReplyValue;
 
     static ModbusChannel* __instance;
     static QList<ModbusSerializedClient*> __channels;

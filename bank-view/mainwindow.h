@@ -17,7 +17,7 @@
 
 #include <frontcontrolpanel.h>
 
-
+#include <controllermaterialtransfer.h>
 
 
 #include <QMap>
@@ -35,9 +35,11 @@ public:
     ~MainWindow();
 
 private slots:
-    void onRaiseUpdateEvent(UpdateEvent* e);
+    void onReadReply();
 private:
     Ui::MainWindow *ui;
+
+   QList<ControllerMaterialTransfer*> __materialSlots;
 
 };
 

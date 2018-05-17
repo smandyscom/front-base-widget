@@ -137,7 +137,7 @@ protected slots:
     //! \brief onMonitorBlockReply
     //! \param event
     //! Looping
-    void onReply(UpdateEvent* event);
+    void onReply();
 protected:
      explicit ControllerManualMode(QObject *parent = nullptr);
 

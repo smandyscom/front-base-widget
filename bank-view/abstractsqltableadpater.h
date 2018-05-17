@@ -47,7 +47,8 @@ public:
     {
         __model->setFilter(nullptr);
         __model->select();
-        __model->setRecord(select(key,keyType,keyName),data2Record(data));
+        int rowIndex = select(key,keyType,keyName);
+        __model->setRecord(rowIndex,data2Record(data,rowIndex));
     }
     AbstractDataBlock Record(int key,
                              KeyType keyType=KEY_ROW_ID,
@@ -77,9 +78,9 @@ public:
 
         return *__concreteTypeBlock;
     }
-    virtual QSqlRecord data2Record(const AbstractDataBlock& data)
+    virtual QSqlRecord data2Record(const AbstractDataBlock& data,int referenceRowIndex)
     {
-        QSqlRecord __record = __model->record(); //get empty records as reference
+        QSqlRecord __record = __model->record(referenceRowIndex); //get default records as reference
         *__concreteTypeBlock = data; //value assign only , keep vPtr as same
 
         foreach (QVariant var, __headerList) {

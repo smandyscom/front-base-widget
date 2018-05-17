@@ -75,6 +75,29 @@ MainWindow::MainWindow(QWidget *parent) :
     //! Connect data changed
     connect(fmm,&FrontManaualMode::dataChanged,ControllerMainPanel::Instance(),&ControllerMainPanel::onDataChanged);
     connect(fcp,&FrontCylinderPanel::dataChanged,ControllerMainPanel::Instance(),&ControllerMainPanel::onDataChanged);
+    //! Material information
+    QList<ControllerMaterialTransfer::SlotType> __typeList = {
+        ControllerMaterialTransfer::TYPE_DATA_NODE,//0
+        ControllerMaterialTransfer::TYPE_DATA_NODE,//1
+        ControllerMaterialTransfer::TYPE_EMPTY_NODE,
+        ControllerMaterialTransfer::TYPE_DATA_NODE,//3
+        ControllerMaterialTransfer::TYPE_DATA_NODE,//4
+        ControllerMaterialTransfer::TYPE_EMPTY_NODE,
+        ControllerMaterialTransfer::TYPE_EMPTY_NODE,
+        ControllerMaterialTransfer::TYPE_EMPTY_NODE,
+        ControllerMaterialTransfer::TYPE_DATA_NODE,//8
+        ControllerMaterialTransfer::TYPE_EMPTY_NODE,
+        ControllerMaterialTransfer::TYPE_EMPTY_NODE,
+        ControllerMaterialTransfer::TYPE_EMPTY_NODE,
+        ControllerMaterialTransfer::TYPE_EMPTY_NODE,
+        ControllerMaterialTransfer::TYPE_EMPTY_NODE,
+        ControllerMaterialTransfer::TYPE_EMPTY_NODE,//14
+        ControllerMaterialTransfer::TYPE_DATA_NODE,//15
+    };
+    int counter=0;
+    foreach (ControllerMaterialTransfer::SlotType var, __typeList) {
+        __materialSlots.append(new ControllerMaterialTransfer(counter++,var,this));
+    }
     //! Connect controller and channel
     ControllerManualMode* __controller =  ControllerManualMode::Instance();
     ModbusChannel* __channel = ModbusChannel::Instance();
@@ -84,7 +107,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(__controller,&ControllerManualMode::requireWriteData,__channel,[__channel](ModbusDriverAddress address,const QVariant data){
         __channel->Access(address,data);
     });
-    connect(__channel,SIGNAL(raiseUpdateEvent(UpdateEvent*)),this,SLOT(onRaiseUpdateEvent(UpdateEvent*)));
+    //!
+    connect(__channel,&ModbusChannel::readReply,this,&MainWindow::onReadReply);
 }
 
 MainWindow::~MainWindow()
@@ -92,7 +116,10 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::onRaiseUpdateEvent(UpdateEvent *e)
-{
-    ControllerManualMode::Instance()->postEvent(e);
+void MainWindow::onReadReply()
+{    
+    ControllerManualMode::Instance()->postEvent(ModbusChannel::Instance()->EventSocket());
+    foreach (ControllerMaterialTransfer* var, __materialSlots) {
+        var->postEvent(ModbusChannel::Instance()->EventSocket());
+    }
 }

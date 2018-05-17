@@ -141,10 +141,12 @@ void ModbusChannel::onReadRequestProcessed(QModbusDataUnit result)
    //write , size unit should be converting
    writeData(modbusAddress,result.values().data(),result.valueCount()*2);
 
+   __cachedReplyAddress = modbusAddress;
+   __cachedReplyValue = QVariant(channelCache[modbusAddress.getChannel()][modbusAddress.getRegisterAddress()]);
    //!
    //! Value contains single word only
    //! Bit mask would vanished here
-   emit raiseUpdateEvent(new UpdateEvent(modbusAddress,QVariant(channelCache[modbusAddress.getChannel()][modbusAddress.getRegisterAddress()])));
+   emit readReply();
 }
 
 //!

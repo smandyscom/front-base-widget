@@ -88,7 +88,7 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
            emit operationPerformed();//inform required operation had performed
     });
     //!
-    connect(__channel,SIGNAL(raiseUpdateEvent(UpdateEvent*)),this,SLOT(onReply(UpdateEvent*)));
+    connect(__channel,&ModbusChannel::readReply,this,&ControllerManualMode::onReply);
 
     //!
     setInitialState(s0);
@@ -99,9 +99,9 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
 //! \brief ControllerManualMode::onMonitorBlockReply
 //! \param event
 //! intercept monitor block updating event
-void ControllerManualMode::onReply(UpdateEvent *event)
+void ControllerManualMode::onReply()
 {
-    switch (event->address) {
+    switch (__channel->CachedReplyAddress().getAddress()) {
     case MONITOR_BLOCK_HEAD:
     {
         //! keep polling monitor status
@@ -131,6 +131,7 @@ void ControllerManualMode::onReply(UpdateEvent *event)
     default:
         break;
     }
+
 }
 
 //!

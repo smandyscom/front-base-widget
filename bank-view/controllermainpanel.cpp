@@ -10,7 +10,7 @@ ControllerMainPanel::ControllerMainPanel(QObject *parent) : QObject(parent)
     __channel->beginAccess<AbstractDataBlock>(__monitorBaseAddress);
 
     //! Link
-    connect(__channel,&ModbusChannel::raiseUpdateEvent,this,&ControllerMainPanel::onReply);
+    connect(__channel,&ModbusChannel::readReply,this,&ControllerMainPanel::onReply);
     //!
     __deviceMap[CommitBlock::SELECTION_AXIS] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_AXIS);
     __deviceMap[CommitBlock::SELECTION_CYLINDER] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_CYLINDERS);
@@ -32,9 +32,9 @@ ControllerMainPanel::ControllerMainPanel(QObject *parent) : QObject(parent)
 //! \brief ControllerMainPanel::onReply
 //! \param event
 //!
-void ControllerMainPanel::onReply(UpdateEvent *event)
+void ControllerMainPanel::onReply()
 {
-    switch (event->address) {
+    switch (__channel->CachedReplyAddress().getAddress()) {
     case OFFSET_CONTEXT_LUID_PARENT:
         QTimer::singleShot(100,this,[=](){
             //! Schedualing next polling
