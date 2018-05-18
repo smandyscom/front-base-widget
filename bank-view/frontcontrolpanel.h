@@ -21,7 +21,7 @@ public:
 
 protected slots:
     void onTimerTimeout();
-    void onCheckedChanged();
+    void onCheckedChanged(bool toggled);
     void onStateChanged(ControllerMainPanel::MainStates currentState);
     void onErrorChanged(bool currentError);
 

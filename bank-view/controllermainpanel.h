@@ -67,6 +67,7 @@ public:
     void Pause()
     {
         __channel->Access<bool>(ModbusDriverAddress(MANUAL_TOGGLE_PAUSE),true);
+        emit stateChanged(CurrentState());
     }
     void Manual(bool value)
     {
@@ -79,9 +80,12 @@ public:
         {
             __controllerTransfer->Direction(CommitBlock::MODE_DOWNLOAD_DATA_BLOCK);
             __controllerTransfer->onTransferData();
+            return;
         }
 
-        __channel->Access(ModbusDriverAddress(MANUAL_TOOGLE_MANUAL),value);
+        //! Semi->Manaul , unconditional
+        __channel->Access(ModbusDriverAddress(MANUAL_TOOGLE_MANUAL),true);
+        emit stateChanged(CurrentState());
     }
 
     bool IsPause() const
@@ -159,9 +163,6 @@ public:
                 __state =  STATE_SEMI_AUTO;
         }
 
-        if(__lastState!=__state)
-            emit stateChanged(__state);
-        __lastState = __state;
         return __state;
     }
 

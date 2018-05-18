@@ -5,12 +5,12 @@
 JunctionBankDatabase::JunctionBankDatabase(QString databaseName, QObject *parent) :
     QObject(parent)
 {
-    db = QSqlDatabase::addDatabase("QSQLITE");//setup driver
-    db.setDatabaseName(databaseName);
+    __database = QSqlDatabase::addDatabase("QSQLITE","base");//setup driver
+    __database.setDatabaseName(databaseName);
 }
 JunctionBankDatabase::~JunctionBankDatabase()
 {
-    db.close();
+    __database.close();
 }
 
 void JunctionBankDatabase::onInitialize()
@@ -21,7 +21,7 @@ void JunctionBankDatabase::onInitialize()
     if(!qf.exists())
         return;
 
-    if(!db.open())
+    if(!__database.open())
         return;
 
     //! Table name preparation
@@ -33,7 +33,7 @@ void JunctionBankDatabase::onInitialize()
     }
     //! Open tables
     foreach (TableNames var, __tableList) {
-        QSqlRelationalTableModel* __reference = new QSqlRelationalTableModel(this);
+        QSqlRelationalTableModel* __reference = new QSqlRelationalTableModel(this,__database);
         bool result = false;
         __reference->setEditStrategy(QSqlTableModel::OnFieldChange);
         __reference->setTable(QVariant::fromValue(var).value<QString>());

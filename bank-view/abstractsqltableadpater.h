@@ -35,7 +35,7 @@ public:
         QObject(parent)
     {
         //!duplication
-        __model = new QSqlTableModel(this);
+        __model = new QSqlTableModel(this,qobject_cast<QSqlTableModel*>(this->parent())->database());
         __model->setTable(qobject_cast<QSqlTableModel*>(this->parent())->tableName());
         __model->select();
     }
@@ -47,6 +47,7 @@ public:
     {
         __model->setFilter(nullptr);
         __model->select();
+        QSqlRecord __record = __model->record(1);
         int rowIndex = select(key,keyType,keyName);
         __model->setRecord(rowIndex,data2Record(data,rowIndex));
     }

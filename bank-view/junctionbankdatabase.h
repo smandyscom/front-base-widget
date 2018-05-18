@@ -73,7 +73,7 @@ public:
 
     QSqlRelationalTableModel* TableMap(TableNames value)
     {
-        QSqlRelationalTableModel* result = new QSqlRelationalTableModel(this);
+        QSqlRelationalTableModel* result = new QSqlRelationalTableModel(this,__database);
         result->setEditStrategy(QSqlTableModel::OnFieldChange);
         result->setTable(__tableMap[value].second->tableName());
         result->select();
@@ -93,7 +93,7 @@ protected:
 
     virtual void decorateTable(){}
 
-    QSqlDatabase db;
+    QSqlDatabase __database;
 
     QMap<TableNames,TableEntity> __tableMap;
 

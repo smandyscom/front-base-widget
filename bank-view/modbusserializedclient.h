@@ -26,8 +26,7 @@ public:
 
     typedef QPair<QModbusDataUnit,AccessMethod> ModbusRequest;
 
-    explicit ModbusSerializedClient(QModbusClient* __driver = nullptr,
-                                    int __serverAddress=1,
+    explicit ModbusSerializedClient(int __serverAddress=1,
                                     QObject *parent = nullptr);
     void pushRequest(const ModbusRequest* request);
 
@@ -35,6 +34,10 @@ public:
     int ProcessingCount() const {return requestQueue.count();}
 
     QModbusClient* Driver() const {return __driver;}
+    void Driver(QModbusClient* value);
+
+
+    ~ModbusSerializedClient();
 
 signals:
     //!

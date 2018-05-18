@@ -22,18 +22,22 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
 
-
+    __isClosing = false;
     //! Initialize Modbus Serialized Client
     //! port from 10001-10008 (CH1-CH8
     QList<ModbusSerializedClient*> __list;
     for(int i=0;i<4;i++)
     {
-        QModbusTcpClient* client = new QModbusTcpClient(this);
+
+
+        ModbusSerializedClient* __serializedClient = new ModbusSerializedClient(1,this);
+
+        QModbusTcpClient* client = new QModbusTcpClient(__serializedClient);
         QUrl url = QUrl::fromUserInput(tr("169.254.28.1:%1").arg(10001+i));
-        //QUrl url = QUrl::fromUserInput(tr("127.0.0.1:%1").arg(500+1+i));
         client->setConnectionParameter(QModbusDevice::NetworkAddressParameter,url.host());
         client->setConnectionParameter(QModbusDevice::NetworkPortParameter,url.port());
-        ModbusSerializedClient* __serializedClient = new ModbusSerializedClient(client);
+
+        __serializedClient->Driver(client);
         __list.append(__serializedClient);
     }
     ModbusChannel::Channels(__list);
@@ -109,6 +113,8 @@ MainWindow::MainWindow(QWidget *parent) :
     });
     //!
     connect(__channel,&ModbusChannel::readReply,this,&MainWindow::onReadReply);
+    //!
+
 }
 
 MainWindow::~MainWindow()
@@ -121,5 +127,30 @@ void MainWindow::onReadReply()
     ControllerManualMode::Instance()->postEvent(ModbusChannel::Instance()->EventSocket());
     foreach (ControllerMaterialTransfer* var, __materialSlots) {
         var->postEvent(ModbusChannel::Instance()->EventSocket());
+    }
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    if(!__isClosing)
+    {
+        //! inform material transfer to send DB_ENGAGED
+        foreach (ControllerMaterialTransfer* var, __materialSlots) {
+            var->onAboutToLeave();
+        }
+        __isClosing = true;
+        event->ignore();
+    }
+    else
+    {
+        bool __isAllDisengaged=true;
+        foreach (ControllerMaterialTransfer* var, __materialSlots) {
+            if(var->ConnectionEngaged())
+                __isAllDisengaged = false;
+        }
+        if(__isAllDisengaged)
+            event->accept();
+        else
+            event->ignore();
     }
 }

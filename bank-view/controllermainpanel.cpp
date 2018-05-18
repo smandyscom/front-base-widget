@@ -26,6 +26,8 @@ ControllerMainPanel::ControllerMainPanel(QObject *parent) : QObject(parent)
     //!
     __controllerTransfer = new ControllerBankTransfer(this);
     connect(__controllerTransfer,SIGNAL(dataTransfered()),this,SLOT(onDataTransfered()));
+    //! sync with PLC
+
 }
 
 //!
@@ -36,7 +38,7 @@ void ControllerMainPanel::onReply()
 {
     switch (__channel->CachedReplyAddress().getAddress()) {
     case OFFSET_CONTEXT_LUID_PARENT:
-        QTimer::singleShot(100,this,[=](){
+        QTimer::singleShot(10,this,[=](){
             //! Schedualing next polling
             __channel->beginAccess<AbstractDataBlock>(__monitorBaseAddress);
         });
@@ -106,6 +108,7 @@ void ControllerMainPanel::onDataTransfered()
 {
     //! Turns into auto mode
     __channel->Access(ModbusDriverAddress(MANUAL_TOOGLE_MANUAL),false);
+    emit stateChanged(CurrentState());
 }
 
 ControllerMainPanel* ControllerMainPanel::__instace = nullptr;

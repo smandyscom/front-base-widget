@@ -30,8 +30,8 @@ frontControlPanel::frontControlPanel(QWidget *parent) :
         ui->radioButtonManual,
     };
     //!
-    connect(ui->radioButtonAuto,SIGNAL(toggled(bool)),this,SLOT(onCheckedChanged()));
-    connect(ui->radioButtonManual,SIGNAL(toggled(bool)),this,SLOT(onCheckedChanged()));
+    //connect(ui->radioButtonAuto,SIGNAL(toggled(bool)),this,SLOT(onCheckedChanged()));
+    connect(ui->radioButtonManual,&QRadioButton::toggled,this,&frontControlPanel::onCheckedChanged);
     //!
     connect(__controller,&ControllerMainPanel::stateChanged,this,&frontControlPanel::onStateChanged);
     connect(__controller,&ControllerMainPanel::errorChanged,this,&frontControlPanel::onErrorChanged);
@@ -77,9 +77,12 @@ void frontControlPanel::onTimerTimeout()
 
 }
 
-void frontControlPanel::onCheckedChanged()
+void frontControlPanel::onCheckedChanged(bool toggled)
 {
-    __controller->Manual(ui->radioButtonManual->isChecked());
+//    if(ui->radioButtonManual->isChecked())
+//        __controller->Manual(true);
+//    else if(ui->radioButtonAuto->isChecked())
+        __controller->Manual(toggled);
     //!
     ui->progressBarSync->setMaximum(__controller->ControllerTransfer()->RestTasksCount());
     ui->progressBarSync->reset();
@@ -87,9 +90,18 @@ void frontControlPanel::onCheckedChanged()
 
 void frontControlPanel::onStateChanged(ControllerMainPanel::MainStates currentState)
 {
-    if(!ui->radioButtonManual->isChecked() &&
-            currentState==ControllerMainPanel::STATE_MANUAL)
-        ui->radioButtonManual->setChecked(true);
+    switch (currentState) {
+    case ControllerMainPanel::STATE_MANUAL:
+        if(!ui->radioButtonManual->isChecked())
+            ui->radioButtonManual->setChecked(true);
+        break;
+    case ControllerMainPanel::STATE_SEMI_AUTO:
+        if(!ui->radioButtonAuto->isChecked())
+            ui->radioButtonAuto->setChecked(true);
+        break;
+    default:
+        break;
+    }
 }
 
 void frontControlPanel::onErrorChanged(bool currentError)

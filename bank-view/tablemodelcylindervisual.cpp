@@ -1,7 +1,7 @@
 #include "tablemodelcylindervisual.h"
 
 TableModelCylinderVisual::TableModelCylinderVisual(QSqlRelationalTableModel *source) :
-    QSqlRelationalTableModel(source->parent())
+    QSqlRelationalTableModel(source->parent(),source->database())
 {
     //!
     __backGroundColorRole.append(Qt::BackgroundColorRole);

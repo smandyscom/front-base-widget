@@ -1,7 +1,7 @@
 #include "tablemodeliooverride.h"
 
 TableModelIOOverride::TableModelIOOverride(QSqlRelationalTableModel *source):
-    QSqlRelationalTableModel(source->parent())
+    QSqlRelationalTableModel(source->parent(),source->database())
 {
     //!
     //!

@@ -34,13 +34,17 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-private slots:
+
+
+protected slots:
     void onReadReply();
-private:
+protected:
     Ui::MainWindow *ui;
 
-   QList<ControllerMaterialTransfer*> __materialSlots;
+    void closeEvent(QCloseEvent* event) Q_DECL_OVERRIDE;
+    QList<ControllerMaterialTransfer*> __materialSlots;
 
+    bool __isClosing;
 };
 
 #endif // MAINWINDOW_H

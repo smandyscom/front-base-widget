@@ -82,7 +82,12 @@ public:
     {
         return __isValid;
     }
-
+    bool ConnectionEngaged() const
+    {
+        return __connectionEngaged;
+    }
+public slots:
+    void onAboutToLeave();
 protected slots:
     //!
     //! \brief onMonitorBlockReply
@@ -102,7 +107,7 @@ protected:
 
     QSqlRelationalTableModel* __table;
 
-    ModbusDriverAddress toOffseteAaddress(int base);
+    ModbusDriverAddress toOffseteAddress(int base);
 
     AbstractSqlTableAdpater* __adpator;
 
@@ -111,6 +116,8 @@ protected:
 
     static QSqlDatabase __database;
     static QString __databaseName;
+
+    bool __connectionEngaged;
 };
 
 #endif // CONTROLLERMATERIALTRANSFER_H

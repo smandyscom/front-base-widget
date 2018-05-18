@@ -1,17 +1,41 @@
 #include "modbusserializedclient.h"
 #include <QDebug>
-ModbusSerializedClient::ModbusSerializedClient(QModbusClient *driver, int serverAddress, QObject *parent) :
+ModbusSerializedClient::ModbusSerializedClient(int serverAddress, QObject *parent) :
     QObject(parent),
-    __driver(driver),
     __serverAddress(serverAddress)
 {
+    __driver = nullptr;
+    //!
     __timer = new QTimer(this);
     connect(__timer,SIGNAL(timeout()),this,SLOT(onPopRequest()));
-    connect(__driver,SIGNAL(stateChanged(QModbusDevice::State)),this,SLOT(onDriverStateChanged(QModbusDevice::State)));
-    connect(__driver,SIGNAL(errorOccurred(QModbusDevice::Error)),this,SLOT(onDriverErrorOccured(QModbusDevice::Error)));
     __isProcessing = false;
 }
 
+void ModbusSerializedClient::Driver(QModbusClient* value)
+{
+    if(__driver != nullptr)
+        return;
+    __driver = value;
+
+    connect(__driver,SIGNAL(stateChanged(QModbusDevice::State)),this,SLOT(onDriverStateChanged(QModbusDevice::State)));
+    connect(__driver,SIGNAL(errorOccurred(QModbusDevice::Error)),this,SLOT(onDriverErrorOccured(QModbusDevice::Error)));
+}
+
+ModbusSerializedClient::~ModbusSerializedClient()
+{
+    //! Message loop stuck here , so that requests cannot be comsumed
+
+
+//    qDebug() << "destructor";
+//    //! release all rest requests
+//    while (requestQueue.count() > 0 &&
+//           __driver->state()==QModbusDevice::ConnectedState) {
+//        __isProcessing = false;//forced clear out
+//        onPopRequest();
+//        requestQueue.dequeue();
+//    }
+//    qDebug() << "destructor";
+}
 //!
 //! \brief ModbusSerializedClient::popRequest
 //! this function would be poll repeatly
@@ -19,14 +43,10 @@ void ModbusSerializedClient::onPopRequest()
 {
     if(requestQueue.isEmpty() || __isProcessing)
         return;
-
     //!
     //! Lock-up processor
     //!
     __isProcessing = true;
-
-    //request = const_cast<ModbusRequest*>(requestQueue.head());
-
     QModbusReply* reply = nullptr;
     switch (requestQueue.head()->second) {
     case READ:
@@ -56,13 +76,13 @@ void ModbusSerializedClient::onPopRequest()
                 emit readRequestDone(reply->result());
             //destroy
             requestQueue.dequeue();
-            reply->deleteLater();
             break;
         default:
             qDebug() << reply->errorString();
             break;
         }//switch
 
+        reply->deleteLater();
         __isProcessing = false;
     });
 }

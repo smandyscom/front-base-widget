@@ -40,14 +40,17 @@ int utilities::getSelectedValue(QTableView *target, const QString &keyName)
 
 QSqlRecord utilities::getSqlTableSelectedRecord(QSqlTableModel *target, QVariant keyName, QVariant keyValue)
 {
-    //QString origin = target->filter();
-    QSqlTableModel __dup;
-    __dup.setTable(target->tableName());
-    __dup.select();
+    //!append one record if there is not existed in cache
+    if(!__cachedTables.contains(target->database().connectionName()))
+        __cachedTables[target->database().connectionName()] = new QSqlTableModel(nullptr,target->database());
 
-    __dup.setFilter(generateFilterString(trimNamespace(keyName),trimNamespace(keyValue)));
-    QSqlRecord result = __dup.record(0);
-    //target->setFilter(origin);
+    QSqlTableModel* __dup = __cachedTables[target->database().connectionName()];
+
+    __dup->setTable(target->tableName());
+    __dup->select();
+
+    __dup->setFilter(generateFilterString(trimNamespace(keyName),trimNamespace(keyValue)));
+    QSqlRecord result = __dup->record(0);
     return result;
 }
 
@@ -71,3 +74,5 @@ void utilities::linkQComboBoxAndModel(QComboBox *comboBox, QSqlTableModel *model
     comboBox->setModelColumn(model->fieldIndex(showKey.toString()));
     comboBox->setCurrentIndex(0);
 }
+
+QMap<QString,QSqlTableModel*> utilities::__cachedTables;

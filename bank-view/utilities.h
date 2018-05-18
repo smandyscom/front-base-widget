@@ -60,6 +60,9 @@ public:
     static void linkQComboBoxAndModel(QComboBox* comboBox,
                                       QSqlTableModel *model,
                                       QVariant showKey = QString("NAME"));
+protected:
+    //!connection name/table model
+    static QMap<QString,QSqlTableModel*> __cachedTables;
 };
 
 #endif // UTILITIES_H
