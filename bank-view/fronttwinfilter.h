@@ -9,11 +9,15 @@
 
 #include <abstractsqltableadpater.h>
 #include <QSqlRelationalTableModel>
+
+#include <abstractauthreceiver.h>
+
 namespace Ui {
 class FrontTwinFilter;
 }
 
-class FrontTwinFilter : public QWidget
+class FrontTwinFilter : public QWidget,
+        public AbstractAuthReceiver
 {
     Q_OBJECT
 

@@ -78,6 +78,7 @@ void ModbusSerializedClient::onPopRequest()
             requestQueue.dequeue();
             break;
         default:
+
             qDebug() << reply->errorString();
             break;
         }//switch
@@ -96,6 +97,10 @@ void ModbusSerializedClient::onDriverStateChanged(QModbusDevice::State state)
 {
     switch (state) {
     case QModbusDevice::ConnectedState:
+        qDebug() << __driver->connectionParameter(QModbusDevice::NetworkAddressParameter)
+                 << ":"
+                 << __driver->connectionParameter(QModbusDevice::NetworkPortParameter)
+                 << "Connected" ;
         __timer->start();
         break;
     case QModbusDevice::UnconnectedState:

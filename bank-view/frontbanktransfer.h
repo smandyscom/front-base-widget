@@ -9,6 +9,8 @@
 #include <definitionbasicblocks.h>
 #include <definitionauxiliarykeys.h>
 
+#include <abstractauthreceiver.h>
+
 namespace Ui {
 class FrontBankTransfer;
 }
@@ -18,7 +20,8 @@ using namespace HEADER_STRUCTURE;
 //!
 //! \brief The FrontBankTransfer class
 //! Transfer all mode
-class FrontBankTransfer : public QWidget
+class FrontBankTransfer : public QWidget,
+        public AbstractAuthReceiver
 {
     Q_OBJECT
 

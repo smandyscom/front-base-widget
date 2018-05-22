@@ -25,6 +25,8 @@
 
 #include <QSqlRecord>
 
+#include <abstractauthreceiver.h>
+
 namespace Ui {
 class FrontManaualMode;
 }
@@ -34,7 +36,8 @@ using namespace DEF_BASIC_DIMENSION;
 //!
 //! \brief The FrontManaualMode class
 //!
-class FrontManaualMode : public QWidget
+class FrontManaualMode : public QWidget,
+        public AbstractAuthReceiver
 {
     Q_OBJECT
 

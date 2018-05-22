@@ -18,6 +18,7 @@
 #include <tablemodeliooverride.h>
 #include <tablemodelcylindervisual.h>
 
+#include <abstractauthreceiver.h>
 
 #include <QSqlRecord>
 
@@ -28,7 +29,8 @@ class FrontCylinderPanel;
 using namespace CylinderBlock;
 using namespace IoAttributes;
 
-class FrontCylinderPanel : public QWidget
+class FrontCylinderPanel : public QWidget ,
+        public AbstractAuthReceiver
 {
     Q_OBJECT
 

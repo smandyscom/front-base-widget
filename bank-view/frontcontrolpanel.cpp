@@ -1,7 +1,7 @@
 #include "frontcontrolpanel.h"
 #include "ui_frontcontrolpanel.h"
 
-frontControlPanel::frontControlPanel(QWidget *parent) :
+FrontControlPanel::FrontControlPanel(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::frontControlPanel)
 {
@@ -30,24 +30,20 @@ frontControlPanel::frontControlPanel(QWidget *parent) :
         ui->radioButtonManual,
     };
     //!
-    //connect(ui->radioButtonAuto,SIGNAL(toggled(bool)),this,SLOT(onCheckedChanged()));
-    connect(ui->radioButtonManual,&QRadioButton::toggled,this,&frontControlPanel::onCheckedChanged);
+    connect(ui->radioButtonManual,&QRadioButton::toggled,this,&FrontControlPanel::onCheckedChanged);
     //!
-    connect(__controller,&ControllerMainPanel::stateChanged,this,&frontControlPanel::onStateChanged);
-    connect(__controller,&ControllerMainPanel::errorChanged,this,&frontControlPanel::onErrorChanged);
-    //!
-    connect(__controller->ControllerTransfer(),&ControllerBankTransfer::dataTransfering,[=](TransferTask task){
-        //!
-        ui->progressBarSync->setValue(ui->progressBarSync->value()+1);
-    });
+    connect(__controller,&ControllerMainPanel::stateChanged,this,&FrontControlPanel::onStateChanged);
+    connect(__controller,&ControllerMainPanel::errorChanged,this,&FrontControlPanel::onErrorChanged);
+    //! Safety I/O monitor
+    FrontSafetyPanel* fsp = new FrontSafetyPanel(ui->widgetSafetyIO);
 }
 
-frontControlPanel::~frontControlPanel()
+FrontControlPanel::~FrontControlPanel()
 {
     delete ui;
 }
 
-void frontControlPanel::onTimerTimeout()
+void FrontControlPanel::onTimerTimeout()
 {
     //!Update
     utilities::colorChangeOver(ui->pushButtonPause,__controller->IsPause(),Qt::red,Qt::green);
@@ -70,25 +66,18 @@ void frontControlPanel::onTimerTimeout()
     //! CYCTIME
     ui->lcdNumberInletCount->display(__controller->Data(ControllerMainPanel::MON_DATA_0).toInt());
     ui->lcdNumberOutletCount->display(__controller->Data(ControllerMainPanel::MON_DATA_1).toInt());
-    ui->lcdNumberOKCount->display(__controller->Data(ControllerMainPanel::MON_DATA_2).toInt());
-    ui->lcdNumberNgCount->display(__controller->Data(ControllerMainPanel::MON_DATA_3).toInt());
 
     ui->lcdNumberCycleTime->display(__controller->Data(ControllerMainPanel::MON_DATA_4).toReal());
 
 }
 
-void frontControlPanel::onCheckedChanged(bool toggled)
+void FrontControlPanel::onCheckedChanged(bool toggled)
 {
-//    if(ui->radioButtonManual->isChecked())
-//        __controller->Manual(true);
-//    else if(ui->radioButtonAuto->isChecked())
         __controller->Manual(toggled);
     //!
-    ui->progressBarSync->setMaximum(__controller->ControllerTransfer()->RestTasksCount());
-    ui->progressBarSync->reset();
 }
 
-void frontControlPanel::onStateChanged(ControllerMainPanel::MainStates currentState)
+void FrontControlPanel::onStateChanged(ControllerMainPanel::MainStates currentState)
 {
     switch (currentState) {
     case ControllerMainPanel::STATE_MANUAL:
@@ -104,7 +93,7 @@ void frontControlPanel::onStateChanged(ControllerMainPanel::MainStates currentSt
     }
 }
 
-void frontControlPanel::onErrorChanged(bool currentError)
+void FrontControlPanel::onErrorChanged(bool currentError)
 {
     //!enable buttons
     ui->pushButtonErrorReset->setEnabled(currentError);
@@ -118,3 +107,5 @@ void frontControlPanel::onErrorChanged(bool currentError)
     else
         ui->textBrowserErrorDescription->clear();
 }
+
+

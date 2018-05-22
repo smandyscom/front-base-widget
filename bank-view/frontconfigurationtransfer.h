@@ -11,6 +11,8 @@
 
 #include <controllerbanktransfer.h>
 
+#include <abstractauthreceiver.h>
+
 namespace Ui {
 class FrontConfigurationTransfer;
 }
@@ -18,7 +20,8 @@ class FrontConfigurationTransfer;
 
 using namespace HEADER_STRUCTURE;
 
-class FrontConfigurationTransfer : public QWidget
+class FrontConfigurationTransfer : public QWidget ,
+        public AbstractAuthReceiver
 {
     Q_OBJECT
 

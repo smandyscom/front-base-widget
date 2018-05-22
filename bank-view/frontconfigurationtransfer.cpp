@@ -22,6 +22,8 @@ FrontConfigurationTransfer::FrontConfigurationTransfer(QWidget *parent) :
     //!
     __regionTable = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_REGION);
     __axisTable = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_AXIS);
+    //!
+    __disableList[AUTH::ROLE_ENGINEER].append(this);
 }
 
 FrontConfigurationTransfer::~FrontConfigurationTransfer()

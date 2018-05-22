@@ -51,7 +51,11 @@ SOURCES += \
     definitionsbaselayer.cpp \
     definitionauxiliarykeys.cpp \
     frontconfigurationtransfer.cpp \
-    tablemodelcylindervisual.cpp
+    tablemodelcylindervisual.cpp \
+    controllersafety.cpp \
+    frontsafetypanel.cpp \
+    controllerauth.cpp \
+    abstractauthreceiver.cpp
 HEADERS += \
     modbussetupwidget.h \
     utilities.h \
@@ -86,7 +90,11 @@ HEADERS += \
     frontunitpanel.h \
     frontconfigurationtransfer.h \
     tablemodelcylindervisual.h \
-    definitionslotblock.h
+    definitionslotblock.h \
+    controllersafety.h \
+    frontsafetypanel.h \
+    controllerauth.h \
+    abstractauthreceiver.h
 
 unix {
     target.path = /usr/lib
@@ -104,4 +112,5 @@ FORMS += \
     fronttwinfilter.ui \
     frontsinglefilter.ui \
     frontunitpanel.ui \
-    frontconfigurationtransfer.ui
+    frontconfigurationtransfer.ui \
+    frontsafetypanel.ui

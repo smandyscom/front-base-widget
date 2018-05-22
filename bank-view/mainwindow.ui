@@ -62,7 +62,7 @@
      <enum>QTabWidget::Rounded</enum>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <property name="iconSize">
      <size>
@@ -122,17 +122,39 @@
      <x>0</x>
      <y>0</y>
      <width>1280</width>
-     <height>26</height>
+     <height>31</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>MS Shell Dlg 2</family>
+     <pointsize>16</pointsize>
+    </font>
    </property>
    <widget class="QMenu" name="menuDatabase">
     <property name="title">
-     <string>Database</string>
+     <string>資料庫</string>
     </property>
     <addaction name="actionCommit"/>
     <addaction name="actionRollback"/>
    </widget>
+   <widget class="QMenu" name="menuLogin">
+    <property name="title">
+     <string>登入</string>
+    </property>
+    <addaction name="actionOperator"/>
+    <addaction name="actionEngineer"/>
+    <addaction name="actionDeveloper"/>
+   </widget>
+   <widget class="QMenu" name="menuMisc">
+    <property name="title">
+     <string>其他</string>
+    </property>
+    <addaction name="actionAbout"/>
+   </widget>
    <addaction name="menuDatabase"/>
+   <addaction name="menuLogin"/>
+   <addaction name="menuMisc"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionCommit">
@@ -143,6 +165,26 @@
   <action name="actionRollback">
    <property name="text">
     <string>Rollback</string>
+   </property>
+  </action>
+  <action name="actionOperator">
+   <property name="text">
+    <string>操作員</string>
+   </property>
+  </action>
+  <action name="actionEngineer">
+   <property name="text">
+    <string>工程師</string>
+   </property>
+  </action>
+  <action name="actionDeveloper">
+   <property name="text">
+    <string>開發者</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
    </property>
   </action>
  </widget>

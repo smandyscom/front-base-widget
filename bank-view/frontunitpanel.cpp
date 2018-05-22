@@ -61,6 +61,8 @@ FrontUnitPanel::FrontUnitPanel(QWidget *parent) :
     //!
     HEADER_STRUCTURE::HeaderRender::renderViewHeader(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::HEADER_UNIT),
                                                      ui->tableViewUnit);
+    //!
+    __disableList[AUTH::ROLE_OPERATOR].append(this);
 }
 
 FrontUnitPanel::~FrontUnitPanel()

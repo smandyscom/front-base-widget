@@ -7,17 +7,21 @@
 #include <QTimer>
 #include <utilities.h>
 
+#include <frontsafetypanel.h>
+
+#include <abstractauthreceiver.h>
+
 namespace Ui {
 class frontControlPanel;
 }
 
-class frontControlPanel : public QWidget
+class FrontControlPanel : public QWidget , public AbstractAuthReceiver
 {
     Q_OBJECT
 
 public:
-    explicit frontControlPanel(QWidget *parent = 0);
-    ~frontControlPanel();
+    explicit FrontControlPanel(QWidget *parent = 0);
+    ~FrontControlPanel();
 
 protected slots:
     void onTimerTimeout();

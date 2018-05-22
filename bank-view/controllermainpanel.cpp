@@ -48,7 +48,6 @@ void ControllerMainPanel::onReply()
         if((ErrorCode()!=0) != __lastError)
             emit errorChanged((ErrorCode()!=0));
         __lastError = (ErrorCode()!=0);
-
         break;
     default:
         break;

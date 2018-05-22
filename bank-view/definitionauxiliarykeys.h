@@ -63,4 +63,16 @@ public:
 
 }
 
+namespace AUTH {
+Q_NAMESPACE
+enum AuthRoles
+{
+    ROLE_OPERATOR,
+    ROLE_ENGINEER,
+    ROLE_DEVELOPER,
+};
+Q_ENUM_NS(AuthRoles)
+}
+
+
 #endif // DEFINITIONAUXILIARYKEYS_H

@@ -1,7 +1,7 @@
 #include "modbuschannel.h"
 #include <utilities.h>
 #include <QCoreApplication>
-
+#include <QDebug>
 ModbusChannel::ModbusChannel(QList<ModbusSerializedClient *> channelList, QObject *parent) :
     QObject(parent)
 {
@@ -30,6 +30,16 @@ void ModbusChannel::beginAccess(ModbusDriverAddress address, const QVariant data
     if(sizeInWord == 0)
         sizeInWord = 1; //prevent zero count
 
+    //! Support DiscreteInputs/HoldingRegister only
+    switch (address.getRegisterType()) {
+    case QModbusDataUnit::DiscreteInputs:
+    case QModbusDataUnit::InputRegisters:
+        preparedReadRequest.setRegisterType(address.getRegisterType());
+        break;
+    default:
+        preparedReadRequest.setRegisterType(QModbusDataUnit::HoldingRegisters);
+        break;
+    }
     preparedReadRequest.setStartAddress(address.getRegisterAddress());
     preparedReadRequest.setValueCount(sizeInWord);
 
@@ -138,6 +148,17 @@ void ModbusChannel::onReadRequestProcessed(QModbusDataUnit result)
    ModbusDriverAddress modbusAddress;
    modbusAddress.setChannel(channelIndex);
    modbusAddress.setRegisterAddress(result.startAddress());
+
+   switch (result.registerType()) {
+   case QModbusDataUnit::DiscreteInputs:
+   case QModbusDataUnit::InputRegisters:
+       modbusAddress.setRegisterType(result.registerType());
+      break;
+   default:
+       //!Do nothing
+       break;
+   }
+
    //write , size unit should be converting
    writeData(modbusAddress,result.values().data(),result.valueCount()*2);
 

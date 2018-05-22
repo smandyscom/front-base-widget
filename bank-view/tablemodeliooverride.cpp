@@ -1,7 +1,8 @@
 #include "tablemodeliooverride.h"
 
-TableModelIOOverride::TableModelIOOverride(QSqlRelationalTableModel *source):
-    QSqlRelationalTableModel(source->parent(),source->database())
+TableModelIOOverride::TableModelIOOverride(QSqlRelationalTableModel *source, Qt::GlobalColor trueColor):
+    QSqlRelationalTableModel(source->parent(),source->database()),
+    __trueColor(trueColor)
 {
     //!
     //!
@@ -14,7 +15,7 @@ TableModelIOOverride::TableModelIOOverride(QSqlRelationalTableModel *source):
     connect(__timer,&QTimer::timeout,[=](){
        emit dataChanged(index(0,0),index(rowCount(),columnCount()));
     });
-    __timer->start(100);
+    __timer->start();
 }
 
 //!
@@ -31,7 +32,7 @@ QVariant TableModelIOOverride::data(const QModelIndex &idx, int role) const
 
     //!Change color once the background role request comes
     if(__channel->Access<bool>(CurrentIndexAddress(idx.row())))
-        return QColor(Qt::green);
+        return QColor(__trueColor);
     else
         return QColor(Qt::gray);
 }

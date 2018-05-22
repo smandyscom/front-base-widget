@@ -16,13 +16,16 @@
 
 #include <junctionbankdatabase.h>
 
+#include <abstractauthreceiver.h>
+
 namespace Ui {
 class FrontUnitPanel;
 }
 
 typedef QPair<ModbusDriverAddress,Qt::GlobalColor> VisualAspect;
 
-class FrontUnitPanel : public QWidget
+class FrontUnitPanel : public QWidget,
+        public AbstractAuthReceiver
 {
     Q_OBJECT
 

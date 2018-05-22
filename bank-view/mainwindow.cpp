@@ -28,8 +28,6 @@ MainWindow::MainWindow(QWidget *parent) :
     QList<ModbusSerializedClient*> __list;
     for(int i=0;i<4;i++)
     {
-
-
         ModbusSerializedClient* __serializedClient = new ModbusSerializedClient(1,this);
 
         QModbusTcpClient* client = new QModbusTcpClient(__serializedClient);
@@ -40,12 +38,15 @@ MainWindow::MainWindow(QWidget *parent) :
         __serializedClient->Driver(client);
         __list.append(__serializedClient);
     }
+    //! Ch0 linked to safety controller
+    QUrl url = QUrl::fromUserInput(tr("169.254.60.1:%1").arg(502));
+    __list.first()->Driver()->setConnectionParameter(QModbusDevice::NetworkAddressParameter,url.host());
+    __list.first()->Driver()->setConnectionParameter(QModbusDevice::NetworkPortParameter,url.port());
+
     ModbusChannel::Channels(__list);
     foreach (ModbusSerializedClient* arg, __list) {
         arg->Driver()->connectDevice();
     }
-
-
     //! Intialize Database
     JunctionBankDatabase::DatabaseName("base.db");
     JunctionBankDatabase::Instance()->onInitialize();
@@ -70,7 +71,7 @@ MainWindow::MainWindow(QWidget *parent) :
                                                      var).value(QVariant::fromValue(__VALUE).toString()).toReal());
     }
     //! Initialize FrontManaul panel
-    frontControlPanel* fcp2 = new frontControlPanel(ui->tabMain);
+    FrontControlPanel* fcp2 = new FrontControlPanel(ui->tabMain);
     FrontManaualMode* fmm = new FrontManaualMode(ui->tabManual);
     FrontIoOverride* fio = new FrontIoOverride(ui->tabIO);
     FrontCylinderPanel* fcp = new FrontCylinderPanel(ui->tabCylinder);
@@ -115,6 +116,20 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(__channel,&ModbusChannel::readReply,this,&MainWindow::onReadReply);
     //!
 
+    //! Auth
+    __authController = new ControllerAuth(this);
+    __authRoleTable[ui->actionOperator] = AUTH::ROLE_OPERATOR;
+    __authRoleTable[ui->actionEngineer] = AUTH::ROLE_ENGINEER;
+    __authRoleTable[ui->actionDeveloper] = AUTH::ROLE_DEVELOPER;
+    foreach (QObject* __action, __authRoleTable.keys()) {
+        connect(qobject_cast<QAction*>(__action),
+                &QAction::triggered,
+                this,
+                &MainWindow::onAuthTriggered);
+    }
+    __authController->linkAuthReceivers(this);
+    connect(__authController,&ControllerAuth::onRoleChanged,this,&MainWindow::onAuthChanged);
+    __authController->onAuthChangingRequired(AUTH::ROLE_OPERATOR,0);
 }
 
 MainWindow::~MainWindow()
@@ -153,4 +168,16 @@ void MainWindow::closeEvent(QCloseEvent *event)
         else
             event->ignore();
     }
+}
+
+void MainWindow::onAuthTriggered()
+{
+    __authController->onAuthChangingRequired(__authRoleTable[sender()],
+            QInputDialog::getInt(this,
+                                 tr("輸入密碼"),
+                                 tr("密碼")));
+}
+void MainWindow::onAuthChanged(QString roleName)
+{
+    ui->menuLogin->setTitle(tr("登入:%1").arg(roleName));
 }

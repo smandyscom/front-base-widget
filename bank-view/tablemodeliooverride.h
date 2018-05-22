@@ -24,7 +24,7 @@ public:
         TERMINAL
     };
     Q_ENUM(Header)
-    explicit TableModelIOOverride(QSqlRelationalTableModel* source);
+    explicit TableModelIOOverride(QSqlRelationalTableModel* source,Qt::GlobalColor trueColor=Qt::green);
 
     //!
     //! \brief data
@@ -38,6 +38,7 @@ protected:
     ModbusChannel* __channel;
     ModbusDriverAddress CurrentIndexAddress(int rowIndex) const;
 
+    Qt::GlobalColor __trueColor;
     QTimer* __timer;
 };
 

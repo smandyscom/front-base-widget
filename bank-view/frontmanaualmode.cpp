@@ -100,6 +100,8 @@ FrontManaualMode::FrontManaualMode(QWidget *parent) :
     utilities::linkQComboBoxAndModel(ui->comboBoxZrtMethod,
                                      JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_MIII_ZRET_METHOD),
                                      QVariant::fromValue(en_US));
+    //! AUTH
+    __disableList[AUTH::ROLE_OPERATOR].append(this);
 }
 
 FrontManaualMode::~FrontManaualMode()

@@ -36,6 +36,8 @@ FrontBankTransfer::FrontBankTransfer(QWidget *parent) :
     __timer = new QTimer(this);
     connect(__timer,SIGNAL(timeout()),this,SLOT(onScanning()));
     __timer->start();
+    //!
+    __disableList[AUTH::ROLE_ENGINEER].append(this);
 }
 
 void FrontBankTransfer::onButtonClicked()

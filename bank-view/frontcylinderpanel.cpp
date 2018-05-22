@@ -75,6 +75,8 @@ FrontCylinderPanel::FrontCylinderPanel(QWidget *parent) :
                 .toInt();
         emit dataChanged(__task);
     });
+    //!
+    __disableList[AUTH::ROLE_OPERATOR].append(this);
 }
 
 

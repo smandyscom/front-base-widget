@@ -14,13 +14,16 @@
 #include <definitionsignalblock.h>
 #include <controllermanualmode.h>
 
+#include <abstractauthreceiver.h>
+
 namespace Ui {
 class FrontIoOverride;
 }
 
 
 
-class FrontIoOverride : public QWidget
+class FrontIoOverride : public QWidget ,
+        public AbstractAuthReceiver
 {
     Q_OBJECT
 
