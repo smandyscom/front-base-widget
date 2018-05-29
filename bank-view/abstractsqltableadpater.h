@@ -46,7 +46,7 @@ public:
                 const QVariant keyName=QVariant::fromValue(0))
     {
         __model->setFilter(nullptr);
-        __model->select();
+        //__model->select();
         QSqlRecord __record = __model->record(1);
         int rowIndex = select(key,keyType,keyName);
         __model->setRecord(rowIndex,data2Record(data,rowIndex));
@@ -56,7 +56,7 @@ public:
                              const QVariant keyName=QVariant::fromValue(0))
     {
         __model->setFilter(nullptr);
-        __model->select();
+        //__model->select();
         AbstractDataBlock result = record2Data(__model->record(select(key,keyType,keyName)));
         return result;
     }
