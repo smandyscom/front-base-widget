@@ -24,6 +24,8 @@ void JunctionBankDatabase::onInitialize()
     if(!__database.open())
         return;
 
+    qDebug() << qf.absoluteFilePath();
+
     //! Table name preparation
     QList<TableNames> __tableList;
     QMetaEnum __qme  =QMetaEnum::fromType<TableNames>();
@@ -39,6 +41,11 @@ void JunctionBankDatabase::onInitialize()
         __reference->setTable(QVariant::fromValue(var).value<QString>());
         result = __reference->select();
         __tableMap[var] = TableEntity(result,__reference);
+        //! Output results
+        qDebug() << QString("%1:%2")
+                        .arg(QVariant::fromValue(var).value<QString>())
+                        .arg(result);
+
     }
 
 
