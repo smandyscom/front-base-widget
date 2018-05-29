@@ -384,10 +384,10 @@
                    <double>0.000000000000000</double>
                   </property>
                   <property name="maximum">
-                   <double>80.000000000000000</double>
+                   <double>300.000000000000000</double>
                   </property>
                   <property name="value">
-                   <double>60.000000000000000</double>
+                   <double>80.000000000000000</double>
                   </property>
                  </widget>
                 </item>

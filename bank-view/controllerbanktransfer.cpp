@@ -45,8 +45,11 @@ void ControllerBankTransfer::onControllerOperationPerformed()
 
     TransferTask __task = __tasksQueue.dequeue();
 
+    AbstractDataBlock __temp;
+    *static_cast<CellDataBlock*>(&__temp) = __controller->DataBlock<CellDataBlock>().value<CellDataBlock>();
     __adaptorMap[__task.first]->
-            Record(__task.second,__controller->DataBlock<AbstractDataBlock>().value<AbstractDataBlock>());
+            Record(__task.second,
+                   __temp);
 
     if(__tasksQueue.isEmpty())
     {

@@ -93,6 +93,8 @@ void FrontUnitPanel::onTimerTimeout()
     ui->lcdNumberNextState->display(umb.Value(UnitMonitorBlock::OFFSET_MONITOR_NEXT_STATE).toInt());
     ui->lcdNumberCycleTime->display(umb.Value(UnitMonitorBlock::OFFSET_MONITOR_WORKING_TIMER_CACHE).toReal());
     //! Interlock
+    bool result1 = __controller->IsControllerInitialized();
+    bool result2 = __controller->IsSemiAutoActivated();
     foreach (QWidget* var, __busyInterlock) {
         var->setEnabled(__controller->IsSemiAutoActivated() &&
                         __controller->IsControllerInitialized() &&
