@@ -1,7 +1,8 @@
 #include "frontcontrolpanel.h"
 #include "ui_frontcontrolpanel.h"
 
-FrontControlPanel::FrontControlPanel(QWidget *parent) :
+FrontControlPanel::FrontControlPanel(QList<ControllerMaterialTransfer*> materialSlots,
+                                     QWidget *parent) :
     QWidget(parent),
     ui(new Ui::frontControlPanel)
 {
@@ -36,6 +37,9 @@ FrontControlPanel::FrontControlPanel(QWidget *parent) :
     connect(__controller,&ControllerMainPanel::errorChanged,this,&FrontControlPanel::onErrorChanged);
     //! Safety I/O monitor
     FrontSafetyPanel* fsp = new FrontSafetyPanel(ui->widgetSafetyIO);
+    //!
+    for(int i=0;i<materialSlots.count();i++)
+        ui->gridLayoutMaterial->addWidget(new FrontSlot(materialSlots[i],this),i/6,i%6);
 }
 
 FrontControlPanel::~FrontControlPanel()

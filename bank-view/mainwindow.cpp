@@ -69,17 +69,7 @@ MainWindow::MainWindow(QWidget *parent) :
                 utilities::getSqlTableSelectedRecord(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_BASIC_DIMENSION),
                                                      QVariant::fromValue(__KEY),
                                                      var).value(QVariant::fromValue(__VALUE).toString()).toReal());
-    }
-    //! Initialize FrontManaul panel
-    FrontControlPanel* fcp2 = new FrontControlPanel(ui->tabMain);
-    FrontManaualMode* fmm = new FrontManaualMode(ui->tabManual);
-    FrontIoOverride* fio = new FrontIoOverride(ui->tabIO);
-    FrontCylinderPanel* fcp = new FrontCylinderPanel(ui->tabCylinder);
-    FrontUnitPanel* fup = new FrontUnitPanel(ui->tabUnit);
-    FrontConfigurationTransfer* fct = new FrontConfigurationTransfer(ui->tabConfiguration);
-    //! Connect data changed
-    connect(fmm,&FrontManaualMode::dataChanged,ControllerMainPanel::Instance(),&ControllerMainPanel::onDataChanged);
-    connect(fcp,&FrontCylinderPanel::dataChanged,ControllerMainPanel::Instance(),&ControllerMainPanel::onDataChanged);
+    }   
     //! Material information
     QList<ControllerMaterialTransfer::SlotType> __typeList = {
         ControllerMaterialTransfer::TYPE_DATA_NODE,//0
@@ -103,6 +93,16 @@ MainWindow::MainWindow(QWidget *parent) :
     foreach (ControllerMaterialTransfer::SlotType var, __typeList) {
         __materialSlots.append(new ControllerMaterialTransfer(counter++,var,this));
     }
+    //! Initialize FrontManaul panel
+    FrontControlPanel* fcp2 = new FrontControlPanel(__materialSlots,ui->tabMain);
+    FrontManaualMode* fmm = new FrontManaualMode(ui->tabManual);
+    FrontIoOverride* fio = new FrontIoOverride(ui->tabIO);
+    FrontCylinderPanel* fcp = new FrontCylinderPanel(ui->tabCylinder);
+    FrontUnitPanel* fup = new FrontUnitPanel(ui->tabUnit);
+    FrontConfigurationTransfer* fct = new FrontConfigurationTransfer(ui->tabConfiguration);
+    //! Connect data changed
+    connect(fmm,&FrontManaualMode::dataChanged,ControllerMainPanel::Instance(),&ControllerMainPanel::onDataChanged);
+    connect(fcp,&FrontCylinderPanel::dataChanged,ControllerMainPanel::Instance(),&ControllerMainPanel::onDataChanged);
     //! Connect controller and channel
     ControllerManualMode* __controller =  ControllerManualMode::Instance();
     ModbusChannel* __channel = ModbusChannel::Instance();

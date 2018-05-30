@@ -55,7 +55,8 @@ SOURCES += \
     controllersafety.cpp \
     frontsafetypanel.cpp \
     controllerauth.cpp \
-    abstractauthreceiver.cpp
+    abstractauthreceiver.cpp \
+    frontslot.cpp
 HEADERS += \
     modbussetupwidget.h \
     utilities.h \
@@ -94,7 +95,8 @@ HEADERS += \
     controllersafety.h \
     frontsafetypanel.h \
     controllerauth.h \
-    abstractauthreceiver.h
+    abstractauthreceiver.h \
+    frontslot.h
 
 unix {
     target.path = /usr/lib
@@ -113,4 +115,5 @@ FORMS += \
     frontsinglefilter.ui \
     frontunitpanel.ui \
     frontconfigurationtransfer.ui \
-    frontsafetypanel.ui
+    frontsafetypanel.ui \
+    frontslot.ui

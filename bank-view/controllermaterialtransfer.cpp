@@ -133,6 +133,8 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index,SlotType role, 
 
         //! Rewind
        __channel->Access<bool>(toOffseteAddress(DONE),false);
+
+       emit dataUpdated();
     });
 
     //! On reply

@@ -71,12 +71,14 @@ public:
                                         QObject *parent = nullptr);
     ~ControllerMaterialTransfer();
 
-    //! TODO , destrcutor , DB disengaged
-
     //! Current material id this slot held
     int MaterialId() const
     {
         return __materialId;
+    }
+    int Index() const
+    {
+        return __index;
     }
     bool IsValid() const
     {
@@ -86,6 +88,21 @@ public:
     {
         return __connectionEngaged;
     }
+    SlotType Role() const
+    {
+        return __role;
+    }
+    QSqlRelationalTableModel* Table() const
+    {
+        return __table;
+    }
+
+    static QSqlDatabase DataBase()
+    {
+        return __database;
+    }
+signals:
+    void dataUpdated();
 public slots:
     void onAboutToLeave();
 protected slots:

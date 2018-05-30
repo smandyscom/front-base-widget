@@ -8,6 +8,8 @@
 #include <utilities.h>
 
 #include <frontsafetypanel.h>
+#include <frontslot.h>
+#include <controllermaterialtransfer.h>
 
 #include <abstractauthreceiver.h>
 
@@ -20,7 +22,8 @@ class FrontControlPanel : public QWidget , public AbstractAuthReceiver
     Q_OBJECT
 
 public:
-    explicit FrontControlPanel(QWidget *parent = 0);
+    explicit FrontControlPanel(QList<ControllerMaterialTransfer *> materialSlots,
+                               QWidget *parent = 0);
     ~FrontControlPanel();
 
 protected slots:
