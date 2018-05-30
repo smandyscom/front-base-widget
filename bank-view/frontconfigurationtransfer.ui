@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1260</width>
-    <height>865</height>
+    <height>845</height>
    </rect>
   </property>
   <property name="font">
@@ -21,9 +21,9 @@
   <widget class="QTableView" name="tableView">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>10</y>
-     <width>841</width>
+     <x>0</x>
+     <y>0</y>
+     <width>821</width>
      <height>851</height>
     </rect>
    </property>
@@ -34,9 +34,9 @@
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>860</x>
-     <y>10</y>
-     <width>381</width>
+     <x>820</x>
+     <y>0</y>
+     <width>441</width>
      <height>851</height>
     </rect>
    </property>

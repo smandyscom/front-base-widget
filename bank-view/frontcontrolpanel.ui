@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1260</width>
-    <height>865</height>
+    <height>845</height>
    </rect>
   </property>
   <property name="font">
@@ -22,9 +22,9 @@
    <property name="geometry">
     <rect>
      <x>0</x>
-     <y>380</y>
-     <width>831</width>
-     <height>481</height>
+     <y>370</y>
+     <width>861</width>
+     <height>471</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayoutMaterial">
@@ -36,10 +36,10 @@
   <widget class="QGroupBox" name="groupBoxProduce">
    <property name="geometry">
     <rect>
-     <x>838</x>
-     <y>1</y>
-     <width>412</width>
-     <height>861</height>
+     <x>870</x>
+     <y>0</y>
+     <width>381</width>
+     <height>841</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -174,7 +174,7 @@
     <rect>
      <x>1</x>
      <y>1</y>
-     <width>831</width>
+     <width>861</width>
      <height>371</height>
     </rect>
    </property>
