@@ -37,7 +37,7 @@ FrontSlot::FrontSlot(ControllerMaterialTransfer *controller, QWidget *parent) :
         __reference->deleteLater();
         //!
         connect(ui->toolButtonDialog,&QToolButton::clicked,this,&FrontSlot::onDataRaise);
-        connect(__controller,&ControllerMaterialTransfer::dataUpdated,this,&FrontSlot::onDataRaise);
+        connect(__controller,&ControllerMaterialTransfer::dataUpdated,this,&FrontSlot::onDataUpdated);
     }
 }
 

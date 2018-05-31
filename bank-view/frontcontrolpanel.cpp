@@ -39,7 +39,8 @@ FrontControlPanel::FrontControlPanel(QList<ControllerMaterialTransfer*> material
     FrontSafetyPanel* fsp = new FrontSafetyPanel(ui->widgetSafetyIO);
     //!
     for(int i=0;i<materialSlots.count();i++)
-        ui->gridLayoutMaterial->addWidget(new FrontSlot(materialSlots[i],this),i/6,i%6);
+        if(materialSlots[i]->Role()==ControllerMaterialTransfer::TYPE_DATA_NODE)
+            ui->gridLayoutMaterial->addWidget(new FrontSlot(materialSlots[i],this),i/6,i%6);
 }
 
 FrontControlPanel::~FrontControlPanel()

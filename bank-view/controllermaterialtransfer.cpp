@@ -32,7 +32,8 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index,SlotType role, 
     //! Very first shot
     __channel->beginAccess<MODBUS_U_WORD>(toOffseteAddress(WORD_OUT));
     //! DB engaged,
-    __channel->Access<bool>(toOffseteAddress(DB_ENGAGED),true);
+    if(__role==TYPE_DATA_NODE)
+        __channel->Access<bool>(toOffseteAddress(DB_ENGAGED),true);
     __connectionEngaged = true;
     //!
     QState* s0 = new QState(this);
@@ -141,7 +142,8 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index,SlotType role, 
     connect(__channel,&ModbusChannel::readReply,this,&ControllerMaterialTransfer::onReply);
     //!Ready
     setInitialState(s0);
-    start();
+    if(__role==TYPE_DATA_NODE)
+        start();
 }
 
 ControllerMaterialTransfer::~ControllerMaterialTransfer()

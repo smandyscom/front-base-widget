@@ -141,7 +141,8 @@ void MainWindow::onReadReply()
 {    
     ControllerManualMode::Instance()->postEvent(ModbusChannel::Instance()->EventSocket());
     foreach (ControllerMaterialTransfer* var, __materialSlots) {
-        var->postEvent(ModbusChannel::Instance()->EventSocket());
+        if(var->Role()==ControllerMaterialTransfer::TYPE_DATA_NODE)
+            var->postEvent(ModbusChannel::Instance()->EventSocket());
     }
 }
 
