@@ -63,7 +63,7 @@ public:
             return QVariant::fromValue(Dimension->value(TORQUE_RATIO) * getData<MODBUS_U_LONG>(key));
             break;
         default:
-            return QVariant::fromValue(key);
+            return AbstractDataBlock::Value(key);
             break;
         }
     }
@@ -103,10 +103,8 @@ public:
         case OFFSET_ECB_COORD1:
         case OFFSET_ECB_COORD2:
         case OFFSET_ECB_COORD3:
-        {
             setData(key, static_cast<MODBUS_S_LONG>(value.toReal() / Dimension->value(LENGTH)));
             break;
-        }
         case OFFSET_ECB_CONTROL_BIT_0:
         case OFFSET_ECB_CONTROL_BIT_1:
             Bit(key,value.toBool());

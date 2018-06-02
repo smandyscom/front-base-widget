@@ -115,7 +115,10 @@ void FrontManaualMode::onBankOperationClicked()
 {
     auto button = qobject_cast<QPushButton*>(sender());
 
-    QSqlRecord __record = __commandBlockTable->record(SelectedBlockIndex());
+    //QSqlRecord __record = __commandBlockTable->record(SelectedBlockIndex());
+    QSqlRecord __record = SelectedCommandBlockTable()->record(SelectedBlockIndex());
+
+    //! Manual submit?
 
     if(button==ui->pushButtonCoordinateSet)
     {
@@ -131,9 +134,20 @@ void FrontManaualMode::onBankOperationClicked()
         __record.setValue(QVariant::fromValue(TORQUE_LIMIT).toString(),ui->doubleSpinBoxTorque->value());
     }
 
-
+    if(!__commandBlockTable->database().transaction())
+    {
+        qDebug() << QString("Bank trunsaction error:%1").arg(__commandBlockTable->database().lastError().text());
+    }
     //write back to model
-    __commandBlockTable->setRecord(SelectedBlockIndex(),__record);
+    qDebug() << QString("Index:%1").arg(SelectedBlockIndex());
+    if(!SelectedCommandBlockTable()->setRecord(SelectedBlockIndex(),__record))
+    {
+        qDebug() << QString("Bank set error:%1").arg(__commandBlockTable->database().lastError().text());
+    }
+    if(!__commandBlockTable->database().commit())
+    {
+        qDebug() << QString("Bank commit error:%1").arg(__commandBlockTable->database().lastError().text());
+    }
 }
 
 //!
@@ -291,14 +305,14 @@ void FrontManaualMode::onTimerTimeout()
                                          .arg(utilities::getSqlTableSelectedRecord(__errorTable,QVariant::fromValue(HEADER_STRUCTURE::ID),amb.Value(AxisMonitorBlock::OFFSET_MONITOR_WARNINGS)).value(QVariant::fromValue(zh_TW).toString()).toString())
                                          .arg(utilities::getSqlTableSelectedRecord(__errorTable,QVariant::fromValue(HEADER_STRUCTURE::ID),amb.Value(AxisMonitorBlock::OFFSET_MONITOR_ALARMS).toUInt() + UINT_MAX).value(QVariant::fromValue(zh_TW).toString()).toString()));
     //! Interlocks (Selection
-    foreach (QWidget* var, __hasSelectionInterlock) {
-        var->setEnabled(__controller->IsManualModeActiavted() &&
-                    ui->tableViewCommandBlock->selectionModel()->hasSelection());
-    }
-    //! Interlocks (Busy
-    foreach (QWidget* var, __busyInterlock) {
-        var->setEnabled(__controller->IsManualModeActiavted());
-    }
+//    foreach (QWidget* var, __hasSelectionInterlock) {
+//        var->setEnabled(__controller->IsManualModeActiavted() &&
+//                    ui->tableViewCommandBlock->selectionModel()->hasSelection());
+//    }
+//    //! Interlocks (Busy
+//    foreach (QWidget* var, __busyInterlock) {
+//        var->setEnabled(__controller->IsManualModeActiavted());
+//    }
 }
 
 int FrontManaualMode::SelectedBlockIndex() const
@@ -311,6 +325,11 @@ QVariant FrontManaualMode::SelectedAxisValue(QVariant keyName) const
                                                 QVariant::fromValue(__selectedAxisId))
             .value(utilities::trimNamespace(keyName));
 }
+QSqlRelationalTableModel* FrontManaualMode::SelectedCommandBlockTable() const
+{
+    return qobject_cast<QSqlRelationalTableModel*>(ui->tableViewCommandBlock->selectionModel()->model());
+}
+
 
 void FrontManaualMode::showEvent(QShowEvent *event)
 {

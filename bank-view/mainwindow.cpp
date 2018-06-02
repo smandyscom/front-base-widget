@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //! Initialize Modbus Serialized Client
     //! port from 10001-10008 (CH1-CH8
     QList<ModbusSerializedClient*> __list;
-    for(int i=0;i<4;i++)
+    for(int i=0;i<5;i++)
     {
         ModbusSerializedClient* __serializedClient = new ModbusSerializedClient(1,this);
 
@@ -72,7 +72,7 @@ MainWindow::MainWindow(QWidget *parent) :
     }   
     //! Material information
     QList<ControllerMaterialTransfer::SlotType> __typeList = {
-        ControllerMaterialTransfer::TYPE_DATA_NODE,//0
+        ControllerMaterialTransfer::TYPE_CREATE_NODE,//0
         ControllerMaterialTransfer::TYPE_DATA_NODE,//1
         ControllerMaterialTransfer::TYPE_EMPTY_NODE,
         ControllerMaterialTransfer::TYPE_DATA_NODE,//3

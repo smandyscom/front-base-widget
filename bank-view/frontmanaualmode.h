@@ -75,6 +75,8 @@ protected:
 
     int SelectedBlockIndex() const;
     QVariant SelectedAxisValue(QVariant keyName) const;
+    QSqlRelationalTableModel* SelectedCommandBlockTable() const;
+
     MODBUS_U_WORD __selectedAxisId;
 
     //! Front table , fully translated

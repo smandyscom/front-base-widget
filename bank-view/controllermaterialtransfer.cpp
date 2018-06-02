@@ -3,7 +3,8 @@
 ControllerMaterialTransfer::ControllerMaterialTransfer(int index,SlotType role, QObject *parent) :
     QStateMachine(parent),
     __index(index),
-    __role(role)
+    __role(role),
+    __pollCyclic(50)
 {
     //! Channel initialize
     __channel = ModbusChannel::Instance();
@@ -19,7 +20,7 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index,SlotType role, 
         bool result = __database.open();
         qDebug() << result;
     }
-    if(__role == TYPE_DATA_NODE && __database.isOpen())
+    if(((__role & TYPE_DATA_NODE) >0) && __database.isOpen())
     {
         __table = new QSqlRelationalTableModel(this,__database);
         QString __tableName = QString("%1%2").arg(QVariant::fromValue(MAT_DATA_SLOT).toString()).arg(__index);
@@ -32,7 +33,7 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index,SlotType role, 
     //! Very first shot
     __channel->beginAccess<MODBUS_U_WORD>(toOffseteAddress(WORD_OUT));
     //! DB engaged,
-    if(__role==TYPE_DATA_NODE)
+    if((__role & TYPE_DATA_NODE)>0)
         __channel->Access<bool>(toOffseteAddress(DB_ENGAGED),true);
     __connectionEngaged = true;
     //!
@@ -53,17 +54,24 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index,SlotType role, 
     ValueTransition* actOn = new ValueTransition(toOffseteAddress(ACT),ValueTransition::BIT_STATE_ON);
     actOn->setTargetState(s1);
     s0->addTransition(actOn);
+    if((__role & ATTR_CREATE_NODE) > 0)
+        connect(s0,&QState::entered,[this](){
+        //!Fetch next id
+        onPrimeInsert();
+        });
     connect(s0,&QState::exited,[this](){
        //! read SYNC_ACTION , ID , IS_VALID
-       __channel->beginAccess<MODBUS_U_LONG>(toOffseteAddress(MATERIAL_ID));
-       __channel->beginAccess<MODBUS_U_WORD>(toOffseteAddress(IS_VALID));
-       __channel->beginAccess<MODBUS_U_WORD>(toOffseteAddress(SYNC_ACTION));
+//       __channel->beginAccess<MODBUS_U_LONG>(toOffseteAddress(MATERIAL_ID));
+//       __channel->beginAccess<MODBUS_U_WORD>(toOffseteAddress(IS_VALID));
+//       __channel->beginAccess<MODBUS_U_WORD>(toOffseteAddress(SYNC_ACTION));
+        __channel->beginAccess<CellDataBlock>(toOffseteAddress(PLC_ENGAGED));
     });
     //!
     //!  s1
-    ValueTransition* syncRequest = new ValueTransition(toOffseteAddress(SYNC_ACTION),ValueTransition::VALUE_UPDATED);
+    ValueTransition* syncRequest = new ValueTransition(toOffseteAddress(PLC_ENGAGED),ValueTransition::VALUE_UPDATED);
     syncRequest->setTargetState(s2);
     s1->addTransition(syncRequest);
+
     connect(s1,&QState::exited,[this]()
     {
         __materialId = __channel->Access<MODBUS_U_WORD>(toOffseteAddress(MATERIAL_ID));
@@ -80,15 +88,8 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index,SlotType role, 
             __channel->beginAccess<CellDataBlock>(toOffseteAddress(BLOCK_DATA));
             break;
         case ACTION_CREATE:
-        {
-            //!insert record on table
-           bool result = __table->insertRecord(-1,__table->record());
-           __table->sort(0,Qt::AscendingOrder);
-            QSqlRecord __record = __table->record(__table->rowCount()-1);
-            onPrimeInsert(0,__record);
+            __channel->Access<MODBUS_U_LONG>(toOffseteAddress(MATERIAL_ID),__materialId);
             break;
-        }
-
         case ACTION_QUERY:
             //!Write data
             //! find record by material id
@@ -106,6 +107,7 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index,SlotType role, 
 
         //! Acknoledge
         __channel->Access<bool>(toOffseteAddress(DONE),true);
+        __pollCyclic=1;//speed up
     });
 
     //!
@@ -118,14 +120,14 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index,SlotType role, 
         switch (__request) {
         case ACTION_UPDATE_BLOCK:
         {
-            AbstractDataBlock __adb;
-            *static_cast<CellDataBlock*>(&__adb) =
-                    __channel->Access<CellDataBlock>(toOffseteAddress(BLOCK_DATA));
-            //! Write in data base
-            __adpator->Record(__materialId,
-                              __adb,
-                              AbstractSqlTableAdpater::KEY_NAMED_KEY,
-                              QVariant::fromValue(SlotBlock::ID));
+//            AbstractDataBlock __adb;
+//            *static_cast<CellDataBlock*>(&__adb) =
+//                    __channel->Access<CellDataBlock>(toOffseteAddress(BLOCK_DATA));
+//            //! Write in data base
+//            __adpator->Record(__materialId,
+//                              __adb,
+//                              AbstractSqlTableAdpater::KEY_NAMED_KEY,
+//                              QVariant::fromValue(SlotBlock::ID));
             break;
         }
         default:
@@ -134,7 +136,7 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index,SlotType role, 
 
         //! Rewind
        __channel->Access<bool>(toOffseteAddress(DONE),false);
-
+       __pollCyclic=50;//slow down
        emit dataUpdated();
     });
 
@@ -142,8 +144,12 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index,SlotType role, 
     connect(__channel,&ModbusChannel::readReply,this,&ControllerMaterialTransfer::onReply);
     //!Ready
     setInitialState(s0);
-    if(__role==TYPE_DATA_NODE)
+    if((__role & TYPE_DATA_NODE) >0)
         start();
+
+    //!prefetch id
+    if((__role & ATTR_CREATE_NODE) > 0)
+        onPrimeInsert();
 }
 
 ControllerMaterialTransfer::~ControllerMaterialTransfer()
@@ -174,15 +180,19 @@ void ControllerMaterialTransfer::onReply()
     if(__channel->CachedReplyAddress().getAddress() !=
             toOffseteAddress(WORD_OUT))
         return;
-    QTimer::singleShot(10,[this](){
+    QTimer::singleShot(__pollCyclic,[this](){
         __channel->beginAccess<MODBUS_U_WORD>(toOffseteAddress(WORD_OUT));
     });
 }
 
-void ControllerMaterialTransfer::onPrimeInsert(int row, QSqlRecord &record)
+void ControllerMaterialTransfer::onPrimeInsert()
 {
-    __materialId = record.value(QVariant::fromValue(SlotBlock::ID).toString()).toInt();
-    __channel->Access<MODBUS_U_LONG>(toOffseteAddress(MATERIAL_ID),__materialId);
+    //!insert record on table
+    bool result = __table->insertRecord(-1,__table->record());
+    __table->sort(0,Qt::AscendingOrder);
+    QSqlRecord __record = __table->record(__table->rowCount()-1);
+    __materialId = __record.value(QVariant::fromValue(SlotBlock::ID).toString()).toInt();
+    //__channel->Access<MODBUS_U_LONG>(toOffseteAddress(MATERIAL_ID),__materialId);
 }
 
 void ControllerMaterialTransfer::onAboutToLeave()

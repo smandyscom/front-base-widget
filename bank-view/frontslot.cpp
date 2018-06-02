@@ -12,7 +12,7 @@ FrontSlot::FrontSlot(ControllerMaterialTransfer *controller, QWidget *parent) :
     //!
     ui->lcdNumberSlot->display(__controller->Index());
     //! Prepare dialog
-    if(__controller->Role()==ControllerMaterialTransfer::TYPE_DATA_NODE)
+    if((__controller->Role() & ControllerMaterialTransfer::TYPE_DATA_NODE)>0)
     {
         __dialog = new QDialog(this);
 //        __dialog->setGeometry(__dialog->geometry().x(),

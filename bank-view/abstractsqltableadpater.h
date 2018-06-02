@@ -48,6 +48,9 @@ public:
         __model->setFilter(nullptr);
         int rowIndex = select(key,keyType,keyName);
         __model->setRecord(rowIndex,data2Record(data,rowIndex));
+        //!
+        //__model->database().transaction();
+        //__model->database().commit();
     }
     AbstractDataBlock Record(int key,
                              KeyType keyType=KEY_ROW_ID,

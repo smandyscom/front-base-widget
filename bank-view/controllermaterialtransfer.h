@@ -21,9 +21,12 @@ public:
     enum SlotType
     {
         //! Update header only , no backend data table
-        TYPE_EMPTY_NODE,
+        TYPE_EMPTY_NODE=0x02,
         //! With backend data table
-        TYPE_DATA_NODE,
+        TYPE_DATA_NODE=0x01,
+        //!
+        ATTR_CREATE_NODE=0x10,
+        TYPE_CREATE_NODE = ATTR_CREATE_NODE+TYPE_DATA_NODE,
     };
     enum NameConstants
     {
@@ -34,19 +37,32 @@ public:
     };
     enum SlotContext
     {
-        //! PLC->DB
-        PLC_ENGAGED=0x3008000,
-        ACT=0x3018000,
-        IS_VALID=0x3028000,
-        WORD_OUT=0x3008000,
-        SYNC_ACTION=0x3008001,
-        //! PLC<-DB
-        DB_ENGAGED=0x3008008,
-        WORD_IN=0x3008008,
-        DONE=0x3018008,
-        //! Mutual
-        MATERIAL_ID=0x3008010,
-        BLOCK_DATA=0x3008014,
+        PLC_ENGAGED=0x4008000,
+        ACT=0x4018000,
+        IS_VALID=0x4028000,
+        WORD_OUT=0x4008000,
+        SYNC_ACTION=0x4008001,
+        DB_ENGAGED=0x4008008,
+        WORD_IN=0x4008008,
+        DONE=0x4018008,
+        MATERIAL_ID=0x4008010,
+        BLOCK_DATA=0x4008014,
+
+
+
+//        //! PLC->DB
+//        PLC_ENGAGED=0x3008000,
+//        ACT=0x3018000,
+//        IS_VALID=0x3028000,
+//        WORD_OUT=0x3008000,
+//        SYNC_ACTION=0x3008001,
+//        //! PLC<-DB
+//        DB_ENGAGED=0x3008008,
+//        WORD_IN=0x3008008,
+//        DONE=0x3018008,
+//        //! Mutual
+//        MATERIAL_ID=0x3008010,
+//        BLOCK_DATA=0x3008014,
     };
     enum SyncRequests
     {
@@ -111,7 +127,7 @@ protected slots:
     //! \param event
     //! Looping
     void onReply();
-    void onPrimeInsert(int row, QSqlRecord &record);
+    void onPrimeInsert();
 protected:
     ModbusChannel* __channel;
 
@@ -135,6 +151,9 @@ protected:
     static QString __databaseName;
 
     bool __connectionEngaged;
+
+    int __pollCyclic;
+
 };
 
 #endif // CONTROLLERMATERIALTRANSFER_H
