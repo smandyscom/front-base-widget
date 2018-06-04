@@ -11,6 +11,8 @@
 
 #include <utilities.h>
 
+#include <QDebug>
+
 #define FIRST_COLUMN 0
 
 //!
@@ -47,10 +49,9 @@ public:
     {
         __model->setFilter(nullptr);
         int rowIndex = select(key,keyType,keyName);
-        __model->setRecord(rowIndex,data2Record(data,rowIndex));
-        //!
-        //__model->database().transaction();
-        //__model->database().commit();
+
+        if(!__model->setRecord(rowIndex,data2Record(data,rowIndex)))
+            qDebug() << QString("%1:setRecord failed").arg(rowIndex);
     }
     AbstractDataBlock Record(int key,
                              KeyType keyType=KEY_ROW_ID,

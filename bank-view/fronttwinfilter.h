@@ -22,11 +22,11 @@ class FrontTwinFilter : public QWidget,
     Q_OBJECT
 
 public:
-    explicit FrontTwinFilter(QSqlRelationalTableModel* dataTable,
+    explicit FrontTwinFilter(QSqlTableModel* dataTable,
                              QVariant key1,
-                             QSqlRelationalTableModel* primaryTable,
+                             QSqlTableModel* primaryTable,
                              QVariant key2,
-                             QSqlRelationalTableModel* secondaryTable,
+                             QSqlTableModel* secondaryTable,
                              QWidget *parent = 0);
     ~FrontTwinFilter();
 
@@ -39,20 +39,20 @@ protected slots:
 private:
     Ui::FrontTwinFilter *ui;
 
-    QSqlRelationalTableModel* __dataTable;
+    QSqlTableModel* __dataTable;
     QVariant __key1;
     //!
     //! \brief __primaryTable
     //! Load to
-    QSqlRelationalTableModel* __primaryTable;
+    QSqlTableModel* __primaryTable;
     QVariant __key2;
     //!
     //! \brief __secondaryTable
     //!
-    QSqlRelationalTableModel* __secondaryTable;
+    QSqlTableModel* __secondaryTable;
 
     //!
-    QMap<QWidget*,QSqlRelationalTableModel*> __manipulateMap;
+    QMap<QWidget*,QSqlTableModel*> __manipulateMap;
 };
 
 #endif // FRONTWINFILTER_H

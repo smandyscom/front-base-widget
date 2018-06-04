@@ -23,7 +23,10 @@ FrontSafetyPanel::FrontSafetyPanel(QWidget *parent) :
     //! Control
     connect(ui->checkBoxSolenoid,&QCheckBox::toggled,__controller,&ControllerSafety::DoorSolenoid);
     connect(ui->checkBoxInterlockBypass,&QCheckBox::toggled,__controller,&ControllerSafety::InterlockBypass);
+    connect(ui->checkBoxAirChoke,&QCheckBox::toggled,__controller,&ControllerSafety::ManualAirChoke);
+    connect(ui->checkBoxLightgateBypass,&QCheckBox::toggled,__controller,&ControllerSafety::LightGateBypass);
 
+    ui->checkBoxAirChoke->setChecked(true);
     //! Auth
     __disableList[AUTH::ROLE_OPERATOR].append(ui->checkBoxInterlockBypass);
 }

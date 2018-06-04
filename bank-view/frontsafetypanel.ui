@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>292</width>
-    <height>593</height>
+    <height>584</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -30,7 +30,7 @@
      <x>0</x>
      <y>0</y>
      <width>291</width>
-     <height>591</height>
+     <height>581</height>
     </rect>
    </property>
    <property name="title">
@@ -42,7 +42,7 @@
       <x>0</x>
       <y>30</y>
       <width>291</width>
-      <height>561</height>
+      <height>551</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -67,9 +67,23 @@
       </widget>
      </item>
      <item>
+      <widget class="QCheckBox" name="checkBoxLightgateBypass">
+       <property name="text">
+        <string>光閘除能</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QCheckBox" name="checkBoxSolenoid">
        <property name="text">
         <string>安全門鎖定</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="checkBoxAirChoke">
+       <property name="text">
+        <string>氣壓開啟</string>
        </property>
       </widget>
      </item>

@@ -75,15 +75,15 @@ protected:
 
     int SelectedBlockIndex() const;
     QVariant SelectedAxisValue(QVariant keyName) const;
-    QSqlRelationalTableModel* SelectedCommandBlockTable() const;
+    QSqlTableModel* SelectedCommandBlockTable() const;
 
     MODBUS_U_WORD __selectedAxisId;
 
     //! Front table , fully translated
-    QSqlRelationalTableModel* __commandBlockTable;
-    QSqlRelationalTableModel* __axisTable;
-    QSqlRelationalTableModel* __regionTable;
-    QSqlRelationalTableModel* __errorTable;
+    QSqlTableModel* __commandBlockTable;
+    QSqlTableModel* __axisTable;
+    QSqlTableModel* __regionTable;
+    QSqlTableModel* __errorTable;
 
     AbstractSqlTableAdpater* __commandBlockAdaptor;
 

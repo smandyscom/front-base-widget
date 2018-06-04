@@ -1,11 +1,11 @@
 #include "fronttwinfilter.h"
 #include "ui_fronttwinfilter.h"
 
-FrontTwinFilter::FrontTwinFilter(QSqlRelationalTableModel *dataTable,
+FrontTwinFilter::FrontTwinFilter(QSqlTableModel *dataTable,
                                  QVariant key1,
-                                 QSqlRelationalTableModel *primaryTable,
+                                 QSqlTableModel *primaryTable,
                                  QVariant key2,
-                                 QSqlRelationalTableModel *secondaryTable,
+                                 QSqlTableModel *secondaryTable,
                                  QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FrontTwinFilter),

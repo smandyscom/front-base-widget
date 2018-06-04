@@ -29,6 +29,7 @@ public:
         DOOR_SOLENOID_CONTROL=0x000000,
         INTERLOCK_BYPASS=0x010000,
         MANUAL_AIRCHOKE=0x020000,
+        LIGHTGATE_BYPASS=0x030000,
     };
 
 
@@ -40,9 +41,13 @@ public:
     {
         __channel->Access<bool>(ModbusDriverAddress(INTERLOCK_BYPASS),value);
     }
-    void ManualAirChoke(boo value)
+    void ManualAirChoke(bool value)
     {
-
+        __channel->Access<bool>(ModbusDriverAddress(MANUAL_AIRCHOKE),value);
+    }
+    void LightGateBypass(bool value)
+    {
+        __channel->Access<bool>(ModbusDriverAddress(LIGHTGATE_BYPASS),value);
     }
 
     bool Status(MODBUS_ADDRESS address) const

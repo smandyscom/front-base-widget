@@ -115,10 +115,7 @@ void FrontManaualMode::onBankOperationClicked()
 {
     auto button = qobject_cast<QPushButton*>(sender());
 
-    //QSqlRecord __record = __commandBlockTable->record(SelectedBlockIndex());
     QSqlRecord __record = SelectedCommandBlockTable()->record(SelectedBlockIndex());
-
-    //! Manual submit?
 
     if(button==ui->pushButtonCoordinateSet)
     {
@@ -132,22 +129,22 @@ void FrontManaualMode::onBankOperationClicked()
         __record.setValue(QVariant::fromValue(ACC_TIME).toString(),ui->doubleSpinBoxAccerlation->value());
         __record.setValue(QVariant::fromValue(DEC_TIME).toString(),ui->doubleSpinBoxDecerlation->value());
         __record.setValue(QVariant::fromValue(TORQUE_LIMIT).toString(),ui->doubleSpinBoxTorque->value());
+
+        QList<CommandBlock::DataBaseHeaders> __list = {
+            SPEED,
+            ACC_TIME,
+            DEC_TIME,
+            TORQUE_LIMIT
+        };
     }
 
-    if(!__commandBlockTable->database().transaction())
-    {
-        qDebug() << QString("Bank trunsaction error:%1").arg(__commandBlockTable->database().lastError().text());
-    }
     //write back to model
     qDebug() << QString("Index:%1").arg(SelectedBlockIndex());
     if(!SelectedCommandBlockTable()->setRecord(SelectedBlockIndex(),__record))
     {
         qDebug() << QString("Bank set error:%1").arg(__commandBlockTable->database().lastError().text());
     }
-    if(!__commandBlockTable->database().commit())
-    {
-        qDebug() << QString("Bank commit error:%1").arg(__commandBlockTable->database().lastError().text());
-    }
+    __commandBlockTable->setFilter(__commandBlockTable->filter());//somehow it need re-select once , otherwise setRecord may fails
 }
 
 //!
@@ -325,7 +322,7 @@ QVariant FrontManaualMode::SelectedAxisValue(QVariant keyName) const
                                                 QVariant::fromValue(__selectedAxisId))
             .value(utilities::trimNamespace(keyName));
 }
-QSqlRelationalTableModel* FrontManaualMode::SelectedCommandBlockTable() const
+QSqlTableModel* FrontManaualMode::SelectedCommandBlockTable() const
 {
     return qobject_cast<QSqlRelationalTableModel*>(ui->tableViewCommandBlock->selectionModel()->model());
 }
