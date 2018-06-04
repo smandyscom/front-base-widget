@@ -41,7 +41,7 @@ protected:
 private:
     Ui::FrontUnitPanel *ui;
 
-    QSqlRelationalTableModel* __unitTable;
+    QSqlTableModel* __unitTable;
 
     QTimer* __timer;
     MODBUS_U_WORD __currentViewIndex;

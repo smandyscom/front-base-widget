@@ -1,7 +1,7 @@
 #include "tablemodeliooverride.h"
 
-TableModelIOOverride::TableModelIOOverride(QSqlRelationalTableModel *source, Qt::GlobalColor trueColor):
-    QSqlRelationalTableModel(source->parent(),source->database()),
+TableModelIOOverride::TableModelIOOverride(QSqlTableModel *source, Qt::GlobalColor trueColor):
+    QSqlTableModel(source->parent(),source->database()),
     __trueColor(trueColor)
 {
     //!

@@ -1,7 +1,7 @@
 #include "tablemodelcylindervisual.h"
 
-TableModelCylinderVisual::TableModelCylinderVisual(QSqlRelationalTableModel *source) :
-    QSqlRelationalTableModel(source->parent(),source->database())
+TableModelCylinderVisual::TableModelCylinderVisual(QSqlTableModel *source) :
+    QSqlTableModel(source->parent(),source->database())
 {
     //!
     __backGroundColorRole.append(Qt::BackgroundColorRole);
@@ -38,15 +38,25 @@ TableModelCylinderVisual::TableModelCylinderVisual(QSqlRelationalTableModel *sou
         __map[fieldIndex(nameColumn.toString())] = fieldIndex(__columnPairQVariant[nameColumn].toString());
     }
     //!
+
 }
 
 QVariant TableModelCylinderVisual::data(const QModelIndex &idx, int role) const
 {
     //! irrelavent columns
     if(!__map.keys().contains(idx.column()) || role != Qt::BackgroundColorRole)
-        return QSqlRelationalTableModel::data(idx,role);
+        return QSqlTableModel::data(idx,role);
 
     return __channel->Access<bool>(ModbusDriverAddress(index(idx.row(),__map[idx.column()]).data().toUInt()))?
                 QColor(Qt::green) :
                 QColor(Qt::gray);
+}
+
+void TableModelCylinderVisual::onBeforeEditing()
+{
+    __timer->stop();
+}
+void TableModelCylinderVisual::onAfterEditing()
+{
+    __timer->start();
 }

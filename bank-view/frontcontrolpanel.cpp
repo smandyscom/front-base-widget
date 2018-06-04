@@ -41,6 +41,17 @@ FrontControlPanel::FrontControlPanel(QList<ControllerMaterialTransfer*> material
     for(int i=0;i<materialSlots.count();i++)
         if((materialSlots[i]->Role() & ControllerMaterialTransfer::TYPE_DATA_NODE)>0)
             ui->gridLayoutMaterial->addWidget(new FrontSlot(materialSlots[i],this),i/6,i%6);
+
+//    connect(ui->pushButtonTest,&QPushButton::clicked,[=]()
+//    {
+//       materialSlots[0]->onInsert();
+//    });
+//    connect(ui->pushButtonTest_2,&QPushButton::clicked,[=](){
+//       materialSlots[1]->onUpdate();
+//    });
+//    connect(ui->pushButtonTest_3,&QPushButton::clicked,[=](){
+//       materialSlots.last()->onQuery();
+//    });
 }
 
 FrontControlPanel::~FrontControlPanel()

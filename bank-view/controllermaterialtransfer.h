@@ -6,6 +6,8 @@
 
 #include <QSqlRelationalTableModel>
 #include <QFileInfo>
+#include <QtConcurrent>
+#include <QElapsedTimer>
 
 #include <modbuschannel.h>
 #include <definitionslotblock.h>
@@ -37,32 +39,19 @@ public:
     };
     enum SlotContext
     {
-        PLC_ENGAGED=0x4008000,
+        //! PLC->DB
+        //PLC_ENGAGED=0x4008000,
         ACT=0x4018000,
         IS_VALID=0x4028000,
         WORD_OUT=0x4008000,
         SYNC_ACTION=0x4008001,
+        //! PLC<-DB
         DB_ENGAGED=0x4008008,
         WORD_IN=0x4008008,
         DONE=0x4018008,
+        //! Mutual
         MATERIAL_ID=0x4008010,
         BLOCK_DATA=0x4008014,
-
-
-
-//        //! PLC->DB
-//        PLC_ENGAGED=0x3008000,
-//        ACT=0x3018000,
-//        IS_VALID=0x3028000,
-//        WORD_OUT=0x3008000,
-//        SYNC_ACTION=0x3008001,
-//        //! PLC<-DB
-//        DB_ENGAGED=0x3008008,
-//        WORD_IN=0x3008008,
-//        DONE=0x3018008,
-//        //! Mutual
-//        MATERIAL_ID=0x3008010,
-//        BLOCK_DATA=0x3008014,
     };
     enum SyncRequests
     {
@@ -121,13 +110,16 @@ signals:
     void dataUpdated();
 public slots:
     void onAboutToLeave();
+    void onInsert();
+    void onQuery();
+    void onUpdate();
 protected slots:
     //!
     //! \brief onMonitorBlockReply
     //! \param event
     //! Looping
     void onReply();
-    void onPrimeInsert();
+
 protected:
     ModbusChannel* __channel;
 
@@ -154,6 +146,9 @@ protected:
 
     int __pollCyclic;
 
+    AbstractDataBlock __adb;
+
+    QElapsedTimer __procedureTimer;
 };
 
 #endif // CONTROLLERMATERIALTRANSFER_H

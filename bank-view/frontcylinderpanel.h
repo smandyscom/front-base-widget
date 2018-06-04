@@ -48,8 +48,8 @@ protected:
 private:
     Ui::FrontCylinderPanel *ui;
 
-    QSqlRelationalTableModel* __cylinderTable;
-    QSqlRelationalTableModel* __headerTable;
+    QSqlTableModel* __cylinderTable;
+    QSqlTableModel* __headerTable;
 
     ControllerManualMode* __controller;
 

@@ -20,6 +20,7 @@ FrontCylinderPanel::FrontCylinderPanel(QWidget *parent) :
     ui->tableViewCylinder->setModel(__cylinderTable);
     ui->tableViewCylinder->setSelectionBehavior(QAbstractItemView::SelectItems);
     ui->tableViewCylinder->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->tableViewCylinder->setEditTriggers(QTableView::DoubleClicked); // only double-click trigger editing
     connect(ui->tableViewCylinder,&QTableView::clicked,this,&FrontCylinderPanel::onViewSelectionChanged);
     HEADER_STRUCTURE::HeaderRender::renderViewHeader(__headerTable,
                                                      ui->tableViewCylinder,
@@ -35,7 +36,7 @@ FrontCylinderPanel::FrontCylinderPanel(QWidget *parent) :
     }
     //! Timer
     __timer = new QTimer(this);
-    connect(__timer,SIGNAL(timeout()),this,SLOT(onTimerTimeout()));
+    //connect(__timer,SIGNAL(timeout()),this,SLOT(onTimerTimeout()));
     __timer->start();
     //! Map
     __labelAddressMap[ui->labelDone] = CylinderMonitorBlock::MOR_DONE;
@@ -77,6 +78,14 @@ FrontCylinderPanel::FrontCylinderPanel(QWidget *parent) :
     });
     //!
     __disableList[AUTH::ROLE_OPERATOR].append(this);
+
+    //! Stop polling when editing
+    connect(ui->tableViewCylinder,&QTableView::doubleClicked,[=](){
+       qobject_cast<TableModelCylinderVisual*>(__cylinderTable)->onBeforeEditing();
+    });
+    connect(ui->tableViewCylinder,&QTableView::clicked,[=](){
+        qobject_cast<TableModelCylinderVisual*>(__cylinderTable)->onAfterEditing();
+    });
 }
 
 

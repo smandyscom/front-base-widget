@@ -9,7 +9,7 @@
 //!
 //! \brief The TableModelIOOverride class
 //! Override/Read the I/O data
-class TableModelIOOverride : public QSqlRelationalTableModel
+class TableModelIOOverride : public QSqlTableModel
 {
     Q_OBJECT
 public:
@@ -24,7 +24,7 @@ public:
         TERMINAL
     };
     Q_ENUM(Header)
-    explicit TableModelIOOverride(QSqlRelationalTableModel* source,Qt::GlobalColor trueColor=Qt::green);
+    explicit TableModelIOOverride(QSqlTableModel* source,Qt::GlobalColor trueColor=Qt::green);
 
     //!
     //! \brief data

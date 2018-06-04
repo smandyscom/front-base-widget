@@ -15,7 +15,7 @@
 //!
 //! \brief TableEntity
 //!
-typedef QPair<bool,QSqlRelationalTableModel*> TableEntity;
+typedef QPair<bool,QSqlTableModel*> TableEntity;
 
 //!
 //! \brief The JunctionBankDatabase class
@@ -71,9 +71,9 @@ public:
     static void DatabaseName(QString value){ __databaseName = value;}
     static QString DatabaseName(){return __databaseName;}
 
-    QSqlRelationalTableModel* TableMap(TableNames value)
+    QSqlTableModel* TableMap(TableNames value)
     {
-        QSqlRelationalTableModel* result = new QSqlRelationalTableModel(this,__database);
+        QSqlTableModel* result = new QSqlTableModel(this,__database);
         result->setEditStrategy(QSqlTableModel::OnFieldChange);
         result->setTable(__tableMap[value].second->tableName());
         result->select();

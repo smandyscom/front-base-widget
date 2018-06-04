@@ -11,9 +11,9 @@
 
 #include <modbuschannel.h>
 
-#include <QSqlRelationalTableModel>
+#include <QSqlTableModel>
 
-class TableModelCylinderVisual : public QSqlRelationalTableModel
+class TableModelCylinderVisual : public QSqlTableModel
 {
     Q_OBJECT
 public:
@@ -49,9 +49,12 @@ public:
     Q_ENUM(RelatedHeaders)
 
 
-    explicit TableModelCylinderVisual(QSqlRelationalTableModel* source);
+    explicit TableModelCylinderVisual(QSqlTableModel* source);
 
     QVariant data(const QModelIndex &idx, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+public slots:
+    void onBeforeEditing();
+    void onAfterEditing();
 protected:
     ModbusChannel* __channel;
     QTimer* __timer;

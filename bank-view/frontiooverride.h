@@ -38,12 +38,12 @@ protected:
 private:
     Ui::FrontIoOverride *ui;
 
-    QSqlRelationalTableModel* __inputTable;
-    QSqlRelationalTableModel* __outputTable;
+    QSqlTableModel* __inputTable;
+    QSqlTableModel* __outputTable;
 
-    QSqlRelationalTableModel* __signalTable;
+    QSqlTableModel* __signalTable;
 
-    QSqlRelationalTableModel* __regionTable;
+    QSqlTableModel* __regionTable;
 
     ControllerManualMode* __controller;
     QTimer* __timer;

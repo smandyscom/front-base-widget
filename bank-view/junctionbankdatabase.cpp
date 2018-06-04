@@ -35,7 +35,7 @@ void JunctionBankDatabase::onInitialize()
     }
     //! Open tables
     foreach (TableNames var, __tableList) {
-        QSqlRelationalTableModel* __reference = new QSqlRelationalTableModel(this,__database);
+        QSqlTableModel* __reference = new QSqlTableModel(this,__database);
         bool result = false;
         __reference->setEditStrategy(QSqlTableModel::OnFieldChange);
         __reference->setTable(QVariant::fromValue(var).value<QString>());
