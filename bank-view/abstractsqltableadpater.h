@@ -47,17 +47,23 @@ public:
                 KeyType keyType=KEY_ROW_ID,
                 const QVariant keyName=QVariant::fromValue(0))
     {
-        __model->setFilter(nullptr);
+
         int rowIndex = select(key,keyType,keyName);
 
         if(!__model->setRecord(rowIndex,data2Record(data,rowIndex)))
+        {
             qDebug() << QString("%1:setRecord failed").arg(rowIndex);
+            rowIndex = select(key,keyType,keyName);
+            __model->setRecord(rowIndex,data2Record(data,rowIndex));
+        }
+        //__model->select();
     }
     AbstractDataBlock Record(int key,
                              KeyType keyType=KEY_ROW_ID,
                              const QVariant keyName=QVariant::fromValue(0))
     {
-        __model->setFilter(nullptr);
+        //__model->setFilter(nullptr);
+        //__model->select();
         AbstractDataBlock result = record2Data(__model->record(select(key,keyType,keyName)));
         return result;
     }

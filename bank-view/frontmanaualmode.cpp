@@ -324,7 +324,7 @@ QVariant FrontManaualMode::SelectedAxisValue(QVariant keyName) const
 }
 QSqlTableModel* FrontManaualMode::SelectedCommandBlockTable() const
 {
-    return qobject_cast<QSqlRelationalTableModel*>(ui->tableViewCommandBlock->selectionModel()->model());
+    return qobject_cast<QSqlTableModel*>(ui->tableViewCommandBlock->selectionModel()->model());
 }
 
 

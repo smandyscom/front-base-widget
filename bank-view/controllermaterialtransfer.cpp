@@ -4,7 +4,7 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index,SlotType role, 
     QStateMachine(parent),
     __index(index),
     __role(role),
-    __pollCyclic(50),
+    __pollCyclic(10),
     __materialId(0)
 {
     //! Channel initialize
