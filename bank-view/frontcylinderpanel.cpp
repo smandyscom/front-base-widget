@@ -36,7 +36,7 @@ FrontCylinderPanel::FrontCylinderPanel(QWidget *parent) :
     }
     //! Timer
     __timer = new QTimer(this);
-    //connect(__timer,SIGNAL(timeout()),this,SLOT(onTimerTimeout()));
+    connect(__timer,SIGNAL(timeout()),this,SLOT(onTimerTimeout()));
     __timer->start();
     //! Map
     __labelAddressMap[ui->labelDone] = CylinderMonitorBlock::MOR_DONE;
@@ -59,7 +59,7 @@ FrontCylinderPanel::FrontCylinderPanel(QWidget *parent) :
         ui->tableViewCylinder,
     };
     //!
-    connect(__cylinderTable,&QSqlRelationalTableModel::dataChanged,[=](const QModelIndex &topLeft,
+    connect(__cylinderTable,&QSqlTableModel::dataChanged,[=](const QModelIndex &topLeft,
             const QModelIndex &bottomRight,
             const QVector<int> &roles = QVector<int>()){
 

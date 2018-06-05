@@ -97,7 +97,7 @@ public:
     {
         return __role;
     }
-    QSqlRelationalTableModel* Table() const
+    QSqlTableModel* Table() const
     {
         return __table;
     }
@@ -130,7 +130,7 @@ protected:
 
     SyncRequests __request;
 
-    QSqlRelationalTableModel* __table;
+    QSqlTableModel* __table;
 
     ModbusDriverAddress toOffseteAddress(int base);
 

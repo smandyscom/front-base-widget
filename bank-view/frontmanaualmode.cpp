@@ -84,7 +84,7 @@ FrontManaualMode::FrontManaualMode(QWidget *parent) :
         ui->pushButtonBankExecution
     };
     //! Forward dataChanged
-    connect(__commandBlockTable,&QSqlRelationalTableModel::dataChanged,[=](const QModelIndex &topLeft,
+    connect(__commandBlockTable,&QSqlTableModel::dataChanged,[=](const QModelIndex &topLeft,
             const QModelIndex &bottomRight,
             const QVector<int> &roles = QVector<int>()){
         //!
@@ -115,7 +115,8 @@ void FrontManaualMode::onBankOperationClicked()
 {
     auto button = qobject_cast<QPushButton*>(sender());
 
-    QSqlRecord __record = SelectedCommandBlockTable()->record(SelectedBlockIndex());
+    int __index = SelectedBlockIndex();
+    QSqlRecord __record = __commandBlockTable->record(__index);
 
     if(button==ui->pushButtonCoordinateSet)
     {
@@ -129,22 +130,14 @@ void FrontManaualMode::onBankOperationClicked()
         __record.setValue(QVariant::fromValue(ACC_TIME).toString(),ui->doubleSpinBoxAccerlation->value());
         __record.setValue(QVariant::fromValue(DEC_TIME).toString(),ui->doubleSpinBoxDecerlation->value());
         __record.setValue(QVariant::fromValue(TORQUE_LIMIT).toString(),ui->doubleSpinBoxTorque->value());
-
-        QList<CommandBlock::DataBaseHeaders> __list = {
-            SPEED,
-            ACC_TIME,
-            DEC_TIME,
-            TORQUE_LIMIT
-        };
     }
 
-    //write back to model
-    qDebug() << QString("Index:%1").arg(SelectedBlockIndex());
-    if(!SelectedCommandBlockTable()->setRecord(SelectedBlockIndex(),__record))
+    //! cannot put while loop here , once setRecord fails , should call select to refresh data
+    if(!__commandBlockTable->setRecord(__index,__record))
     {
-        qDebug() << QString("Bank set error:%1").arg(__commandBlockTable->database().lastError().text());
+        qDebug() << QString("Bank set error:%1").arg(__commandBlockTable->lastError().text());
     }
-    __commandBlockTable->setFilter(__commandBlockTable->filter());//somehow it need re-select once , otherwise setRecord may fails
+    __commandBlockTable->select();
 }
 
 //!
@@ -302,10 +295,10 @@ void FrontManaualMode::onTimerTimeout()
                                          .arg(utilities::getSqlTableSelectedRecord(__errorTable,QVariant::fromValue(HEADER_STRUCTURE::ID),amb.Value(AxisMonitorBlock::OFFSET_MONITOR_WARNINGS)).value(QVariant::fromValue(zh_TW).toString()).toString())
                                          .arg(utilities::getSqlTableSelectedRecord(__errorTable,QVariant::fromValue(HEADER_STRUCTURE::ID),amb.Value(AxisMonitorBlock::OFFSET_MONITOR_ALARMS).toUInt() + UINT_MAX).value(QVariant::fromValue(zh_TW).toString()).toString()));
     //! Interlocks (Selection
-//    foreach (QWidget* var, __hasSelectionInterlock) {
-//        var->setEnabled(__controller->IsManualModeActiavted() &&
-//                    ui->tableViewCommandBlock->selectionModel()->hasSelection());
-//    }
+    foreach (QWidget* var, __hasSelectionInterlock) {
+        var->setEnabled(__controller->IsManualModeActiavted() &&
+                    ui->tableViewCommandBlock->selectionModel()->hasSelection());
+    }
 //    //! Interlocks (Busy
 //    foreach (QWidget* var, __busyInterlock) {
 //        var->setEnabled(__controller->IsManualModeActiavted());

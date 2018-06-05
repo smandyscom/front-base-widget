@@ -12,7 +12,7 @@
 #include <utilities.h>
 
 #include <QDebug>
-
+#include <QSqlError>
 #define FIRST_COLUMN 0
 
 //!
@@ -50,20 +50,17 @@ public:
 
         int rowIndex = select(key,keyType,keyName);
 
+        //! multi client write-in should use truncate?
         if(!__model->setRecord(rowIndex,data2Record(data,rowIndex)))
         {
             qDebug() << QString("%1:setRecord failed").arg(rowIndex);
-            rowIndex = select(key,keyType,keyName);
-            __model->setRecord(rowIndex,data2Record(data,rowIndex));
+            qDebug() << QString("%1").arg(__model->lastError().text());
         }
-        //__model->select();
     }
     AbstractDataBlock Record(int key,
                              KeyType keyType=KEY_ROW_ID,
                              const QVariant keyName=QVariant::fromValue(0))
     {
-        //__model->setFilter(nullptr);
-        //__model->select();
         AbstractDataBlock result = record2Data(__model->record(select(key,keyType,keyName)));
         return result;
     }
@@ -112,18 +109,25 @@ protected:
 
 
     int select(int key,KeyType keyType,const QVariant keyName){
+
+        __model->select(); //update before operating
+        int __result = 0;
+
         switch (keyType) {
         case KEY_ROW_ID:
-            return key;
+            __model->setFilter(nullptr);
+            __result = key;
             break;
         case KEY_NAMED_KEY:
             __model->setFilter(utilities::generateFilterString(keyName,QVariant::fromValue(key)));
-            return 0; //select first row
+            __result = 0;
             break;
         default:
-            return 0;
             break;
         }
+
+        __model->select(); //update before operating
+        return __result;
     }
 };
 

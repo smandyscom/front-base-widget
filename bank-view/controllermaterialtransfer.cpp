@@ -23,7 +23,7 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index,SlotType role, 
     }
     if(((__role & TYPE_DATA_NODE) >0) && __database.isOpen())
     {
-        __table = new QSqlRelationalTableModel(this,__database);
+        __table = new QSqlTableModel(this,__database);
         QString __tableName = QString("%1%2").arg(QVariant::fromValue(MAT_DATA_SLOT).toString()).arg(__index);
         __table->setTable(QString("%1%2").arg(QVariant::fromValue(MAT_DATA_SLOT).toString()).arg(__index));
         bool result = __table->select();
@@ -177,6 +177,8 @@ void ControllerMaterialTransfer::onInsert()
     QElapsedTimer __timer;
     __timer.start();
 
+    __table->database().transaction();
+
     //!insert record on table
     QSqlRecord __record = __table->record();
     __record.setGenerated(QVariant::fromValue(SlotBlock::ID).toString(),false);
@@ -187,17 +189,27 @@ void ControllerMaterialTransfer::onInsert()
     __record = __table->record(__table->rowCount()-1);
     __materialId = __record.value(QVariant::fromValue(SlotBlock::ID).toString()).toInt();
 
+    if(!__table->database().commit())
+        qDebug() << QString("database commit failed onInsert");
     qDebug() << QString("%1,onInsert elapsed,%2").arg(__index).arg(__timer.elapsed());
+
+
 }
 void ControllerMaterialTransfer::onQuery()
 {
     QElapsedTimer __timer;
     __timer.start();
 
+    __table->database().transaction();
+
+    //__table->database().transaction();
+
     __adb = __adpator->Record(__materialId,
                               AbstractSqlTableAdpater::KEY_NAMED_KEY,
                               QVariant::fromValue(SlotBlock::ID));
 
+    if(!__table->database().commit())
+        qDebug() << QString("database commit failed onInsert");
     qDebug() << QString("%1,onQuery elapsed,%2").arg(__index).arg(__timer.elapsed());
 }
 void ControllerMaterialTransfer::onUpdate()
@@ -205,11 +217,16 @@ void ControllerMaterialTransfer::onUpdate()
     QElapsedTimer __timer;
     __timer.start();
 
+    __table->database().transaction();
+
     //! Write in data base
     __adpator->Record(__materialId,
                       __adb,
                       AbstractSqlTableAdpater::KEY_NAMED_KEY,
                       QVariant::fromValue(SlotBlock::ID));
+
+    if(!__table->database().commit())
+        qDebug() << QString("database commit failed onInsert");
 
     qDebug() << QString("%1,onUpdate elapsed,%2").arg(__index).arg(__timer.elapsed());
 }
