@@ -12,6 +12,16 @@
 #include <modbuschannel.h>
 #include <definitionslotblock.h>
 #include <abstractsqltableadpater.h>
+
+class MaterialHeaderBlock
+{
+public:
+    MaterialHeaderBlock() {}
+protected:
+    MODBUS_U_WORD reserved[32];
+};
+Q_DECLARE_METATYPE(MaterialHeaderBlock)
+
 //!
 //! \brief The ControllerMaterialTransfer class
 //! Proceding material/slot handshaking
@@ -50,7 +60,7 @@ public:
         WORD_IN=0x4008008,
         DONE=0x4018008,
         //! Mutual
-        MATERIAL_ID=0x4008010,
+        MATERIAL_ID=0x4008010, //move to first 8 words
         BLOCK_DATA=0x4008014,
     };
     enum SyncRequests
@@ -63,7 +73,6 @@ public:
     enum SlotState
     {
         WAIT_ACT_ON,
-        SYNC,
         WAIT_ACT_OFF,
     };
     Q_ENUM(SlotContext)

@@ -72,11 +72,11 @@ MainWindow::MainWindow(QWidget *parent) :
     }   
     //! Material information
     QList<ControllerMaterialTransfer::SlotType> __typeList = {
-        ControllerMaterialTransfer::TYPE_CREATE_NODE,//0
-        ControllerMaterialTransfer::TYPE_DATA_NODE,//1
+        ControllerMaterialTransfer::TYPE_EMPTY_NODE,//0
+        ControllerMaterialTransfer::TYPE_EMPTY_NODE,//1
         ControllerMaterialTransfer::TYPE_EMPTY_NODE,
-        ControllerMaterialTransfer::TYPE_DATA_NODE,//3
-        ControllerMaterialTransfer::TYPE_DATA_NODE,//4
+        ControllerMaterialTransfer::TYPE_EMPTY_NODE,//3
+        ControllerMaterialTransfer::TYPE_EMPTY_NODE,//4
         ControllerMaterialTransfer::TYPE_EMPTY_NODE,
         ControllerMaterialTransfer::TYPE_EMPTY_NODE,
         ControllerMaterialTransfer::TYPE_EMPTY_NODE,
@@ -87,7 +87,7 @@ MainWindow::MainWindow(QWidget *parent) :
         ControllerMaterialTransfer::TYPE_EMPTY_NODE,
         ControllerMaterialTransfer::TYPE_EMPTY_NODE,
         ControllerMaterialTransfer::TYPE_EMPTY_NODE,//14
-        ControllerMaterialTransfer::TYPE_DATA_NODE,//15
+        ControllerMaterialTransfer::TYPE_EMPTY_NODE,//15
     };
     int counter=0;
     foreach (ControllerMaterialTransfer::SlotType var, __typeList) {

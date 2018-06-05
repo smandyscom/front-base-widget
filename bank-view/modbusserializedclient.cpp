@@ -24,17 +24,6 @@ void ModbusSerializedClient::Driver(QModbusClient* value)
 ModbusSerializedClient::~ModbusSerializedClient()
 {
     //! Message loop stuck here , so that requests cannot be comsumed
-
-
-//    qDebug() << "destructor";
-//    //! release all rest requests
-//    while (requestQueue.count() > 0 &&
-//           __driver->state()==QModbusDevice::ConnectedState) {
-//        __isProcessing = false;//forced clear out
-//        onPopRequest();
-//        requestQueue.dequeue();
-//    }
-//    qDebug() << "destructor";
 }
 //!
 //! \brief ModbusSerializedClient::popRequest
@@ -100,7 +89,8 @@ void ModbusSerializedClient::onDriverStateChanged(QModbusDevice::State state)
         qDebug() << __driver->connectionParameter(QModbusDevice::NetworkAddressParameter)
                  << ":"
                  << __driver->connectionParameter(QModbusDevice::NetworkPortParameter)
-                 << "Connected" ;
+                 << "Connected , with interval:"
+                 << __timer->interval();
         __timer->start();
         break;
     case QModbusDevice::UnconnectedState:

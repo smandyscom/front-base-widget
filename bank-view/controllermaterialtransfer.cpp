@@ -37,17 +37,15 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index,SlotType role, 
         //! DB engaged,
         __channel->Access<bool>(toOffseteAddress(DB_ENGAGED),true);
         //! Very first shot
-        __channel->beginAccess<CellDataBlock>(toOffseteAddress(WORD_OUT));
+        __channel->beginAccess<MaterialHeaderBlock>(toOffseteAddress(WORD_OUT));
         __connectionEngaged = true;
     }
 
     //!
     QState* s0 = new QState(this);
     QState* s1 = new QState(this);
-    QState* s2 = new QState(this);
     __stateMap[WAIT_ACT_ON] = s0;
-    __stateMap[SYNC] = s1;
-    __stateMap[WAIT_ACT_OFF] = s2;
+    __stateMap[WAIT_ACT_OFF] = s1;
     //! Common
     foreach (QState* var, __stateMap.values()) {
         connect(var,&QState::entered,[this](){
@@ -60,19 +58,10 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index,SlotType role, 
     actOn->setTargetState(s1);
     s0->addTransition(actOn);
 
-    connect(s0,&QState::exited,[this](){
-       //! read SYNC_ACTION , ID , IS_VALID
-        //__channel->beginAccess<CellDataBlock>(toOffseteAddress(PLC_ENGAGED));
-        __procedureTimer.start();
-    });
-    //!
-    //!  s1
-    ValueTransition* syncRequest = new ValueTransition(toOffseteAddress(WORD_OUT),ValueTransition::VALUE_UPDATED);
-    syncRequest->setTargetState(s2);
-    s1->addTransition(syncRequest);
-
-    connect(s1,&QState::exited,[this]()
+    connect(s0,&QState::exited,[this]()
     {
+        __procedureTimer.start();
+
         __materialId = __channel->Access<MODBUS_U_WORD>(toOffseteAddress(MATERIAL_ID));
         __isValid = __channel->Access<bool>(toOffseteAddress(IS_VALID));
         __request = SyncRequests(__channel->Access<MODBUS_U_WORD>(toOffseteAddress(SYNC_ACTION)));
@@ -102,31 +91,32 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index,SlotType role, 
 
         //! Acknoledge
         __channel->Access<bool>(toOffseteAddress(DONE),true);
-        //__pollCyclic=1;//speed up
+        __pollCyclic=1;//speed up
     });
 
     //!
-    //! s2
+    //! s1
     ValueTransition* actOff = new ValueTransition(toOffseteAddress(ACT),ValueTransition::BIT_STATE_OFF);
     actOff->setTargetState(s0);
-    s2->addTransition(actOff);
-    connect(s2,&QState::exited,[this](){
+    s1->addTransition(actOff);
+    connect(s1,&QState::exited,[this](){
 
         switch (__request) {
         case ACTION_UPDATE_BLOCK:
         {
             *static_cast<CellDataBlock*>(&__adb) =
                     __channel->Access<CellDataBlock>(toOffseteAddress(BLOCK_DATA));
+            //! Rewind
+            __channel->Access<bool>(toOffseteAddress(DONE),false); //lead
             onUpdate();
             break;
         }
         default:
+            __channel->Access<bool>(toOffseteAddress(DONE),false); //lead
             break;
         }
 
-        //! Rewind
-       __channel->Access<bool>(toOffseteAddress(DONE),false);
-       //__pollCyclic=50;//slow down
+       __pollCyclic=10;//slow down
        emit dataUpdated();
 
        qDebug() << QString("%1,procedure elapsed,%2").arg(__index).arg(__procedureTimer.elapsed());
@@ -136,7 +126,9 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index,SlotType role, 
     connect(__channel,&ModbusChannel::readReply,this,&ControllerMaterialTransfer::onReply);
     //!Ready
     setInitialState(s0);
-    start();
+    if((__role & TYPE_DATA_NODE)>0)
+        start();
+
 }
 
 ControllerMaterialTransfer::~ControllerMaterialTransfer()
@@ -168,7 +160,7 @@ void ControllerMaterialTransfer::onReply()
             toOffseteAddress(WORD_OUT))
         return;
     QTimer::singleShot(__pollCyclic,[this](){
-        __channel->beginAccess<CellDataBlock>(toOffseteAddress(WORD_OUT));
+        __channel->beginAccess<MaterialHeaderBlock>(toOffseteAddress(WORD_OUT));
     });
 }
 
@@ -201,9 +193,6 @@ void ControllerMaterialTransfer::onQuery()
     __timer.start();
 
     __table->database().transaction();
-
-    //__table->database().transaction();
-
     __adb = __adpator->Record(__materialId,
                               AbstractSqlTableAdpater::KEY_NAMED_KEY,
                               QVariant::fromValue(SlotBlock::ID));
