@@ -1,11 +1,11 @@
 #include "controllermaterialtransfer.h"
 #include <QDebug>
-ControllerMaterialTransfer::ControllerMaterialTransfer(int index,SlotType role, QObject *parent) :
+ControllerMaterialTransfer::ControllerMaterialTransfer(int index, int channelIndex, QObject *parent) :
     QStateMachine(parent),
-    __index(index),
-    __role(role),
+    __slotIndex(index),
     __pollCyclic(10),
-    __materialId(0)
+    __materialId(0),
+    __channelIndex(channelIndex)
 {
     //! Channel initialize
     __channel = ModbusChannel::Instance();
@@ -21,25 +21,25 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index,SlotType role, 
         bool result = __database.open();
         qDebug() << result;
     }
-    if(((__role & TYPE_DATA_NODE) >0) && __database.isOpen())
+    if(__database.isOpen())
     {
         __table = new QSqlTableModel(this,__database);
-        QString __tableName = QString("%1%2").arg(QVariant::fromValue(MAT_DATA_SLOT).toString()).arg(__index);
-        __table->setTable(QString("%1%2").arg(QVariant::fromValue(MAT_DATA_SLOT).toString()).arg(__index));
+        QString __tableName = QString("%1%2").arg(QVariant::fromValue(MAT_DATA_SLOT).toString()).arg(__slotIndex);
+        __table->setTable(QString("%1%2").arg(QVariant::fromValue(MAT_DATA_SLOT).toString()).arg(__slotIndex));
         bool result = __table->select();
         __adpator = new GenericSqlTableAdapter<SlotDataBlock,SlotBlock::DataBaseHeaders>(__table);
         if(!result)
             qDebug() << result;
     }
 
-    if((__role & TYPE_DATA_NODE)>0)
-    {
+//    if((__role & TYPE_DATA_NODE)>0)
+//    {
         //! DB engaged,
         __channel->Access<bool>(toOffseteAddress(DB_ENGAGED),true);
         //! Very first shot
         __channel->beginAccess<MaterialHeaderBlock>(toOffseteAddress(WORD_OUT));
         __connectionEngaged = true;
-    }
+    //}
 
     //!
     QState* s0 = new QState(this);
@@ -119,14 +119,14 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index,SlotType role, 
        __pollCyclic=10;//slow down
        emit dataUpdated();
 
-       qDebug() << QString("%1,procedure elapsed,%2").arg(__index).arg(__procedureTimer.elapsed());
+       qDebug() << QString("%1,procedure elapsed,%2").arg(__slotIndex).arg(__procedureTimer.elapsed());
     });
 
     //! On reply
     connect(__channel,&ModbusChannel::readReply,this,&ControllerMaterialTransfer::onReply);
     //!Ready
     setInitialState(s0);
-    if((__role & TYPE_DATA_NODE)>0)
+    //if((__role & TYPE_DATA_NODE)>0)
         start();
 
 }
@@ -138,7 +138,9 @@ ControllerMaterialTransfer::~ControllerMaterialTransfer()
 
 ModbusDriverAddress ControllerMaterialTransfer::toOffseteAddress(int base)
 {
-    return ModbusDriverAddress(base + __index * 256);
+    ModbusDriverAddress __address(base + __slotIndex * 256);
+    __address.setChannel(__channelIndex);
+    return __address;
 }
 
 void ControllerMaterialTransfer::onReply()
@@ -175,7 +177,7 @@ void ControllerMaterialTransfer::onInsert()
     QSqlRecord __record = __table->record();
     __record.setGenerated(QVariant::fromValue(SlotBlock::ID).toString(),false);
     if(!__table->insertRecord(-1,__record))
-        qDebug() << QString("Insert record error , %1").arg(__index);
+        qDebug() << QString("Insert record error , %1").arg(__slotIndex);
     __table->select();//re-select
 
     __record = __table->record(__table->rowCount()-1);
@@ -183,7 +185,7 @@ void ControllerMaterialTransfer::onInsert()
 
     if(!__table->database().commit())
         qDebug() << QString("database commit failed onInsert");
-    qDebug() << QString("%1,onInsert elapsed,%2").arg(__index).arg(__timer.elapsed());
+    qDebug() << QString("%1,onInsert elapsed,%2").arg(__slotIndex).arg(__timer.elapsed());
 
 
 }
@@ -199,7 +201,7 @@ void ControllerMaterialTransfer::onQuery()
 
     if(!__table->database().commit())
         qDebug() << QString("database commit failed onInsert");
-    qDebug() << QString("%1,onQuery elapsed,%2").arg(__index).arg(__timer.elapsed());
+    qDebug() << QString("%1,onQuery elapsed,%2").arg(__slotIndex).arg(__timer.elapsed());
 }
 void ControllerMaterialTransfer::onUpdate()
 {
@@ -217,7 +219,7 @@ void ControllerMaterialTransfer::onUpdate()
     if(!__table->database().commit())
         qDebug() << QString("database commit failed onInsert");
 
-    qDebug() << QString("%1,onUpdate elapsed,%2").arg(__index).arg(__timer.elapsed());
+    qDebug() << QString("%1,onUpdate elapsed,%2").arg(__slotIndex).arg(__timer.elapsed());
 }
 
 void ControllerMaterialTransfer::onAboutToLeave()

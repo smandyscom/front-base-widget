@@ -30,16 +30,16 @@ class ControllerMaterialTransfer :
 {
     Q_OBJECT
 public:
-    enum SlotType
-    {
-        //! Update header only , no backend data table
-        TYPE_EMPTY_NODE=0x02,
-        //! With backend data table
-        TYPE_DATA_NODE=0x01,
-        //!
-        ATTR_CREATE_NODE=0x10,
-        TYPE_CREATE_NODE = ATTR_CREATE_NODE+TYPE_DATA_NODE,
-    };
+//    enum SlotType
+//    {
+//        //! Update header only , no backend data table
+//        TYPE_EMPTY_NODE=0x02,
+//        //! With backend data table
+//        TYPE_DATA_NODE=0x01,
+//        //!
+//        ATTR_CREATE_NODE=0x10,
+//        TYPE_CREATE_NODE = ATTR_CREATE_NODE+TYPE_DATA_NODE,
+//    };
     enum NameConstants
     {
         //! Data base name
@@ -81,7 +81,7 @@ public:
     Q_ENUM(NameConstants)
 
     explicit ControllerMaterialTransfer(int slotOffset,
-                                        SlotType role,
+                                        int channelIndex,
                                         QObject *parent = nullptr);
     ~ControllerMaterialTransfer();
 
@@ -92,7 +92,7 @@ public:
     }
     int Index() const
     {
-        return __index;
+        return __slotIndex;
     }
     bool IsValid() const
     {
@@ -102,10 +102,10 @@ public:
     {
         return __connectionEngaged;
     }
-    SlotType Role() const
-    {
-        return __role;
-    }
+//    SlotType Role() const
+//    {
+//        return __role;
+//    }
     QSqlTableModel* Table() const
     {
         return __table;
@@ -132,10 +132,12 @@ protected slots:
 protected:
     ModbusChannel* __channel;
 
-    int __index;
+    int __slotIndex;
+    int __channelIndex;
+
     int __materialId;
     bool __isValid;
-    SlotType __role;
+    //SlotType __role;
 
     SyncRequests __request;
 
@@ -159,5 +161,6 @@ protected:
 
     QElapsedTimer __procedureTimer;
 };
+
 
 #endif // CONTROLLERMATERIALTRANSFER_H

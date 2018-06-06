@@ -20,6 +20,8 @@
 
 #include <QMap>
 
+typedef QPair<int,int> ChannelSlot;
+
 namespace Ui {
 class MainWindow;
 }
@@ -42,7 +44,7 @@ protected:
     Ui::MainWindow *ui;
 
     void closeEvent(QCloseEvent* event) Q_DECL_OVERRIDE;
-    QList<ControllerMaterialTransfer*> __materialSlots;
+    QList<ControllerMaterialTransfer *> __materialSlots;
 
     bool __isClosing;
 
