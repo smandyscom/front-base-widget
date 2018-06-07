@@ -41,7 +41,6 @@ FrontControlPanel::FrontControlPanel(QList<ControllerMaterialTransfer*> material
     for(int i=0;i<materialSlots.count();i++){
         FrontSlot* __frontSlot = new FrontSlot(materialSlots[i],this);
         ui->gridLayoutMaterial->addWidget(__frontSlot,i/6,i%6);
-        connect(materialSlots[i],&ControllerMaterialTransfer::dataUpdated,FrontSlot,&FrontSlot::onDataUpdated);
     }
 }
 

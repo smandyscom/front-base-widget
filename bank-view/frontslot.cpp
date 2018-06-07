@@ -12,8 +12,7 @@ FrontSlot::FrontSlot(ControllerMaterialTransfer *controller, QWidget *parent) :
     //!
     ui->lcdNumberSlot->display(__controller->Index());
     //! Prepare dialog
-    if((__controller->Role() & ControllerMaterialTransfer::TYPE_DATA_NODE)>0)
-    {
+
         __dialog = new QDialog(this);
 //        __dialog->setGeometry(__dialog->geometry().x(),
 //                              __dialog->geometry().y(),
@@ -38,7 +37,6 @@ FrontSlot::FrontSlot(ControllerMaterialTransfer *controller, QWidget *parent) :
         //!
         connect(ui->toolButtonDialog,&QToolButton::clicked,this,&FrontSlot::onDataRaise);
         connect(__controller,&ControllerMaterialTransfer::dataUpdated,this,&FrontSlot::onDataUpdated);
-    }
 }
 
 FrontSlot::~FrontSlot()
