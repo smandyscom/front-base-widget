@@ -29,6 +29,8 @@ FrontSafetyPanel::FrontSafetyPanel(QWidget *parent) :
     ui->checkBoxAirChoke->setChecked(true);
     //! Auth
     __disableList[AUTH::ROLE_OPERATOR].append(ui->checkBoxInterlockBypass);
+    __disableList[AUTH::ROLE_OPERATOR].append(ui->checkBoxLightgateBypass);
+    __disableList[AUTH::ROLE_OPERATOR].append(ui->checkBoxAirChoke);
 }
 
 FrontSafetyPanel::~FrontSafetyPanel()

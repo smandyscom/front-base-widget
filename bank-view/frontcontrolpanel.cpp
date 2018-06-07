@@ -38,19 +38,11 @@ FrontControlPanel::FrontControlPanel(QList<ControllerMaterialTransfer*> material
     //! Safety I/O monitor
     FrontSafetyPanel* fsp = new FrontSafetyPanel(ui->widgetSafetyIO);
     //!
-    for(int i=0;i<materialSlots.count();i++)
-        ui->gridLayoutMaterial->addWidget(new FrontSlot(materialSlots[i],this),i/6,i%6);
-
-//    connect(ui->pushButtonTest,&QPushButton::clicked,[=]()
-//    {
-//       materialSlots[0]->onInsert();
-//    });
-//    connect(ui->pushButtonTest_2,&QPushButton::clicked,[=](){
-//       materialSlots[1]->onUpdate();
-//    });
-//    connect(ui->pushButtonTest_3,&QPushButton::clicked,[=](){
-//       materialSlots.last()->onQuery();
-//    });
+    for(int i=0;i<materialSlots.count();i++){
+        FrontSlot* __frontSlot = new FrontSlot(materialSlots[i],this);
+        ui->gridLayoutMaterial->addWidget(__frontSlot,i/6,i%6);
+        connect(materialSlots[i],&ControllerMaterialTransfer::dataUpdated,FrontSlot,&FrontSlot::onDataUpdated);
+    }
 }
 
 FrontControlPanel::~FrontControlPanel()
