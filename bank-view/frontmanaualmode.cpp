@@ -299,10 +299,10 @@ void FrontManaualMode::onTimerTimeout()
         var->setEnabled(__controller->IsManualModeActiavted() &&
                     ui->tableViewCommandBlock->selectionModel()->hasSelection());
     }
-//    //! Interlocks (Busy
-//    foreach (QWidget* var, __busyInterlock) {
-//        var->setEnabled(__controller->IsManualModeActiavted());
-//    }
+    //! Interlocks (Busy
+    foreach (QWidget* var, __busyInterlock) {
+        var->setEnabled(__controller->IsManualModeActiavted());
+    }
 }
 
 int FrontManaualMode::SelectedBlockIndex() const

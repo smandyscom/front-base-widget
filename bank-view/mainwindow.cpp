@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //! Initialize Modbus Serialized Client
     //! port from 10001-10008 (CH1-CH8
     QList<ModbusSerializedClient*> __list;
-    for(int i=0;i<6;i++)
+    for(int i=0;i<7;i++)
     {
         ModbusSerializedClient* __serializedClient = new ModbusSerializedClient(1,this);
 
@@ -74,8 +74,8 @@ MainWindow::MainWindow(QWidget *parent) :
     //! 0,1,3,4,8,15
     //! Channel , Slot
     QList<QPair<int,int>> __typeList = {
-        ChannelSlot(5,0),//0
-        ChannelSlot(4,1),//1
+        ChannelSlot(4,0),//0
+        ChannelSlot(5,1),//1
         ChannelSlot(4,3),//3
         ChannelSlot(4,4),//4
         ChannelSlot(6,8),//8
