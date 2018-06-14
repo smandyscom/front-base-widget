@@ -64,7 +64,8 @@ void ModbusSerializedClient::onPopRequest()
             if(requestQueue.head()->second==READ)
                 emit readRequestDone(reply->result());
             //destroy
-            requestQueue.dequeue();
+            ModbusRequest* __request = requestQueue.dequeue();
+            delete __request;
             break;
         default:
 
