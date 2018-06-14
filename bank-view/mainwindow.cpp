@@ -25,12 +25,13 @@ MainWindow::MainWindow(QWidget *parent) :
     __isClosing = false;
     //! Initialize Modbus Serialized Client
     //! port from 10001-10008 (CH1-CH8
-    QList<ModbusSerializedClient*> __list;
+    //QList<ModbusSerializedClient*> __list;
     for(int i=0;i<7;i++)
     {
         ModbusSerializedClient* __serializedClient = new ModbusSerializedClient(1,this);
 
         QModbusTcpClient* client = new QModbusTcpClient(__serializedClient);
+
         QUrl url = QUrl::fromUserInput(tr("169.254.28.1:%1").arg(10001+i));
         client->setConnectionParameter(QModbusDevice::NetworkAddressParameter,url.host());
         client->setConnectionParameter(QModbusDevice::NetworkPortParameter,url.port());
@@ -152,11 +153,20 @@ void MainWindow::closeEvent(QCloseEvent *event)
     else
     {
         bool __isAllDisengaged=true;
+        bool __isAllDisconnected=true;
+
+        //!
         foreach (ControllerMaterialTransfer* var, __materialSlots) {
             if(var->ConnectionEngaged())
                 __isAllDisengaged = false;
         }
-        if(__isAllDisengaged)
+        //!
+        foreach (ModbusSerializedClient* var, __list) {
+            if(var->Driver()->state()== QModbusDevice::ConnectedState)
+                __isAllDisconnected=false;
+        }
+
+        if(__isAllDisengaged || __isAllDisconnected)
             event->accept();
         else
             event->ignore();

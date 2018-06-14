@@ -9,6 +9,18 @@ ModbusSerializedClient::ModbusSerializedClient(int serverAddress, QObject *paren
     __timer = new QTimer(this);
     connect(__timer,SIGNAL(timeout()),this,SLOT(onPopRequest()));
     __isProcessing = false;
+
+    connect(this,&ModbusSerializedClient::destroyed,[=]{
+       //qDebug() << "";
+       if(__driver != nullptr)
+       {
+           disconnect(__driver,&QModbusClient::stateChanged,this,&ModbusSerializedClient::onDriverStateChanged);
+           disconnect(__driver,&QModbusClient::errorOccurred,this,&ModbusSerializedClient::onDriverErrorOccured);
+
+           //disconnect(__driver,SIGNAL(stateChanged(QModbusDevice::State)),this,SLOT(onDriverStateChanged(QModbusDevice::State)));
+           //disconnect(__driver,SIGNAL(errorOccurred(QModbusDevice::Error)),this,SLOT(onDriverErrorOccured(QModbusDevice::Error)));
+       }
+    });
 }
 
 void ModbusSerializedClient::Driver(QModbusClient* value)
@@ -24,6 +36,7 @@ void ModbusSerializedClient::Driver(QModbusClient* value)
 ModbusSerializedClient::~ModbusSerializedClient()
 {
     //! Message loop stuck here , so that requests cannot be comsumed
+    qDebug()<<"";
 }
 //!
 //! \brief ModbusSerializedClient::popRequest
@@ -61,12 +74,14 @@ void ModbusSerializedClient::onPopRequest()
     connect(reply,&QModbusReply::finished,this,[this,reply](){
         switch (reply->error()) {
         case QModbusDevice::NoError:
+        {
             if(requestQueue.head()->second==READ)
                 emit readRequestDone(reply->result());
             //destroy
             ModbusRequest* __request = requestQueue.dequeue();
             delete __request;
             break;
+        }
         default:
 
             qDebug() << reply->errorString();
@@ -78,7 +93,7 @@ void ModbusSerializedClient::onPopRequest()
     });
 }
 
-void ModbusSerializedClient::pushRequest(const ModbusRequest *request)
+void ModbusSerializedClient::pushRequest(ModbusRequest *request)
 {
     requestQueue.enqueue(request);
 }

@@ -49,6 +49,7 @@ protected:
     bool __isClosing;
 
     ControllerAuth* __authController;
+    QList<ModbusSerializedClient*> __list;
     QMap<QObject*,AUTH::AuthRoles> __authRoleTable;
 };
 

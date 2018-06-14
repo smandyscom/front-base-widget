@@ -28,7 +28,7 @@ public:
 
     explicit ModbusSerializedClient(int __serverAddress=1,
                                     QObject *parent = nullptr);
-    void pushRequest(const ModbusRequest* request);
+    void pushRequest(ModbusRequest *request);
 
     bool IsProcessing() const {return __isProcessing;}
     int ProcessingCount() const {return requestQueue.count();}
@@ -54,7 +54,7 @@ protected slots:
     void onDriverErrorOccured(QModbusDevice::Error error);
 protected:
 
-    QQueue<const ModbusRequest*> requestQueue;
+    QQueue<ModbusRequest*> requestQueue;
 
     int __serverAddress;
     QModbusClient* __driver; //should be initialed somewhere
