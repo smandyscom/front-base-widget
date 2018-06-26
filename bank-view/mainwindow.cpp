@@ -12,6 +12,7 @@
 #include<definitionunitblocks.h>
 
 #include<QSqlRecord>
+#include<QFileInfo>
 
 using namespace DEF_BASIC_DIMENSION;
 
@@ -20,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
 
 
     __isClosing = false;
@@ -124,6 +126,11 @@ MainWindow::MainWindow(QWidget *parent) :
     __authController->linkAuthReceivers(this);
     connect(__authController,&ControllerAuth::onRoleChanged,this,&MainWindow::onAuthChanged);
     __authController->onAuthChangingRequired(AUTH::ROLE_OPERATOR,0);
+
+    //! Version info
+    QFileInfo __qf(QCoreApplication::applicationFilePath());
+    QString __mtime = __qf.lastModified().toString(Qt::ISODate);
+    this->setWindowTitle(this->windowTitle().append(__mtime));
 }
 
 MainWindow::~MainWindow()
