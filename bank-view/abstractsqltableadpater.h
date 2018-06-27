@@ -109,7 +109,7 @@ protected:
 
     int select(int key,KeyType keyType,const QVariant keyName){
 
-        __model->select(); //update before operating
+        //__model->select(); //update before operating
         int __result = 0;
 
         switch (keyType) {

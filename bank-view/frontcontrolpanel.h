@@ -9,6 +9,8 @@
 
 #include <frontsafetypanel.h>
 #include <frontslot.h>
+#include <frontmaterialselection.h>
+
 #include <controllermaterialtransfer.h>
 
 #include <abstractauthreceiver.h>
