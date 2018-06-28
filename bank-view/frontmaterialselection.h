@@ -9,7 +9,7 @@
 #include <QMap>
 
 #include <utilities.h>
-
+#include <definitionslotblock.h>
 
 namespace Ui {
 class frontMaterialSelection;
@@ -19,13 +19,13 @@ class frontMaterialSelection : public QWidget
 {
     Q_OBJECT
 public:
-    enum DataFields
+    enum DataFields : int
     {
-        FIELD_L_KEY,
-        FIELD_L_HOUSING,
-        FIELD_R_KEY,
-        FIELD_R_HOUSING,
-        FIELD_WORKING_NUMBER
+        FIELD_L_KEY = SlotBlock::DATA_1,
+        FIELD_L_HOUSING = SlotBlock::DATA_2,
+        FIELD_R_KEY = SlotBlock::DATA_3,
+        FIELD_R_HOUSING = SlotBlock::DATA_4,
+        FIELD_WORKING_NUMBER = SlotBlock::DATA_5
     };
     enum TableNames
     {
@@ -46,7 +46,9 @@ public:
     explicit frontMaterialSelection(QSqlDatabase db, QWidget *parent = 0);
     ~frontMaterialSelection();
 signals:
-    void fieldValueChanged(DataFields field,QVariant value);
+    void fieldValueChanged(int field,QVariant value);
+public slots:
+    void onInitialized();
 protected slots:
     void onComboBoxActivated(int index);
     void onWorkingNumberInputed();

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>519</width>
-    <height>225</height>
+    <height>270</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -47,7 +47,7 @@
           <rect>
            <x>0</x>
            <y>20</y>
-           <width>211</width>
+           <width>251</width>
            <height>81</height>
           </rect>
          </property>
@@ -150,7 +150,7 @@
           <rect>
            <x>0</x>
            <y>20</y>
-           <width>211</width>
+           <width>251</width>
            <height>81</height>
           </rect>
          </property>
@@ -274,6 +274,31 @@
        </widget>
       </item>
      </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>220</y>
+     <width>158</width>
+     <height>37</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_7">
+    <item>
+     <widget class="QPushButton" name="pushButton">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>35</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>確認輸入</string>
+      </property>
+     </widget>
     </item>
     <item>
      <widget class="QPushButton" name="pushButtonReport">

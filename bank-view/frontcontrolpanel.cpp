@@ -45,6 +45,9 @@ FrontControlPanel::FrontControlPanel(QList<ControllerMaterialTransfer*> material
     //!
     frontMaterialSelection* __fms = new frontMaterialSelection(ControllerMaterialTransfer::DataBase(),
                                                                ui->frameWorking);
+    //added for creative slot
+    connect(__fms,&frontMaterialSelection::fieldValueChanged,materialSlots[0],&ControllerMaterialTransfer::onFieldValueChaged);
+    __fms->onInitialized(); // inform material controller
 }
 
 FrontControlPanel::~FrontControlPanel()

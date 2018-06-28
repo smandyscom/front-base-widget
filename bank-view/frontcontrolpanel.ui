@@ -413,16 +413,6 @@
    <property name="frameShadow">
     <enum>QFrame::Raised</enum>
    </property>
-   <widget class="QLCDNumber" name="lcdNumber">
-    <property name="geometry">
-     <rect>
-      <x>563</x>
-      <y>80</y>
-      <width>161</width>
-      <height>61</height>
-     </rect>
-    </property>
-   </widget>
   </widget>
  </widget>
  <resources/>

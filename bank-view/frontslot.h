@@ -30,6 +30,7 @@ private:
 
     ControllerMaterialTransfer* __controller;
     QDialog* __dialog;
+    QTableView* __view;
 };
 
 #endif // FRONTSLOT_H

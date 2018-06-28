@@ -35,6 +35,8 @@ frontMaterialSelection::frontMaterialSelection(QSqlDatabase db,QWidget *parent) 
         {
             utilities::linkQComboBoxAndModel(__cb,__tableMap[__fieldsMap[var]],"ID");
             connect(__cb,SIGNAL(activated(int)),this,SLOT(onComboBoxActivated(int)));
+
+            __cb->setCurrentIndex(0);
         }
         else
         {
@@ -57,14 +59,24 @@ void frontMaterialSelection::onComboBoxActivated(int index)
     QSqlRecord __record = __table->record(__cb->currentIndex());
     int __polarization = __record.value(QVariant::fromValue(Polarization).toString()).toInt();
 
-    emit fieldValueChanged(__fieldsMap[__cb],__polarization);
-
-    qDebug() << "";
+    emit fieldValueChanged(static_cast<int>(__fieldsMap[__cb]),__polarization);
 }
 
 void frontMaterialSelection::onWorkingNumberInputed()
 {
     QDoubleSpinBox* __dsb = qobject_cast<QDoubleSpinBox*>(sender());
     int __workingNumber = static_cast<int>(ui->doubleSpinBoxWorkingNumber->value());
-    emit fieldValueChanged(__fieldsMap[__dsb],__workingNumber);
+    emit fieldValueChanged(static_cast<int>(__fieldsMap[__dsb]),__workingNumber);
+}
+
+//!
+//! \brief frontMaterialSelection::onInitialized
+//! raise comboBox activated event
+void frontMaterialSelection::onInitialized()
+{
+    foreach (QWidget* var, __fieldsMap.keys()) {
+        QComboBox* __cb = qobject_cast<QComboBox*>(var);
+        if(__cb != nullptr)
+            emit __cb->activated(__cb->currentIndex());
+    }
 }

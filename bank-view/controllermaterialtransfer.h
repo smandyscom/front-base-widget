@@ -122,6 +122,8 @@ public slots:
     void onInsert();
     void onQuery();
     void onUpdate();
+
+    void onFieldValueChaged(int field,QVariant value);
 protected slots:
     //!
     //! \brief onMonitorBlockReply
@@ -160,6 +162,8 @@ protected:
     AbstractDataBlock __adb;
 
     QElapsedTimer __procedureTimer;
+
+    QMap<SlotBlock::DataBaseHeaders,QVariant> __preCachedValues;
 };
 
 

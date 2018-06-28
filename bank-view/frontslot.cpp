@@ -21,7 +21,7 @@ FrontSlot::FrontSlot(ControllerMaterialTransfer *controller, QWidget *parent) :
         __dialog->setSizePolicy(QSizePolicy::Expanding,
                                 QSizePolicy::Expanding);
 
-        QTableView* __view = new QTableView(__dialog);
+        __view = new QTableView(__dialog);
         __view->setSizePolicy(QSizePolicy::Expanding,
                               QSizePolicy::Expanding);
         __view->verticalHeader()->setVisible(false);
@@ -53,5 +53,10 @@ void FrontSlot::onDataUpdated()
 
 void FrontSlot::onDataRaise()
 {
+    //! Show current datas
+    QSqlTableModel* __table = qobject_cast<QSqlTableModel*>(__view->model());
+    __table->setFilter(utilities::generateFilterString(QVariant::fromValue(HEADER_STRUCTURE::ID),
+                                                       QVariant::fromValue(__controller->MaterialId())));
+    __table->select();
     __dialog->exec();
 }
