@@ -169,8 +169,11 @@ void MainWindow::closeEvent(QCloseEvent *event)
         }
         //!
         foreach (ModbusSerializedClient* var, __list) {
-            if(var->Driver()->state()== QModbusDevice::ConnectedState)
+            var->Driver()->disconnectDevice();
+
+            if(var->Driver()->state()== QModbusDevice::ConnectedState){
                 __isAllDisconnected=false;
+            }
         }
 
         if(__isAllDisengaged || __isAllDisconnected)
