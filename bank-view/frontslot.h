@@ -25,6 +25,7 @@ public:
 protected:
     void onDataUpdated();
     void onDataRaise();
+    void onMaterialOverrideOff();
 private:
     Ui::FrontSlot *ui;
 

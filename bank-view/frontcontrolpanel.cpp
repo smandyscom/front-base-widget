@@ -43,11 +43,14 @@ FrontControlPanel::FrontControlPanel(QList<ControllerMaterialTransfer*> material
         ui->gridLayoutMaterial->addWidget(__frontSlot,i/6,i%6);
     }
     //!
-    frontMaterialSelection* __fms = new frontMaterialSelection(ControllerMaterialTransfer::DataBase(),
-                                                               ui->frameWorking);
-    //added for creative slot
-    connect(__fms,&frontMaterialSelection::fieldValueChanged,materialSlots[0],&ControllerMaterialTransfer::onFieldValueChaged);
-    __fms->onInitialized(); // inform material controller
+//    frontMaterialSelection* __fms = new frontMaterialSelection(ControllerMaterialTransfer::DataBase(),
+//                                                               ui->frameWorking);
+//    //!added for creative slot
+//    connect(__fms,&frontMaterialSelection::fieldValueChanged,materialSlots[0],&ControllerMaterialTransfer::onFieldValueChaged);
+//    __fms->onInitialized(); // inform material controller
+//    FrontMaterialSelectionV2* __fms2 = new FrontMaterialSelectionV2(ControllerMaterialTransfer::DataBase(),
+//                                                                    ui->frameWorking);
+
 }
 
 FrontControlPanel::~FrontControlPanel()

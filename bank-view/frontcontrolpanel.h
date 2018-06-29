@@ -10,6 +10,7 @@
 #include <frontsafetypanel.h>
 #include <frontslot.h>
 #include <frontmaterialselection.h>
+#include <frontmaterialselectionv2.h>
 
 #include <controllermaterialtransfer.h>
 

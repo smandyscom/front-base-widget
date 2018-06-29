@@ -62,6 +62,9 @@ public:
         //! Mutual
         MATERIAL_ID=0x4008010, //move to first 8 words
         BLOCK_DATA=0x4008014,
+
+        //!
+        MATERIAL_OVERRIDE=0x4050003, //material override
     };
     enum SyncRequests
     {
@@ -106,6 +109,15 @@ public:
 //    {
 //        return __role;
 //    }
+    //!
+    //! \brief MaterialOverride
+    //! \param value
+    //! Able to control material override via slot interface
+    void MaterialOverride(bool value)
+    {
+        __channel->Access<bool>(toOffseteAddress(MATERIAL_OVERRIDE),value);
+    }
+
     QSqlTableModel* Table() const
     {
         return __table;
@@ -115,6 +127,8 @@ public:
     {
         return __database;
     }
+
+
 signals:
     void dataUpdated();
 public slots:
@@ -123,7 +137,7 @@ public slots:
     void onQuery();
     void onUpdate();
 
-    void onFieldValueChaged(int field,QVariant value);
+    //void onFieldValueChaged(int field,QVariant value);
 protected slots:
     //!
     //! \brief onMonitorBlockReply
@@ -163,7 +177,7 @@ protected:
 
     QElapsedTimer __procedureTimer;
 
-    QMap<SlotBlock::DataBaseHeaders,QVariant> __preCachedValues;
+    //QMap<SlotBlock::DataBaseHeaders,QVariant> __preCachedValues;
 };
 
 

@@ -57,7 +57,9 @@ SOURCES += \
     controllerauth.cpp \
     abstractauthreceiver.cpp \
     frontslot.cpp \
-    frontmaterialselection.cpp
+    frontmaterialselection.cpp \
+    delegatematerialselector.cpp \
+    frontmaterialselectionv2.cpp
 HEADERS += \
     modbussetupwidget.h \
     utilities.h \
@@ -98,7 +100,9 @@ HEADERS += \
     controllerauth.h \
     abstractauthreceiver.h \
     frontslot.h \
-    frontmaterialselection.h
+    frontmaterialselection.h \
+    delegatematerialselector.h \
+    frontmaterialselectionv2.h
 
 unix {
     target.path = /usr/lib
@@ -119,4 +123,5 @@ FORMS += \
     frontconfigurationtransfer.ui \
     frontsafetypanel.ui \
     frontslot.ui \
-    frontmaterialselection.ui
+    frontmaterialselection.ui \
+    frontmaterialselectionv2.ui

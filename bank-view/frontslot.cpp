@@ -37,6 +37,7 @@ FrontSlot::FrontSlot(ControllerMaterialTransfer *controller, QWidget *parent) :
         //!
         connect(ui->toolButtonDialog,&QToolButton::clicked,this,&FrontSlot::onDataRaise);
         connect(__controller,&ControllerMaterialTransfer::dataUpdated,this,&FrontSlot::onDataUpdated);
+        connect(ui->pushButtonMaterialOverrideOff,&QPushButton::clicked,this,&FrontSlot::onMaterialOverrideOff);
 }
 
 FrontSlot::~FrontSlot()
@@ -49,6 +50,9 @@ void FrontSlot::onDataUpdated()
     utilities::colorChangeOver(ui->labelIsValid,
                                __controller->IsValid());
     ui->lcdNumberID->display(__controller->MaterialId());
+
+    //! enable button once valid
+    ui->pushButtonMaterialOverrideOff->setEnabled(__controller->IsValid());
 }
 
 void FrontSlot::onDataRaise()
@@ -59,4 +63,10 @@ void FrontSlot::onDataRaise()
                                                        QVariant::fromValue(__controller->MaterialId())));
     __table->select();
     __dialog->exec();
+}
+
+void FrontSlot::onMaterialOverrideOff()
+{
+    __controller->MaterialOverride(false);
+    ui->pushButtonMaterialOverrideOff->setEnabled(false);
 }
