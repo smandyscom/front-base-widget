@@ -59,7 +59,8 @@ SOURCES += \
     frontslot.cpp \
     frontmaterialselection.cpp \
     delegatematerialselector.cpp \
-    frontmaterialselectionv2.cpp
+    frontmaterialselectionv2.cpp \
+    delegatedataselector.cpp
 HEADERS += \
     modbussetupwidget.h \
     utilities.h \
@@ -102,7 +103,8 @@ HEADERS += \
     frontslot.h \
     frontmaterialselection.h \
     delegatematerialselector.h \
-    frontmaterialselectionv2.h
+    frontmaterialselectionv2.h \
+    delegatedataselector.h
 
 unix {
     target.path = /usr/lib

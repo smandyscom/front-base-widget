@@ -23,8 +23,8 @@
     <rect>
      <x>0</x>
      <y>370</y>
-     <width>861</width>
-     <height>211</height>
+     <width>431</width>
+     <height>471</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayoutMaterial">
@@ -401,10 +401,10 @@
   <widget class="QFrame" name="frameWorking">
    <property name="geometry">
     <rect>
-     <x>0</x>
-     <y>590</y>
-     <width>861</width>
-     <height>251</height>
+     <x>440</x>
+     <y>370</y>
+     <width>421</width>
+     <height>471</height>
     </rect>
    </property>
    <property name="frameShape">

@@ -6,14 +6,19 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>455</height>
+    <width>394</width>
+    <height>454</height>
    </rect>
+  </property>
+  <property name="font">
+   <font>
+    <pointsize>16</pointsize>
+   </font>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QTableView" name="tableViewReportHead">
+  <widget class="QWidget" name="">
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -22,6 +27,25 @@
      <height>451</height>
     </rect>
    </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="spacing">
+     <number>3</number>
+    </property>
+    <item>
+     <widget class="QTableView" name="tableViewReportHead">
+      <attribute name="verticalHeaderVisible">
+       <bool>false</bool>
+      </attribute>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="pushButtonReport">
+      <property name="text">
+       <string>報表</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
  </widget>
  <resources/>

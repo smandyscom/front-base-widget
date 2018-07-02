@@ -9,6 +9,7 @@ FrontMaterialSelectionV2::FrontMaterialSelectionV2(QSqlDatabase db, QWidget *par
     //!
     QSqlTableModel* __model = new QSqlTableModel(this,db);
     __model->setTable(QVariant::fromValue(REPORT_HEAD).toString());
+    __model->setEditStrategy(QSqlTableModel::OnFieldChange);
     __model->select();
 
     ui->tableViewReportHead->setModel(__model);
@@ -25,7 +26,13 @@ FrontMaterialSelectionV2::FrontMaterialSelectionV2(QSqlDatabase db, QWidget *par
         ui->tableViewReportHead->setItemDelegateForRow(var.toInt(),
                                                        __delegate);
     }
+    ui->tableViewReportHead->setItemDelegateForRow(7,new DelegateDateSelector(VALUE));
 
+    //!
+    QSqlTableModel* __header = new QSqlTableModel(this,db);
+    __header->setTable(QVariant::fromValue(HEADER_REPORT_HEAD).toString());
+    __header->select();
+    HEADER_STRUCTURE::HeaderRender::renderViewHeader(__header,ui->tableViewReportHead);
 }
 
 FrontMaterialSelectionV2::~FrontMaterialSelectionV2()

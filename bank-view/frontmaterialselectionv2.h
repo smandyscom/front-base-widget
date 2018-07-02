@@ -11,6 +11,7 @@
 #include <utilities.h>
 #include <definitionslotblock.h>
 #include <delegatematerialselector.h>
+#include <delegatedataselector.h>
 
 namespace Ui {
 class FrontMaterialSelectionV2;
@@ -26,6 +27,7 @@ public:
         REPORT_HEAD,
         VIEW_MAT_TABLE_KEY,
         VIEW_MAT_TABLE_HOUSING,
+        HEADER_REPORT_HEAD
     };
     enum TableFields
     {
