@@ -60,7 +60,8 @@ SOURCES += \
     frontmaterialselection.cpp \
     delegatematerialselector.cpp \
     frontmaterialselectionv2.cpp \
-    delegatedataselector.cpp
+    delegatedataselector.cpp \
+    frontreportquerytable.cpp
 HEADERS += \
     modbussetupwidget.h \
     utilities.h \
@@ -104,7 +105,8 @@ HEADERS += \
     frontmaterialselection.h \
     delegatematerialselector.h \
     frontmaterialselectionv2.h \
-    delegatedataselector.h
+    delegatedataselector.h \
+    frontreportquerytable.h
 
 unix {
     target.path = /usr/lib
@@ -126,4 +128,5 @@ FORMS += \
     frontsafetypanel.ui \
     frontslot.ui \
     frontmaterialselection.ui \
-    frontmaterialselectionv2.ui
+    frontmaterialselectionv2.ui \
+    frontreportquerytable.ui

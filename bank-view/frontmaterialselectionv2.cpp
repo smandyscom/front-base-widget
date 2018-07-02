@@ -33,9 +33,22 @@ FrontMaterialSelectionV2::FrontMaterialSelectionV2(QSqlDatabase db, QWidget *par
     __header->setTable(QVariant::fromValue(HEADER_REPORT_HEAD).toString());
     __header->select();
     HEADER_STRUCTURE::HeaderRender::renderViewHeader(__header,ui->tableViewReportHead);
+
+    //!
+    connect(ui->pushButtonReport,SIGNAL(clicked(bool)),this,SLOT(onReportGenerating()));
+
+    //!
+    __dialog = new QDialog(this);
+    __report = new FrontReportQueryTable(db,__dialog);
+    __dialog->adjustSize();
 }
 
 FrontMaterialSelectionV2::~FrontMaterialSelectionV2()
 {
     delete ui;
+}
+
+void FrontMaterialSelectionV2::onReportGenerating()
+{
+    __dialog->exec();
 }
