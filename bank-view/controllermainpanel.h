@@ -191,7 +191,7 @@ public:
     static ControllerMainPanel* Instance();
 signals:
     void stateChanged(MainStates currentState);
-    void errorChanged(bool currentError);
+    void errorChanged(MODBUS_U_QUAD currentError);
 public slots:
     void onDataChanged(TransferTask task);
 protected slots:
@@ -216,7 +216,7 @@ protected:
     QMap<MODBUS_S_WORD,QSqlTableModel*> __errorCodeMap;
 
     MainStates __lastState;
-    bool __lastError;
+    MODBUS_U_QUAD __lastError;
 
     ControllerBankTransfer* __controllerTransfer;
 

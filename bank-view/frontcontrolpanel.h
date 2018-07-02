@@ -33,7 +33,7 @@ protected slots:
     void onTimerTimeout();
     void onCheckedChanged(bool toggled);
     void onStateChanged(ControllerMainPanel::MainStates currentState);
-    void onErrorChanged(bool currentError);
+    void onErrorChanged(quint64 currentError);
 
 private:
     Ui::frontControlPanel *ui;

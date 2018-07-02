@@ -108,11 +108,11 @@ void FrontControlPanel::onStateChanged(ControllerMainPanel::MainStates currentSt
     }
 }
 
-void FrontControlPanel::onErrorChanged(bool currentError)
+void FrontControlPanel::onErrorChanged(MODBUS_U_QUAD currentError)
 {
     //!enable buttons
-    ui->pushButtonErrorReset->setEnabled(currentError);
-    ui->pushButtonErrorIgnore->setEnabled(currentError &&
+    ui->pushButtonErrorReset->setEnabled(currentError!=0);
+    ui->pushButtonErrorIgnore->setEnabled(currentError!=0 &&
                                           (__controller->ErrorCategrory() == CommitBlock::SELECTION_CYLINDER));
     //! given message
     if(currentError)

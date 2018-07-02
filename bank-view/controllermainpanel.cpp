@@ -45,9 +45,9 @@ void ControllerMainPanel::onReply()
         //!
         //! Error detection
         //!
-        if((ErrorCode()!=0) != __lastError)
-            emit errorChanged((ErrorCode()!=0));
-        __lastError = (ErrorCode()!=0);
+        if(ErrorCode() != __lastError)
+            emit errorChanged(ErrorCode());
+        __lastError = ErrorCode();
         break;
     default:
         break;
@@ -79,23 +79,34 @@ QString ControllerMainPanel::ErrorDevice() const
 QString ControllerMainPanel::ErrorDescription() const
 {
     MODBUS_U_QUAD __code = ErrorCode();
-    MODBUS_U_LONG __lower = (reinterpret_cast<MODBUS_U_LONG*>(&__code))[0];
-    MODBUS_U_LONG __higher = (reinterpret_cast<MODBUS_U_LONG*>(&__code))[1];
+//    MODBUS_U_LONG __lower = (reinterpret_cast<MODBUS_U_LONG*>(&__code))[0];
+//    MODBUS_U_LONG __higher = (reinterpret_cast<MODBUS_U_LONG*>(&__code))[1];
 
-    QString __lowerDescription =
-            utilities::getSqlTableSelectedRecord(__errorCodeMap[ErrorCategrory()],
-            QVariant::fromValue(ID),
-            QVariant::fromValue(__lower))
-            .value(QVariant::fromValue(__key).toString()).toString();
-    QString __higherDescription =
-            utilities::getSqlTableSelectedRecord(__errorCodeMap[ErrorCategrory()],
-            QVariant::fromValue(ID),
-            QVariant::fromValue(__higher))
-            .value(QVariant::fromValue(__key).toString()).toString();
+//    QString __lowerDescription =
+//            utilities::getSqlTableSelectedRecord(__errorCodeMap[ErrorCategrory()],
+//            QVariant::fromValue(ID),
+//            QVariant::fromValue(__lower))
+//            .value(QVariant::fromValue(__key).toString()).toString();
+//    QString __higherDescription =
+//            utilities::getSqlTableSelectedRecord(__errorCodeMap[ErrorCategrory()],
+//            QVariant::fromValue(ID),
+//            QVariant::fromValue(__higher))
+//            .value(QVariant::fromValue(__key).toString()).toString();
+    if(__code==0)
+        return QString("");
 
-    return QString("%1\n%2")
-            .arg(__lowerDescription)
-            .arg(__higherDescription);
+    QSqlTableModel* __lookupTable = __errorCodeMap[ErrorCategrory()];
+    QString __description;
+    for(int i=0;i<__lookupTable->rowCount();i++)
+    {
+        QSqlRecord __record = __lookupTable->record(i);
+        MODBUS_U_QUAD __ref = __record.value(QVariant::fromValue(ID).toString()).toULongLong();
+        if((__ref & __code)!=0)
+            __description.append(QString("%1\n").arg(__record.value(QVariant::fromValue(__key).toString()).toString()));
+    }
+
+    return QString("%1")
+            .arg(__description);
 }
 
 void ControllerMainPanel::onDataChanged(TransferTask task)
