@@ -10,6 +10,9 @@
 #include <utilities.h>
 #include <definitionauxiliarykeys.h>
 
+//!
+//! \brief The DelegateMaterialSelector class
+//! Generic item selector refer to referenceModel
 class DelegateMaterialSelector : public QStyledItemDelegate
 {
     Q_OBJECT
@@ -26,14 +29,10 @@ public:
     void updateEditorGeometry(QWidget *editor,
         const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
 
-signals:
-
-public slots:
-
 protected:
     QSqlTableModel* __referenceModel;
     int __interestedColumn;
-    int __selectedIndex;
+    //int __selectedIndex;
 };
 
 #endif // DELEGATEMATERIALSELECTOR_H

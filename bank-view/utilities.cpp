@@ -75,4 +75,17 @@ void utilities::linkQComboBoxAndModel(QComboBox *comboBox, QSqlTableModel *model
     comboBox->setCurrentIndex(0);
 }
 
+void utilities::sqlTableModel2Csv(QSqlTableModel *source, QString filename, QString delimiter)
+{
+    QFile __file(filename);
+    if(__file.open(QFile::WriteOnly | QFile::Truncate))
+
+
+    for(int i=0;i<source->rowCount();i++)
+    {
+
+    }
+
+}
+
 QMap<QString,QSqlTableModel*> utilities::__cachedTables;

@@ -15,6 +15,7 @@
 
 #include <QSqlTableModel>
 #include <QSqlRecord>
+#include <QFile>
 
 typedef QPair<QVariant,QVariant> KeyValuePair;
 typedef QList<KeyValuePair> KeyValueCollection;
@@ -60,6 +61,9 @@ public:
     static void linkQComboBoxAndModel(QComboBox* comboBox,
                                       QSqlTableModel *model,
                                       QVariant showKey = QString("NAME"));
+
+    static void sqlTableModel2Csv(QSqlTableModel* source,QString filename,QString delimiter=",");
+
 protected:
     //!connection name/table model
     static QMap<QString,QSqlTableModel*> __cachedTables;

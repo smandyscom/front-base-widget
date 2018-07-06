@@ -14,6 +14,7 @@ QWidget* DelegateMaterialSelector::createEditor(QWidget *parent, const QStyleOpt
     if(index.column()==__interestedColumn)
     {
         QComboBox* __editor = new QComboBox(parent);
+        __referenceModel->select();//reselect
         utilities::linkQComboBoxAndModel(__editor,__referenceModel,QVariant::fromValue(HEADER_STRUCTURE::ID));
 
         return __editor;
@@ -31,8 +32,7 @@ void DelegateMaterialSelector::setEditorData(QWidget *editor, const QModelIndex 
 {
     //! ComboBox would retain last selected id
     QComboBox* __combo = qobject_cast<QComboBox*>(editor);
-    __combo->setCurrentIndex(__selectedIndex);
-    //__referenceModel->match()
+    __combo->setCurrentIndex(index.row());
 }
 
 void DelegateMaterialSelector::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
@@ -41,6 +41,7 @@ void DelegateMaterialSelector::setModelData(QWidget *editor, QAbstractItemModel 
 
     model->setData(index,
                    __referenceModel->record(__combo->currentIndex()).value(QVariant::fromValue(HEADER_STRUCTURE::ID).toString()));
+    //__selectedIndex = __combo->currentIndex();
 }
 
 void DelegateMaterialSelector::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const

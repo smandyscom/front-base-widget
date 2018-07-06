@@ -15,18 +15,22 @@ FrontMaterialSelectionV2::FrontMaterialSelectionV2(QSqlDatabase db, QWidget *par
     ui->tableViewReportHead->setModel(__model);
 
     QSqlTableModel* __referenceModel =  new QSqlTableModel(this,db);
-    __referenceModel->setTable(QVariant::fromValue(VIEW_MAT_TABLE_KEY).toString());
+    __referenceModel->setTable(QVariant::fromValue(VIEW_MAT_TABLE_HOUSING).toString());
     __referenceModel->select();
 
+    //!
+    QList<QueryKeys> __list = {
+        HOUSING1,
+        HOUSING2
+    };
 
-
-    foreach (QVariant var, utilities::listupEnumVariant<TableRows>()) {
+    foreach (QVariant var, __list) {
         DelegateMaterialSelector* __delegate =
                 new DelegateMaterialSelector(__referenceModel,VALUE,ui->tableViewReportHead);
         ui->tableViewReportHead->setItemDelegateForRow(var.toInt(),
                                                        __delegate);
     }
-    ui->tableViewReportHead->setItemDelegateForRow(7,new DelegateDateSelector(VALUE));
+    ui->tableViewReportHead->setItemDelegateForRow(REPORTDATE,new DelegateDateSelector(VALUE)); //date editor
 
     //!
     QSqlTableModel* __header = new QSqlTableModel(this,db);

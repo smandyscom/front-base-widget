@@ -106,7 +106,8 @@ HEADERS += \
     delegatematerialselector.h \
     frontmaterialselectionv2.h \
     delegatedataselector.h \
-    frontreportquerytable.h
+    frontreportquerytable.h \
+    definitionmaterialkeys.h
 
 unix {
     target.path = /usr/lib

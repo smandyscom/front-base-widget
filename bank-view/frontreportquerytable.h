@@ -6,6 +6,9 @@
 #include <QSqlDatabase>
 
 #include <definitionauxiliarykeys.h>
+#include <delegatematerialselector.h>
+#include <definitionmaterialkeys.h>
+using namespace MaterialKeys;
 
 namespace Ui {
 class FrontReportQueryTable;
@@ -16,16 +19,6 @@ class FrontReportQueryTable : public QWidget
     Q_OBJECT
 
 public:
-    enum TableName
-    {
-        QUERY_HEAD,
-        VIEW_REPORT_OVERVIEW,
-        //!
-        HEADER_REPORT_OVERVIEW,
-        HEADER_REPORT_HEAD,
-    };
-    Q_ENUM(TableName)
-
     explicit FrontReportQueryTable(QSqlDatabase db,QWidget *parent = 0);
     ~FrontReportQueryTable();
 
@@ -42,6 +35,8 @@ protected:
     //! \brief __reportTable
     //! Read-only
     QSqlTableModel* __reportTable;
+
+    QMap<TableNames,QSqlTableModel*> __referenceTables;
 };
 
 #endif // FRONTREPORTQUERYTABLE_H
