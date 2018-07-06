@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QSqlTableModel>
 #include <QSqlDatabase>
+#include <QDateTime>
 
 #include <definitionauxiliarykeys.h>
 #include <delegatematerialselector.h>

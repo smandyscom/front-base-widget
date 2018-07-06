@@ -79,13 +79,35 @@ void utilities::sqlTableModel2Csv(QSqlTableModel *source, QString filename, QStr
 {
     QFile __file(filename);
     if(__file.open(QFile::WriteOnly | QFile::Truncate))
-
-
-    for(int i=0;i<source->rowCount();i++)
     {
+        QTextStream data(&__file);
 
+        data.setCodec(QTextCodec::codecForName("UTF-8"));
+        //! Load header
+        for(int i=0;i<source->columnCount();i++)
+        {
+            QString __header = source->headerData(i,Qt::Horizontal).toString();
+           data << QString("%1%2")
+                   .arg(__header)
+                   .arg(delimiter);
+        }
+        data << "\n";
+        //! Load datas
+        for(int i=0;i<source->rowCount();i++)
+        {
+            data << QString("%1\n").arg(sqlRecord2DelimitedString(source->record(i)));
+        }
+
+        __file.close();
     }
+}
 
+QString utilities::sqlRecord2DelimitedString(QSqlRecord record, QString delimiter)
+{
+    QString __output;
+    for(int i=0;i<record.count();i++)
+        __output.append(QString("%1%2").arg(record.value(i).toString()).arg(delimiter));
+    return __output;
 }
 
 QMap<QString,QSqlTableModel*> utilities::__cachedTables;

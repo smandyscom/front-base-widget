@@ -16,7 +16,8 @@
 #include <QSqlTableModel>
 #include <QSqlRecord>
 #include <QFile>
-
+#include <QTextStream>
+#include <QTextCodec>
 typedef QPair<QVariant,QVariant> KeyValuePair;
 typedef QList<KeyValuePair> KeyValueCollection;
 
@@ -63,6 +64,7 @@ public:
                                       QVariant showKey = QString("NAME"));
 
     static void sqlTableModel2Csv(QSqlTableModel* source,QString filename,QString delimiter=",");
+    static QString sqlRecord2DelimitedString(QSqlRecord record,QString delimiter=",");
 
 protected:
     //!connection name/table model

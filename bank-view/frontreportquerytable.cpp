@@ -90,7 +90,8 @@ void FrontReportQueryTable::onQueryPerformed()
 
 void FrontReportQueryTable::onExportPerformed()
 {
-
+    utilities::sqlTableModel2Csv(__reportPollTable,
+                                 QString("%1.csv").arg(QDateTime::currentDateTime().toString("yyyyMMddhhmmss")));
 }
 
 void FrontReportQueryTable::onAddPerformed()
