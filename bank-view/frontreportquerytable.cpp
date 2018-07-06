@@ -13,9 +13,13 @@ FrontReportQueryTable::FrontReportQueryTable(QSqlDatabase db,QWidget *parent) :
     __queryTable->setEditStrategy(QSqlTableModel::OnManualSubmit);
     __queryTable->select();
     //!
-    __reportTable = new QSqlTableModel(this,__db);
-    __reportTable->setTable(QVariant::fromValue(VIEW_REPORT_OVERVIEW).toString());
-    __reportTable->select();
+    __reportSingleTable = new QSqlTableModel(this,__db);
+    __reportSingleTable->setTable(QVariant::fromValue(VIEW_REPORT_OVERVIEW).toString());
+    __reportSingleTable->select();
+    //!
+    __reportPollTable = new QSqlTableModel(this,__db);
+    __reportPollTable->setTable(QVariant::fromValue(REPORT_POLL).toString());
+    __reportPollTable->select();
     //!
     QList<TableNames> __names = {VIEW_MAT_TABLE_HOUSING,
                                 VIEW_DISTINCT_WORKING_NUMBER,
@@ -33,20 +37,26 @@ FrontReportQueryTable::FrontReportQueryTable(QSqlDatabase db,QWidget *parent) :
 
     //!
     QSqlTableModel* __header = new QSqlTableModel(this,__db);
+    //!
     __header->setTable(QVariant::fromValue(HEADER_REPORT_OVERVIEW).toString());
     __header->select();
-    ui->tableViewReport->setModel(__reportTable);
+    ui->tableViewReport->setModel(__reportSingleTable);
     HEADER_STRUCTURE::HeaderRender::renderViewHeader(__header,ui->tableViewReport);
-
-
+    //!
     __header->setTable(QVariant::fromValue(HEADER_REPORT_HEAD).toString());
     __header->select();
     ui->tableViewQuery->setModel(__queryTable);
     HEADER_STRUCTURE::HeaderRender::renderViewHeader(__header,ui->tableViewQuery);
     //!
+    __header->setTable(QVariant::fromValue(HEADER_REPORT_OVERVIEW).toString());
+    __header->select();
+    ui->tableViewReportPoll->setModel(__reportPollTable);
+    HEADER_STRUCTURE::HeaderRender::renderViewHeader(__header,ui->tableViewReportPoll);
+    //!
     connect(ui->pushButtonQuery,SIGNAL(clicked(bool)),this,SLOT(onQueryPerformed()));
     connect(ui->pushButtonExport,SIGNAL(clicked(bool)),this,SLOT(onExportPerformed()));
-
+    connect(ui->pushButtonAdd,SIGNAL(clicked(bool)),this,SLOT(onAddPerformed()));
+    connect(ui->pushButtonClear,SIGNAL(clicked(bool)),this,SLOT(onClearPerformed()));
     //!
     ui->tableViewQuery->setItemDelegateForRow(HOUSING1,
                                               new DelegateMaterialSelector(__referenceTables[VIEW_MAT_TABLE_HOUSING],VALUE, ui->tableViewQuery));
@@ -75,10 +85,23 @@ FrontReportQueryTable::~FrontReportQueryTable()
 void FrontReportQueryTable::onQueryPerformed()
 {
     __queryTable->submitAll();
-    __reportTable->select(); //reselect-renew
+    __reportSingleTable->select(); //reselect-renew
 }
 
 void FrontReportQueryTable::onExportPerformed()
 {
 
+}
+
+void FrontReportQueryTable::onAddPerformed()
+{
+    QSqlRecord __record = __reportSingleTable->record(0);
+    __reportPollTable->insertRecord(-1,__record); //insert to last
+    __reportPollTable->select();
+
+}
+
+void FrontReportQueryTable::onClearPerformed()
+{
+    __reportPollTable->clear();
 }

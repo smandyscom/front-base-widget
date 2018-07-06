@@ -26,6 +26,8 @@ private:
     Ui::FrontReportQueryTable *ui;
 protected slots:
     void onQueryPerformed();
+    void onAddPerformed();
+    void onClearPerformed();
     void onExportPerformed();
 protected:
     QSqlDatabase __db;
@@ -34,7 +36,11 @@ protected:
     //!
     //! \brief __reportTable
     //! Read-only
-    QSqlTableModel* __reportTable;
+    QSqlTableModel* __reportSingleTable;
+    //!
+    //! \brief __reportPollTable
+    //!
+    QSqlTableModel* __reportPollTable;
 
     QMap<TableNames,QSqlTableModel*> __referenceTables;
 };
