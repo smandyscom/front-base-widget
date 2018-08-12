@@ -40,7 +40,9 @@ public :
     uint getAddress() const{return address;}
 
 protected :
-    uint address;
+	//ff				f		f					ffff
+	//(client index)	(type)	(bit access index)	(register address)
+    uint address; //still 32bit addressing mode
 };
 
 inline bool operator==(const AbstractAddress& lhp,const AbstractAddress& rhp)

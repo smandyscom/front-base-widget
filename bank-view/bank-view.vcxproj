@@ -663,6 +663,7 @@
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
     </CustomBuild>
+    <ClInclude Include="adsRequest.h" />
     <ClInclude Include="C:\TwinCAT\AdsApi\TcAdsDll\Include\TcAdsAPI.h" />
     <ClInclude Include="C:\TwinCAT\AdsApi\TcAdsDll\Include\TcAdsDef.h" />
     <ClInclude Include="abstractauthreceiver.h" />

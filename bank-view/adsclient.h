@@ -10,6 +10,8 @@
 #include <TcAdsAPI.h>
 //#pragma comment(lib,"TcAdsDll.lib")
 
+#include <adsRequest.h>
+
 class AdsClient : public QObject
 {
 	Q_OBJECT
@@ -17,6 +19,7 @@ class AdsClient : public QObject
 public:
 	AdsClient(QObject *parent);
 	~AdsClient();
+signals:
 
 private:
 	//mind how much size can be aquired at once in ADS protocal
@@ -26,9 +29,12 @@ protected slots:
 	//void onDriverStateChanged(QModbusDevice::State state);
 	//void onDriverErrorOccured(QModbusDevice::Error error);
 protected:
-	QQueue<void*> requestQueue; //TODO Ads request
+	QQueue<AdsRequest> requestQueue; //TODO Ads request
 	QTimer* __timer; //driving consumer
 	AmsAddr __address;
+
+	bool _isProcessing;
+	void executeRequest();
 };
 
 #endif // ADSCLIENT_H
