@@ -107,7 +107,9 @@ HEADERS += \
     frontmaterialselectionv2.h \
     delegatedataselector.h \
     frontreportquerytable.h \
-    definitionmaterialkeys.h
+    definitionmaterialkeys.h \
+    C://TwinCAT/AdsApi/TcAdsDll/Include/TcAdsAPI.h \
+    C://TwinCAT/AdsApi/TcAdsDll/Include/TcAdsDef.h
 
 unix {
     target.path = /usr/lib
@@ -131,3 +133,6 @@ FORMS += \
     frontmaterialselection.ui \
     frontmaterialselectionv2.ui \
     frontreportquerytable.ui
+
+INCLUDEPATH += C://TwinCAT/AdsApi/TcAdsDll/Include/
+LIBS += -L "C://TwinCAT/AdsApi/TcAdsDll/Lib/" -lTcAdsDll
