@@ -9,6 +9,7 @@
 
 #include <QDialog>
 #include <QTableView>
+#include <QFormLayout>
 
 namespace Ui {
 class FrontSlot;

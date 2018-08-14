@@ -14,18 +14,25 @@ FrontSlot::FrontSlot(ControllerMaterialTransfer *controller, QWidget *parent) :
     //! Prepare dialog
 
         __dialog = new QDialog(this);
-//        __dialog->setGeometry(__dialog->geometry().x(),
-//                              __dialog->geometry().y(),
-//                              600,
-//                              480);
+        __dialog->setGeometry(__dialog->geometry().x(),
+                              __dialog->geometry().y() + 120,
+                              1024,
+                              240);
         __dialog->setSizePolicy(QSizePolicy::Expanding,
                                 QSizePolicy::Expanding);
+        auto __layout = new QFormLayout(__dialog);
+        __layout->setFieldGrowthPolicy(QFormLayout::AllNonFixedFieldsGrow);
+        __dialog->setLayout(__layout);
 
         __view = new QTableView(__dialog);
         __view->setSizePolicy(QSizePolicy::Expanding,
                               QSizePolicy::Expanding);
         __view->verticalHeader()->setVisible(false);
+        __view->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
         __view->setModel(__controller->Table());
+        emit
+
+        __layout->addWidget(__view);
         //! Fetch headers
         QSqlTableModel* __reference = new QSqlTableModel(this,__controller->DataBase());
         __reference->setTable(QString("MAT_HEADER_SLOT%1").arg(__controller->Index()));
