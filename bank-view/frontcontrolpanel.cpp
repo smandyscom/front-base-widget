@@ -62,8 +62,8 @@ void FrontControlPanel::onTimerTimeout()
 {
     //!Update
     utilities::colorChangeOver(ui->pushButtonPause,__controller->IsPause(),Qt::red,Qt::green);
-    ui->pushButtonInitialize->setEnabled(__controller->IsNotInitializing());
-    ui->pushButtonClear->setEnabled(!__controller->IsClear());
+    ui->pushButtonInitialize->setEnabled(__controller->InitializingState() != ControllerMainPanel::INITIALING);
+    ui->pushButtonClear->setEnabled(!__controller->IsClear() && __controller->InitializingState() == ControllerMainPanel::INITIALIZED);
     //!
     foreach (QWidget* var, __manualInterlock) {
         var->setEnabled(__controller->CurrentState() != ControllerMainPanel::STATE_MANUAL);
@@ -80,10 +80,21 @@ void FrontControlPanel::onTimerTimeout()
     //! NGCount
     //! CYCTIME
     ui->lcdNumberInletCount->display(__controller->Data(ControllerMainPanel::MON_DATA_0).toInt());
-    ui->lcdNumberOutletCount->display(__controller->Data(ControllerMainPanel::MON_DATA_1).toInt());
-
     ui->lcdNumberCycleTime->display(__controller->Data(ControllerMainPanel::MON_DATA_4).toReal());
-
+    //!
+    switch (__controller->InitializingState()) {
+        case ControllerMainPanel::WAIT_INITIAL:
+            ui->textBrowserInitializing->setText(QString("等待復歸"));
+            break;
+        case ControllerMainPanel::INITIALING:
+            ui->textBrowserInitializing->setText(QString("復歸中..."));
+            break;
+        case ControllerMainPanel::INITIALIZED:
+            ui->textBrowserInitializing->setText(QString("復歸完成..."));
+            break;
+        default:
+            break;
+    }
 }
 
 void FrontControlPanel::onCheckedChanged(bool toggled)

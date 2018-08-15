@@ -62,6 +62,12 @@ public:
         STATE_MANUAL,
     };
     Q_ENUM(MainStates)
+    enum InitializingStates
+    {
+        WAIT_INITIAL = 0,
+        INITIALING,
+        INITIALIZED = 0x100
+    };
 
     //! Send one shot command
     void Pause()
@@ -99,17 +105,23 @@ public:
         __channel->Access<bool>(ModbusDriverAddress(MANUAL_TOGGLE_INIT),true);
     }
     //!
-    //! \brief IsInitialize
+    //! \brief InitializingState
     //! \return
-    //! is in auto run routine
-    bool IsNotInitializing() const
+    //! Reflect current initializing state
+    InitializingStates InitializingState() const
     {
         //! = Controller state on H100
         ModbusDriverAddress __address(UnitOperationBlock::OFFSET_MONITOR_STATE);
         __address.setChannel(3);
-        return __channel->Access<MODBUS_U_WORD>(__address) == 0x100 ||
-                __channel->Access<MODBUS_S_WORD>(__address) == 0;
+        MODBUS_U_WORD state = __channel->Access<MODBUS_U_WORD>(__address);
+        if(state == 0)
+            return WAIT_INITIAL;
+        else if(state < INITIALIZED)
+            return INITIALING;
+        else
+            return INITIALIZED;
     }
+
     //!
     //! \brief ErrorReset
     //!
