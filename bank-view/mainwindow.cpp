@@ -24,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //
     FrontMessageShow* fms = new FrontMessageShow(ui->tabHistory);
-
+    MessageRecorder::Instance();
 
     __isClosing = false;
     //! Initialize Modbus Serialized Client

@@ -64,7 +64,8 @@ SOURCES += \
     frontreportquerytable.cpp \
     frontmessageshow.cpp \
     messagereceiver.cpp \
-    messagehandler.cpp
+    messagehandler.cpp \
+    messagerecorder.cpp
 HEADERS += \
     modbussetupwidget.h \
     utilities.h \
@@ -113,7 +114,8 @@ HEADERS += \
     definitionmaterialkeys.h \
     frontmessageshow.h \
     messagereceiver.h \
-    messagehandler.h
+    messagehandler.h \
+    messagerecorder.h
 
 unix {
     target.path = /usr/lib

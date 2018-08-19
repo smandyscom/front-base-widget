@@ -22,8 +22,6 @@ public:
     explicit FrontMessageShow(QWidget *parent = 0);
     ~FrontMessageShow();
 
-public slots:
-    //void onMessageCame();
 protected slots:
     void onMessageReceived(QString arg);
 private:

@@ -12,8 +12,6 @@ FrontMessageShow::FrontMessageShow(QWidget *parent) :
 {
     ui->setupUi(this);
     __receiver = new MessageReceiver(this);
-
-    MessageHandler::Instance()->registerReceiver(__receiver);
     connect(__receiver,SIGNAL(messageReceivedFormatted(QString)),this,SLOT(onMessageReceived(QString)));
 }
 

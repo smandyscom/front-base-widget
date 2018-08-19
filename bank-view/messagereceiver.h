@@ -8,6 +8,7 @@ class MessageReceiver : public QObject
     Q_OBJECT
 public:
     explicit MessageReceiver(QObject *parent = nullptr);
+    ~MessageReceiver();
 
 signals:
     void messageReceivedFormatted(QString arg);

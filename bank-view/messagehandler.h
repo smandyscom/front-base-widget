@@ -34,6 +34,7 @@ public:
 
 
     static void registerReceiver(MessageReceiver* arg);
+    static void unregisterReceiver(MessageReceiver* arg);
 signals:
 
 public slots:

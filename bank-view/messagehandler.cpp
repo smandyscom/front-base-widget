@@ -11,6 +11,7 @@ MessageHandler::MessageHandler(QObject *parent) : QObject(parent)
 //! Dispatch to all receiver
 void MessageHandler::messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &str)
 {
+    //IF define RELEASE , do not output to Debugger/Console
     __default(type,context,str);
 
     QString __formatted = QString("%1[%2]%3")
@@ -27,6 +28,14 @@ void MessageHandler::messageHandler(QtMsgType type, const QMessageLogContext &co
 void MessageHandler::registerReceiver(MessageReceiver *arg)
 {
     __list.append(arg);
+//    connect(arg,SIGNAL(destroyed(QObject*)),[=](){
+//        //remove from list
+//        __list.removeOne(arg);
+//    });
+}
+void MessageHandler::unregisterReceiver(MessageReceiver *arg)
+{
+    __list.removeOne(arg);
 }
 
 QList<MessageReceiver*> MessageHandler::__list;

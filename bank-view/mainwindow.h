@@ -19,6 +19,7 @@
 #include <controllerauth.h>
 #include <abstractauthreceiver.h>
 #include <messagehandler.h>
+#include <messagerecorder.h>
 
 #include <QMap>
 
