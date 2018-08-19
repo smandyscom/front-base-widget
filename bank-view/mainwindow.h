@@ -13,10 +13,12 @@
 #include <frontmanaualmode.h>
 #include <frontunitpanel.h>
 #include <frontcontrolpanel.h>
+#include <frontmessageshow.h>
 
 #include <controllermaterialtransfer.h>
 #include <controllerauth.h>
 #include <abstractauthreceiver.h>
+#include <messagehandler.h>
 
 #include <QMap>
 

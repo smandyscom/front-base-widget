@@ -22,6 +22,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    //
+    FrontMessageShow* fms = new FrontMessageShow(ui->tabHistory);
 
 
     __isClosing = false;

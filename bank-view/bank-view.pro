@@ -11,7 +11,7 @@ QTPLUGIN += qtvirtualkeyboardplugin
 
 TARGET = bank-view
 TEMPLATE = app
-
+#win32:CONFIG += console
 #DEFINES += BANKVIEW_LIBRARY
 
 # The following define makes your compiler emit warnings if you use
@@ -61,7 +61,10 @@ SOURCES += \
     delegatematerialselector.cpp \
     frontmaterialselectionv2.cpp \
     delegatedataselector.cpp \
-    frontreportquerytable.cpp
+    frontreportquerytable.cpp \
+    frontmessageshow.cpp \
+    messagereceiver.cpp \
+    messagehandler.cpp
 HEADERS += \
     modbussetupwidget.h \
     utilities.h \
@@ -107,7 +110,10 @@ HEADERS += \
     frontmaterialselectionv2.h \
     delegatedataselector.h \
     frontreportquerytable.h \
-    definitionmaterialkeys.h
+    definitionmaterialkeys.h \
+    frontmessageshow.h \
+    messagereceiver.h \
+    messagehandler.h
 
 unix {
     target.path = /usr/lib
@@ -130,4 +136,5 @@ FORMS += \
     frontslot.ui \
     frontmaterialselection.ui \
     frontmaterialselectionv2.ui \
-    frontreportquerytable.ui
+    frontreportquerytable.ui \
+    frontmessageshow.ui
