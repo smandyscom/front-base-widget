@@ -3,14 +3,14 @@
 class AdsRequest
 {
 public:
-	enum AdsAccess
+        enum AdsAccess : int
 	{
 		READ,
 		WRITE
 	};
 	
 
-	AdsRequest();
+        AdsRequest(){}
 	AdsRequest(AdsAccess access,ulong group,ulong offset,ulong length,void* cache) :
 		_access(access),
 		_offset(offset),
@@ -18,7 +18,7 @@ public:
 		_group(group),
 		_cache(cache)
 	{}
-	~AdsRequest();
+        //~AdsRequest();
 
 	//Following the Ads API specicication
 	AdsAccess Access() { return _access; }
@@ -34,11 +34,3 @@ private:
 	ulong _length;
 	void* _cache; //where to store acquired values
 };
-
-AdsRequest::AdsRequest()
-{
-}
-
-AdsRequest::~AdsRequest()
-{
-}
