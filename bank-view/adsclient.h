@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QtConcurrent>
 #include <QTimer>
+#include <interfaceclient.h>
 
 #define BOOL bool
 #include <TcAdsDef.h>
@@ -12,7 +13,7 @@
 
 #include <adsRequest.h>
 
-class AdsClient : public QObject
+class AdsClient : public InterfaceClient
 {
 	Q_OBJECT
 

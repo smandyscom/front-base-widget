@@ -62,7 +62,9 @@ SOURCES += \
     frontmaterialselectionv2.cpp \
     delegatedataselector.cpp \
     frontreportquerytable.cpp \
-    adsclient.cpp
+    adsclient.cpp \
+    interfacechannel.cpp \
+    interfaceclient.cpp
 HEADERS += \
     modbussetupwidget.h \
     utilities.h \
@@ -111,7 +113,11 @@ HEADERS += \
     definitionmaterialkeys.h \
     C://TwinCAT/AdsApi/TcAdsDll/Include/TcAdsAPI.h \
     C://TwinCAT/AdsApi/TcAdsDll/Include/TcAdsDef.h \
-    adsclient.h
+    adsclient.h \
+    interfacechannel.h \
+    adsRequest.h \
+    interfacerequest.h \
+    interfaceclient.h
 
 unix {
     target.path = /usr/lib
