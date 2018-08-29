@@ -25,6 +25,7 @@ void InterfaceClient::operationDone()
     //! write into cache
     ADDRESS_MODE __address = ack.Address();
     memcpy(&__cache[ADDRESS_REGISTER(__address)],ack.Data().data(),utilities::sizeOf(ack.Data()));
+    emit requestAcknowledged(ack);
 }
 
 void InterfaceClient::onPopRequest()

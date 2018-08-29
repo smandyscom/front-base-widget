@@ -32,7 +32,7 @@ public:
     {}
 
     InterfaceAccess Access(){return __access;}
-    QVariant Data()const{ return __data;}
+    QVariant& Data() { return __data;}
     //!
     //! \brief Address
     //! \return

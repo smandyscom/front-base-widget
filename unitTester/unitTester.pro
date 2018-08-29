@@ -28,13 +28,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         tst_unittestertest.cpp \ 
-    ../bank-view/adsclient.cpp
+    ../bank-view/adsclient.cpp \
+    ../bank-view/interfaceclient.cpp \
+    ../bank-view/utilities.cpp
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
     ../bank-view/adsclient.h \
-    ../bank-view/adsRequest.h
+    ../bank-view/interfaceclient.h \
+    ../bank-view/interfacerequest.h \
+    ../bank-view/utilities.h
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../../TwinCAT/AdsApi/TcAdsDll/Lib/ -lTcAdsDll
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../../TwinCAT/AdsApi/TcAdsDll/Lib/ -lTcAdsDll

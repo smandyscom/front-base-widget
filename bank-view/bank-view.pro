@@ -115,7 +115,6 @@ HEADERS += \
     C://TwinCAT/AdsApi/TcAdsDll/Include/TcAdsDef.h \
     adsclient.h \
     interfacechannel.h \
-    adsRequest.h \
     interfacerequest.h \
     interfaceclient.h
 
