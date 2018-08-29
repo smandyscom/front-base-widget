@@ -12,7 +12,7 @@ MessageHandler::MessageHandler(QObject *parent) : QObject(parent)
 void MessageHandler::messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &str)
 {
     //IF define RELEASE , do not output to Debugger/Console
-    __default(type,context,str);
+    //__default(type,context,str);
 
     QString __formatted = QString("%1[%2]%3")
             .arg(QDateTime::currentDateTime().toString(timeformat))
