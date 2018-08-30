@@ -28,7 +28,7 @@ public:
     //! \param address
     //! \param dataFrom
     //! Register and trigger the routine access
-    void RoutineAccess(ADDRESS_MODE address,const QVariant dataFrom,int interval);
+    void RoutineAccess(ADDRESS_MODE address,const QVariant dataFrom,int interval = 50);
 
     //! Accessing interface
     //! Raising asynchrous updating operation to remote
@@ -70,24 +70,6 @@ public:
         __commit(address,QVariant::fromValue(value));
     }
 
-//    //!
-//    //! \brief EventSocket
-//    //! \return
-//    //! Generate a event entity for stateMachines
-//    //! since stateMachine would consume a entity after processed
-//    //! each stateMachine need to connect to this socket
-//    UpdateEvent* EventSocket()
-//    {
-//        return new UpdateEvent(__cachedReplyAddress,__cachedReplyValue);
-//    }
-//    ADDRESS_MODE CachedReplyAddress() const
-//    {
-//        return __cachedReplyAddress;
-//    }
-//    QVariant CachedReplyValue() const
-//    {
-//        return __cachedReplyValue;
-//    }
 protected slots:
     void onAcknowledged(InterfaceRequest ack);
 protected:
@@ -106,21 +88,7 @@ protected:
     //! \param out
     //! Read value from internal buffer
     void __update(ADDRESS_MODE address,QVariant& out);
-//    //!
-//    //! \brief __resolveAddress
-//    //! \return
-//    //! Turns ADDRESS_MODE into handle
-//    quint16 *__resolveCache(ADDRESS_MODE address);
-//    //!
-//    //! \brief __resolveBitAccessor
-//    //! \param address
-//    //! \return
-//    //! Return bit mask
-//    uint __resolveBitAccessor(ADDRESS_MODE address);
-//    int __resolveClient(ADDRESS_MODE address);
-//    int __resolveRegister(ADDRESS_MODE address);
 
-    //QList<quint16*> __cache;
     QList<InterfaceClient*> __clients;
     QList<QStateMachine*> __stateMachines;
     QMap<ADDRESS_MODE,int> __routines;

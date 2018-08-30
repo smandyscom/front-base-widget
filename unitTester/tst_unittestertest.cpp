@@ -43,6 +43,6 @@ void UnitTesterTest::adsClientTest2()
     QVERIFY2(true, "Failure");
 }
 
-QTEST_APPLESS_MAIN(UnitTesterTest)
+//QTEST_APPLESS_MAIN(UnitTesterTest)
 
 #include "tst_unittestertest.moc"

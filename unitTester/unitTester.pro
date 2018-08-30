@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += widgets sql testlib concurrent
+QT       += widgets sql testlib concurrent serialbus
 
 QT       -= gui
 
@@ -30,7 +30,10 @@ SOURCES += \
         tst_unittestertest.cpp \ 
     ../bank-view/adsclient.cpp \
     ../bank-view/interfaceclient.cpp \
-    ../bank-view/utilities.cpp
+    ../bank-view/utilities.cpp \
+    tst_unittestinterfacechannel.cpp \
+    ../bank-view/interfacechannel.cpp \
+    ../bank-view/definitionsbaselayer.cpp
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
@@ -38,7 +41,9 @@ HEADERS += \
     ../bank-view/adsclient.h \
     ../bank-view/interfaceclient.h \
     ../bank-view/interfacerequest.h \
-    ../bank-view/utilities.h
+    ../bank-view/utilities.h \
+    ../bank-view/interfacechannel.h \
+    ../bank-view/definitionsbaselayer.h
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../../TwinCAT/AdsApi/TcAdsDll/Lib/ -lTcAdsDll
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../../TwinCAT/AdsApi/TcAdsDll/Lib/ -lTcAdsDll

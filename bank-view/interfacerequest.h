@@ -5,7 +5,7 @@
 
 #define ADDRESS_MODE uint
 #define ADDRESS_CLIENT_ID(x) reinterpret_cast<quint8*>(&x)[3]
-#define ADDRESS_BIT_ACCESSOR(x) reinterpret_cast<quint8*>(&x)[2]
+#define ADDRESS_BIT_ACCESSOR(x) 0x0001 << reinterpret_cast<quint8*>(&x)[2]
 #define ADDRESS_REGISTER(x) reinterpret_cast<quint16*>(&x)[0]
 //32bits[4 bytes] , client id[1 byte],bit accessor(16bits)[1 byte] , register address (16bits for each register)[2 byte]
 
