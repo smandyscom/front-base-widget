@@ -54,7 +54,7 @@ void UnitTesterTest2::adsClientTest2()
 void UnitTesterTest2::adsClientTest3()
 {
     //!Routine
-    RoutineAccess(0x000F0000,QVariant::fromValue(true));
+    RegisterRoutines(0x000F0000,QVariant::fromValue(true));
     onAcknowledged(InterfaceRequest(InterfaceRequest::READ,0x000F0000,QVariant::fromValue(true)));
 
     QVERIFY2(true, "Failure");

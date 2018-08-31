@@ -15,11 +15,11 @@ InterfaceChannel::InterfaceChannel(QList<InterfaceClient*> clients,QObject *pare
 //! \param address
 //! \param dataForm
 //! Turns
-void InterfaceChannel::beginAccess(ADDRESS_MODE address, QVariant dataForm)
+void InterfaceChannel::__remoteUpdate(ADDRESS_MODE address, QVariant dataForm)
 {
     //! For bool type (bit access) , update whole word
     if(dataForm.type() == QVariant::Bool)
-        dataFrom = QVariant::fromValue(static_cast<quint16>(0));
+        dataForm = QVariant::fromValue(static_cast<quint16>(0));
 
     //! read via interface , put specific type of package into
     __clients[ADDRESS_CLIENT_ID(address)]->pushRequest(InterfaceRequest(InterfaceRequest::READ,
@@ -102,17 +102,17 @@ void InterfaceChannel::onAcknowledged(InterfaceRequest ack)
     {
         //! once this address had been registered as routine , query interval
         QTimer::singleShot(__routines[ack.Address()],this,[ack,this,__data](){
-            this->beginAccess(ack.Address(),__data);
+            this->__remoteUpdate(ack.Address(),__data);
         });
     }
 }
 
-void InterfaceChannel::RoutineAccess(uint address, const QVariant dataFrom, int interval)
+void InterfaceChannel::RegisterRoutines(uint address, const QVariant dataFrom, int interval)
 {
     //! registration
     __routines[address] = interval;
 
     //! first shot
-    beginAccess(address,dataFrom);
+    __remoteUpdate(address,dataFrom);
 }
 

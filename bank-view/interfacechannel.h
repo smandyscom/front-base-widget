@@ -17,6 +17,7 @@ using namespace BaseLayer;
 //!
 //! \brief The InterfaceChannel class
 //! The interface defined for Controller/Fronts
+//! Bool type would be resolved here
 class InterfaceChannel : public QObject
 {
     Q_OBJECT
@@ -28,18 +29,9 @@ public:
     //! \param address
     //! \param dataFrom
     //! Register and trigger the routine access
-    void RoutineAccess(ADDRESS_MODE address,const QVariant dataFrom,int interval = 50);
+    void RegisterRoutines(ADDRESS_MODE address,const QVariant dataFrom,int interval = 50);
 
-    //! Accessing interface
-    //! Raising asynchrous updating operation to remote
-    void beginAccess(ADDRESS_MODE address, QVariant dataForm); //
 
-    template<typename T>
-    void beginAccess(ADDRESS_MODE address)
-    {
-        QVariant form = QVariant::fromValue(T());
-        beginAccess(address,form);
-    }
 
     //!
     //!
@@ -73,9 +65,6 @@ public:
 protected slots:
     void onAcknowledged(InterfaceRequest ack);
 protected:
-    ADDRESS_MODE __cachedReplyAddress;
-    QVariant __cachedReplyValue;
-
     //!
     //! \brief __commit
     //! \param address
@@ -88,10 +77,16 @@ protected:
     //! \param out
     //! Read value from internal buffer
     void __update(ADDRESS_MODE address,QVariant& out);
+    //! Accessing interface
+    //! Raising asynchrous updating operation to remote
+    void __remoteUpdate(ADDRESS_MODE address, QVariant dataForm);
 
     QList<InterfaceClient*> __clients;
     QList<QStateMachine*> __stateMachines;
     QMap<ADDRESS_MODE,int> __routines;
+
+
+    //!Singleton
 };
 
 #endif // INTERFACECHANNEL_H

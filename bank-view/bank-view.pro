@@ -64,7 +64,8 @@ SOURCES += \
     frontreportquerytable.cpp \
     adsclient.cpp \
     interfacechannel.cpp \
-    interfaceclient.cpp
+    interfaceclient.cpp \
+    controllerbase.cpp
 HEADERS += \
     modbussetupwidget.h \
     utilities.h \
@@ -116,7 +117,8 @@ HEADERS += \
     adsclient.h \
     interfacechannel.h \
     interfacerequest.h \
-    interfaceclient.h
+    interfaceclient.h \
+    controllerbase.h
 
 unix {
     target.path = /usr/lib

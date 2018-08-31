@@ -20,92 +20,92 @@ namespace BaseLayer {
 
 #define MODBUS_ADDRESS quint16
 
-//!
-//! \brief The AbstractAddress class
-//! 32Bits addressing mode
-class AbstractAddress
-{
-public :
-    AbstractAddress(uint address=0):address(address){}
-    //!
-    //! \brief AbstractAddress
-    //! \param source
-    //! copy constructor
-    AbstractAddress(const AbstractAddress& source):address(source.address){}
-
-    virtual uint toBitwiseMask() const
-    {
-        return 0;
-    }
-    uint getAddress() const{return address;}
-
-protected :
-	//ff				f		f					ffff
-	//(client index)	(type)	(bit access index)	(register address)
-    uint address; //still 32bit addressing mode
-};
-
-inline bool operator==(const AbstractAddress& lhp,const AbstractAddress& rhp)
-{
-    return lhp.getAddress() == rhp.getAddress();
-}
-inline bool operator !=(const AbstractAddress& lhp,const AbstractAddress& rhp)
-{
-    return !(lhp==rhp);
-}
-inline bool operator <(const AbstractAddress& lhp,const AbstractAddress& rhp)
-{
-    return lhp.getAddress()<rhp.getAddress();
-}
+#define ADDRESS_MODE uint
+#define ADDRESS_CLIENT_ID(x) reinterpret_cast<quint8*>(&x)[3]
+#define ADDRESS_BIT_ACCESSOR(x) 0x0001 << reinterpret_cast<quint8*>(&x)[2]
+#define ADDRESS_REGISTER(x) reinterpret_cast<quint16*>(&x)[0]
+//32bits[4 bytes] , client id[1 byte],bit accessor(16bits)[1 byte] , register address (16bits for each register)[2 byte]
 
 
+////!
+////! \brief The AbstractAddress class
+////! 32Bits addressing mode
+//class AbstractAddress
+//{
+//public :
+//    AbstractAddress(uint address=0):address(address){}
+//    //!
+//    //! \brief AbstractAddress
+//    //! \param source
+//    //! copy constructor
+//    AbstractAddress(const AbstractAddress& source):address(source.address){}
 
-//!
-//! \brief The ModbusDriverAddress struct
-//! 32Bits addressing mode
-class ModbusDriverAddress : public AbstractAddress
-{
-protected:
-    quint8* channelAddress;
-    quint8* registerTypeBitIndex;//upper half byte: coil,input,holding , lower half bytpe: bit index
-    quint16* registerAddress;
-public:
-    ModbusDriverAddress(uint address=0);
-    //!
-    //! \brief ModbusDriverAddress
-    //! \param address
-    //! copy constructor
-    ModbusDriverAddress(const ModbusDriverAddress& address);
-    ModbusDriverAddress(quint8 channel,quint8 bitIndex,quint16 registerAddress);
+//    virtual uint toBitwiseMask() const
+//    {
+//        return 0;
+//    }
+//    uint getAddress() const{return address;}
 
-    QModbusDataUnit::RegisterType getRegisterType() const{
-        return QModbusDataUnit::RegisterType(*registerTypeBitIndex>>4);
-    }
-    void setRegisterType(QModbusDataUnit::RegisterType type){
-        *registerTypeBitIndex = (*registerTypeBitIndex & 0x0F) + (type << 4);}
+//protected :
+//	//ff				f		f					ffff
+//	//(client index)	(type)	(bit access index)	(register address)
+//    uint address; //still 32bit addressing mode
+//};
 
-    quint8 getBitIndex() const{return (*registerTypeBitIndex) & 0x0f;}
-    void setBitIndex(quint8 index){*registerTypeBitIndex = (*registerTypeBitIndex & 0xf0) | (index & 0x0f);}
-
-    quint8 getChannel() const {return *channelAddress;}
-    quint16 getRegisterAddress() const {return *registerAddress;}
-
-    void setChannel(quint8 __channelAddress){(*channelAddress) = __channelAddress;}
-    void setRegisterAddress(quint16 __registerAddress){(*registerAddress)=__registerAddress;}
-
-    virtual uint toBitwiseMask() const
-    {
-        return 0x0001 << (*registerTypeBitIndex & 0x0f);
-    }
-};
-
-//!
-//! \brief AddressValueBinding
-//! QVarariable had contended type info
-typedef QPair<AbstractAddress,QVariant> AddressValueBinding;
+//inline bool operator==(const AbstractAddress& lhp,const AbstractAddress& rhp)
+//{
+//    return lhp.getAddress() == rhp.getAddress();
+//}
+//inline bool operator !=(const AbstractAddress& lhp,const AbstractAddress& rhp)
+//{
+//    return !(lhp==rhp);
+//}
+//inline bool operator <(const AbstractAddress& lhp,const AbstractAddress& rhp)
+//{
+//    return lhp.getAddress()<rhp.getAddress();
+//}
 
 
-//extern QEvent::Type updateEventTypeCode;// = QEvent::Type(QEvent::registerEventType());
+
+////!
+////! \brief The ModbusDriverAddress struct
+////! 32Bits addressing mode
+//class ModbusDriverAddress : public AbstractAddress
+//{
+//protected:
+//    quint8* channelAddress;
+//    quint8* registerTypeBitIndex;//upper half byte: coil,input,holding , lower half bytpe: bit index
+//    quint16* registerAddress;
+//public:
+//    ModbusDriverAddress(uint address=0);
+//    //!
+//    //! \brief ModbusDriverAddress
+//    //! \param address
+//    //! copy constructor
+//    ModbusDriverAddress(const ModbusDriverAddress& address);
+//    ModbusDriverAddress(quint8 channel,quint8 bitIndex,quint16 registerAddress);
+
+//    QModbusDataUnit::RegisterType getRegisterType() const{
+//        return QModbusDataUnit::RegisterType(*registerTypeBitIndex>>4);
+//    }
+//    void setRegisterType(QModbusDataUnit::RegisterType type){
+//        *registerTypeBitIndex = (*registerTypeBitIndex & 0x0F) + (type << 4);}
+
+//    quint8 getBitIndex() const{return (*registerTypeBitIndex) & 0x0f;}
+//    void setBitIndex(quint8 index){*registerTypeBitIndex = (*registerTypeBitIndex & 0xf0) | (index & 0x0f);}
+
+//    quint8 getChannel() const {return *channelAddress;}
+//    quint16 getRegisterAddress() const {return *registerAddress;}
+
+//    void setChannel(quint8 __channelAddress){(*channelAddress) = __channelAddress;}
+//    void setRegisterAddress(quint16 __registerAddress){(*registerAddress)=__registerAddress;}
+
+//    virtual uint toBitwiseMask() const
+//    {
+//        return 0x0001 << (*registerTypeBitIndex & 0x0f);
+//    }
+//};
+
 //!
 //! \brief The UpdateEvent struct
 //!
@@ -113,9 +113,9 @@ class UpdateEvent: public QEvent
 {
 public :
 
-    UpdateEvent(const AbstractAddress& address,const QVariant value);
+    UpdateEvent(const ADDRESS_MODE& address,const QVariant value);
 
-    const uint address;
+    const ADDRESS_MODE address;
     QVariant value;
 };
 
@@ -137,9 +137,9 @@ public:
         VALUE_UPDATED
     };
 
-    ValueTransition(const AbstractAddress& address,Detection action):
-        address(address.getAddress()),
-        bitMask(address.toBitwiseMask()),
+    ValueTransition(const ADDRESS_MODE& address,Detection action):
+        __address(ADDRESS_REGISTER(address)),
+        __bitAccessor(ADDRESS_BIT_ACCESSOR(address)),
         detection(action)
     {}
 
@@ -148,17 +148,12 @@ protected:
     virtual void onTransition(QEvent*);
 
 
-    const uint address;
-    const uint bitMask;
+    const quint16 __address;
+    const quint16 __bitAccessor;
     Detection detection;
 };
 
-typedef QPair<ModbusDriverAddress,QVariant> QModbusBinding;
-
 }//namespace
 
-
-Q_DECLARE_METATYPE(BaseLayer::ModbusDriverAddress)
-//Q_DECLARE_METATYPE(BaseLayer::DummyDriverAddress)
 
 #endif // BASELAYERDEFINITIONS_H
