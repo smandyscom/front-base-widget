@@ -1,28 +1,22 @@
 #include "controllermainpanel.h"
 
-ControllerMainPanel::ControllerMainPanel(QObject *parent) : QObject(parent)
+ControllerMainPanel::ControllerMainPanel(QObject *parent) :
+    QObject(parent) ,
+    __key(HEADER_STRUCTURE::zh_TW)
 {
-    __channel = ModbusChannel::Instance();
-
-    //! Very first shot
-    __monitorBaseAddress.setRegisterAddress(UnitContextBlock::OFFSET_CONTEXT_LUID_PARENT);
-    __monitorBaseAddress.setChannel(3);
-    __channel->beginAccess<AbstractDataBlock>(__monitorBaseAddress);
-
-    //! Link
-    connect(__channel,&ModbusChannel::readReply,this,&ControllerMainPanel::onReply);
-    //!
-    __deviceMap[CommitBlock::SELECTION_AXIS] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_AXIS);
-    __deviceMap[CommitBlock::SELECTION_CYLINDER] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_CYLINDERS);
-    __deviceMap[CommitBlock::SELECTION_UNIT] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_UNITS);
+    //! register monitor , start routine service
+    __channel->RegisterRoutines(toAddressMode(UnitContextBlock::OffsetContext),QVariant::fromValue(AbstractDataBlock));
+      //!
+    __errorDeviceMap[CommitBlock::SELECTION_AXIS] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_AXIS);
+    __errorDeviceMap[CommitBlock::SELECTION_CYLINDER] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_CYLINDERS);
+    __errorDeviceMap[CommitBlock::SELECTION_UNIT] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_UNITS);
 
     __errorCodeMap[CommitBlock::SELECTION_AXIS] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::ERROR_CODE_AXIS);
     __errorCodeMap[CommitBlock::SELECTION_CYLINDER] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::ERROR_CODE_CYLINDER);
     __errorCodeMap[CommitBlock::SELECTION_UNIT] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::ERROR_CODE_UNIT);
 
     __deviceTable = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_OBJECT_TYPE);
-    //!
-    __key = zh_TW;
+
     //!
     __controllerTransfer = new ControllerBankTransfer(this);
     connect(__controllerTransfer,SIGNAL(dataTransfered()),this,SLOT(onDataTransfered()));
@@ -30,28 +24,14 @@ ControllerMainPanel::ControllerMainPanel(QObject *parent) : QObject(parent)
 
 }
 
-//!
-//! \brief ControllerMainPanel::onReply
-//! \param event
-//!
-void ControllerMainPanel::onReply()
+void ControllerMainPanel::onAcknowledged(InterfaceRequest ack)
 {
-    switch (__channel->CachedReplyAddress().getAddress()) {
-    case OFFSET_CONTEXT_LUID_PARENT:
-        QTimer::singleShot(10,this,[=](){
-            //! Schedualing next polling
-            __channel->beginAccess<AbstractDataBlock>(__monitorBaseAddress);
-        });
-        //!
-        //! Error detection
-        //!
-        if(ErrorCode() != __lastError)
-            emit errorChanged(ErrorCode());
-        __lastError = ErrorCode();
-        break;
-    default:
-        break;
-    }
+    //!
+    //! Error detection
+    //!
+    if(ErrorCode() != __lastError)
+        emit errorChanged(ErrorCode());
+    __lastError = ErrorCode();
 }
 
 ControllerMainPanel* ControllerMainPanel::Instance()
@@ -64,7 +44,7 @@ ControllerMainPanel* ControllerMainPanel::Instance()
 QString ControllerMainPanel::ErrorDevice() const
 {
     QSqlRecord __recordIndex =
-            __deviceMap[ErrorCategrory()]->record(ErrorDeviceIndex());
+            __errorDeviceMap[ErrorCategrory()]->record(ErrorDeviceIndex());
 
     QSqlRecord __recordDevice =
             utilities::getSqlTableSelectedRecord(__deviceTable,

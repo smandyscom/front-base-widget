@@ -1,13 +1,8 @@
 #include "interfacechannel.h"
 
-InterfaceChannel::InterfaceChannel(QList<InterfaceClient*> clients,QObject *parent) : QObject(parent)
+InterfaceChannel::InterfaceChannel(QObject *parent) : QObject(parent)
 {
-    //! link clients
-    for(int i=0;i<clients.count();i++)
-    {
-        __clients.append(clients[i]);
-        connect(clients[i],&InterfaceClient::requestAcknowledged,this,&InterfaceChannel::onAcknowledged);
-    }
+
 }
 
 //!
@@ -105,6 +100,8 @@ void InterfaceChannel::onAcknowledged(InterfaceRequest ack)
             this->__remoteUpdate(ack.Address(),__data);
         });
     }
+    //! Dispatch signal to upper
+    emit ackownledged(ack);
 }
 
 void InterfaceChannel::RegisterRoutines(uint address, const QVariant dataFrom, int interval)
@@ -116,3 +113,5 @@ void InterfaceChannel::RegisterRoutines(uint address, const QVariant dataFrom, i
     __remoteUpdate(address,dataFrom);
 }
 
+
+InterfaceChannel* InterfaceChannel::__instance = nullptr;

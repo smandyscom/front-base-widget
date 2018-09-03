@@ -13,6 +13,8 @@
 
 #include <controllerbanktransfer.h>
 
+#include <controllerbase.h>
+
 #include <QTimer>
 
 //!
@@ -24,11 +26,11 @@
 
 using namespace HEADER_STRUCTURE;
 
-class ControllerMainPanel : public QObject
+class ControllerMainPanel : public ControllerBase
 {
     Q_OBJECT
 public:
-    enum MainPanelContext
+    enum MainPanelContext : ADDRESS_MODE
     {
         //! Operations
         ERROR_RESET_BIT=0x03000020,
@@ -136,15 +138,15 @@ public:
 
     MODBUS_U_QUAD ErrorCode() const
     {
-        return __channel->Access<MODBUS_U_QUAD>(ModbusDriverAddress(ERROR_CODE));
+        return __channel->Access<MODBUS_U_QUAD>(toAddressMode(ERROR_CODE));
     }
     MODBUS_U_WORD ErrorCategrory() const
     {
-        return __channel->Access<MODBUS_U_WORD>(ModbusDriverAddress(ERROR_CATEGRORY));
+        return __channel->Access<MODBUS_U_WORD>(toAddressMode(ERROR_CATEGRORY));
     }
     MODBUS_U_WORD ErrorDeviceIndex() const
     {
-        return __channel->Access<MODBUS_U_WORD>(ModbusDriverAddress(ERROR_DEVICE_INDEX));
+        return __channel->Access<MODBUS_U_WORD>(toAddressMode(ERROR_DEVICE_INDEX));
     }
 
     QString ErrorDevice() const;
@@ -195,20 +197,18 @@ signals:
 public slots:
     void onDataChanged(TransferTask task);
 protected slots:
-    void onReply();
     void onDataTransfered();
+
+    void onAcknowledged(InterfaceRequest ack) Q_DECL_OVERRIDE;
 protected:
     explicit ControllerMainPanel(QObject *parent = nullptr);
-
-    ModbusChannel* __channel;
-    ModbusDriverAddress __monitorBaseAddress;
 
     HEADER_STRUCTURE::Headers __key;
     QSqlTableModel* __deviceTable;
     //!
     //! \brief __deviceMap
     //! Key , Device categrory
-    QMap<MODBUS_S_WORD,QSqlTableModel*> __deviceMap;
+    QMap<MODBUS_S_WORD,QSqlTableModel*> __errorDeviceMap;
     //!
     //! \brief __errorDescriptionMap
     //! Key 1: Device categrory

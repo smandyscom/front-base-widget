@@ -18,8 +18,8 @@ public:
 
 signals:
 
-public slots:
-
+protected slots:
+    virtual void onAcknowledged(InterfaceRequest ack);
 protected:
     quint8 __clientId;
     quint16 __baseOffset;

@@ -22,7 +22,23 @@ class InterfaceChannel : public QObject
 {
     Q_OBJECT
 public:
-    explicit InterfaceChannel(QList<InterfaceClient*> clients,QObject *parent = nullptr);
+    static InterfaceChannel Instance()
+    {
+        if(__instance == nullptr)
+            __instance = new InterfaceChannel();
+        return __instance;
+    }
+
+
+    void Clients(QList<InterfaceClient*> clients)
+    {
+        //! link clients
+        for(int i=0;i<clients.count();i++)
+        {
+            __clients.append(clients[i]);
+            connect(clients[i],&InterfaceClient::requestAcknowledged,this,&InterfaceChannel::onAcknowledged);
+        }
+    }
 
     //!
     //! \brief RoutineAccess
@@ -61,7 +77,8 @@ public:
     {
         __commit(address,QVariant::fromValue(value));
     }
-
+signals:
+    void ackownledged(InterfaceRequest ack);
 protected slots:
     void onAcknowledged(InterfaceRequest ack);
 protected:
@@ -87,6 +104,9 @@ protected:
 
 
     //!Singleton
+    static InterfaceChannel* __instance;
+    explicit InterfaceChannel(QObject *parent = nullptr);
+
 };
 
 #endif // INTERFACECHANNEL_H
