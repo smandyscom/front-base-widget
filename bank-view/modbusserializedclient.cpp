@@ -2,7 +2,8 @@
 #include <QDebug>
 ModbusSerializedClient::ModbusSerializedClient(int serverAddress, QObject *parent) :
     QObject(parent),
-    __serverAddress(serverAddress)
+    __serverAddress(serverAddress),
+    __isDestroyed(false)
 {
     __driver = nullptr;
     //!
@@ -16,9 +17,10 @@ ModbusSerializedClient::ModbusSerializedClient(int serverAddress, QObject *paren
        {
            disconnect(__driver,&QModbusClient::stateChanged,this,&ModbusSerializedClient::onDriverStateChanged);
            disconnect(__driver,&QModbusClient::errorOccurred,this,&ModbusSerializedClient::onDriverErrorOccured);
-
+           //disconnect(reply,&QModbusReply::finished,this,&ModbusSerializedClient::onReplyFinished);
            //disconnect(__driver,SIGNAL(stateChanged(QModbusDevice::State)),this,SLOT(onDriverStateChanged(QModbusDevice::State)));
            //disconnect(__driver,SIGNAL(errorOccurred(QModbusDevice::Error)),this,SLOT(onDriverErrorOccured(QModbusDevice::Error)));
+           __isDestroyed = true;
        }
     });
 }
@@ -49,7 +51,7 @@ void ModbusSerializedClient::onPopRequest()
     //! Lock-up processor
     //!
     __isProcessing = true;
-    QModbusReply* reply = nullptr;
+    reply = nullptr;
     switch (requestQueue.head()->second) {
     case READ:
         reply = __driver->sendReadRequest(requestQueue.head()->first,__serverAddress);
@@ -71,26 +73,7 @@ void ModbusSerializedClient::onPopRequest()
     //! when finished , dequeue
     //! otherwise , would remained on queue
     //! when use lambda , do not use SIGNAL marco
-    connect(reply,&QModbusReply::finished,this,[this,reply](){
-        switch (reply->error()) {
-        case QModbusDevice::NoError:
-        {
-            if(requestQueue.head()->second==READ)
-                emit readRequestDone(reply->result());
-            //destroy
-            ModbusRequest* __request = requestQueue.dequeue();
-            delete __request;
-            break;
-        }
-        default:
-
-            qDebug() << reply->errorString();
-            break;
-        }//switch
-
-        reply->deleteLater();
-        __isProcessing = false;
-    });
+    connect(reply,&QModbusReply::finished,this,&ModbusSerializedClient::onReplyFinished);
 }
 
 void ModbusSerializedClient::pushRequest(ModbusRequest *request)
@@ -130,4 +113,29 @@ void ModbusSerializedClient::onDriverErrorOccured(QModbusDevice::Error error)
     default:
         break;
     }
+}
+
+void ModbusSerializedClient::onReplyFinished()
+{
+    if(__isDestroyed)
+        return; //would be called by another thread
+
+    switch (reply->error()) {
+    case QModbusDevice::NoError:
+    {
+        if(requestQueue.head()->second==READ)
+            emit readRequestDone(reply->result());
+        //destroy
+        ModbusRequest* __request = requestQueue.dequeue();
+        delete __request;
+        break;
+    }
+    default:
+
+        qDebug() << reply->errorString();
+        break;
+    }//switch
+
+    reply->deleteLater();
+    __isProcessing = false;
 }
