@@ -30,8 +30,7 @@ void ControllerBankTransfer::onTransferData()
     }
 
      //!Raise asynchrons operation
-    QtConcurrent::run(this,&ControllerBankTransfer::transfer);
-    emit dataTransfering(__tasksQueue.head());
+    transfer();
 }
 
 //!
@@ -58,8 +57,7 @@ void ControllerBankTransfer::onControllerOperationPerformed()
     }
 
     //! Raise next operation
-    QtConcurrent::run(this,&ControllerBankTransfer::transfer);
-    emit dataTransfering(__tasksQueue.head());
+    transfer();
 }
 
 void ControllerBankTransfer::transfer()
@@ -72,9 +70,17 @@ void ControllerBankTransfer::transfer()
     __controller->CommitOption(__commitOption);
     //! Setup data pack
     __controller->DataBlock(QVariant::fromValue(static_cast<CellDataBlock>(__adaptorMap[__task.first]->Record(__task.second)))); //Write-in anyway
-    //! Wait until controller comes to right state
-    while (__controller->CurrentState()!=ControllerManualMode::STATE_IDLE) {}
-    emit __controller->operationTriggered();
+
+    emit dataTransfering(__tasksQueue.head());
+
+    QtConcurrent::run([=](){
+        //! Wait until controller comes to right state
+        while (__controller->CurrentState()!=ControllerManualMode::STATE_IDLE) {}
+        //! raise state machine to work
+        emit __controller->operationTriggered();
+    });
+
+
 }
 
 void ControllerBankTransfer::PutTask(TransferTask task)
