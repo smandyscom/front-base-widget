@@ -44,6 +44,9 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
     //! s1
     ValueTransition* engagedPLCOff = new ValueTransition(ModbusDriverAddress(ENGAGED_SEMI_AUTO),ValueTransition::BIT_STATE_OFF);
     engagedPLCOff->setTargetState(s0);
+    connect(s1,&QState::entered,[=](){
+       emit operationReady();
+    });
     s1->addTransition(engagedPLCOff);
     s1->addTransition(this,SIGNAL(operationTriggered()),s2);// when user triggered
 

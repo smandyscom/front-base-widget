@@ -131,6 +131,7 @@ signals:
     //! \brief triggerOperation
     //! Linked to S1 transition condition
     void operationTriggered();
+    void operationReady();
     void operationPerformed();
 protected slots:
     //!

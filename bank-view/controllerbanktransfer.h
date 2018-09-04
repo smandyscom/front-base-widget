@@ -66,7 +66,7 @@ public slots:
     //!
     void onTransferData();
 protected slots:
-    void onControllerOperationPerformed();
+    void onControllerOperationReady();
 protected:
 
     CommitBlock __commitOption;
