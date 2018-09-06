@@ -10,6 +10,7 @@ InterfaceClient::InterfaceClient(QObject *parent) :
     //! create timer
     __workingTimer = new QTimer(this);
     connect(__workingTimer,SIGNAL(timeout()),this,SLOT(onPopRequest()));
+//    __workingTimer->start();
 }
 
 void InterfaceClient::pushRequest(InterfaceRequest request)
@@ -25,12 +26,16 @@ void InterfaceClient::operationDone()
     //! write into cache
     ADDRESS_MODE __address = ack.Address();
     memcpy(&__cache[ADDRESS_REGISTER(__address)],ack.Data().data(),utilities::sizeOf(ack.Data()));
+
     emit requestAcknowledged(ack);
 }
 
 void InterfaceClient::onPopRequest()
 {
+    //!Automatic polling by request/acknowledge
     if(__queue.isEmpty() || __isProcessing)
         return;
     __isProcessing = true;
+//    onPopRequest();
 }
+

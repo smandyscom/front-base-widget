@@ -23,6 +23,8 @@ public:
 
 signals:
     void requestAcknowledged(InterfaceRequest acknowledge);
+public slots:
+    void onTimerStart() { __workingTimer->start();}
 protected slots:
     virtual void onPopRequest() ;
 protected:

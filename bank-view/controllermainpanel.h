@@ -2,8 +2,7 @@
 #define CONTROLLERMAINPANEL_H
 
 #include <QObject>
-
-#include <modbuschannel.h>
+#include <QVariant>
 
 #include <definitionsbaselayer.h>
 #include <definitionunitblocks.h>
@@ -11,7 +10,7 @@
 
 #include <junctionbankdatabase.h>
 
-#include <controllerbanktransfer.h>
+//#include <controllerbanktransfer.h>
 
 #include <controllerbase.h>
 
@@ -30,33 +29,40 @@ class ControllerMainPanel : public ControllerBase
 {
     Q_OBJECT
 public:
+    enum RelatedProperties : int
+    {
+        PROP_MAIN_STATE,
+        PROP_IS_PAUSE,
+    };
+    Q_ENUM(RelatedProperties)
     enum MainPanelContext : ADDRESS_MODE
     {
         //! Operations
-        ERROR_RESET_BIT=0x03000020,
-        MANUAL_CONTROL_WORD=0x03000020,
-        MANUAL_TOGGLE_PAUSE=0x03010020,
-        MANUAL_TOGGLE_INIT=0x03020020,
-        MANUAL_TOOGLE_MANUAL=0x03030020,
-        ERROR_IGNORE_BIT=0x03040020,
-        MANUAL_TOOGLE_CLEAR=0x03050020,
+        ERROR_RESET_BIT=0x00000020,
+        MANUAL_CONTROL_WORD=0x00000020,
+        MANUAL_TOGGLE_PAUSE=0x00010020,
+        MANUAL_TOGGLE_INIT=0x00020020,
+        MANUAL_TOOGLE_MANUAL=0x00030020,
+        ERROR_IGNORE_BIT=0x00040020,
+        MANUAL_TOOGLE_CLEAR=0x00050020,
         //! Monitors
-        ERROR_DEVICE_INDEX=0x03000022,
-        ERROR_CATEGRORY=0x03000024,
-        ERROR_CODE=0x03000026,
+        ERROR_DEVICE_INDEX=0x00000022,
+        ERROR_CATEGRORY=0x00000024,
+        ERROR_CODE=0x00000026,
 
-        MON_DATA_0 = 0x03000030,
-        MON_DATA_1= 0x03000032,
-        MON_DATA_2= 0x03000034,
-        MON_DATA_3= 0x03000036,
-        MON_DATA_4= 0x03000038,
-        MON_DATA_5= 0x0300003A,
-        MON_DATA_6= 0x0300003C,
-        MON_DATA_7= 0x0300003E,
+        MAIN_STATE = 0x00000030,
+        MON_DATA_1= 0x00000032,
+        MON_DATA_2= 0x00000034,
+        MON_DATA_3= 0x00000036,
+        MON_DATA_4= 0x00000038,
+        MON_DATA_5= 0x0000003A,
+        MON_DATA_6= 0x0000003C,
+        MON_DATA_7= 0x0000003E,
 
         OFFSET_CONTEXT_LUID_PARENT = 0x03000000+UnitContextBlock::OFFSET_CONTEXT_LUID_PARENT,
     };
     Q_ENUM(MainPanelContext)
+
     enum MainStates
     {
         STATE_AUTO,
@@ -68,47 +74,38 @@ public:
     //! Send one shot command
     void Pause()
     {
-        __channel->Access<bool>(ModbusDriverAddress(MANUAL_TOGGLE_PAUSE),true);
-        emit stateChanged(CurrentState());
+//        __channel->Access<bool>(ModbusDriverAddress(MANUAL_TOGGLE_PAUSE),true);
     }
     void Manual(bool value)
     {
-        //!Reject
-        if(!IsPause())
-            return;
+//        //!Reject
+//        if(!IsPause())
+//            return;
 
-        //! Manual->SemiAuto , clear all task
-        if(!value)
-        {
-            __controllerTransfer->Direction(CommitBlock::MODE_DOWNLOAD_DATA_BLOCK);
-            __controllerTransfer->onTransferData();
-            return;
-        }
+//        //! Manual->SemiAuto , clear all task
+//        if(!value)
+//        {
+//            __controllerTransfer->Direction(CommitBlock::MODE_DOWNLOAD_DATA_BLOCK);
+//            __controllerTransfer->onTransferData();
+//            return;
+//        }
 
-        //! Semi->Manaul , unconditional
-        __channel->Access(ModbusDriverAddress(MANUAL_TOOGLE_MANUAL),true);
-        emit stateChanged(CurrentState());
+//        //! Semi->Manaul , unconditional
+//        __channel->Access(ModbusDriverAddress(MANUAL_TOOGLE_MANUAL),true);
     }
 
-    bool IsPause() const
-    {
-        ModbusDriverAddress __address(UnitOperationBlock::OFFSET_UOB_STATE_PAUSE);
-        __address.setChannel(3);
-        return __channel->Access<bool>(__address);
-    }
     void Initialize()
     {
-        __channel->Access<bool>(ModbusDriverAddress(MANUAL_TOGGLE_INIT),true);
+//        __channel->Access<bool>(ModbusDriverAddress(MANUAL_TOGGLE_INIT),true);
     }
     //!
     //! \brief IsInitialize
     //! \return
     //! is in auto run routine
-    bool IsNotInitializing() const
+    bool IsNotInitializing()
     {
         //! = Controller state on H100
-        ModbusDriverAddress __address(UnitOperationBlock::OFFSET_MONITOR_STATE);
-        __address.setChannel(3);
+        ADDRESS_MODE __address = toAddressMode(UnitOperationBlock::OFFSET_MONITOR_STATE);
         return __channel->Access<MODBUS_U_WORD>(__address) == 0x100 ||
                 __channel->Access<MODBUS_S_WORD>(__address) == 0;
     }
@@ -117,60 +114,40 @@ public:
     //!
     void ErrorReset()
     {
-        __channel->Access<bool>(ModbusDriverAddress(ERROR_RESET_BIT),true);
+        __channel->Access<bool>(toAddressMode(ERROR_RESET_BIT),true);
     }
     //!
     //! \brief ErrorIgnore
     //! Given another error reset decision
     void ErrorIgnore()
     {
-        __channel->Access<bool>(ModbusDriverAddress(ERROR_IGNORE_BIT),true);
+        __channel->Access<bool>(toAddressMode(ERROR_IGNORE_BIT),true);
     }
 
     void Clear()
     {
-        __channel->Access<bool>(ModbusDriverAddress(MANUAL_TOOGLE_CLEAR),true);
-    }
-    bool IsClear() const
-    {
-        return __channel->Access<bool>(ModbusDriverAddress(MANUAL_TOOGLE_CLEAR));
+        __channel->Access<bool>(toAddressMode(MANUAL_TOOGLE_CLEAR),true);
     }
 
-    MODBUS_U_QUAD ErrorCode() const
+    MODBUS_U_QUAD ErrorCode()
     {
         return __channel->Access<MODBUS_U_QUAD>(toAddressMode(ERROR_CODE));
     }
-    MODBUS_U_WORD ErrorCategrory() const
+    MODBUS_U_WORD ErrorCategrory()
     {
         return __channel->Access<MODBUS_U_WORD>(toAddressMode(ERROR_CATEGRORY));
     }
-    MODBUS_U_WORD ErrorDeviceIndex() const
+    MODBUS_U_WORD ErrorDeviceIndex()
     {
         return __channel->Access<MODBUS_U_WORD>(toAddressMode(ERROR_DEVICE_INDEX));
     }
 
-    QString ErrorDevice() const;
-    QString ErrorDescription() const;
+    QString ErrorDevice() ;
+    QString ErrorDescription() ;
 
-    MainStates CurrentState()
+    QVariant Data(uint key)
     {
-        MainStates __state;
-        if(!IsPause())
-            __state = STATE_AUTO;
-        else
-        {
-            if(__channel->Access<bool>(ModbusDriverAddress(MANUAL_TOOGLE_MANUAL)))
-                __state = STATE_MANUAL;
-            else
-                __state =  STATE_SEMI_AUTO;
-        }
-
-        return __state;
-    }
-
-    QVariant Data(uint key) const
-    {
-        MODBUS_U_LONG value = __channel->Access<MODBUS_U_LONG>(ModbusDriverAddress(key));
+        MODBUS_U_LONG value = __channel->Access<MODBUS_U_LONG>(toAddressMode(key));
 
         switch (key) {
         case MON_DATA_4:
@@ -185,23 +162,57 @@ public:
         }
     }
 
-    const ControllerBankTransfer* ControllerTransfer() const
-    {
-        return __controllerTransfer;
-    }
+//    const ControllerBankTransfer* ControllerTransfer() const
+//    {
+//        return __controllerTransfer;
+//    }
 
-    static ControllerMainPanel* Instance();
+//    bool event(QEvent *event) Q_DECL_OVERRIDE;
+
+
+    explicit ControllerMainPanel(QObject *parent = nullptr);
+    //static ControllerMainPanel* Instance();
 signals:
     void stateChanged(MainStates currentState);
     void errorChanged(MODBUS_U_QUAD currentError);
 public slots:
-    void onDataChanged(TransferTask task);
+//    void onDataChanged(TransferTask task);
 protected slots:
-    void onDataTransfered();
+//    void onDataTransfered();
 
-    void onAcknowledged(InterfaceRequest ack) Q_DECL_OVERRIDE;
+//    void onAcknowledged(InterfaceRequest ack) Q_DECL_OVERRIDE;
+//    void onInitializing(InterfaceRequest ack) Q_DECL_OVERRIDE;
+
 protected:
-    explicit ControllerMainPanel(QObject *parent = nullptr);
+
+
+    MainStates __currentState()
+    {
+        MainStates __state;
+        if(!__isPause())
+            __state = STATE_AUTO;
+        else
+        {
+            if(__channel->Access<bool>(toAddressMode(MANUAL_TOOGLE_MANUAL)))
+                __state = STATE_MANUAL;
+            else
+                __state = STATE_SEMI_AUTO;
+        }
+
+        return __state;
+    }
+    bool __isPause()
+    {
+        return __channel->Access<bool>(toAddressMode(UnitOperationBlock::OFFSET_UOB_STATE_PAUSE));
+    }
+
+    bool __isClear()
+    {
+        return __channel->Access<bool>(toAddressMode(MANUAL_TOOGLE_CLEAR));
+    }
+
+//    QVariant ___temp(){ return QVariant::fromValue(0);}
+
 
     HEADER_STRUCTURE::Headers __key;
     QSqlTableModel* __deviceTable;
@@ -218,9 +229,13 @@ protected:
     MainStates __lastState;
     MODBUS_U_QUAD __lastError;
 
-    ControllerBankTransfer* __controllerTransfer;
+//    QVariant propertyValues(QVariant key) Q_DECL_OVERRIDE;
 
-    static ControllerMainPanel* __instace;
+
+    //ControllerBankTransfer* __controllerTransfer;
+
+    //static ControllerMainPanel* __instace;
+
 };
 
 #endif // CONTROLLERMAINPANEL_H

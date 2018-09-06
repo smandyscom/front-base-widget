@@ -86,7 +86,7 @@ Q_DECLARE_METATYPE(UnitOperationBlock)
 class UnitContextBlock : public UnitOperationBlock
 {
 public:
-    enum OffsetContext
+    enum OffsetContext : uint
     {
         OFFSET_CONTEXT_LUID_PARENT=0,
         OFFSET_CONTEXT_LSID_BASE=6,

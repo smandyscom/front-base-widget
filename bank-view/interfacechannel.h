@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QTimer>
 #include <QStateMachine>
-
+#include <QApplication>
 #include <definitionsbaselayer.h>
 #include <utilities.h>
 
@@ -22,10 +22,10 @@ class InterfaceChannel : public QObject
 {
     Q_OBJECT
 public:
-    static InterfaceChannel Instance()
+    static InterfaceChannel* Instance()
     {
         if(__instance == nullptr)
-            __instance = new InterfaceChannel();
+            __instance = new InterfaceChannel(qApp);
         return __instance;
     }
 
@@ -36,7 +36,7 @@ public:
         for(int i=0;i<clients.count();i++)
         {
             __clients.append(clients[i]);
-            connect(clients[i],&InterfaceClient::requestAcknowledged,this,&InterfaceChannel::onAcknowledged);
+            connect(__clients[i],&InterfaceClient::requestAcknowledged,this,&InterfaceChannel::onAcknowledged);
         }
     }
 
@@ -82,6 +82,12 @@ signals:
 protected slots:
     void onAcknowledged(InterfaceRequest ack);
 protected:
+    explicit InterfaceChannel(QObject *parent = nullptr);
+
+    QList<InterfaceClient*> __clients;
+    QList<QStateMachine*> __stateMachines;
+    QMap<ADDRESS_MODE,int> __routines;
+
     //!
     //! \brief __commit
     //! \param address
@@ -98,14 +104,12 @@ protected:
     //! Raising asynchrous updating operation to remote
     void __remoteUpdate(ADDRESS_MODE address, QVariant dataForm);
 
-    QList<InterfaceClient*> __clients;
-    QList<QStateMachine*> __stateMachines;
-    QMap<ADDRESS_MODE,int> __routines;
+
 
 
     //!Singleton
     static InterfaceChannel* __instance;
-    explicit InterfaceChannel(QObject *parent = nullptr);
+
 
 };
 

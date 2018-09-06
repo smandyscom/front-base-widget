@@ -1,0 +1,15 @@
+*{
+    border: 1px solid black;
+}
+
+*[PROP="1"] > * > QLabel{
+        background-color: #00FFC4;
+}
+
+*[PROP="2"] > * > QLabel{
+        background-color: #FF004C;
+}
+
+*[PROP="3"] > * > QLabel{
+        background-color: #F5860F;
+}

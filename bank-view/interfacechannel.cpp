@@ -1,5 +1,5 @@
 #include "interfacechannel.h"
-
+#include <QDebug>
 InterfaceChannel::InterfaceChannel(QObject *parent) : QObject(parent)
 {
 
@@ -59,7 +59,7 @@ void InterfaceChannel::__commit(uint address, QVariant value)
 //! Directly return cached data
 void InterfaceChannel::__update(uint address, QVariant &out)
 {
-    quint16* __baseAddress = &__clients[ADDRESS_CLIENT_ID(address)]->Cache()[ADDRESS_REGISTER(address)];
+    quint16* __baseAddress = &(__clients[ADDRESS_CLIENT_ID(address)]->Cache()[ADDRESS_REGISTER(address)]);
 
     switch (out.type()) {
     case QVariant::Bool:

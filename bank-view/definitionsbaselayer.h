@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QAbstractTransition>
 #include <QVariant>
-#include <QModbusDataUnit>
+//#include <QModbusDataUnit>
 #include <QEvent>
 
 namespace BaseLayer {
@@ -21,9 +21,9 @@ namespace BaseLayer {
 #define MODBUS_ADDRESS quint16
 
 #define ADDRESS_MODE uint
-#define ADDRESS_CLIENT_ID(x) reinterpret_cast<quint8*>(&x)[3]
-#define ADDRESS_BIT_ACCESSOR(x) 0x0001 << reinterpret_cast<quint8*>(&x)[2]
-#define ADDRESS_REGISTER(x) reinterpret_cast<quint16*>(&x)[0]
+#define ADDRESS_CLIENT_ID(x) reinterpret_cast<const quint8*>(&x)[3]
+#define ADDRESS_BIT_ACCESSOR(x) 0x0001 << reinterpret_cast<const quint8*>(&x)[2]
+#define ADDRESS_REGISTER(x) reinterpret_cast<const quint16*>(&x)[0]
 //32bits[4 bytes] , client id[1 byte],bit accessor(16bits)[1 byte] , register address (16bits for each register)[2 byte]
 
 
@@ -115,8 +115,12 @@ public :
 
     UpdateEvent(const ADDRESS_MODE& address,const QVariant value);
 
-    const ADDRESS_MODE address;
-    QVariant value;
+    ADDRESS_MODE Address(){ return __address;}
+    QVariant Value(){return __value;}
+
+protected:
+    ADDRESS_MODE __address;
+    QVariant __value;
 };
 
 

@@ -79,7 +79,7 @@ void FrontControlPanel::onTimerTimeout()
     //! OKCount
     //! NGCount
     //! CYCTIME
-    ui->lcdNumberInletCount->display(__controller->Data(ControllerMainPanel::MON_DATA_0).toInt());
+    ui->lcdNumberInletCount->display(__controller->Data(ControllerMainPanel::MAIN_STATE).toInt());
     ui->lcdNumberOutletCount->display(__controller->Data(ControllerMainPanel::MON_DATA_1).toInt());
 
     ui->lcdNumberCycleTime->display(__controller->Data(ControllerMainPanel::MON_DATA_4).toReal());

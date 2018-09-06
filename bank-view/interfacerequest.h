@@ -1,8 +1,11 @@
 #ifndef INTERFACEREQUEST_H
 #define INTERFACEREQUEST_H
 
+#include <QObject>
 #include <QVariant>
+#include <definitionsbaselayer.h>
 
+using namespace BaseLayer;
 
 
 class InterfaceRequest
@@ -25,6 +28,7 @@ public:
         __address(address),
         __data(data)
     {}
+    InterfaceRequest(){}
 
     InterfaceAccess Access(){return __access;}
     QVariant& Data() { return __data;}
@@ -39,5 +43,7 @@ protected:
     ADDRESS_MODE __address;
     QVariant __data;
 };
+Q_DECLARE_METATYPE(InterfaceRequest)
+
 
 #endif // INTERFACEREQUEST_H

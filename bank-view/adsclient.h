@@ -2,7 +2,7 @@
 #define ADSCLIENT_H
 
 #include <QObject>
-#include <QtConcurrent>
+//#include <QtConcurrent>
 #include <QTimer>
 #include <interfaceclient.h>
 

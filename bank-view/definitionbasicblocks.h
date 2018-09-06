@@ -70,22 +70,14 @@ protected:
     }
     inline void Bit(uint key,bool value)
     {
-        //!
-        //! \brief mask
-        ModbusDriverAddress __address(key);
-
         if(value)
-            reserved[__address.getRegisterAddress()] |= __address.toBitwiseMask();
+            reserved[ADDRESS_REGISTER(key)] |= ADDRESS_BIT_ACCESSOR(key);
         else
-            reserved[__address.getRegisterAddress()] &= ~__address.toBitwiseMask();
+            reserved[ADDRESS_REGISTER(key)] &= ~ADDRESS_BIT_ACCESSOR(key);
     }
     inline bool Bit(uint key) const
     {
-        //!
-        //! \brief mask
-        ModbusDriverAddress __address(key);
-
-        return (reserved[__address.getRegisterAddress()] & __address.toBitwiseMask()) > 0;
+        return (reserved[ADDRESS_REGISTER(key)] & ADDRESS_BIT_ACCESSOR(key)) > 0;
     }
 };
 Q_DECLARE_METATYPE(AbstractDataBlock)
