@@ -167,7 +167,7 @@ public:
 //        return __controllerTransfer;
 //    }
 
-//    bool event(QEvent *event) Q_DECL_OVERRIDE;
+    bool event(QEvent *event) Q_DECL_OVERRIDE;
 
 
     explicit ControllerMainPanel(QObject *parent = nullptr);
@@ -180,8 +180,8 @@ public slots:
 protected slots:
 //    void onDataTransfered();
 
-//    void onAcknowledged(InterfaceRequest ack) Q_DECL_OVERRIDE;
-//    void onInitializing(InterfaceRequest ack) Q_DECL_OVERRIDE;
+    void onAcknowledged(InterfaceRequest ack) Q_DECL_OVERRIDE;
+    void onInitializing(InterfaceRequest ack) Q_DECL_OVERRIDE;
 
 protected:
 
@@ -211,7 +211,6 @@ protected:
         return __channel->Access<bool>(toAddressMode(MANUAL_TOOGLE_CLEAR));
     }
 
-//    QVariant ___temp(){ return QVariant::fromValue(0);}
 
 
     HEADER_STRUCTURE::Headers __key;
@@ -229,7 +228,7 @@ protected:
     MainStates __lastState;
     MODBUS_U_QUAD __lastError;
 
-//    QVariant propertyValues(QVariant key) Q_DECL_OVERRIDE;
+    QVariant propertyValues(QVariant key) Q_DECL_OVERRIDE;
 
 
     //ControllerBankTransfer* __controllerTransfer;

@@ -13,3 +13,15 @@
 *[PROP="3"] > * > QLabel{
         background-color: #F5860F;
 }
+
+*[LUID_PARENT="1"] > * > QLabel{
+        background-color: #00FFC4;
+}
+
+*[LUID_PARENT="2"] > * > QLabel{
+        background-color: #FF004C;
+}
+
+*[LUID_PARENT="3"] > * > QLabel{
+        background-color: #F5860F;
+}

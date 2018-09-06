@@ -20,8 +20,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QList<InterfaceClient*> __clients = {__client};
     InterfaceChannel::Instance()->Clients(__clients);
     InterfaceChannel::Instance()->RegisterRoutines(256,QVariant::fromValue(CellDataBlock()),100);
-    auto __temp = new ControllerBase(0,0,100,this);
-//    __controller = new ControllerMainPanel(this->centralWidget());
+//    auto __temp = new TempController(this);
+    __controller = new ControllerMainPanel(this);
 
     //!
 

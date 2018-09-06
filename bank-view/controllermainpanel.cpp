@@ -34,48 +34,46 @@ ControllerMainPanel::ControllerMainPanel(QObject *parent) :
 //! \brief ControllerMainPanel::onAcknowledged
 //! \param ack
 //! Routine
-//void ControllerMainPanel::onAcknowledged(InterfaceRequest ack)
-//{
-//    //!
-//    //! Error detection
-//    //!
-////    if(ErrorCode() != __lastError)
-////        emit errorChanged(ErrorCode());
-////    __lastError = ErrorCode();
+void ControllerMainPanel::onAcknowledged(InterfaceRequest ack)
+{
+    //!
+    //! Error detection
+    //!
+//    if(ErrorCode() != __lastError)
+//        emit errorChanged(ErrorCode());
+//    __lastError = ErrorCode();
 
-//    ControllerBase::onAcknowledged(ack);
-//}
-//void ControllerMainPanel::onInitializing(InterfaceRequest ack)
-//{
-//    this->__isInitialized = true;
+    ControllerBase::onAcknowledged(ack);
+}
+void ControllerMainPanel::onInitializing(InterfaceRequest ack)
+{
+    this->__isInitialized = true;
 
-//    ADDRESS_MODE __address = ack.Address();
-//    //! Update auto/manual status
-//    if (ADDRESS_REGISTER(__address) == toAddressMode(MANUAL_CONTROL_WORD))
-//    {
+    ADDRESS_MODE __address = ack.Address();
+    //! Update auto/manual status
+    if (ADDRESS_REGISTER(__address) == toAddressMode(MANUAL_CONTROL_WORD))
+    {
 
-//    }
-
-
-//}
+    }
+}
 
 //!
 //! \brief ControllerMainPanel::event
 //! \param event
 //! \return
 //! Handling
-//bool ControllerMainPanel::event(QEvent *event)
-//{
-//    switch (event->type()) {
-//    case QEvent::DynamicPropertyChange:
-//        //!intercept and handling
-//        break;
-//    default:
-//        break;
-//    }
+bool ControllerMainPanel::event(QEvent *event)
+{
+    switch (event->type()) {
+    case QEvent::DynamicPropertyChange:
+        //!intercept and handling
+        break;
+    default:
+        break;
+    }
 
-//    return ControllerBase::event(event);
-//}
+    return ControllerBase::event(event);
+}
 
 //ControllerMainPanel* ControllerMainPanel::Instance()
 //{
@@ -133,16 +131,16 @@ QString ControllerMainPanel::ErrorDescription()
 //}
 
 
-//QVariant ControllerMainPanel::propertyValues(QVariant key)
-//{
-//    switch(key.toInt())
-//    {
-//    case UnitBlock::LUID_PARENT:
-//        return QVariant::fromValue(__channel->Access<MODBUS_U_WORD>(toAddressMode(UnitBlock::LUID_PARENT)));
-//        break;
-//    default:
-//        return ControllerBase::propertyValues(key);
-//    }
-//}
+QVariant ControllerMainPanel::propertyValues(QVariant key)
+{
+    switch(key.toInt())
+    {
+    case UnitBlock::LUID_PARENT:
+        return QVariant::fromValue(__channel->Access<MODBUS_U_WORD>(toAddressMode(UnitBlock::LUID_PARENT)));
+        break;
+    default:
+        return ControllerBase::propertyValues(key);
+    }
+}
 
 //ControllerMainPanel* ControllerMainPanel::__instace = nullptr;

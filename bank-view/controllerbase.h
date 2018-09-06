@@ -33,23 +33,21 @@ public:
 
     explicit ControllerBase(quint8 clientId,quint16 baseOffset,int interval,QObject *parent = nullptr);
 
-//    void temp(){qDebug() << __watchList.count();}
 protected slots:
     //!
     //! \brief onAcknowledged
     //! \param ack
     //! Routine
-     void onAcknowledged(InterfaceRequest ack);
+    virtual void onAcknowledged(InterfaceRequest ack);
     //!
     //! \brief onInitializing
     //! First time received ack
-     void onInitializing(InterfaceRequest ack){}
+    virtual void onInitializing(InterfaceRequest ack){}
 protected:
     quint8 __clientId;
     quint16 __baseOffset;
     int __interval;
     bool __isInitialized;
-//    QWidget* __targetWidget;
     InterfaceChannel* __channel;
 
     QList<QVariant> __propertyKeys;
