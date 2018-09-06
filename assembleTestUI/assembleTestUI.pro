@@ -37,7 +37,8 @@ SOURCES += \
     ../bank-view/adsclient.cpp \
     ../bank-view/definitionauxiliarykeys.cpp \
     tempcontroller.cpp \
-    ../../qt-tries/try-property-bind/commonhelper.cpp
+    ../../qt-tries/try-property-bind/commonhelper.cpp \
+    ../bank-view/definitionbasicblocks.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -53,7 +54,8 @@ HEADERS += \
     ../bank-view/definitionauxiliarykeys.h \
     tempcontroller.h \
     ../../qt-tries/try-property-bind/commonhelper.h \
-    ../bank-view/definitionunitblocks.h
+    ../bank-view/definitionunitblocks.h \
+    ../bank-view/definitionbasicblocks.h
 
 FORMS += \
         mainwindow.ui

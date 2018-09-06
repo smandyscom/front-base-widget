@@ -39,10 +39,12 @@ void ControllerBase::onAcknowledged(InterfaceRequest ack)
 
 
 
-void ControllerBase::registerWatchList(ADDRESS_MODE unoffsetedAddress,QVariant form)
+void* ControllerBase::registerWatchList(ADDRESS_MODE unoffsetedAddress,QVariant form)
 {
-    ADDRESS_MODE __address = toAddressMode(unoffsetedAddress);
-    __channel->RegisterRoutines(toAddressMode(__address),form,__interval);
+    ADDRESS_MODE offsettedAddress = toAddressMode(unoffsetedAddress);
+    __channel->RegisterRoutines(toAddressMode(offsettedAddress),form,__interval);
+
+    return __channel->Handle(offsettedAddress);
 }
 
 QVariant ControllerBase::propertyValues(QVariant key)

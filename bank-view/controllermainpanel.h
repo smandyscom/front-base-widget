@@ -230,6 +230,8 @@ protected:
 
     QVariant propertyValues(QVariant key) Q_DECL_OVERRIDE;
 
+    CellDataBlock* __monitorBlock;
+    UnitContextBlock __monitor;
 
     //ControllerBankTransfer* __controllerTransfer;
 

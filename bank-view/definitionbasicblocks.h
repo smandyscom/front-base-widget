@@ -22,7 +22,7 @@ class CellDataBlock
 public:
     CellDataBlock() {}
 protected:
-    MODBUS_U_WORD reserved[DATA_BLOCK_SIZE_IN_WORD_64];
+    MODBUS_U_WORD reserved[DATA_BLOCK_SIZE_IN_WORD_64]; //static , cannot not be re-direct
 };
 Q_DECLARE_METATYPE(CellDataBlock)
 

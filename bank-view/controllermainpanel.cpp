@@ -1,11 +1,12 @@
 #include "controllermainpanel.h"
 
 ControllerMainPanel::ControllerMainPanel(QObject *parent) :
-    ControllerBase(0,256,100,parent)
+    ControllerBase(0,256,100,parent),
+    __key(HEADER_STRUCTURE::zh_TW)
 {
 
     //! register monitor , start routine service
-    registerWatchList(static_cast<ADDRESS_MODE>(UnitContextBlock::OFFSET_CONTEXT_LUID_PARENT),QVariant::fromValue(CellDataBlock()));
+    __monitorBlock = reinterpret_cast<CellDataBlock*>(registerWatchList(static_cast<ADDRESS_MODE>(UnitContextBlock::OFFSET_CONTEXT_LUID_PARENT),QVariant::fromValue(CellDataBlock())));
 //    registerWatchList(static_cast<ADDRESS_MODE>(ERROR_DEVICE_INDEX),QVariant::fromValue(AbstractDataBlock()));
 
       //!
@@ -25,9 +26,6 @@ ControllerMainPanel::ControllerMainPanel(QObject *parent) :
     //! sync with PLC
     __propertyKeys.append(QVariant::fromValue(UnitBlock::LUID_PARENT));
     __watchList.append((QVariant::fromValue(0)));
-    __key =  HEADER_STRUCTURE::zh_TW; //put this line in initializer would cause shift?
-
-    qDebug() << &__propertyKeys;
 }
 
 //!
@@ -133,14 +131,16 @@ QString ControllerMainPanel::ErrorDescription()
 
 QVariant ControllerMainPanel::propertyValues(QVariant key)
 {
-    switch(key.toInt())
-    {
-    case UnitBlock::LUID_PARENT:
-        return QVariant::fromValue(__channel->Access<MODBUS_U_WORD>(toAddressMode(UnitBlock::LUID_PARENT)));
-        break;
-    default:
-        return ControllerBase::propertyValues(key);
-    }
+//    switch(key.toInt())
+//    {
+//    case UnitBlock::LUID_PARENT:
+//        return QVariant::fromValue(__channel->Access<MODBUS_U_WORD>(toAddressMode(UnitBlock::LUID_PARENT)));
+//        break;
+//    default:
+//        return ControllerBase::propertyValues(key);
+//    }
+    *static_cast<CellDataBlock*>(&__monitor) = *__monitorBlock; //correct casting
+    return __monitor.Value(key.toUInt());
 }
 
 //ControllerMainPanel* ControllerMainPanel::__instace = nullptr;

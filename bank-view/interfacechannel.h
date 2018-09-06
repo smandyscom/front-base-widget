@@ -48,6 +48,10 @@ public:
     void RegisterRoutines(ADDRESS_MODE address,const QVariant dataFrom,int interval = 50);
 
 
+    quint16* Handle(ADDRESS_MODE address)
+    {
+        return &(__clients[ADDRESS_CLIENT_ID(address)]->Cache()[ADDRESS_REGISTER(address)]);
+    }
 
     //!
     //!
