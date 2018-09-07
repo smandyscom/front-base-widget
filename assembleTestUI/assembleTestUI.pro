@@ -55,7 +55,8 @@ HEADERS += \
     tempcontroller.h \
     ../../qt-tries/try-property-bind/commonhelper.h \
     ../bank-view/definitionunitblocks.h \
-    ../bank-view/definitionbasicblocks.h
+    ../bank-view/definitionbasicblocks.h \
+    ../bank-view/definitionmaincontrolblock.h
 
 FORMS += \
         mainwindow.ui

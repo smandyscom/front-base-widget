@@ -139,7 +139,7 @@ QVariant ControllerMainPanel::propertyValues(QVariant key)
 //    default:
 //        return ControllerBase::propertyValues(key);
 //    }
-    *static_cast<CellDataBlock*>(&__monitor) = *__monitorBlock; //correct casting
+    *static_cast<CellDataBlock*>(&__monitor) = *__monitorBlock; //correct casting, value copy
     return __monitor.Value(key.toUInt());
 }
 
