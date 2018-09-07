@@ -254,6 +254,7 @@ void ControllerMaterialTransfer::onAboutToLeave()
 {
     __channel->Access<bool>(toOffseteAddress(DB_ENGAGED),false);
     __channel->beginAccess<bool>(toOffseteAddress(DB_ENGAGED)); //double-check
+    qDebug() << QString("Material:{0} , onAboutToLeave").arg(__slotIndex);
 }
 
 //void ControllerMaterialTransfer::onFieldValueChaged(int field, QVariant value)

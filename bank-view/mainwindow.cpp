@@ -150,6 +150,8 @@ void MainWindow::onReadReply()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
+    qDebug() << "closeEvent";
+
     if(!__isClosing)
     {
         //! inform material transfer to send DB_ENGAGED
