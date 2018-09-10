@@ -34,11 +34,10 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index, int channelInd
 
 //    if((__role & TYPE_DATA_NODE)>0)
 //    {
-        //! DB engaged,
-        __channel->Access<bool>(toOffseteAddress(DB_ENGAGED),true);
+
+
         //! Very first shot
         __channel->beginAccess<MaterialHeaderBlock>(toOffseteAddress(WORD_OUT));
-        __connectionEngaged = true;
     //}
 
     //!
@@ -58,6 +57,11 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index, int channelInd
     actOn->setTargetState(s1);
     s0->addTransition(actOn);
 
+    connect(s0,&QState::entered,[=]()
+    {
+        //! set DB engaged,
+        __channel->Access<bool>(toOffseteAddress(DB_ENGAGED),true);
+    });
     connect(s0,&QState::exited,[this]()
     {
         __procedureTimer.start();
@@ -151,18 +155,24 @@ ModbusDriverAddress ControllerMaterialTransfer::toOffseteAddress(int base)
 
 void ControllerMaterialTransfer::onReply()
 {
-    if(__channel->CachedReplyAddress().getAddress() ==
-            toOffseteAddress(DB_ENGAGED))
-    {
-        if(__channel->Access<bool>(toOffseteAddress(DB_ENGAGED)))
-        {
-            onAboutToLeave();//trigger again
-        }
-        else
-        {
-            __connectionEngaged = false;
-        }
-    }
+//    if(__channel->CachedReplyAddress().getAddress() ==
+//            toOffseteAddress(DB_ENGAGED))
+//    {
+//        if(__channel->Access<bool>(toOffseteAddress(DB_ENGAGED)))
+//        {
+//            onAboutToLeave();//trigger again
+//        }
+//        else
+//        {
+//            __connectionEngaged = false;
+//        }
+//    }
+    if(__connectionEngaged && !__channel->Access<bool>(toOffseteAddress(DB_ENGAGED)))
+        qDebug() << QString("Material:%1 , connectionEngaged:Off").arg(__slotIndex);
+    else if(!__connectionEngaged && __channel->Access<bool>(toOffseteAddress(DB_ENGAGED)))
+        qDebug() << QString("Material:%1 , connectionEngaged:On").arg(__slotIndex);
+
+    __connectionEngaged = __channel->Access<bool>(toOffseteAddress(DB_ENGAGED));
 
     if(__channel->CachedReplyAddress().getAddress() !=
             toOffseteAddress(WORD_OUT))
@@ -253,8 +263,8 @@ void ControllerMaterialTransfer::onUpdate()
 void ControllerMaterialTransfer::onAboutToLeave()
 {
     __channel->Access<bool>(toOffseteAddress(DB_ENGAGED),false);
-    __channel->beginAccess<bool>(toOffseteAddress(DB_ENGAGED)); //double-check
-    qDebug() << QString("Material:{0} , onAboutToLeave").arg(__slotIndex);
+    //__channel->beginAccess<bool>(toOffseteAddress(DB_ENGAGED)); //double-check
+    qDebug() << QString("Material:%1 , onAboutToLeave").arg(__slotIndex);
 }
 
 //void ControllerMaterialTransfer::onFieldValueChaged(int field, QVariant value)
