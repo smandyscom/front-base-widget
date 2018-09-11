@@ -57,12 +57,11 @@ public:
             qDebug() << QString("%1").arg(__model->lastError().text());
         }
     }
-    AbstractDataBlock Record(int key,
+    AbstractDataBlock& Record(int key,
                              KeyType keyType=KEY_ROW_ID,
                              const QVariant keyName=QVariant::fromValue(0))
     {
-        AbstractDataBlock result = record2Data(__model->record(select(key,keyType,keyName)));
-        return result;
+        return record2Data(__model->record(select(key,keyType,keyName)));
     }
 
     //!
@@ -70,10 +69,10 @@ public:
     //! \param record
     //! \return
     //! Assume that header list could be on-and-onto data block
-    virtual AbstractDataBlock record2Data(const QSqlRecord& record)
+    virtual AbstractDataBlock& record2Data(const QSqlRecord& record)
     {
         //! clear all data
-        *__concreteTypeBlock = AbstractDataBlock();
+//        *__concreteTypeBlock = AbstractDataBlock();
 
         foreach (QVariant var, __headerList) {
             if(var.toInt() > INVALID_INDEX)

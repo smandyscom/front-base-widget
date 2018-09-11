@@ -53,7 +53,7 @@ protected:
     QList<QVariant> __propertyKeys;
     QList<QVariant> __watchList;
 
-    void *registerWatchList(ADDRESS_MODE unoffsetedAddress,QVariant form);
+    MODBUS_U_WORD *registerWatchList(ADDRESS_MODE unoffsetedAddress,QVariant form);
     ADDRESS_MODE toAddressMode(ADDRESS_MODE unoffseted) const;
 
     //!

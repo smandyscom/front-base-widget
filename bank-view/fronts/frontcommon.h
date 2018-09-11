@@ -10,6 +10,11 @@ class FrontCommon : public QWidget
 public:
     explicit FrontCommon(QWidget *parent = nullptr);
 
+    //!
+    //! \brief event
+    //! \param event
+    //! \return
+    //! Handling DynamicProperty
     bool event(QEvent* event) Q_DECL_OVERRIDE;
 signals:
 

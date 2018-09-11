@@ -11,7 +11,19 @@ using namespace DEF_BASIC_DIMENSION;
 class UnitMonitorBlock:
         public AbstractDataBlock
 {
+    Q_OBJECT
 public:
+    UnitMonitorBlock(QObject* parent=nullptr) :
+        AbstractDataBlock(parent)
+    {
+
+    }
+    UnitMonitorBlock(MODBUS_U_WORD* anchor,QObject* parent=nullptr) :
+        AbstractDataBlock(anchor,parent)
+    {
+
+    }
+
     enum OffsetMonitor
     {
         OFFSET_MONITOR_STATE=0x00000001,
@@ -53,11 +65,24 @@ public:
     }
 
 };
-Q_DECLARE_METATYPE(UnitMonitorBlock)
+//Q_DECLARE_METATYPE(UnitMonitorBlock)
 
-class UnitOperationBlock:public UnitMonitorBlock
+class UnitOperationBlock:
+        public UnitMonitorBlock
 {
+    Q_OBJECT
 public:
+    UnitOperationBlock(QObject* parent=nullptr) :
+        UnitMonitorBlock(parent)
+    {
+
+    }
+    UnitOperationBlock(MODBUS_U_WORD* anchor,QObject* parent=nullptr) :
+        UnitMonitorBlock(anchor,parent)
+    {
+
+    }
+
     enum OffsetOperation
     {
         OFFSET_OPERATION_CONTROL_WORD=3,
@@ -81,11 +106,24 @@ public:
         return UnitMonitorBlock::Value(key);
     }
 };
-Q_DECLARE_METATYPE(UnitOperationBlock)
+//Q_DECLARE_METATYPE(UnitOperationBlock)
 
-class UnitContextBlock : public UnitOperationBlock
+class UnitContextBlock :
+        public UnitOperationBlock
 {
+    Q_OBJECT
 public:
+    UnitContextBlock(QObject* parent=nullptr) :
+        UnitOperationBlock(parent)
+    {
+
+    }
+    UnitContextBlock(MODBUS_U_WORD* anchor,QObject* parent=nullptr) :
+        UnitOperationBlock(anchor,parent)
+    {
+
+    }
+
     enum OffsetContext : uint
     {
         OFFSET_CONTEXT_LUID_PARENT=0,
@@ -149,7 +187,7 @@ public:
         }
     }
 };
-Q_DECLARE_METATYPE(UnitContextBlock)
+//Q_DECLARE_METATYPE(UnitContextBlock)
 
 namespace UnitBlock {
 Q_NAMESPACE

@@ -6,7 +6,7 @@ ControllerMainPanel::ControllerMainPanel(QObject *parent) :
 {
 
     //! register monitor , start routine service
-    __monitorBlock = reinterpret_cast<CellDataBlock*>(registerWatchList(static_cast<ADDRESS_MODE>(UnitContextBlock::OFFSET_CONTEXT_LUID_PARENT),QVariant::fromValue(CellDataBlock())));
+    m__monitor =  new UnitContextBlock(registerWatchList(static_cast<ADDRESS_MODE>(UnitContextBlock::OFFSET_CONTEXT_LUID_PARENT),QVariant::fromValue(CellDataBlock())),parent);
 //    registerWatchList(static_cast<ADDRESS_MODE>(ERROR_DEVICE_INDEX),QVariant::fromValue(AbstractDataBlock()));
 
       //!
@@ -139,8 +139,8 @@ QVariant ControllerMainPanel::propertyValues(QVariant key)
 //    default:
 //        return ControllerBase::propertyValues(key);
 //    }
-    *static_cast<CellDataBlock*>(&__monitor) = *__monitorBlock; //correct casting, value copy
-    return __monitor.Value(key.toUInt());
+//    *static_cast<CellDataBlock*>(&__monitor) = *m__monitor; //correct casting, value copy
+    return m__monitor->Value(key.toUInt());
 }
 
 //ControllerMainPanel* ControllerMainPanel::__instace = nullptr;
