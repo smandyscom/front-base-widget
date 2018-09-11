@@ -65,7 +65,49 @@ SOURCES += \
     adsclient.cpp \
     interfacechannel.cpp \
     interfaceclient.cpp \
-    controllerbase.cpp
+    controllerbase.cpp \
+    abstractauthreceiver.cpp \
+    adsclient.cpp \
+    controllerauth.cpp \
+    controllerbanktransfer.cpp \
+    controllerbase.cpp \
+    controllermainpanel.cpp \
+    controllermanualmode.cpp \
+    controllermaterialtransfer.cpp \
+    controllersafety.cpp \
+    definitionauxiliarykeys.cpp \
+    definitionbasicblocks.cpp \
+    definitionsbaselayer.cpp \
+    delegatedataselector.cpp \
+    delegatematerialselector.cpp \
+    enumcomboboxdynamic.cpp \
+    frontbanktransfer.cpp \
+    frontconfigurationtransfer.cpp \
+    frontcontrolpanel.cpp \
+    frontcylinderpanel.cpp \
+    frontiooverride.cpp \
+    frontmanaualmode.cpp \
+    frontmaterialselection.cpp \
+    frontmaterialselectionv2.cpp \
+    frontreportquerytable.cpp \
+    frontsafetypanel.cpp \
+    frontsinglefilter.cpp \
+    frontslot.cpp \
+    fronttwinfilter.cpp \
+    frontunitpanel.cpp \
+    interfacechannel.cpp \
+    interfaceclient.cpp \
+    junctionbankdatabase.cpp \
+    main.cpp \
+    mainwindow.cpp \
+    modbuschannel.cpp \
+    modbusserializedclient.cpp \
+    modbussetupwidget.cpp \
+    tablemodelcylindervisual.cpp \
+    tablemodeliooverride.cpp \
+    utilities.cpp \
+    fronts/frontcommon.cpp \
+    helpers/commonhelper.cpp
 HEADERS += \
     modbussetupwidget.h \
     utilities.h \
@@ -118,7 +160,59 @@ HEADERS += \
     interfacechannel.h \
     interfacerequest.h \
     interfaceclient.h \
-    controllerbase.h
+    controllerbase.h \
+    abstractauthreceiver.h \
+    abstractsqltableadpater.h \
+    adsclient.h \
+    controllerauth.h \
+    controllerbanktransfer.h \
+    controllerbase.h \
+    controllermainpanel.h \
+    controllermanualmode.h \
+    controllermaterialtransfer.h \
+    controllersafety.h \
+    definitionauxiliarykeys.h \
+    definitionaxisblocks.h \
+    definitionbasicblocks.h \
+    definitioncommandblock.h \
+    definitioncylinderblock.h \
+    definitionioattributes.h \
+    definitionmaterialkeys.h \
+    definitionsbaselayer.h \
+    definitionsignalblock.h \
+    definitionslotblock.h \
+    definitionunitblocks.h \
+    delegatedataselector.h \
+    delegatematerialselector.h \
+    enumcomboboxdynamic.h \
+    enumcomboboxgeneric.h \
+    frontbanktransfer.h \
+    frontconfigurationtransfer.h \
+    frontcontrolpanel.h \
+    frontcylinderpanel.h \
+    frontiooverride.h \
+    frontmanaualmode.h \
+    frontmaterialselection.h \
+    frontmaterialselectionv2.h \
+    frontreportquerytable.h \
+    frontsafetypanel.h \
+    frontsinglefilter.h \
+    frontslot.h \
+    fronttwinfilter.h \
+    frontunitpanel.h \
+    interfacechannel.h \
+    interfaceclient.h \
+    interfacerequest.h \
+    junctionbankdatabase.h \
+    mainwindow.h \
+    modbuschannel.h \
+    modbusserializedclient.h \
+    modbussetupwidget.h \
+    tablemodelcylindervisual.h \
+    tablemodeliooverride.h \
+    utilities.h \
+    fronts/frontcommon.h \
+    helpers/commonhelper.h
 
 unix {
     target.path = /usr/lib

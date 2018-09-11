@@ -26,6 +26,8 @@ TableModelIOOverride::TableModelIOOverride(QSqlTableModel *source, Qt::GlobalCol
 //!
 QVariant TableModelIOOverride::data(const QModelIndex &idx, int role) const
 {
+    //!Possible to implemented as QSS?
+
     //!Base method
     if(!(idx.column()== fieldIndex(QVariant::fromValue(NAME).toString()) && role==Qt::BackgroundRole))
         return QSqlTableModel::data(idx,role);
