@@ -62,8 +62,8 @@ public:
     };
     enum OperationBits
     {
-        BIT_0_ERROR_RESET = 0,
-        BIT_1_TOGGLE_PAUSE = 1,
+        BIT_0_ERROR_RESET = 0x000000,
+        BIT_1_TOGGLE_PAUSE = 0x01,
         BIT_2_TOGGLE_INIT = 2,
         BIT_3_TOGGLE_MANUAL = 3,
         BIT_4_ERROR_IGNORE = 4,
