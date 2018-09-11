@@ -35,6 +35,11 @@ FrontControlPanel::FrontControlPanel(QList<ControllerMaterialTransfer*> material
     //!
     connect(__controller,&ControllerMainPanel::stateChanged,this,&FrontControlPanel::onStateChanged);
     connect(__controller,&ControllerMainPanel::errorChanged,this,&FrontControlPanel::onErrorChanged);
+    //!
+    connect(ui->pushButtonInletClear,&QPushButton::clicked,this,&FrontControlPanel::onInletCleared);
+    connect(ui->pushButtonETUsageClear,&QPushButton::clicked,this,&FrontControlPanel::onETCounterCleared);
+    connect(ui->spinBoxETUsageAlarm,&QSpinBox::editingFinished,this,&FrontControlPanel::onETThresholdChanged);
+
     //! Safety I/O monitor
     FrontSafetyPanel* fsp = new FrontSafetyPanel(ui->widgetSafetyIO);
     //!
@@ -43,11 +48,6 @@ FrontControlPanel::FrontControlPanel(QList<ControllerMaterialTransfer*> material
         ui->gridLayoutMaterial->addWidget(__frontSlot,i/3,i%3);
     }
     //!
-//    frontMaterialSelection* __fms = new frontMaterialSelection(ControllerMaterialTransfer::DataBase(),
-//                                                               ui->frameWorking);
-//    //!added for creative slot
-//    connect(__fms,&frontMaterialSelection::fieldValueChanged,materialSlots[0],&ControllerMaterialTransfer::onFieldValueChaged);
-//    __fms->onInitialized(); // inform material controller
     FrontMaterialSelectionV2* __fms2 = new FrontMaterialSelectionV2(ControllerMaterialTransfer::DataBase(),
                                                                     ui->frameWorking);
 
@@ -75,13 +75,12 @@ void FrontControlPanel::onTimerTimeout()
     ui->lcdNumberSyncCounter->display(__controller->ControllerTransfer()->RestTasksCount());
     //! Show aux datas
     //! InletCount
-    //! OutletCount
-    //! OKCount
-    //! NGCount
-    //! CYCTIME
     ui->lcdNumberInletCount->display(__controller->Data(ControllerMainPanel::MON_DATA_0).toInt());
     ui->lcdNumberCycleTime->display(__controller->Data(ControllerMainPanel::MON_DATA_4).toReal());
-    //!
+    ui->lcdNumberETUsageCounter->display(__controller->Data(ControllerMainPanel::ET_USAGE_COUNTER).toInt());
+    //! Activate clear
+    ui->pushButtonETUsageClear->setEnabled(ui->lcdNumberETUsageCounter->value()>=ui->spinBoxETUsageAlarm->value());
+        //!
     switch (__controller->InitializingState()) {
         case ControllerMainPanel::WAIT_INITIAL:
             ui->textBrowserInitializing->setText(QString("等待復歸"));
@@ -109,12 +108,19 @@ void FrontControlPanel::onStateChanged(ControllerMainPanel::MainStates currentSt
     case ControllerMainPanel::STATE_MANUAL:
         if(!ui->radioButtonManual->isChecked())
             ui->radioButtonManual->setChecked(true);
+
+        ui->spinBoxETUsageAlarm->setEnabled(true);
+
         break;
     case ControllerMainPanel::STATE_SEMI_AUTO:
         if(!ui->radioButtonAuto->isChecked())
             ui->radioButtonAuto->setChecked(true);
+
+        ui->spinBoxETUsageAlarm->setValue(__controller->Data(ControllerMainPanel::ET_USAGE_THRESHOLD).toInt());
+        ui->spinBoxETUsageAlarm->setEnabled(false);
         break;
     default:
+
         break;
     }
 }
@@ -134,4 +140,16 @@ void FrontControlPanel::onErrorChanged(MODBUS_U_QUAD currentError)
         ui->textBrowserErrorDescription->clear();
 }
 
+void FrontControlPanel::onETThresholdChanged()
+{
+    __controller->Data(ControllerMainPanel::ET_USAGE_THRESHOLD,QVariant::fromValue(ui->spinBoxETUsageAlarm->value()));
+}
+void FrontControlPanel::onETCounterCleared()
+{
+    __controller->Data(ControllerMainPanel::ET_USAGE_COUNTER,QVariant::fromValue(0));
+}
 
+void FrontControlPanel::onInletCleared()
+{
+    __controller->Data(ControllerMainPanel::MON_DATA_0,QVariant::fromValue(0));
+}

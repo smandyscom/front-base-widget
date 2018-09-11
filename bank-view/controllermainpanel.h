@@ -52,6 +52,9 @@ public:
         MON_DATA_6= 0x0300003C,
         MON_DATA_7= 0x0300003E,
 
+        ET_USAGE_THRESHOLD = MON_DATA_1,
+        ET_USAGE_COUNTER = MON_DATA_2,
+
         OFFSET_CONTEXT_LUID_PARENT = 0x03000000+UnitContextBlock::OFFSET_CONTEXT_LUID_PARENT,
     };
     Q_ENUM(MainPanelContext)
@@ -178,6 +181,10 @@ public:
         return __state;
     }
 
+    void Data(uint key,QVariant value)
+    {
+        __channel->Access(ModbusDriverAddress(key),value);
+    }
     QVariant Data(uint key) const
     {
         MODBUS_U_LONG value = __channel->Access<MODBUS_U_LONG>(ModbusDriverAddress(key));
