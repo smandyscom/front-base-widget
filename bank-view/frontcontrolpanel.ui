@@ -264,20 +264,40 @@
           <enum>QLayout::SetDefaultConstraint</enum>
          </property>
          <item>
-          <widget class="QTextBrowser" name="textBrowserNetwork">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
+          <layout class="QHBoxLayout" name="horizontalLayout_4">
+           <property name="spacing">
+            <number>0</number>
            </property>
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>50</height>
-            </size>
-           </property>
-          </widget>
+           <item>
+            <widget class="QTextBrowser" name="textBrowserNetwork">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>35</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="labelNetword">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>35</height>
+              </size>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
          <item>
           <widget class="QTextBrowser" name="textBrowserInitializing">

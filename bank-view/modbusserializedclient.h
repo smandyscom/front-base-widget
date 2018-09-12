@@ -37,6 +37,8 @@ public:
     void Driver(QModbusClient* value);
 
 
+    bool IsConnected() const {return __driver->state() == QModbusClient::ConnectedState;}
+
     ~ModbusSerializedClient();
 
 signals:

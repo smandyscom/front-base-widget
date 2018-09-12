@@ -94,6 +94,23 @@ void FrontControlPanel::onTimerTimeout()
         default:
             break;
     }
+
+    //!
+    bool result = true;
+    for(int i=2;i<7;i++)
+        result &= ModbusChannel::Channels()[i]->IsConnected();
+    switch (result) {
+    case true:
+        ui->textBrowserNetwork->setText("PLC連線正常");
+
+        break;
+    case false:
+        ui->textBrowserNetwork->setText("PLC連線異常");
+        break;
+    default:
+        break;
+    }
+    utilities::colorChangeOver(ui->labelNetword,result,Qt::green,Qt::red);
 }
 
 void FrontControlPanel::onCheckedChanged(bool toggled)

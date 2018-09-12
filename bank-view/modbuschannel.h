@@ -84,6 +84,8 @@ public:
     {
         return __cachedReplyValue;
     }
+
+
 signals:
     //!
     //! \brief raiseUpdateEvent
