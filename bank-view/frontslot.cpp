@@ -3,7 +3,7 @@
 
 #include <QDebug>
 
-FrontSlot::FrontSlot(ControllerMaterialTransfer *controller, QWidget *parent) :
+FrontSlot::FrontSlot(ControllerMaterialTransfer *controller,bool isShowCounters, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FrontSlot),
     __controller(controller)
@@ -38,13 +38,22 @@ FrontSlot::FrontSlot(ControllerMaterialTransfer *controller, QWidget *parent) :
         __reference->setTable(QString("MAT_HEADER_SLOT%1").arg(__controller->Index()));
         bool result = __reference->select();
         qDebug() << QString("%1:%2").arg(__reference->tableName()).arg(result);
-
+        __reference->deleteLater();
         HEADER_STRUCTURE::HeaderRender::renderViewHeader(__reference,__view);
+        //! Set title
+        __reference = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_REGION);
+        __reference->setTable("DEF_REGION");
+        __reference->setFilter(QString("ID=%1").arg(__controller->Index()));
+        __reference->select();
+        ui->labelName->setText(__reference->record(0).value("zh_Tw").toString());
         __reference->deleteLater();
         //!
         connect(ui->toolButtonDialog,&QToolButton::clicked,this,&FrontSlot::onDataRaise);
         connect(__controller,&ControllerMaterialTransfer::dataUpdated,this,&FrontSlot::onDataUpdated);
         connect(ui->pushButtonMaterialOverrideOff,&QPushButton::clicked,this,&FrontSlot::onMaterialOverrideOff);
+        connect(ui->pushButtonClear,&QPushButton::clicked,this,&FrontSlot::onClear);
+
+
 }
 
 FrontSlot::~FrontSlot()
@@ -60,6 +69,18 @@ void FrontSlot::onDataUpdated()
 
     //! enable button once valid
     ui->pushButtonMaterialOverrideOff->setEnabled(__controller->IsValid());
+
+    //!
+    ui->lcdNumberTotalCounter->display(__controller->TotalCount());
+    ui->lcdNumberOKCounter->display(__controller->OKCount());
+    ui->lcdNumberNGCounter->display(__controller->NGCount());
+    ui->lcdNumberOKRate->display(__controller->OKRate());
+    ui->lcdNumberNGRate->display(__controller->NGRate());
+    ui->labelOKNG->setText(QVariant::fromValue(__controller->CurrentGrade()).toString());
+    utilities::colorChangeOver(ui->labelOKNG,
+                              __controller->CurrentGrade()==ControllerMaterialTransfer::OK,
+                              Qt::green,
+                              Qt::red);
 }
 
 void FrontSlot::onDataRaise()
@@ -76,4 +97,8 @@ void FrontSlot::onMaterialOverrideOff()
 {
     __controller->MaterialOverride(false);
     ui->pushButtonMaterialOverrideOff->setEnabled(false);
+}
+void FrontSlot::onClear()
+{
+    __controller->CounterClear();
 }

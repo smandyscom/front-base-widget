@@ -58,7 +58,7 @@
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QLCDNumber" name="lcdNumber"/>
+        <widget class="QLCDNumber" name="lcdNumberOKCounter"/>
        </item>
       </layout>
      </item>
@@ -72,7 +72,7 @@
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QLCDNumber" name="lcdNumber_5"/>
+        <widget class="QLCDNumber" name="lcdNumberTotalCounter"/>
        </item>
       </layout>
      </item>
@@ -86,7 +86,7 @@
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QLCDNumber" name="lcdNumber_4"/>
+        <widget class="QLCDNumber" name="lcdNumberNGRate"/>
        </item>
        <item row="0" column="2">
         <widget class="QLabel" name="label_6">
@@ -244,7 +244,7 @@
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QLCDNumber" name="lcdNumber_2"/>
+        <widget class="QLCDNumber" name="lcdNumberNGCounter"/>
        </item>
       </layout>
      </item>
@@ -258,7 +258,7 @@
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QLCDNumber" name="lcdNumber_3"/>
+        <widget class="QLCDNumber" name="lcdNumberOKRate"/>
        </item>
        <item row="0" column="2">
         <widget class="QLabel" name="label_2">
@@ -270,7 +270,7 @@
       </layout>
      </item>
      <item row="9" column="0">
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="pushButtonClear">
        <property name="text">
         <string>Clear</string>
        </property>
