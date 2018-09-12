@@ -10,7 +10,8 @@ FrontSlot::FrontSlot(ControllerMaterialTransfer *controller,bool isShowCounters,
 {
     ui->setupUi(this);
     //!
-    ui->lcdNumberSlot->display(__controller->Index());
+//    ui->lcdNumberSlot->display(__controller->Index());
+    ui->frameInspection->setVisible(isShowCounters);
     //! Prepare dialog
 
         __dialog = new QDialog(this);

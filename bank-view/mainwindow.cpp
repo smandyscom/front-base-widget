@@ -79,11 +79,11 @@ MainWindow::MainWindow(QWidget *parent) :
     //! 0,1,3,4,8,15
     //! Channel , Slot
     QList<QPair<int,int>> __typeList = {
-        ChannelSlot(4,0),//0
-        ChannelSlot(5,1),//1
-        ChannelSlot(4,3),//3
-        ChannelSlot(4,4),//4
-        ChannelSlot(6,8),//8
+        ChannelSlot(4,0),//0,input
+        ChannelSlot(5,1),//1,bottom
+        ChannelSlot(4,3),//3,et
+        ChannelSlot(4,4),//4,top
+        ChannelSlot(6,8),//8,front
         ChannelSlot(4,15),//15
     };
     foreach (ChannelSlot var, __typeList) {
@@ -91,6 +91,10 @@ MainWindow::MainWindow(QWidget *parent) :
                                                               var.first,
                                                               this));
     }
+    //!
+    __materialSlots[1]->IndexGrades(0,11); //bottom view
+    __materialSlots[3]->IndexGrades(0,23); //top view
+    __materialSlots[4]->IndexGrades(0,28); //front view
     //! Initialize FrontManaul panel
     FrontControlPanel* fcp2 = new FrontControlPanel(__materialSlots,ui->tabMain);
     FrontManaualMode* fmm = new FrontManaualMode(ui->tabManual);

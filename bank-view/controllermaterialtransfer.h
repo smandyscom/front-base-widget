@@ -130,6 +130,7 @@ public:
         m_totalCounter = 0;
         m_okCounter = 0;
         m_ngCounter = 0;
+        emit dataUpdated();
     }
     int TotalCount() const {return m_totalCounter;}
     int OKCount() const {return m_okCounter;}
@@ -147,6 +148,11 @@ public:
         return ((qreal)m_ngCounter/(qreal)m_totalCounter) * 100;
     }
     Grade CurrentGrade() const {return m_currentGrade;}
+    void IndexGrades(int index1,int index2)
+    {
+        m_index_grade1 = index1;
+        m_index_grade2 = index2;
+    }
 
 signals:
     void dataUpdated();

@@ -32,10 +32,10 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index, int channelInd
         __table = new QSqlTableModel(this,__database);
         QString __tableName = QString("%1%2").arg(QVariant::fromValue(MAT_DATA_SLOT).toString()).arg(__slotIndex);
         __table->setTable(QString("%1%2").arg(QVariant::fromValue(MAT_DATA_SLOT).toString()).arg(__slotIndex));
-        bool result = __table->select();
+        //bool result = __table->select();
         __adpator = new GenericSqlTableAdapter<SlotDataBlock,SlotBlock::DataBaseHeaders>(__table);
-        if(!result)
-            qDebug() << result;
+//        if(!result)
+//            qDebug() << result;
     }
 
 //    if((__role & TYPE_DATA_NODE)>0)
