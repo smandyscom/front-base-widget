@@ -3,7 +3,7 @@
 ControllerMaterialTransfer::ControllerMaterialTransfer(int index, int channelIndex, QObject *parent) :
     QStateMachine(parent),
     __slotIndex(index),
-    __pollCyclic(10),
+    __pollCyclic(100),
     __materialId(0),
     __channelIndex(channelIndex)
 {

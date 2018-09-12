@@ -38,7 +38,7 @@ void ControllerMainPanel::onReply()
 {
     switch (__channel->CachedReplyAddress().getAddress()) {
     case OFFSET_CONTEXT_LUID_PARENT:
-        QTimer::singleShot(10,this,[=](){
+        QTimer::singleShot(100,this,[=](){
             //! Schedualing next polling
             __channel->beginAccess<AbstractDataBlock>(__monitorBaseAddress);
         });
