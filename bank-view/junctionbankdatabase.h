@@ -12,6 +12,7 @@
 
 #include <QSqlRelationalTableModel>.h>
 
+#include<QDebug>
 //!
 //! \brief TableEntity
 //!
@@ -76,7 +77,13 @@ public:
         QSqlTableModel* result = new QSqlTableModel(this,__database);
         result->setEditStrategy(QSqlTableModel::OnFieldChange);
         result->setTable(__tableMap[value].second->tableName());
-        result->select();
+
+        bool bResult = result->select();
+        __tableMap[value].first = bResult;
+        //! Output results
+        qDebug() << QString("%1:%2")
+                        .arg(QVariant::fromValue(value).value<QString>())
+                        .arg(bResult);
         return result;
     }
 

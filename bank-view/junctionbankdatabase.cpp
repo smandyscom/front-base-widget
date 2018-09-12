@@ -39,12 +39,12 @@ void JunctionBankDatabase::onInitialize()
         bool result = false;
         __reference->setEditStrategy(QSqlTableModel::OnFieldChange);
         __reference->setTable(QVariant::fromValue(var).value<QString>());
-        result = __reference->select();
-        __tableMap[var] = TableEntity(result,__reference);
-        //! Output results
-        qDebug() << QString("%1:%2")
-                        .arg(QVariant::fromValue(var).value<QString>())
-                        .arg(result);
+//        result = __reference->select();
+        __tableMap[var] = TableEntity(false,__reference);
+//        //! Output results
+//        qDebug() << QString("%1:%2")
+//                        .arg(QVariant::fromValue(var).value<QString>())
+//                        .arg(result);
 
     }
 
