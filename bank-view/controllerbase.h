@@ -60,7 +60,7 @@ protected:
     //! \brief __instance
     //! Next layer
 
-
+    AbstractDataBlock* m_monitor;
     virtual QVariant propertyValues(QVariant key);
 
 private:

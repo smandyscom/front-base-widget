@@ -20,6 +20,10 @@ ADDRESS_MODE ControllerBase::toAddressMode(ADDRESS_MODE unoffseted) const
             __baseOffset;
 }
 
+//!
+//! \brief ControllerBase::onAcknowledged
+//! \param ack
+//! Pumping dynamic property values to parent (Routine update
 void ControllerBase::onAcknowledged(InterfaceRequest ack)
 {
     //! could be overriden by derived
@@ -49,5 +53,5 @@ MODBUS_U_WORD* ControllerBase::registerWatchList(ADDRESS_MODE unoffsetedAddress,
 
 QVariant ControllerBase::propertyValues(QVariant key)
 {
-    return QVariant::fromValue(0);
+    return m_monitor->Value(key.toUInt());
 }

@@ -1,6 +1,8 @@
 #include "frontcommon.h"
 
-FrontCommon::FrontCommon(QWidget *parent) : QWidget(parent)
+FrontCommon::FrontCommon(ControllerBase *controller, QWidget *parent) :
+    QWidget(parent),
+    m_controller(controller)
 {
 
 }

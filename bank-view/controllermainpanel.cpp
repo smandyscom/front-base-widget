@@ -6,13 +6,12 @@ ControllerMainPanel::ControllerMainPanel(QObject *parent) :
 {
 
     //! register monitor , start routine service
-    m__monitor =  new UnitContextBlock(registerWatchList(static_cast<ADDRESS_MODE>(UnitContextBlock::OFFSET_CONTEXT_LUID_PARENT),QVariant::fromValue(CellDataBlock())),parent);
-//    registerWatchList(static_cast<ADDRESS_MODE>(ERROR_DEVICE_INDEX),QVariant::fromValue(AbstractDataBlock()));
-
+    m_monitor =  new MainMonitorBlock(registerWatchList(static_cast<ADDRESS_MODE>(UnitContextBlock::OFFSET_CONTEXT_LUID_PARENT),
+                                                         QVariant::fromValue(CellDataBlock())),parent);
       //!
-    __errorDeviceMap[CommitBlock::SELECTION_AXIS] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_AXIS);
-    __errorDeviceMap[CommitBlock::SELECTION_CYLINDER] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_CYLINDERS);
-    __errorDeviceMap[CommitBlock::SELECTION_UNIT] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_UNITS);
+    m_errorDeviceMap[CommitBlock::SELECTION_AXIS] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_AXIS);
+    m_errorDeviceMap[CommitBlock::SELECTION_CYLINDER] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_CYLINDERS);
+    m_errorDeviceMap[CommitBlock::SELECTION_UNIT] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_UNITS);
 
     __errorCodeMap[CommitBlock::SELECTION_AXIS] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::ERROR_CODE_AXIS);
     __errorCodeMap[CommitBlock::SELECTION_CYLINDER] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::ERROR_CODE_CYLINDER);
@@ -28,21 +27,7 @@ ControllerMainPanel::ControllerMainPanel(QObject *parent) :
     __watchList.append((QVariant::fromValue(0)));
 }
 
-//!
-//! \brief ControllerMainPanel::onAcknowledged
-//! \param ack
-//! Routine
-void ControllerMainPanel::onAcknowledged(InterfaceRequest ack)
-{
-    //!
-    //! Error detection
-    //!
-//    if(ErrorCode() != __lastError)
-//        emit errorChanged(ErrorCode());
-//    __lastError = ErrorCode();
 
-    ControllerBase::onAcknowledged(ack);
-}
 void ControllerMainPanel::onInitializing(InterfaceRequest ack)
 {
     this->__isInitialized = true;
@@ -73,17 +58,11 @@ bool ControllerMainPanel::event(QEvent *event)
     return ControllerBase::event(event);
 }
 
-//ControllerMainPanel* ControllerMainPanel::Instance()
-//{
-//    if(__instace ==nullptr)
-//        __instace = new ControllerMainPanel();
-//    return __instace;
-//}
 
 QString ControllerMainPanel::ErrorDevice()
 {
     QSqlRecord __recordIndex =
-            __errorDeviceMap[ErrorCategrory()]->record(ErrorDeviceIndex());
+            m_errorDeviceMap[ErrorCategrory()]->record(ErrorDeviceIndex());
 
     QSqlRecord __recordDevice =
             utilities::getSqlTableSelectedRecord(__deviceTable,
@@ -131,16 +110,9 @@ QString ControllerMainPanel::ErrorDescription()
 
 QVariant ControllerMainPanel::propertyValues(QVariant key)
 {
-//    switch(key.toInt())
-//    {
-//    case UnitBlock::LUID_PARENT:
-//        return QVariant::fromValue(__channel->Access<MODBUS_U_WORD>(toAddressMode(UnitBlock::LUID_PARENT)));
-//        break;
-//    default:
-//        return ControllerBase::propertyValues(key);
-//    }
-//    *static_cast<CellDataBlock*>(&__monitor) = *m__monitor; //correct casting, value copy
-    return m__monitor->Value(key.toUInt());
+    if(key.toInt() == MainMonitorBlock::ERROR_CODE)
+        return QVariant::fromValue(ErrorDevice() + ErrorDescription());
+
+    return ControllerBase::propertyValues(key);
 }
 
-//ControllerMainPanel* ControllerMainPanel::__instace = nullptr;

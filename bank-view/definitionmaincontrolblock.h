@@ -6,7 +6,19 @@
 class MainMonitorBlock:
         public UnitOperationBlock
 {
+    Q_OBJECT
 public:
+    MainMonitorBlock(QObject* parent=nullptr) :
+        UnitOperationBlock(parent)
+    {
+
+    }
+    MainMonitorBlock(MODBUS_U_WORD* anchor,QObject* parent=nullptr) :
+        UnitOperationBlock(anchor,parent)
+    {
+
+    }
+
     enum OffsetMainMonitor
     {
         //! Monitors
@@ -50,7 +62,7 @@ public:
         UnitOperationBlock::Value(key,value);
     }
 };
-Q_DECLARE_METATYPE(MainControlBlock)
+//Q_DECLARE_METATYPE(MainControlBlock)
 
 class MainOperationBlock:
         public MainMonitorBlock
@@ -63,11 +75,11 @@ public:
     enum OperationBits
     {
         BIT_0_ERROR_RESET = 0x000000,
-        BIT_1_TOGGLE_PAUSE = 0x01,
-        BIT_2_TOGGLE_INIT = 2,
-        BIT_3_TOGGLE_MANUAL = 3,
-        BIT_4_ERROR_IGNORE = 4,
-        BIT_5_TOGGLE_CLEAR = 5
+        BIT_1_TOGGLE_PAUSE = 0x010000,
+        BIT_2_TOGGLE_INIT = 0x020000,
+        BIT_3_TOGGLE_MANUAL = 0x030000,
+        BIT_4_ERROR_IGNORE = 0x040000,
+        BIT_5_TOGGLE_CLEAR = 0x050000
     };
 
     QVariant Value(uint key) Q_DECL_OVERRIDE
@@ -79,6 +91,6 @@ public:
         Bit(key,value.toBool());
     }
 };
-Q_DECLARE_METATYPE(MainOperationBlock)
+//Q_DECLARE_METATYPE(MainOperationBlock)
 
 #endif // DEFINITIONMAINCONTROLBLOCK_H

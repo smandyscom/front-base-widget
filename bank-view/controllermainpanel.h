@@ -7,6 +7,7 @@
 #include <definitionsbaselayer.h>
 #include <definitionunitblocks.h>
 #include <definitionauxiliarykeys.h>
+#include <definitionmaincontrolblock.h>
 
 #include <junctionbankdatabase.h>
 
@@ -171,16 +172,13 @@ public:
 
 
     explicit ControllerMainPanel(QObject *parent = nullptr);
-    //static ControllerMainPanel* Instance();
 signals:
     void stateChanged(MainStates currentState);
     void errorChanged(MODBUS_U_QUAD currentError);
 public slots:
 //    void onDataChanged(TransferTask task);
 protected slots:
-//    void onDataTransfered();
 
-    void onAcknowledged(InterfaceRequest ack) Q_DECL_OVERRIDE;
     void onInitializing(InterfaceRequest ack) Q_DECL_OVERRIDE;
 
 protected:
@@ -218,24 +216,15 @@ protected:
     //!
     //! \brief __deviceMap
     //! Key , Device categrory
-    QMap<MODBUS_S_WORD,QSqlTableModel*> __errorDeviceMap;
+    QMap<MODBUS_S_WORD,QSqlTableModel*> m_errorDeviceMap;
     //!
     //! \brief __errorDescriptionMap
     //! Key 1: Device categrory
     //! Key 2: Error Code
-    QMap<MODBUS_S_WORD,QSqlTableModel*> __errorCodeMap;
+    QMap<MODBUS_S_WORD,QSqlTableModel*> m_errorCodeMap;
 
-    MainStates __lastState;
-    MODBUS_U_QUAD __lastError;
 
     QVariant propertyValues(QVariant key) Q_DECL_OVERRIDE;
-
-    UnitContextBlock* m__monitor;
-
-    //ControllerBankTransfer* __controllerTransfer;
-
-    //static ControllerMainPanel* __instace;
-
 };
 
 #endif // CONTROLLERMAINPANEL_H

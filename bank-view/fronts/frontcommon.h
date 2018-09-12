@@ -4,11 +4,13 @@
 #include <QtWidgets>
 #include <QtEvents>
 
+#include <controllerbase.h>
+
 class FrontCommon : public QWidget
 {
     Q_OBJECT
 public:
-    explicit FrontCommon(QWidget *parent = nullptr);
+    explicit FrontCommon(ControllerBase* controller,QWidget *parent = nullptr);
 
     //!
     //! \brief event
@@ -19,6 +21,8 @@ public:
 signals:
 
 public slots:
+protected:
+    ControllerBase* m_controller;
 };
 
 #endif // FRONTCOMMON_H
