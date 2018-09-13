@@ -7,6 +7,7 @@
 #include <QVariant>
 #include <QTimer>
 
+#include <definitionmanualblock.h>
 #include <definitionsbaselayer.h>
 using namespace BaseLayer;
 
