@@ -22,17 +22,10 @@ class ControllerBase : public QObject
 {
     Q_OBJECT
 
-//using VALUE_FETCHER = QVariant (ControllerBase::*)();
-
 public:
-    enum Temp
-    {
-      PROP,
-    };
-    Q_ENUM(Temp)
-
     explicit ControllerBase(quint8 clientId,quint16 baseOffset,int interval,QObject *parent = nullptr);
 
+    bool event(QEvent *event) Q_DECL_OVERRIDE;
 protected slots:
     //!
     //! \brief onAcknowledged
@@ -42,29 +35,24 @@ protected slots:
     //!
     //! \brief onInitializing
     //! First time received ack
-    virtual void onInitializing(InterfaceRequest ack){}
+    virtual void onInitializing(InterfaceRequest ack){ m_isInitialized = true; }
 protected:
-    quint8 __clientId;
-    quint16 __baseOffset;
-    int __interval;
-    bool __isInitialized;
-    InterfaceChannel* __channel;
-
-    QList<QVariant> __propertyKeys;
-    QList<QVariant> __watchList;
+    quint8 m_clientId;
+    quint16 m_baseOffset;
+    int m_interval;
+    bool m_isInitialized;
+    InterfaceChannel* m_channel;
 
     MODBUS_U_WORD *registerWatchList(ADDRESS_MODE unoffsetedAddress,QVariant form);
     ADDRESS_MODE toAddressMode(ADDRESS_MODE unoffseted) const;
 
-    //!
-    //! \brief __instance
-    //! Next layer
-
+    //! Monitor
     AbstractDataBlock* m_monitor;
-    virtual QVariant propertyValues(QVariant key);
-
-private:
-
+    QList<QVariant> m_monitor_propertyKeys;
+    virtual QVariant m_monitor_propertyValues(QVariant key);
+    //! Operator
+    QMap<QString,QVariant> m_operator_propertyKeys;
+    virtual void m_operator_propertyChanged(QVariant key,QVariant value){}
 
 };
 

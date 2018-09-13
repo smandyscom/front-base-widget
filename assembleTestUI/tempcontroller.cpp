@@ -5,9 +5,9 @@ TempController::TempController(QObject *parent) :
 {
     registerWatchList(0,QVariant::fromValue(CellDataBlock()));
 
-    qDebug() << __propertyKeys.count();
+    qDebug() << m_monitor_propertyKeys.count();
 //    __propertyKeys.clear();
-    __propertyKeys.append(QVariant::fromValue(PROP));
-    qDebug() << __propertyKeys.count();
-    qDebug() << __channel;
+    m_monitor_propertyKeys.append(QVariant::fromValue(PROP));
+    qDebug() << m_monitor_propertyKeys.count();
+    qDebug() << m_channel;
 }

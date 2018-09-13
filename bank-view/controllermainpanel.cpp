@@ -2,7 +2,7 @@
 
 ControllerMainPanel::ControllerMainPanel(QObject *parent) :
     ControllerBase(0,256,100,parent),
-    __key(HEADER_STRUCTURE::zh_TW)
+    locale(HEADER_STRUCTURE::zh_TW)
 {
 
     //! register monitor , start routine service
@@ -13,87 +13,77 @@ ControllerMainPanel::ControllerMainPanel(QObject *parent) :
     m_errorDeviceMap[CommitBlock::SELECTION_CYLINDER] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_CYLINDERS);
     m_errorDeviceMap[CommitBlock::SELECTION_UNIT] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_UNITS);
 
-    __errorCodeMap[CommitBlock::SELECTION_AXIS] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::ERROR_CODE_AXIS);
-    __errorCodeMap[CommitBlock::SELECTION_CYLINDER] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::ERROR_CODE_CYLINDER);
-    __errorCodeMap[CommitBlock::SELECTION_UNIT] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::ERROR_CODE_UNIT);
+    m_errorCodeMap[CommitBlock::SELECTION_AXIS] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::ERROR_CODE_AXIS);
+    m_errorCodeMap[CommitBlock::SELECTION_CYLINDER] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::ERROR_CODE_CYLINDER);
+    m_errorCodeMap[CommitBlock::SELECTION_UNIT] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::ERROR_CODE_UNIT);
 
-    __deviceTable = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_OBJECT_TYPE);
+    m_deviceTable = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_OBJECT_TYPE);
 
     //!
 //    __controllerTransfer = new ControllerBankTransfer(this);
 //    connect(__controllerTransfer,SIGNAL(dataTransfered()),this,SLOT(onDataTransfered()));
     //! sync with PLC
-    __propertyKeys.append(QVariant::fromValue(UnitBlock::LUID_PARENT));
-    __watchList.append((QVariant::fromValue(0)));
-}
-
-
-void ControllerMainPanel::onInitializing(InterfaceRequest ack)
-{
-    this->__isInitialized = true;
-
-    ADDRESS_MODE __address = ack.Address();
-    //! Update auto/manual status
-    if (ADDRESS_REGISTER(__address) == toAddressMode(MANUAL_CONTROL_WORD))
-    {
-
+    m_monitor_propertyKeys
+            << QVariant::fromValue(UnitOperationBlock::OFFSET_UOB_STATE_PAUSE)
+            << QVariant::fromValue(MainOperationBlock::BIT_3_TOGGLE_MANUAL)
+            << QVariant::fromValue(MainOperationBlock::BIT_5_TOGGLE_CLEAR)
+            << QVariant::fromValue(MainMonitorBlock::ERROR_CODE);
+    //!
+    foreach (QVariant var, utilities::listupEnumVariant<MainOperationBlock::OperationBits>()) {
+        m_operator_propertyKeys[var.toString()] = var;
     }
 }
 
-//!
-//! \brief ControllerMainPanel::event
-//! \param event
-//! \return
-//! Handling
-bool ControllerMainPanel::event(QEvent *event)
+
+QString ControllerMainPanel::errorDevice()
 {
-    switch (event->type()) {
-    case QEvent::DynamicPropertyChange:
-        //!intercept and handling
-        break;
-    default:
-        break;
-    }
+    auto deviceCategrory = static_cast<MainMonitorBlock*>(m_monitor)->Value(MainMonitorBlock::ERROR_CATEGRORY).toInt();
+    auto deviceIndex = static_cast<MainMonitorBlock*>(m_monitor)->Value(MainMonitorBlock::ERROR_DEVICE_INDEX).toInt();
 
-    return ControllerBase::event(event);
-}
+    QSqlRecord recordIndex =
+            m_errorDeviceMap[deviceCategrory]->record(deviceIndex);
 
-
-QString ControllerMainPanel::ErrorDevice()
-{
-    QSqlRecord __recordIndex =
-            m_errorDeviceMap[ErrorCategrory()]->record(ErrorDeviceIndex());
-
-    QSqlRecord __recordDevice =
-            utilities::getSqlTableSelectedRecord(__deviceTable,
+    QSqlRecord recordDevice =
+            utilities::getSqlTableSelectedRecord(m_deviceTable,
                                                  QVariant::fromValue(ID),
-                                                 QVariant::fromValue(ErrorCategrory()));
+                                                 QVariant::fromValue(deviceCategrory));
 
     return QString("%1,%2,%3")
-            .arg(__recordDevice.value(QVariant::fromValue(__key).toString()).toString())
-            .arg(__recordIndex.value(QVariant::fromValue(NAME).toString()).toString())
-            .arg(__recordIndex.value(QVariant::fromValue(__key).toString()).toString());
+            .arg(recordDevice.value(QVariant::fromValue(locale).toString()).toString())
+            .arg(recordIndex.value(QVariant::fromValue(NAME).toString()).toString())
+            .arg(recordIndex.value(QVariant::fromValue(locale).toString()).toString());
 }
-QString ControllerMainPanel::ErrorDescription()
+QString ControllerMainPanel::errorDescription()
 {
-    MODBUS_U_QUAD __code = ErrorCode();
+    auto errorCode = static_cast<MainMonitorBlock*>(m_monitor)->Value(MainMonitorBlock::ERROR_CODE).value<MODBUS_U_QUAD>();
+    auto deviceCategrory = static_cast<MainMonitorBlock*>(m_monitor)->Value(MainMonitorBlock::ERROR_CATEGRORY).toInt();
 
-    if(__code==0)
+    if(errorCode==0)
         return QString("");
 
-    QSqlTableModel* __lookupTable = __errorCodeMap[ErrorCategrory()];
+    QSqlTableModel* __lookupTable = m_errorCodeMap[deviceCategrory];
     QString __description;
     for(int i=0;i<__lookupTable->rowCount();i++)
     {
         QSqlRecord __record = __lookupTable->record(i);
         MODBUS_U_QUAD __ref = __record.value(QVariant::fromValue(ID).toString()).toULongLong();
-        if((__ref & __code)!=0)
-            __description.append(QString("%1\n").arg(__record.value(QVariant::fromValue(__key).toString()).toString()));
+        if((__ref & errorCode)!=0)
+            __description.append(QString("%1\n").arg(__record.value(QVariant::fromValue(locale).toString()).toString()));
     }
 
     return QString("%1")
             .arg(__description);
 }
+
+//MainStates ControllerMainPanel::mainState()
+//{
+//    if(!static_cast<UnitOperationBlock*>(m_monitor)->Value(UnitOperationBlock::OFFSET_UOB_STATE_PAUSE).toBool())
+//        return STATE_AUTO;
+//    else if(static_cast<MainOperationBlock*>(m_monitor)->Value(MainOperationBlock::BIT_3_TOGGLE_MANUAL).toBool())
+//        return STATE_MANUAL;
+//    else
+//        return STATE_SEMI_AUTO;
+//}
 
 //void ControllerMainPanel::onDataChanged(TransferTask task)
 //{
@@ -107,12 +97,24 @@ QString ControllerMainPanel::ErrorDescription()
 //    emit stateChanged(CurrentState());
 //}
 
-
-QVariant ControllerMainPanel::propertyValues(QVariant key)
+//!
+//! \brief ControllerMainPanel::propertyValues
+//! \param key
+//! \return
+//! Post infos to front
+QVariant ControllerMainPanel::m_monitor_propertyValues(QVariant key)
 {
-    if(key.toInt() == MainMonitorBlock::ERROR_CODE)
-        return QVariant::fromValue(ErrorDevice() + ErrorDescription());
+    if(key == QVariant::fromValue(MainMonitorBlock::ERROR_CODE))
+        return QVariant::fromValue(errorDevice() + errorDescription());
 
-    return ControllerBase::propertyValues(key);
+    return ControllerBase::m_monitor_propertyValues(key);
 }
-
+//!
+//! \brief ControllerMainPanel::m_operator_propertyChanged
+//! \param key
+//! \param value
+//!
+void ControllerMainPanel::m_operator_propertyChanged(QVariant key, QVariant value)
+{
+    m_channel->Access(this->toAddressMode(key.value<ADDRESS_MODE>()),value.toBool());
+}

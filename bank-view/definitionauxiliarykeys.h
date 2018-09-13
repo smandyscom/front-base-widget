@@ -48,6 +48,7 @@ enum Headers
 {
     ID,
     NAME,
+    //! Locale
     en_US,
     zh_TW,
 };

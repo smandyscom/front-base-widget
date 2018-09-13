@@ -117,8 +117,8 @@ void FrontControlPanel::onErrorChanged(MODBUS_U_QUAD currentError)
     //! given message
     if(currentError)
         ui->textBrowserErrorDescription->setText(QString("%1\n%2")
-                                                 .arg(__controller->ErrorDevice())
-                                                 .arg(__controller->ErrorDescription()));
+                                                 .arg(__controller->errorDevice())
+                                                 .arg(__controller->errorDescription()));
     else
         ui->textBrowserErrorDescription->clear();
 }

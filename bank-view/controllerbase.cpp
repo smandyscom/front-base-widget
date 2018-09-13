@@ -3,21 +3,21 @@
 
 ControllerBase::ControllerBase(quint8 clientId, quint16 baseOffset, int interval, QObject *parent) :
     QObject(parent),
-    __clientId(clientId),
-    __baseOffset(baseOffset),
-    __interval(interval)
+    m_clientId(clientId),
+    m_baseOffset(baseOffset),
+    m_interval(interval)
 {
-    __isInitialized = false;
-    __channel = InterfaceChannel::Instance();
+    m_isInitialized = false;
+    m_channel = InterfaceChannel::Instance();
 
-    connect(__channel,&InterfaceChannel::ackownledged,this,&ControllerBase::onAcknowledged);
+    connect(m_channel,&InterfaceChannel::ackownledged,this,&ControllerBase::onAcknowledged);
 }
 
 ADDRESS_MODE ControllerBase::toAddressMode(ADDRESS_MODE unoffseted) const
 {
     return (unoffseted & 0x00ffffff) +
-            __clientId * 0x01000000 +
-            __baseOffset;
+            m_clientId * 0x01000000 +
+            m_baseOffset;
 }
 
 //!
@@ -27,17 +27,15 @@ ADDRESS_MODE ControllerBase::toAddressMode(ADDRESS_MODE unoffseted) const
 void ControllerBase::onAcknowledged(InterfaceRequest ack)
 {
     //! could be overriden by derived
-    if (!__isInitialized)
+    if (!m_isInitialized)
     {
         onInitializing(ack);
         return; // first time received ack
     }
 
-    //!if not on watch list , return (performance
-
     //! Raising property updating (string copy , performance issue?
-    foreach (QVariant var, __propertyKeys) {
-       parent()->setProperty(var.toString().toStdString().c_str(),propertyValues(var));
+    foreach (QVariant var, m_monitor_propertyKeys) {
+       parent()->setProperty(var.toString().toStdString().c_str(),m_monitor_propertyValues(var));
     }
 }
 
@@ -46,12 +44,30 @@ void ControllerBase::onAcknowledged(InterfaceRequest ack)
 MODBUS_U_WORD* ControllerBase::registerWatchList(ADDRESS_MODE unoffsetedAddress,QVariant form)
 {
     ADDRESS_MODE offsettedAddress = toAddressMode(unoffsetedAddress);
-    __channel->RegisterRoutines(toAddressMode(offsettedAddress),form,__interval);
+    m_channel->RegisterRoutines(toAddressMode(offsettedAddress),form,m_interval);
 
-    return __channel->Handle(offsettedAddress);
+    return m_channel->Handle(offsettedAddress);
 }
 
-QVariant ControllerBase::propertyValues(QVariant key)
+QVariant ControllerBase::m_monitor_propertyValues(QVariant key)
 {
     return m_monitor->Value(key.toUInt());
+}
+
+bool ControllerBase::event(QEvent *event)
+{
+    switch (event->type()) {
+    case QEvent::DynamicPropertyChange:
+        //!intercept and handling
+    {
+        auto value = property(static_cast<QDynamicPropertyChangeEvent*>(event)->propertyName());
+        auto key = QString(static_cast<QDynamicPropertyChangeEvent*>(event)->propertyName());
+        m_operator_propertyChanged(m_operator_propertyKeys[key],value);
+        break;
+    }
+    default:
+        break;
+    }
+
+    return ControllerBase::event(event);
 }

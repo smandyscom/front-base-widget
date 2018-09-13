@@ -56,7 +56,8 @@ HEADERS += \
     ../../qt-tries/try-property-bind/commonhelper.h \
     ../bank-view/definitionunitblocks.h \
     ../bank-view/definitionbasicblocks.h \
-    ../bank-view/definitionmaincontrolblock.h
+    ../bank-view/definitionmaincontrolblock.h \
+    ../bank-view/definitionunitblocks.h
 
 FORMS += \
         mainwindow.ui

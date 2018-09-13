@@ -35,6 +35,7 @@ public:
 //        MON_DATA_6= 0x0000003C,
 //        MON_DATA_7= 0x0000003E,
     };
+    Q_ENUM(OffsetMainMonitor)
 
     //!
     //! \brief Value
@@ -67,22 +68,25 @@ public:
 class MainOperationBlock:
         public MainMonitorBlock
 {
+    Q_OBJECT
 public:
     enum OffsetMainOperation
     {
         MANUAL_CONTROL_WORD=0x00000020,
     };
+    Q_ENUM(OffsetMainOperation)
     enum OperationBits
     {
-        BIT_0_ERROR_RESET = 0x000000,
-        BIT_1_TOGGLE_PAUSE = 0x010000,
-        BIT_2_TOGGLE_INIT = 0x020000,
-        BIT_3_TOGGLE_MANUAL = 0x030000,
-        BIT_4_ERROR_IGNORE = 0x040000,
-        BIT_5_TOGGLE_CLEAR = 0x050000
+        BIT_0_ERROR_RESET = 0x000000 + MANUAL_CONTROL_WORD,
+        BIT_1_TOGGLE_PAUSE = 0x010000 + MANUAL_CONTROL_WORD,
+        BIT_2_TOGGLE_INIT = 0x020000 + MANUAL_CONTROL_WORD,
+        BIT_3_TOGGLE_MANUAL = 0x030000 + MANUAL_CONTROL_WORD,
+        BIT_4_ERROR_IGNORE = 0x040000 + MANUAL_CONTROL_WORD,
+        BIT_5_TOGGLE_CLEAR = 0x050000 + MANUAL_CONTROL_WORD
     };
+    Q_ENUM(OperationBits)
 
-    QVariant Value(uint key) Q_DECL_OVERRIDE
+    QVariant Value(uint key) const Q_DECL_OVERRIDE
     {
         return MainMonitorBlock::Value(key);
     }
