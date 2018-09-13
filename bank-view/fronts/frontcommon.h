@@ -10,7 +10,11 @@ class FrontCommon : public QWidget
 {
     Q_OBJECT
 public:
-    explicit FrontCommon(ControllerBase* controller,QWidget *parent = nullptr);
+    //!
+    //! \brief FrontCommon
+    //! \param parent
+    //! Defualt constructor , able to use "Promote" on QtUi designer
+    explicit FrontCommon(QWidget *parent = nullptr);
 
     //!
     //! \brief event
@@ -22,6 +26,9 @@ signals:
 
 public slots:
 protected:
+    //!
+    //! \brief m_controller
+    //! Auto find-out linked controller
     ControllerBase* m_controller;
 };
 

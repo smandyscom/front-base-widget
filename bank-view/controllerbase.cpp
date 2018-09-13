@@ -59,6 +59,7 @@ bool ControllerBase::event(QEvent *event)
     switch (event->type()) {
     case QEvent::DynamicPropertyChange:
         //!intercept and handling
+        //! Raise when property changed only
     {
         auto value = property(static_cast<QDynamicPropertyChangeEvent*>(event)->propertyName());
         auto key = QString(static_cast<QDynamicPropertyChangeEvent*>(event)->propertyName());
@@ -69,5 +70,5 @@ bool ControllerBase::event(QEvent *event)
         break;
     }
 
-    return ControllerBase::event(event);
+    return QObject::event(event);
 }

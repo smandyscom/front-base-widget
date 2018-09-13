@@ -135,6 +135,10 @@ public slots:
 protected:
 
 //    MainStates mainState();
+    ///!
+    //! \brief errorDevice
+    //! \return
+    //! Put this on front
     QString errorDevice() ;
     QString errorDescription() ;
 

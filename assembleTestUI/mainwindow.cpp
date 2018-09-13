@@ -21,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
     InterfaceChannel::Instance()->Clients(__clients);
     InterfaceChannel::Instance()->RegisterRoutines(256,QVariant::fromValue(CellDataBlock()),100);
 //    auto __temp = new TempController(this);
-    __controller = new ControllerMainPanel(this);
+    m_controller = new ControllerMainPanel(this);
 
     //!
 
@@ -43,11 +43,12 @@ bool MainWindow::event(QEvent *event)
     case QEvent::DynamicPropertyChange:
     {
         auto __string = QString(static_cast<QDynamicPropertyChangeEvent*>(event)->propertyName());
-        auto __value = this->centralWidget()->property(__string.toStdString().c_str());
+        auto __value = this->property(__string.toStdString().c_str());
 
         this->style()->unpolish(ui->label); //valid
         this->style()->polish(ui->label);
 
+        ui->statusBar->showMessage(QString("%1,%2").arg(__string).arg(__value.toString()));
         break;
     }
     default:
@@ -78,4 +79,10 @@ void MainWindow::on_pushButton_2_clicked()
 {
     CommonHelper::setStyle("../style2.qss",this);
     qDebug() << this->styleSheet();
+}
+
+void MainWindow::on_pushButton_3_clicked()
+{
+
+    m_controller->setProperty(QVariant::fromValue(MainOperationBlock::BIT_1_TOGGLE_PAUSE).toString().toStdString().c_str(),true);
 }

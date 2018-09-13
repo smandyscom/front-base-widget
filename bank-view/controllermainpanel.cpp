@@ -40,8 +40,9 @@ QString ControllerMainPanel::errorDevice()
     auto deviceCategrory = static_cast<MainMonitorBlock*>(m_monitor)->Value(MainMonitorBlock::ERROR_CATEGRORY).toInt();
     auto deviceIndex = static_cast<MainMonitorBlock*>(m_monitor)->Value(MainMonitorBlock::ERROR_DEVICE_INDEX).toInt();
 
-    QSqlRecord recordIndex =
-            m_errorDeviceMap[deviceCategrory]->record(deviceIndex);
+    QSqlRecord recordIndex;
+    if(m_errorDeviceMap.contains(deviceCategrory))
+        recordIndex = m_errorDeviceMap[deviceCategrory]->record(deviceIndex);
 
     QSqlRecord recordDevice =
             utilities::getSqlTableSelectedRecord(m_deviceTable,
@@ -62,6 +63,11 @@ QString ControllerMainPanel::errorDescription()
         return QString("");
 
     QSqlTableModel* __lookupTable = m_errorCodeMap[deviceCategrory];
+
+    if(__lookupTable == nullptr)
+        return QString("%1")
+                .arg("no description");
+
     QString __description;
     for(int i=0;i<__lookupTable->rowCount();i++)
     {
