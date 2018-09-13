@@ -24,10 +24,15 @@ ControllerMainPanel::ControllerMainPanel(QObject *parent) :
 //    connect(__controllerTransfer,SIGNAL(dataTransfered()),this,SLOT(onDataTransfered()));
     //! sync with PLC
     m_monitor_propertyKeys
-            << QVariant::fromValue(UnitOperationBlock::OFFSET_UOB_STATE_PAUSE)
-            << QVariant::fromValue(MainOperationBlock::BIT_3_TOGGLE_MANUAL)
-            << QVariant::fromValue(MainOperationBlock::BIT_5_TOGGLE_CLEAR)
-            << QVariant::fromValue(MainMonitorBlock::ERROR_CODE);
+            << QVariant::fromValue(UnitOperationBlock::OFFSET_UOB_STATE_PAUSE);
+    foreach(QVariant var,utilities::listupEnumVariant<MainOperationBlock::OperationBits>())
+    {
+        m_monitor_propertyKeys.append(var);
+    }
+    foreach(QVariant var,utilities::listupEnumVariant<MainMonitorBlock::OffsetMainMonitor>())
+    {
+        m_monitor_propertyKeys.append(var);
+    }
     //!
     foreach (QVariant var, utilities::listupEnumVariant<MainOperationBlock::OperationBits>()) {
         m_operator_propertyKeys[var.toString()] = var;
@@ -122,5 +127,7 @@ QVariant ControllerMainPanel::m_monitor_propertyValues(QVariant key)
 //!
 void ControllerMainPanel::m_operator_propertyChanged(QVariant key, QVariant value)
 {
-    m_channel->Access(this->toAddressMode(key.value<ADDRESS_MODE>()),value.toBool());
+    m_channel->Access(this->toAddressMode(key.value<ADDRESS_MODE>()),true);
+    //! Reset after used
+    setProperty(key.toString().toStdString().c_str(),false);
 }

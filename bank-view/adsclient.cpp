@@ -40,14 +40,14 @@ void AdsClient::executeRequest()
     case InterfaceRequest::READ:
         lastResult = AdsSyncReadReq(&__amsAddress,
             __group,
-            __register,
+            __register * 2, //since counting in byte
             __size,
             __queue.head().Data().data());
 		break;
     case InterfaceRequest::WRITE:
         lastResult = AdsSyncWriteReq(&__amsAddress,
             __group,
-            __register,
+            __register * 2,
             __size,
             __queue.head().Data().data());
 		break;

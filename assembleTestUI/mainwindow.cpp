@@ -84,5 +84,11 @@ void MainWindow::on_pushButton_2_clicked()
 void MainWindow::on_pushButton_3_clicked()
 {
 
+//    m_controller->setProperty(QVariant::fromValue(MainOperationBlock::BIT_1_TOGGLE_PAUSE).toString().toStdString().c_str(),true);
+}
+
+void MainWindow::on_pushButton_3_clicked(bool checked)
+{
     m_controller->setProperty(QVariant::fromValue(MainOperationBlock::BIT_1_TOGGLE_PAUSE).toString().toStdString().c_str(),true);
+
 }
