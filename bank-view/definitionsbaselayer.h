@@ -141,7 +141,7 @@ public:
         VALUE_UPDATED
     };
 
-    ValueTransition(const ADDRESS_MODE& address,Detection action):
+    ValueTransition(const ADDRESS_MODE address,Detection action):
         m_address(ADDRESS_REGISTER(address)),
         m_bitAccessor(ADDRESS_BIT_ACCESSOR(address)),
         detection(action)

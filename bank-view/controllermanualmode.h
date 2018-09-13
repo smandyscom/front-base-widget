@@ -25,29 +25,6 @@ class ControllerManualMode :
 {
     Q_OBJECT
 public:
-//    //!
-//    //! \brief The ManualContext enum
-//    //! Should do channel offset
-//    enum ManualContext : quint32
-//    {
-//        STATUS_WORD=0x02000000,
-//        ENGAGED_SEMI_AUTO=0x02000000,
-//        DONE=0x02010000,
-//        ENGAGED_MANUAL = 0x02020000,
-//        INITIALIZED = 0x02030000,
-//        ENGAGED_HMI=0x02000020,
-//        RUN=0x02010020,
-//        MON_CATEGRORY=0x02000028,
-//        MON_DEVICE_INDEX=0x02000029,
-//        COMMIT_BLOCK=0x200002A,
-//        COMMIT_MODE=0x200002A,
-//        COMMIT_SELECTION=0x200002C,
-//        COMMIT_INDEX=0x200002E,
-//        DATA_BLOCK_HEAD=0x02000040,
-//        MONITOR_BLOCK_HEAD=0x02000080,
-//        IO_MON_OVERRIDE=0x02000100,
-//    };
-//    Q_ENUM(ManualContext)
     enum ManualState : int
     {
         STATE_IN_AUTO,
@@ -60,8 +37,8 @@ public:
 
     //!
     //! Data interfaces
-    void CommitOption(CommitBlock value) {__channel->Access<CommitBlock>(ModbusDriverAddress(COMMIT_BLOCK),value);}
-    CommitBlock CommitOption() const {return  __channel->Access<CommitBlock>(ModbusDriverAddress(COMMIT_BLOCK));}
+//    void CommitOption(CommitBlock value) {__channel->Access<CommitBlock>(ModbusDriverAddress(COMMIT_BLOCK),value);}
+//    CommitBlock CommitOption() const {return  __channel->Access<CommitBlock>(ModbusDriverAddress(COMMIT_BLOCK));}
 
     //!
     //! \brief DataBlock
@@ -85,7 +62,7 @@ public:
         emit requireWriteData(ModbusDriverAddress(ControllerManualMode::MON_CATEGRORY),QVariant::fromValue(value));
     }
 
-    ManualState CurrentState() const { return __currentState;}
+    ManualState CurrentState() const { return m_currentState;}
 
 //    //!
 //    //! \brief IsChannelActivated
@@ -117,18 +94,18 @@ public slots:
         emit requireWriteData(ModbusDriverAddress(ControllerManualMode::MON_DEVICE_INDEX),QVariant::fromValue(objectId));
     }
 signals:
-    //!
-    //! \brief readWordIn
-    //! \param address
-    //! \param wordData
-    //!
-    void requireReadData(ModbusDriverAddress address,const QVariant data);
-    //!
-    //! \brief writeData
-    //! \param address
-    //! \param data
-    //!
-    void requireWriteData(ModbusDriverAddress address,const QVariant data);
+//    //!
+//    //! \brief readWordIn
+//    //! \param address
+//    //! \param wordData
+//    //!
+//    void requireReadData(ModbusDriverAddress address,const QVariant data);
+//    //!
+//    //! \brief writeData
+//    //! \param address
+//    //! \param data
+//    //!
+//    void requireWriteData(ModbusDriverAddress address,const QVariant data);
     //!
     //! \brief triggerOperation
     //! Linked to S1 transition condition
@@ -140,16 +117,24 @@ signals:
 //    //! \param event
 //    //! Looping
 //    void onReply();
+    explicit ControllerManualMode(QObject *parent = nullptr);
 protected:
-     explicit ControllerManualMode(QObject *parent = nullptr);
 
-    QMap<ManualState,QState*> __stateMap;
-    ManualState __currentState;
+    QMap<ManualState,QState*> m_stateMap;
+    ManualState m_currentState;
 
     QStateMachine* m_stateMachine;
-//    ModbusChannel* __channel;
+    void s1Exited();
+    void s2Exited();
+    void s3Exited();
 
-//    static ControllerManualMode* __instance;
+    //!
+    //! \brief m_monitor_propertyValues
+    //! \param key
+    //! \return
+    //! Overrides
+    QVariant m_monitor_propertyValues(QVariant key) Q_DECL_OVERRIDE;
+    void m_operator_propertyChanged(QVariant key,QVariant value) Q_DECL_OVERRIDE;
 };
 
 #endif // CONTROLLERMANUALMODE_H

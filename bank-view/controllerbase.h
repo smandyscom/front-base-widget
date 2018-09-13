@@ -7,6 +7,7 @@
 #include <QList>
 #include <QWidget>
 #include <QDebug>
+#include <QVariant>
 
 #include <interfacerequest.h>
 #include <interfacechannel.h>

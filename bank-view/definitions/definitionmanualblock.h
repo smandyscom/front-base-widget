@@ -9,10 +9,35 @@
 //! \brief The ManualModeDataBlock class
 //! 256Words block
 class ManualModeDataBlock :
-        AbstractDataBlock
+        public AbstractDataBlock
 {
     Q_OBJECT
 public:
+    enum CommitCategrories
+    {
+        SELECTION_AXIS = 0,
+        SELECTION_CYLINDER = 1,
+        SELECTION_SIGNAL=2,
+
+        SELECTION_COMMAND_BLOCK = 4,
+
+        SELECTION_UNIT = 5,
+    };
+    Q_ENUM(CommitCategrories)
+    enum CommitMode
+    {
+        MODE_EXE_AXIS=SELECTION_AXIS,
+        MODE_EXE_CYLINDER=SELECTION_CYLINDER,
+        MODE_EXE_SIGNAL=SELECTION_SIGNAL, //dummy
+
+        MODE_EXE_COMMAND_BLOCK=SELECTION_COMMAND_BLOCK,
+
+        MODE_EXE_UNIT =SELECTION_UNIT,
+
+        MODE_DOWNLOAD_DATA_BLOCK = 15, //PLC<-HMI
+        MODE_UPLOAD_DATA_BLOCK = 16,   //PLC->HMI
+    };
+    Q_ENUM(CommitMode)
     //!
     //! \brief The ManualContext enum
     //! Should do channel offset
@@ -41,11 +66,13 @@ public:
         BIT_2_ENGAGED_MANUAL = 0x020000 + STATUS_WORD,
         BIT_3_INITIALIZED = 0x030000 + STATUS_WORD
     };
+    Q_ENUM(StatusBits)
     enum ControlBits
     {
         BIT_0_ENGAGED_HMI = 0x000000 + CONTROL_WORD,
         BIT_1_RUN = 0x010000 + CONTROL_WORD
     };
+    Q_ENUM(ControlBits)
 
     ManualModeDataBlock(QObject* parent = nullptr)
         : AbstractDataBlock(parent)
