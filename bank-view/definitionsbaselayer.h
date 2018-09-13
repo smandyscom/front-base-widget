@@ -142,8 +142,8 @@ public:
     };
 
     ValueTransition(const ADDRESS_MODE& address,Detection action):
-        __address(ADDRESS_REGISTER(address)),
-        __bitAccessor(ADDRESS_BIT_ACCESSOR(address)),
+        m_address(ADDRESS_REGISTER(address)),
+        m_bitAccessor(ADDRESS_BIT_ACCESSOR(address)),
         detection(action)
     {}
 
@@ -152,8 +152,8 @@ protected:
     virtual void onTransition(QEvent*);
 
 
-    const quint16 __address;
-    const quint16 __bitAccessor;
+    const quint16 m_address;
+    const quint16 m_bitAccessor;
     Detection detection;
 };
 

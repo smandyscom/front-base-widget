@@ -89,7 +89,7 @@ protected:
     explicit InterfaceChannel(QObject *parent = nullptr);
 
     QList<InterfaceClient*> __clients;
-    QList<QStateMachine*> __stateMachines;
+    QList<QStateMachine*> m_stateMachines;
     QMap<ADDRESS_MODE,int> __routines;
 
     //!

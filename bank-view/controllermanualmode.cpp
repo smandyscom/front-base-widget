@@ -3,21 +3,21 @@
 ControllerManualMode::ControllerManualMode(QObject *parent) :
     QStateMachine(parent)
 {
-    //! Channel initialize
-    __channel = ModbusChannel::Instance();
+    //!
+    m_monitor = new ManualModeDataBlock(registerWatchList(ManualModeDataBlock::STATUS_WORD,QVariant::fromValue(static_cast<MODBUS_U_WORD>(0))),this);
+    registerWatchList(ManualModeDataBlock::MONITOR_BLOCK_HEAD,QVariant::fromValue(CellDataBlock()));
+
+
     CommitOption(CommitBlock());
 
-    //! Very first shot
-    __channel->beginAccess<AbstractDataBlock>(ModbusDriverAddress(MONITOR_BLOCK_HEAD));
-    __channel->beginAccess<MODBUS_U_WORD>(ModbusDriverAddress(STATUS_WORD));
-    __channel->beginAccess<IoMonitorOverrideBlock>(ModbusDriverAddress(IO_MON_OVERRIDE));
     //!
     //! \brief s1
     //!
-    QState* s0 = new QState(this);
-    QState* s1 = new QState(this);
-    QState* s2 = new QState(this);
-    QState* s3 = new QState(this);
+    m_stateMachine = new QStateMachine(this);
+    QState* s0 = new QState(m_stateMachine);
+    QState* s1 = new QState(m_stateMachine);
+    QState* s2 = new QState(m_stateMachine);
+    QState* s3 = new QState(m_stateMachine);
     __stateMap[STATE_IN_AUTO] =s0;
     __stateMap[STATE_IDLE] = s1;
     __stateMap[STATE_COMPLETE] = s2;
@@ -119,15 +119,15 @@ void ControllerManualMode::onReply()
         });
         break;
     }
-    case IO_MON_OVERRIDE:
-    {
-        QTimer::singleShot(100,this,[this](){
-            //Schedual the next polling
-            //polling 8 Words so far
-            __channel->beginAccess<IoMonitorOverrideBlock>(ModbusDriverAddress(IO_MON_OVERRIDE));
-        });
-        break;
-    }
+//    case IO_MON_OVERRIDE:
+//    {
+//        QTimer::singleShot(100,this,[this](){
+//            //Schedual the next polling
+//            //polling 8 Words so far
+//            __channel->beginAccess<IoMonitorOverrideBlock>(ModbusDriverAddress(IO_MON_OVERRIDE));
+//        });
+//        break;
+//    }
     default:
         break;
     }

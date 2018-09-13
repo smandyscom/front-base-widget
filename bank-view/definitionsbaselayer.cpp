@@ -21,10 +21,10 @@ bool ValueTransition::eventTest(QEvent *event)
     UpdateEvent* ue = static_cast<UpdateEvent*>(event);
 
     //! Match channel and register address
-    if ((ue->Address() & 0xff00ffff) != (__address & 0xff00ffff))
+    if ((ue->Address() & 0xff00ffff) != (m_address & 0xff00ffff))
         return false; //not cared address
 
-    bool logic = (ue->Value().value<quint16>() & __bitAccessor) > 0;
+    bool logic = (ue->Value().value<quint16>() & m_bitAccessor) > 0;
     switch (detection) {
     case BIT_STATE_ON:
          return logic;

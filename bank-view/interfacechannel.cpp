@@ -88,7 +88,7 @@ void InterfaceChannel::onAcknowledged(InterfaceRequest ack)
     const QVariant __data = ack.Data();
 
     //! Dispatch update event to statemachines
-    foreach (QStateMachine* var, __stateMachines) {
+    foreach (QStateMachine* var, m_stateMachines) {
         var->postEvent(new UpdateEvent(ack.Address(),__data));
     }
 

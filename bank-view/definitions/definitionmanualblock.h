@@ -16,7 +16,7 @@ public:
     //!
     //! \brief The ManualContext enum
     //! Should do channel offset
-    enum ManualContext : quint32
+    enum ManualContext
     {
         STATUS_WORD=0x00000000,
         CONTROL_WORD = 0x20,
