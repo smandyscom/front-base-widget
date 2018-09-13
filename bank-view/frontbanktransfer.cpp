@@ -71,7 +71,7 @@ FrontBankTransfer::~FrontBankTransfer()
     delete ui;
 }
 
-void FrontBankTransfer::Selection(CommitBlock::CommitDataBlockSelection value)
+void FrontBankTransfer::Selection(CommitBlock::CommitCategrories value)
 {
     __selection = value;
 

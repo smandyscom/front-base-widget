@@ -11,7 +11,7 @@
 #include <controllermanualmode.h>
 #include <abstractsqltableadpater.h>
 
-typedef QPair<CommitBlock::CommitDataBlockSelection,int> TransferTask;
+typedef QPair<CommitBlock::CommitCategrories,int> TransferTask;
 //!
 //! \brief The ControllerBankManager class
 //! Charge the operation about transfer from/to PLC
@@ -36,11 +36,11 @@ public:
                 __controller->CurrentState()!=ControllerManualMode::STATE_IDLE;
     }
     //! Linkage and configuration
-    static void Adaptor(CommitBlock::CommitDataBlockSelection key,AbstractSqlTableAdpater* value)
+    static void Adaptor(CommitBlock::CommitCategrories key,AbstractSqlTableAdpater* value)
     {
         __adaptorMap[key] = value;
     }
-    static AbstractSqlTableAdpater* Adaptor(CommitBlock::CommitDataBlockSelection key)
+    static AbstractSqlTableAdpater* Adaptor(CommitBlock::CommitCategrories key)
     {
         return __adaptorMap[key];
     }
@@ -71,7 +71,7 @@ protected:
 
     CommitBlock __commitOption;
 
-    static QMap<CommitBlock::CommitDataBlockSelection,AbstractSqlTableAdpater*> __adaptorMap;
+    static QMap<CommitBlock::CommitCategrories,AbstractSqlTableAdpater*> __adaptorMap;
 
     AbstractSqlTableAdpater* __adaptor;
     //!

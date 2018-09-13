@@ -36,9 +36,9 @@ void FrontConfigurationTransfer::onObjectTypeSelected()
     //!Change over Table view
     int objectId =
             __objectTable->record(ui->comboBoxItemSelection->currentIndex()).value(QVariant::fromValue(ID).toString()).toInt();
-    ui->tableView->setModel(ControllerBankTransfer::Adaptor(CommitBlock::CommitDataBlockSelection(objectId))->Model());
+    ui->tableView->setModel(ControllerBankTransfer::Adaptor(CommitBlock::CommitCategrories(objectId))->Model());
     //!Change over Bank transfer
-    __fbt->Selection(CommitBlock::CommitDataBlockSelection(objectId));
+    __fbt->Selection(CommitBlock::CommitCategrories(objectId));
     //!Change over filter
     __fsf->DataTable(reinterpret_cast<QSqlTableModel*>(ui->tableView->model()));
     if(objectId==CommitBlock::SELECTION_COMMAND_BLOCK)
@@ -56,14 +56,14 @@ void FrontConfigurationTransfer::onObjectTypeSelected()
 
 void FrontConfigurationTransfer::onTransferAll()
 {
-    QList<CommitBlock::CommitDataBlockSelection> __list = {
+    QList<CommitBlock::CommitCategrories> __list = {
         CommitBlock::SELECTION_AXIS,
         CommitBlock::SELECTION_CYLINDER,
         CommitBlock::SELECTION_SIGNAL,
         CommitBlock::SELECTION_COMMAND_BLOCK,
         CommitBlock::SELECTION_UNIT
     };
-    foreach (CommitBlock::CommitDataBlockSelection var, __list) {
+    foreach (CommitBlock::CommitCategrories var, __list) {
         __controllerTransfer->PutTask(TransferTask(var,ControllerBankTransfer::BATCH_ALL_MODE));
     }
     __controllerTransfer->Direction(CommitBlock::MODE_DOWNLOAD_DATA_BLOCK);

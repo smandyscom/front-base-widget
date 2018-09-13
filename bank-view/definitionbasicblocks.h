@@ -157,7 +157,7 @@ public:
     //!
     //! \brief The CommitSelection enum
     //! Data block selection
-    enum CommitDataBlockSelection : MODBUS_U_LONG
+    enum CommitCategrories : MODBUS_U_LONG
     {
         SELECTION_AXIS = 0,
         SELECTION_CYLINDER = 1,
@@ -189,14 +189,14 @@ public:
 
     void Mode(CommitMode value) {__mode = value;}
     CommitMode Mode() const {return __mode;}
-    void Selection(CommitDataBlockSelection value) {__selection = value;}
-    CommitDataBlockSelection Selection() const {return __selection;}
+    void Selection(CommitCategrories value) {__selection = value;}
+    CommitCategrories Selection() const {return __selection;}
     void Index(CommitDataBlockIndex value) {__index = value;}
     CommitDataBlockIndex Index() const {return __index;}
 
 protected:
     CommitMode __mode;
-    CommitDataBlockSelection __selection;
+    CommitCategrories __selection;
     CommitDataBlockIndex __index;
 };
 Q_DECLARE_METATYPE(CommitBlock)

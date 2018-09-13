@@ -29,7 +29,7 @@ public:
     explicit FrontBankTransfer(QWidget *parent = 0);
     ~FrontBankTransfer();
 
-    void Selection(CommitBlock::CommitDataBlockSelection value);
+    void Selection(CommitBlock::CommitCategrories value);
 
     ControllerBankTransfer* ControllerTransfer() const
     {
@@ -45,7 +45,7 @@ protected slots:
 private:
     Ui::FrontBankTransfer *ui;
     QTimer* __timer;
-    CommitBlock::CommitDataBlockSelection __selection;
+    CommitBlock::CommitCategrories __selection;
 
     QList<QWidget*> __interlockedList;
     QString __titlePrefix;

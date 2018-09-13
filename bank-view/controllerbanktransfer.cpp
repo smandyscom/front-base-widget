@@ -101,4 +101,4 @@ void ControllerBankTransfer::PutTask(TransferTask task)
     }
 }
 
-QMap<CommitBlock::CommitDataBlockSelection,AbstractSqlTableAdpater*> ControllerBankTransfer::__adaptorMap;
+QMap<CommitBlock::CommitCategrories,AbstractSqlTableAdpater*> ControllerBankTransfer::__adaptorMap;
