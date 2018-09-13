@@ -134,7 +134,7 @@ public slots:
 //    void onDataChanged(TransferTask task);
 protected:
 
-//    MainStates mainState();
+
     ///!
     //! \brief errorDevice
     //! \return

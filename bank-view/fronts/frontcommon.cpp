@@ -11,9 +11,15 @@ bool FrontCommon::event(QEvent* event)
 {
     switch (event->type()) {
     case QEvent::DynamicPropertyChange:
+    {
         //!Polish
+        dynamicPropertyChanged(QString(static_cast<QDynamicPropertyChangeEvent*>(event)->propertyName()));
+        bool result = false;
+        int id = QString(static_cast<QDynamicPropertyChangeEvent*>(event)->propertyName()).toInt(&result);
+        dynamicPropertyChanged(id);
         style()->polish(this);
         break;
+    }
     default:
         break;
     }

@@ -107,7 +107,8 @@ SOURCES += \
     tablemodeliooverride.cpp \
     utilities.cpp \
     fronts/frontcommon.cpp \
-    helpers/commonhelper.cpp
+    helpers/commonhelper.cpp \
+    fronts/frontmainpanel.cpp
 HEADERS += \
     modbussetupwidget.h \
     utilities.h \
@@ -212,7 +213,9 @@ HEADERS += \
     tablemodeliooverride.h \
     utilities.h \
     fronts/frontcommon.h \
-    helpers/commonhelper.h
+    helpers/commonhelper.h \
+    fronts/frontmainpanel.h \
+    definitions/definitionmanualblock.h
 
 unix {
     target.path = /usr/lib
@@ -235,7 +238,10 @@ FORMS += \
     frontslot.ui \
     frontmaterialselection.ui \
     frontmaterialselectionv2.ui \
-    frontreportquerytable.ui
+    frontreportquerytable.ui \
+    fronts/frontmainpanel.ui
 
-INCLUDEPATH += C://TwinCAT/AdsApi/TcAdsDll/Include/
+INCLUDEPATH += C://TwinCAT/AdsApi/TcAdsDll/Include/ \
+    fronts/ \
+    definitions/
 LIBS += -L "C://TwinCAT/AdsApi/TcAdsDll/Lib/" -lTcAdsDll

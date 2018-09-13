@@ -30,6 +30,9 @@ protected:
     //! \brief m_controller
     //! Auto find-out linked controller
     ControllerBase* m_controller;
+
+    virtual void dynamicPropertyChanged(QString key){}
+    virtual void dynamicPropertyChanged(int key){}
 };
 
 #endif // FRONTCOMMON_H

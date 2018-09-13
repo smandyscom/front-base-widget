@@ -35,7 +35,8 @@ void ControllerBase::onAcknowledged(InterfaceRequest ack)
 
     //! Raising property updating (string copy , performance issue?
     foreach (QVariant var, m_monitor_propertyKeys) {
-       parent()->setProperty(var.toString().toStdString().c_str(),m_monitor_propertyValues(var));
+       parent()->setProperty(var.toStdString().c_str(),m_monitor_propertyValues(var));
+       parent()->setProperty(var.toInt().c_str(),m_monitor_propertyValues(var));
     }
 }
 
