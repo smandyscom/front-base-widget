@@ -53,7 +53,7 @@ protected:
     virtual QVariant m_monitor_propertyValues(QVariant key);
     //! Operator
     QMap<QString,QVariant> m_operator_propertyKeys;
-    virtual void m_operator_propertyChanged(QVariant key,QVariant value){}
+    virtual void m_operator_propertyChanged(QVariant key,QVariant value);
 
 };
 

@@ -11,24 +11,31 @@ using namespace DEF_BASIC_DIMENSION;
 class CylinderMonitorBlock :
         public AbstractDataBlock
 {
+    Q_OBJECT
 public:
+    CylinderMonitorBlock(QObject* parent=nullptr) :
+        AbstractDataBlock(parent){}
+    CylinderMonitorBlock(MODBUS_U_WORD* anchor,QObject* parent=nullptr) :
+        AbstractDataBlock(anchor,parent){}
+
     enum OffsetMonitor
     {
         OFFSET_MONITOR_STATUS_WORD=0,
         OFFSET_MONITOR_LAST_COMMAND=2,
         OFFSET_MONITOR_TMR_COUNT_VALUE=3,
     };
+    Q_ENUM(OffsetMonitor)
     enum Status
     {
         //! Bit
-        MOR_WARN=0,
-        MOR_GROUP_A,
-        MOR_GROUP_B,
-        CTL_SUPPRESS,
-        INT_TMR_ON,
-        MOR_DONE,
+        MOR_WARN=0 + OFFSET_MONITOR_STATUS_WORD,
+        MOR_GROUP_A=0x010000 + OFFSET_MONITOR_STATUS_WORD,
+        MOR_GROUP_B=0x020000 + OFFSET_MONITOR_STATUS_WORD,
+        CTL_SUPPRESS=0x030000 + OFFSET_MONITOR_STATUS_WORD,
+        INT_TMR_ON=0x040000 + OFFSET_MONITOR_STATUS_WORD,
+        MOR_DONE=0x050000 + OFFSET_MONITOR_STATUS_WORD,
     };
-
+    Q_ENUM(Status)
     enum Operation
     {
         OP_NO_COMMAND=0,
@@ -58,15 +65,22 @@ public:
         AbstractDataBlock::Value(key,value);
     }
 };
-Q_DECLARE_METATYPE(CylinderMonitorBlock)
-class CylinderOperationBlock: public CylinderMonitorBlock
+
+class CylinderOperationBlock:
+        public CylinderMonitorBlock
 {
+    Q_OBJECT
 public:
+    CylinderOperationBlock(QObject* parent=nullptr) :
+        CylinderMonitorBlock(parent){}
+    CylinderOperationBlock(MODBUS_U_WORD* anchor,QObject* parent=nullptr) :
+        CylinderMonitorBlock(anchor,parent){}
+
     enum OffsetOperation
     {
         OFFSET_OPERATION_COMMAND_CACHED=1,
     };
-
+    Q_ENUM(OffsetOperation)
     //!
     //! \brief Value
     //! \param index
@@ -81,11 +95,17 @@ public:
         return CylinderMonitorBlock::Value(key);
     }
 };
-Q_DECLARE_METATYPE(CylinderOperationBlock)
 
-class CylinderContext: public CylinderOperationBlock
+class CylinderContext:
+        public CylinderOperationBlock
 {
+    Q_OBJECT
 public:
+    CylinderContext(QObject* parent=nullptr) :
+        CylinderOperationBlock(parent){}
+    CylinderContext(MODBUS_U_WORD* anchor,QObject *parent=nullptr) :
+        CylinderOperationBlock(anchor,parent){}
+
     enum OffsetContext
     {
         OFFSET_CONTEXT_TMR_SET_VALUE=16,
@@ -104,6 +124,7 @@ public:
         OFFSET_CONTEXT_SENSOR_B_3=30,
         OFFSET_CONTEXT_SENSOR_B_4=31,
     };
+    Q_ENUM(OffsetContext)
 
     void Value(uint index, QVariant value) Q_DECL_OVERRIDE
     {
@@ -156,8 +177,6 @@ public:
         }
     }
 };
-Q_DECLARE_METATYPE(CylinderContext)
-
 
 namespace CylinderBlock {
 Q_NAMESPACE

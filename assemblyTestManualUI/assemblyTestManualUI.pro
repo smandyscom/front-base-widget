@@ -29,7 +29,11 @@ SOURCES += \
     ../bank-view/controllerbase.cpp \
     ../bank-view/controllermanualmode.cpp \
     ../bank-view/definitionauxiliarykeys.cpp \
-    ../bank-view/definitionbasicblocks.cpp
+    ../bank-view/definitionbasicblocks.cpp \
+    ../bank-view/definitionsbaselayer.cpp \
+    ../bank-view/interfacechannel.cpp \
+    ../bank-view/interfaceclient.cpp \
+    ../bank-view/utilities.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -38,7 +42,12 @@ HEADERS += \
     ../bank-view/controllerbase.h \
     ../bank-view/controllermanualmode.h \
     ../bank-view/definitionauxiliarykeys.h \
-    ../bank-view/definitionbasicblocks.h
+    ../bank-view/definitionbasicblocks.h \
+    ../bank-view/definitionsbaselayer.h \
+    ../bank-view/interfacechannel.h \
+    ../bank-view/interfaceclient.h \
+    ../bank-view/interfacerequest.h \
+    ../bank-view/utilities.h
 
 INCLUDEPATH += ../bank-view/ \
                 ../bank-view/definitions/ \

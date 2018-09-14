@@ -1,12 +1,17 @@
 #include "controllermanualmode.h"
 #include <QDebug>
 ControllerManualMode::ControllerManualMode(QObject *parent) :
-    ControllerBase(0,512,100,parent)
+    ControllerBase(0,1024,100,parent)
 {
     //!
     m_monitor = new ManualModeDataBlock(registerWatchList(ManualModeDataBlock::STATUS_WORD,QVariant::fromValue(static_cast<MODBUS_U_WORD>(0))),this);
     registerWatchList(ManualModeDataBlock::MONITOR_BLOCK_HEAD,QVariant::fromValue(CellDataBlock()));
-
+    //! Initiate Monitor Data Block
+//    MODBUS_U_WORD* m_monitor_anchor = m_channel->Handle(toAddressMode(ManualModeDataBlock::MONITOR_BLOCK_HEAD));
+//    m_monitor_categrories[ManualModeDataBlock::SELECTION_AXIS] = new AxisMonitorBlock(m_monitor_anchor,this);
+//    m_monitor_categrories[ManualModeDataBlock::SELECTION_CYLINDER] = new CylinderMonitorBlock(m_monitor_anchor,this);
+//    m_monitor_categrories[ManualModeDataBlock::SELECTION_SIGNAL] = new SignalMonitor(m_monitor_anchor,this);
+//    m_monitor_categrories[ManualModeDataBlock::SELECTION_UNIT] = new UnitMonitorBlock(m_monitor_anchor,this);
     //!
     //! \brief s1
     //!
@@ -40,8 +45,8 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
     //! s1
     ValueTransition* engagedPLCOff = new ValueTransition(toAddressMode(ManualModeDataBlock::BIT_0_ENGAGED_SEMI_AUTO),ValueTransition::BIT_STATE_OFF);
     engagedPLCOff->setTargetState(s0);
-    s1->addTransition(engagedPLCOff);
-    s1->addTransition(this,SIGNAL(operationTriggered()),s2);// when user triggered
+    s1->addTransition(engagedPLCOff);   //when manual mode offline
+    s1->addTransition(this,SIGNAL(operationTriggered()),s2);// when user triggered , TODO , triggered by RUN bit on?
     connect(s1,&QState::exited,this,&ControllerManualMode::s1Exited);
     //!
     //! s2
@@ -59,14 +64,21 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
     m_stateMachine->setInitialState(s0);
     m_stateMachine->start();
     //!
-    //!Monitor
+    //!Monitor and Operator
     QList<QList<QVariant>> m_list=
     {
+        //!
+        //! \brief utilities::listupEnumVariant<ManualModeDataBlock::ManualContext>
+        //! for MONITOR_DATA_HEAD , would return CellDataBlock
             utilities::listupEnumVariant<ManualModeDataBlock::ManualContext>(),
             utilities::listupEnumVariant<ManualModeDataBlock::StatusBits>(),
-            utilities::listupEnumVariant<ManualModeDataBlock::ControlBits>()
+            utilities::listupEnumVariant<ManualModeDataBlock::ControlBits>(),
+        //! Monitor post
+//            utilities::listupEnumVariant<AxisMonitorBlock::OffsetMonitor>(),
+//            utilities::listupEnumVariant<CylinderMonitorBlock::OffsetMonitor>(),
+//            utilities::listupEnumVariant<SignalMonitor::OffsetMonitor>(),
+//            utilities::listupEnumVariant<UnitMonitorBlock::OffsetMonitor>()
     };
-
     foreach (QList<QVariant> var, m_list)
     {
         foreach (QVariant varInner, var)
@@ -74,13 +86,20 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
             m_monitor_propertyKeys.append(var);
         }
     }
-    m_monitor_propertyKeys.append(QVariant::fromValue(ManualModeDataBlock::MONITOR_BLOCK_HEAD));
     //!Operators
-    foreach (QVariant var, utilities::listupEnumVariant<ManualModeDataBlock::ControlBits>()) {
-        m_operator_propertyKeys[var.toString()] = var;
+    QList<ManualModeDataBlock::ManualContext> m_operator_list = {
+        ManualModeDataBlock::MON_CATEGRORY,
+        ManualModeDataBlock::MON_DEVICE_INDEX,
+        ManualModeDataBlock::COMMIT_CATEGRORY,
+        ManualModeDataBlock::COMMIT_DEVICE_INDEX,
+        ManualModeDataBlock::COMMIT_MODE,
+        ManualModeDataBlock::DATA_BLOCK_HEAD,
+    };
+    foreach (ManualModeDataBlock::ManualContext var, m_operator_list)
+    {
+        auto qvar = QVariant::fromValue(var);
+        m_operator_propertyKeys[qvar.toString()] = qvar;
     }
-    m_operator_propertyKeys[QVariant::fromValue(ManualModeDataBlock::DATA_BLOCK_HEAD)] =
-            QVariant::fromValue(ManualModeDataBlock::DATA_BLOCK_HEAD);
 }
 
 void ControllerManualMode::s1Exited()
@@ -97,7 +116,7 @@ void ControllerManualMode::s2Exited()
 {
     //!
     //! read out block if need
-    switch (static_cast<ManualModeDataBlock*>(m_monitor)->Value(ManualModeDataBlock::COMMIT_MODE).value<ManualModeDataBlock::COMMIT_MODE>())
+    switch (static_cast<ManualModeDataBlock*>(m_monitor)->Value(ManualModeDataBlock::COMMIT_MODE).value<ManualModeDataBlock::CommitMode>())
     {
     case ManualModeDataBlock::MODE_UPLOAD_DATA_BLOCK:
         //! should read full size
@@ -119,12 +138,17 @@ void ControllerManualMode::s3Exited()
 //! \brief ControllerManualMode::m_monitor_propertyKeys
 //! \param key
 //! \return
-//!
-QVariant ControllerManualMode::m_monitor_propertyKeys(QVariant key)
-{
+//! Key had been mixed , cannot seperated by ENUM head
+//! Polyresolver left for front?
+//QVariant ControllerManualMode::m_monitor_propertyKeys(QVariant key)
+//{
+//    switch (key.userType()) {
+//    case value:
+//        return m_monitor->Value(key);
+//        break;
+//    default:
+//        break;
+//    }
 
-}
-void ControllerManualMode::m_operator_propertyChanged(QVariant key,QVariant value)
-{
+//}
 
-}

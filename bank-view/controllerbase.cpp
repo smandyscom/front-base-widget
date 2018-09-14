@@ -36,7 +36,7 @@ void ControllerBase::onAcknowledged(InterfaceRequest ack)
     //! Raising property updating (string copy , performance issue?
     foreach (QVariant var, m_monitor_propertyKeys) {
        parent()->setProperty(var.toString().toStdString().c_str(),m_monitor_propertyValues(var));
-       parent()->setProperty(var.toInt().toStdString().c_str(),m_monitor_propertyValues(var));
+       parent()->setProperty(QString(var.toInt()).toStdString().c_str(),m_monitor_propertyValues(var));
     }
 }
 
@@ -53,6 +53,15 @@ MODBUS_U_WORD* ControllerBase::registerWatchList(ADDRESS_MODE unoffsetedAddress,
 QVariant ControllerBase::m_monitor_propertyValues(QVariant key)
 {
     return m_monitor->Value(key.toUInt());
+}
+//!
+//! \brief ControllerBase::m_operator_propertyChanged
+//! \param key
+//! \param value
+//! Write in
+void ControllerBase::m_operator_propertyChanged(QVariant key, QVariant value)
+{
+    m_channel->Access(toAddressMode(key.value<ADDRESS_MODE>()),value);
 }
 
 bool ControllerBase::event(QEvent *event)

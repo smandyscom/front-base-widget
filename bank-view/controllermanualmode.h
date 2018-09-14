@@ -8,7 +8,7 @@
 #include <QTimer>
 
 #include <definitionmanualblock.h>
-#include <definitionsbaselayer.h>
+
 using namespace BaseLayer;
 
 #include <controllerbase.h>
@@ -19,7 +19,8 @@ using namespace BaseLayer;
 //!
 //! \brief The ControllerManualMode class
 //! The state machine about to control manual mode
-//! Inherit QStateMachine
+//! How pass dynamic property to multiple parent
+//!
 class ControllerManualMode :
         public ControllerBase
 {
@@ -34,7 +35,7 @@ public:
     };
     Q_ENUM(ManualState)
 
-
+    explicit ControllerManualMode(QObject *parent = nullptr);
     //!
     //! Data interfaces
 //    void CommitOption(CommitBlock value) {__channel->Access<CommitBlock>(ModbusDriverAddress(COMMIT_BLOCK),value);}
@@ -44,23 +45,23 @@ public:
     //! \brief DataBlock
     //! \param value
     //! Unpack and write in
-    void DataBlock(QVariant value){__channel->Access(ModbusDriverAddress(DATA_BLOCK_HEAD),value);}
+//    void DataBlock(QVariant value){__channel->Access(ModbusDriverAddress(DATA_BLOCK_HEAD),value);}
     //!
     //!
     //!
-    template<typename T>
-    QVariant DataBlock() const
-    {
-        return QVariant::fromValue(__channel->Access<T>(ModbusDriverAddress(DATA_BLOCK_HEAD)));
-    }
-    CellDataBlock MonitorBlock() const
-    {
-        return __channel->Access<CellDataBlock>(ModbusDriverAddress(MONITOR_BLOCK_HEAD));
-    }
-    void MonitorDeviceCategrory(MODBUS_U_WORD value)
-    {
-        emit requireWriteData(ModbusDriverAddress(ControllerManualMode::MON_CATEGRORY),QVariant::fromValue(value));
-    }
+//    template<typename T>
+//    QVariant DataBlock() const
+//    {
+//        return QVariant::fromValue(__channel->Access<T>(ModbusDriverAddress(DATA_BLOCK_HEAD)));
+//    }
+//    CellDataBlock MonitorBlock() const
+//    {
+//        return __channel->Access<CellDataBlock>(ModbusDriverAddress(MONITOR_BLOCK_HEAD));
+//    }
+//    void MonitorDeviceCategrory(MODBUS_U_WORD value)
+//    {
+//        emit requireWriteData(ModbusDriverAddress(ControllerManualMode::MON_CATEGRORY),QVariant::fromValue(value));
+//    }
 
     ManualState CurrentState() const { return m_currentState;}
 
@@ -86,13 +87,13 @@ public:
 //    }
 
 //    static ControllerManualMode* Instance();
-public slots:
-    void onInterrupted() {
-        emit requireWriteData(ModbusDriverAddress(ControllerManualMode::ENGAGED_HMI),QVariant::fromValue(false));
-    }
-    void onMonitorDeviceIndexChanged(MODBUS_U_WORD objectId){
-        emit requireWriteData(ModbusDriverAddress(ControllerManualMode::MON_DEVICE_INDEX),QVariant::fromValue(objectId));
-    }
+//public slots:
+//    void onInterrupted() {
+//        emit requireWriteData(ModbusDriverAddress(ControllerManualMode::ENGAGED_HMI),QVariant::fromValue(false));
+//    }
+//    void onMonitorDeviceIndexChanged(MODBUS_U_WORD objectId){
+//        emit requireWriteData(ModbusDriverAddress(ControllerManualMode::MON_DEVICE_INDEX),QVariant::fromValue(objectId));
+//    }
 signals:
 //    //!
 //    //! \brief readWordIn
@@ -117,7 +118,7 @@ signals:
 //    //! \param event
 //    //! Looping
 //    void onReply();
-    explicit ControllerManualMode(QObject *parent = nullptr);
+
 protected:
 
     QMap<ManualState,QState*> m_stateMap;
@@ -129,12 +130,16 @@ protected:
     void s3Exited();
 
     //!
+    //! \brief m_monitor_categrories
+    //! Polymorphism of monitor data block
+//    QMap<ManualModeDataBlock::Categrories,AbstractDataBlock*> m_monitor_categrories;
+    //!
     //! \brief m_monitor_propertyValues
     //! \param key
     //! \return
     //! Overrides
-    QVariant m_monitor_propertyValues(QVariant key) Q_DECL_OVERRIDE;
-    void m_operator_propertyChanged(QVariant key,QVariant value) Q_DECL_OVERRIDE;
+//    QVariant m_monitor_propertyValues(QVariant key) Q_DECL_OVERRIDE;
+//    void m_operator_propertyChanged(QVariant key,QVariant value) Q_DECL_OVERRIDE;
 };
 
 #endif // CONTROLLERMANUALMODE_H

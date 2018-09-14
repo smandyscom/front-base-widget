@@ -11,7 +11,13 @@ using namespace DEF_BASIC_DIMENSION;
 class AxisMonitorBlock :
         public AbstractDataBlock
 {
+    Q_OBJECT
 public:
+    AxisMonitorBlock(QObject* parent = nullptr) :
+        AbstractDataBlock(parent){}
+    AxisMonitorBlock(MODBUS_U_WORD* anchor,QObject* parent = nullptr) :
+        AbstractDataBlock(parent){}
+
     enum OPERATION
     {
         OP_SERVO_ON=0,
@@ -105,6 +111,7 @@ public:
         OFFSET_MONITOR_SPD_FEEDBACK=16,
         OFFSET_MONITOR_TOR_FEEDBACK=18,
     };
+    Q_ENUM(OffsetMonitor)
 
     //!
     //! \brief Value
@@ -136,18 +143,25 @@ public:
         }
     }
 };
-Q_DECLARE_METATYPE(AxisMonitorBlock)
 
 //!
 //! \brief The AxisOperationBlock class
 //! Extend operation control ability
-class AxisOperationBlock : public AxisMonitorBlock
+class AxisOperationBlock :
+        public AxisMonitorBlock
 {
+    Q_OBJECT
 public:
+    AxisOperationBlock(QObject* parent=nullptr) :
+        AxisMonitorBlock(parent){}
+    AxisOperationBlock(MODBUS_U_WORD* anchor,QObject* parent=nullptr) :
+        AxisMonitorBlock(anchor,parent){}
+
     enum OffsetOperation
     {
         OFFSET_OPEATION_OPERATION=24,
     };
+    Q_ENUM(OffsetOperation)
     QVariant Value(uint key) const Q_DECL_OVERRIDE
     {
         return AxisMonitorBlock::Value(key);
@@ -157,12 +171,17 @@ public:
         Bit(key,value.toBool());
     }
 };
-Q_DECLARE_METATYPE(AxisOperationBlock)
 
-class AxisContextBlock : public AxisOperationBlock
+class AxisContextBlock :
+        public AxisOperationBlock
 {
-
+    Q_OBJECT
 public:
+    AxisContextBlock(QObject* parent=nullptr) :
+        AxisOperationBlock(parent){}
+    AxisContextBlock(MODBUS_U_WORD* anchor,QObject* parent=nullptr):
+        AxisOperationBlock(anchor,parent){}
+
     enum OffsetContext
     {
         OFFSET_CONTEXT_ADDRESS=32,
@@ -211,7 +230,6 @@ public:
     }
 
 };
-Q_DECLARE_METATYPE(AxisContextBlock)
 
 namespace AxisBlock {
 Q_NAMESPACE

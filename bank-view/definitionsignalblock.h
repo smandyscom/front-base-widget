@@ -13,19 +13,27 @@ using namespace DEF_BASIC_DIMENSION;
 class SignalMonitor :
         public AbstractDataBlock
 {
+    Q_OBJECT
 public:
+    SignalMonitor(QObject* parent=nullptr) :
+        AbstractDataBlock(parent){}
+    SignalMonitor(MODBUS_U_WORD* anchor,QObject* parent=nullptr) :
+        AbstractDataBlock(anchor,parent){}
+
     enum OffsetMonitor
     {
         OFFSET_MONITOR_WIDTH_ON_COUNT=3,
         OFFSET_MONITOR_WIDTH_OFF_COUNT=4,
         OFFSET_MONITOR_WORD_OUT=5,
     };
+    Q_ENUM(OffsetMonitor)
     enum WordOutBits
     {
         BIT_0_DEBOUNCED_ON=0x00000+OFFSET_MONITOR_WORD_OUT,
         BIT_1_DEBOUNCED_OFF=0x10000+OFFSET_MONITOR_WORD_OUT,
         BIT_2_RAW=0x20000+OFFSET_MONITOR_WORD_OUT,
     };
+    Q_ENUM(WordOutBits)
 
     QVariant Value(uint key) const Q_DECL_OVERRIDE
     {
@@ -40,17 +48,24 @@ public:
         }
     }
 };
-Q_DECLARE_METATYPE(SignalMonitor)
 
-class SignalContext : public SignalMonitor
+class SignalContext :
+        public SignalMonitor
 {
+    Q_OBJECT
 public:
+    SignalContext(QObject* parent=nullptr) :
+        SignalMonitor(parent){}
+    SignalContext(MODBUS_U_WORD* anchor,QObject* parent=nullptr) :
+        SignalMonitor(anchor,parent){}
+
     enum OffsetContext
     {
         OFFSET_CONTEXT_SIGNAL_ADDRESS=0,
         OFFSET_CONTEXT_WIDTH_ON_SET=1,
         OFFSET_CONTEXT_WIDTH_OFF_SET=2,
     };
+    Q_ENUM(OffsetContext)
 
     QVariant Value(uint key) const Q_DECL_OVERRIDE
     {
@@ -81,7 +96,6 @@ public:
         }
     }
 };
-Q_DECLARE_METATYPE(SignalContext)
 
 namespace SignalBlock {
 

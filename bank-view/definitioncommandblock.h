@@ -1,6 +1,8 @@
 #ifndef DEFINITIONCOMMANDBLOCK_H
 #define DEFINITIONCOMMANDBLOCK_H
 
+#include <QObject>
+
 #include <definitionbasicblocks.h>
 #include <definitionauxiliarykeys.h>
 
@@ -11,7 +13,13 @@ using namespace DEF_BASIC_DIMENSION;
 class AbstractCommandBlock :
         public AbstractDataBlock
 {
+    Q_OBJECT
 public:
+    AbstractCommandBlock(QObject* parent=nullptr) :
+        AbstractDataBlock(parent){}
+    AbstractCommandBlock(MODBUS_U_WORD* anchor,QObject* parent=nullptr) :
+        AbstractDataBlock(anchor,parent){}
+
     enum Offset
     {
         OFFSET_ACB_AXIS_ID = 0,
@@ -21,6 +29,7 @@ public:
         OFFSET_ACB_DEC_T = 6,
         OFFSET_ACB_TOR_LIMIT=8
     };
+    Q_ENUM(Offset)
     enum CommandType
     {
         BCT_NOP=0,
@@ -29,6 +38,7 @@ public:
         BCT_POS_II=64,
         BCT_POS_III=65,
     };
+    Q_ENUM(CommandType)
 
     void Value(uint key, QVariant value) Q_DECL_OVERRIDE
     {
@@ -68,13 +78,26 @@ public:
         }
     }
 };
-Q_DECLARE_METATYPE(AbstractCommandBlock)
+
 //!
 //! \brief The ExtendedCommandBlock struct
 //! Define the fully occupied memory for all kind of command blocks
-class ExtendedCommandBlock : public AbstractCommandBlock
+class ExtendedCommandBlock :
+        public AbstractCommandBlock
 {
+    Q_OBJECT
 public:
+    ExtendedCommandBlock(QObject* parent=nullptr) :
+        AbstractCommandBlock(parent)
+    {
+        AbstractCommandBlock::Value(OFFSET_ACB_COMMAND_TYPE,BCT_NOP);
+    }
+    ExtendedCommandBlock(MODBUS_U_WORD* anchor,QObject *parent=nullptr) :
+        AbstractCommandBlock(anchor,parent)
+    {
+        AbstractCommandBlock::Value(OFFSET_ACB_COMMAND_TYPE,BCT_NOP);
+    }
+
     enum Offset
     {
         OFFSET_CONTROL_WORD=16,
@@ -85,17 +108,14 @@ public:
         OFFSET_ECB_COORD3 = 22,
 
     };
+    Q_ENUM(Offset)
     enum ControlBits
     {
         //! Bit
         OFFSET_ECB_CONTROL_BIT_0=0x00000+OFFSET_CONTROL_WORD,
         OFFSET_ECB_CONTROL_BIT_1=0x10000+OFFSET_CONTROL_WORD,
     };
-
-    ExtendedCommandBlock() : AbstractCommandBlock()
-    {
-        AbstractCommandBlock::Value(OFFSET_ACB_COMMAND_TYPE,BCT_NOP);
-    }
+    Q_ENUM(ControlBits)
 
     void Value(uint key, QVariant value) Q_DECL_OVERRIDE
     {
@@ -134,30 +154,49 @@ public:
     }
 
 };
-Q_DECLARE_METATYPE(ExtendedCommandBlock)
 
-
-class PosCommandBlock : public ExtendedCommandBlock
+class PosCommandBlock :
+        public ExtendedCommandBlock
 {
+    Q_OBJECT
 public:
+    PosCommandBlock(QObject* parent=nullptr) :
+        ExtendedCommandBlock(parent)
+    {
+        ExtendedCommandBlock::Value(OFFSET_ACB_COMMAND_TYPE,BCT_POS_I);
+    }
+    PosCommandBlock(MODBUS_U_WORD* anchor,QObject* parent=nullptr) :
+        ExtendedCommandBlock(anchor,parent)
+    {
+        ExtendedCommandBlock::Value(OFFSET_ACB_COMMAND_TYPE,BCT_POS_I);
+    }
+
     enum OffsetPos
     {
         OFFSET_POS_ABS_REL = OFFSET_ECB_CONTROL_BIT_0,
         OFFSET_POS_CHECK_REACH = OFFSET_ECB_CONTROL_BIT_1,
     };
-
-    PosCommandBlock() : ExtendedCommandBlock()
-    {
-        ExtendedCommandBlock::Value(OFFSET_ACB_COMMAND_TYPE,BCT_POS_I);
-    }
+    Q_ENUM(OffsetPos)
 };
 Q_DECLARE_METATYPE(PosCommandBlock)
 
 
-class ZretCommandBlock : public ExtendedCommandBlock
+class ZretCommandBlock :
+        public ExtendedCommandBlock
 {
-
+    Q_OBJECT
 public:
+    ZretCommandBlock(QObject* parent=nullptr) :
+        ExtendedCommandBlock(parent)
+    {
+        ExtendedCommandBlock::Value(OFFSET_ACB_COMMAND_TYPE,BCT_ZRET);
+    }
+    ZretCommandBlock(MODBUS_U_WORD* anchor,QObject* parent=nullptr) :
+        ExtendedCommandBlock(anchor,parent)
+    {
+        ExtendedCommandBlock::Value(OFFSET_ACB_COMMAND_TYPE,BCT_ZRET);
+    }
+
     enum OffsetZret
     {
         OFFSET_ZRET_DIRECTION = OFFSET_ECB_CONTROL_BIT_0,
@@ -190,13 +229,7 @@ public:
         INPUT_C_PULSE=18,
         INPUT_ONLY=19,
     };
-
-    ZretCommandBlock():ExtendedCommandBlock()
-    {
-        ExtendedCommandBlock::Value(OFFSET_ACB_COMMAND_TYPE,BCT_ZRET);
-    }
 };
-Q_DECLARE_METATYPE(ZretCommandBlock)
 
 namespace CommandBlock {
    Q_NAMESPACE

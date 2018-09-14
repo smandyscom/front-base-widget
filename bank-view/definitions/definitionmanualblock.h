@@ -13,7 +13,7 @@ class ManualModeDataBlock :
 {
     Q_OBJECT
 public:
-    enum CommitCategrories
+    enum Categrories
     {
         SELECTION_AXIS = 0,
         SELECTION_CYLINDER = 1,
@@ -23,7 +23,7 @@ public:
 
         SELECTION_UNIT = 5,
     };
-    Q_ENUM(CommitCategrories)
+    Q_ENUM(Categrories)
     enum CommitMode
     {
         MODE_EXE_AXIS=SELECTION_AXIS,
