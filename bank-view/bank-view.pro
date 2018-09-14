@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui sql widgets serialbus serialport concurrent
+QT       += core gui sql widgets serialbus  concurrent
 QTPLUGIN += qtvirtualkeyboardplugin
 #greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 #QT       -= gui
@@ -26,7 +26,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    modbussetupwidget.cpp \
     utilities.cpp \
     enumcomboboxdynamic.cpp \
     modbuschannel.cpp \
@@ -67,7 +66,6 @@ SOURCES += \
     messagehandler.cpp \
     messagerecorder.cpp
 HEADERS += \
-    modbussetupwidget.h \
     utilities.h \
     enumcomboboxdynamic.h \
     enumcomboboxgeneric.h \
