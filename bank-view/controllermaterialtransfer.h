@@ -30,16 +30,11 @@ class ControllerMaterialTransfer :
 {
     Q_OBJECT
 public:
-//    enum SlotType
-//    {
-//        //! Update header only , no backend data table
-//        TYPE_EMPTY_NODE=0x02,
-//        //! With backend data table
-//        TYPE_DATA_NODE=0x01,
-//        //!
-//        ATTR_CREATE_NODE=0x10,
-//        TYPE_CREATE_NODE = ATTR_CREATE_NODE+TYPE_DATA_NODE,
-//    };
+    enum Grade
+    {
+        OK=1,
+        NG=0,
+    };
     enum NameConstants
     {
         //! Data base name
@@ -82,6 +77,7 @@ public:
     Q_ENUM(SyncRequests)
     Q_ENUM(SlotState)
     Q_ENUM(NameConstants)
+    Q_ENUM(Grade)
 
     explicit ControllerMaterialTransfer(int slotOffset,
                                         int channelIndex,
@@ -129,6 +125,35 @@ public:
     }
 
 
+    void CounterClear()
+    {
+        m_totalCounter = 0;
+        m_okCounter = 0;
+        m_ngCounter = 0;
+        emit dataUpdated();
+    }
+    int TotalCount() const {return m_totalCounter;}
+    int OKCount() const {return m_okCounter;}
+    int NGCount() const {return m_ngCounter;}
+    qreal OKRate() const
+    {
+        if(m_totalCounter==0)
+            return 0;
+        return ((qreal)m_okCounter/(qreal)m_totalCounter) * 100;
+    }
+    qreal NGRate() const
+    {
+        if(m_totalCounter==0)
+            return 0;
+        return ((qreal)m_ngCounter/(qreal)m_totalCounter) * 100;
+    }
+    Grade CurrentGrade() const {return m_currentGrade;}
+    void IndexGrades(int index1,int index2)
+    {
+        m_index_grade1 = index1;
+        m_index_grade2 = index2;
+    }
+
 signals:
     void dataUpdated();
 public slots:
@@ -136,8 +161,6 @@ public slots:
     void onInsert();
     void onQuery();
     void onUpdate();
-
-    //void onFieldValueChaged(int field,QVariant value);
 protected slots:
     //!
     //! \brief onMonitorBlockReply
@@ -177,7 +200,14 @@ protected:
 
     QElapsedTimer __procedureTimer;
 
-    //QMap<SlotBlock::DataBaseHeaders,QVariant> __preCachedValues;
+    //! Counters
+    int m_totalCounter;
+    int m_okCounter;
+    int m_ngCounter;
+    Grade m_currentGrade;
+    //! To indicate which value to count as OK/NG according to individual slot...bad smell
+    int m_index_grade1;
+    int m_index_grade2;
 };
 
 

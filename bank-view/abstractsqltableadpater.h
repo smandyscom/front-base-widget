@@ -39,7 +39,7 @@ public:
         //!duplication
         __model = new QSqlTableModel(this,qobject_cast<QSqlTableModel*>(this->parent())->database());
         __model->setTable(qobject_cast<QSqlTableModel*>(this->parent())->tableName());
-        __model->select();
+        //__model->select();
     }
 
     void Record(int key,

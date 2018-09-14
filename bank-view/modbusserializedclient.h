@@ -7,7 +7,7 @@
 
 #include <QTimer>
 #include <QPair>
-
+#include <QThread>
 //!
 //! \brief The ModbusSerializedClient class
 //! Make sure requests are processed in sequence
@@ -37,6 +37,8 @@ public:
     void Driver(QModbusClient* value);
 
 
+    bool IsConnected() const {return __driver->state() == QModbusClient::ConnectedState;}
+
     ~ModbusSerializedClient();
 
 signals:
@@ -52,6 +54,7 @@ protected slots:
     //! Control whether start/stop handling timer
     void onDriverStateChanged(QModbusDevice::State state);
     void onDriverErrorOccured(QModbusDevice::Error error);
+    void onReplyFinished();
 protected:
 
     QQueue<ModbusRequest*> requestQueue;
@@ -64,6 +67,9 @@ protected:
     bool __isProcessing;
 
     QTimer* __timer; //driving consumer
+    QModbusReply* reply;
+
+    bool __isDestroyed;
 };
 
 #endif // SEQUENTIALMODBUSCLIENT_H

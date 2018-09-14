@@ -35,6 +35,10 @@ protected slots:
     void onStateChanged(ControllerMainPanel::MainStates currentState);
     void onErrorChanged(quint64 currentError);
 
+    void onInletCleared();
+
+    void onETThresholdChanged();
+    void onETCounterCleared();
 private:
     Ui::frontControlPanel *ui;
 

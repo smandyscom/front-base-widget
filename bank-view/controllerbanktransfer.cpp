@@ -10,18 +10,18 @@ ControllerBankTransfer::ControllerBankTransfer(QObject *parent) :
 
     connect(this,&ControllerBankTransfer::dataTransfered,[=](){
        //! cut link after done
-       disconnect(__controller,SIGNAL(operationPerformed()),this,SLOT(onControllerOperationPerformed()));
+       disconnect(__controller,SIGNAL(operationReady()),this,SLOT(onControllerOperationReady()));
     });
 }
 
+//!
+//! \brief ControllerBankTransfer::onTransferData
+//! First time raising transfering operation
 void ControllerBankTransfer::onTransferData()
 {
     if(__commitOption.Mode()!=CommitBlock::MODE_DOWNLOAD_DATA_BLOCK &&
             __commitOption.Mode() != CommitBlock::MODE_UPLOAD_DATA_BLOCK)
         return; // invalid mode
-
-    //! connect before operation
-    connect(__controller,SIGNAL(operationPerformed()),this,SLOT(onControllerOperationPerformed()));
 
     if(__tasksQueue.isEmpty())
     {
@@ -29,15 +29,16 @@ void ControllerBankTransfer::onTransferData()
         return;
     }
 
+    //! connect before operation
+    connect(__controller,SIGNAL(operationReady()),this,SLOT(onControllerOperationReady()));
      //!Raise asynchrons operation
-    QtConcurrent::run(this,&ControllerBankTransfer::transfer);
-    emit dataTransfering(__tasksQueue.head());
+    transfer();
 }
 
 //!
 //! \brief ControllerBankTransfer::onOperationPerformed
 //! Would iteratlly perform opertion until index reached
-void ControllerBankTransfer::onControllerOperationPerformed()
+void ControllerBankTransfer::onControllerOperationReady()
 {
     if(__controller->CommitOption().Mode()!=CommitBlock::MODE_DOWNLOAD_DATA_BLOCK &&
             __controller->CommitOption().Mode()!=CommitBlock::MODE_UPLOAD_DATA_BLOCK)
@@ -58,8 +59,7 @@ void ControllerBankTransfer::onControllerOperationPerformed()
     }
 
     //! Raise next operation
-    QtConcurrent::run(this,&ControllerBankTransfer::transfer);
-    emit dataTransfering(__tasksQueue.head());
+    transfer();
 }
 
 void ControllerBankTransfer::transfer()
@@ -72,9 +72,19 @@ void ControllerBankTransfer::transfer()
     __controller->CommitOption(__commitOption);
     //! Setup data pack
     __controller->DataBlock(QVariant::fromValue(static_cast<CellDataBlock>(__adaptorMap[__task.first]->Record(__task.second)))); //Write-in anyway
-    //! Wait until controller comes to right state
-    while (__controller->CurrentState()!=ControllerManualMode::STATE_IDLE) {}
+
+    emit dataTransfering(__tasksQueue.head());
+
+//    QtConcurrent::run([=](){
+//        //! Wait until controller comes to right state
+//        while (__controller->CurrentState()!=ControllerManualMode::STATE_IDLE) {}
+//        //! raise state machine to work
+//        emit __controller->operationTriggered();
+//    });
+
+    //! raise state machine to work
     emit __controller->operationTriggered();
+
 }
 
 void ControllerBankTransfer::PutTask(TransferTask task)
