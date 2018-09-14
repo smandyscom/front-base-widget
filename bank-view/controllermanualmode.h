@@ -35,6 +35,8 @@ public:
     };
     Q_ENUM(ManualState)
 
+
+
     explicit ControllerManualMode(QObject *parent = nullptr);
     //!
     //! Data interfaces
@@ -110,8 +112,9 @@ signals:
     //!
     //! \brief triggerOperation
     //! Linked to S1 transition condition
-    void operationTriggered();
-    void operationPerformed();
+//    void operationTriggered();
+//    void operationPerformed();
+    void operationReady();
 //protected slots:
 //    //!
 //    //! \brief onMonitorBlockReply
@@ -125,9 +128,8 @@ protected:
     ManualState m_currentState;
 
     QStateMachine* m_stateMachine;
-    void s1Exited();
+    void s1Entered();
     void s2Exited();
-    void s3Exited();
 
     //!
     //! \brief m_monitor_categrories
@@ -139,7 +141,7 @@ protected:
     //! \return
     //! Overrides
 //    QVariant m_monitor_propertyValues(QVariant key) Q_DECL_OVERRIDE;
-//    void m_operator_propertyChanged(QVariant key,QVariant value) Q_DECL_OVERRIDE;
+    void m_operator_propertyChanged(QVariant key,QVariant value) Q_DECL_OVERRIDE;
 };
 
 #endif // CONTROLLERMANUALMODE_H

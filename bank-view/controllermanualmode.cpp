@@ -44,10 +44,12 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
     //!
     //! s1
     ValueTransition* engagedPLCOff = new ValueTransition(toAddressMode(ManualModeDataBlock::BIT_0_ENGAGED_SEMI_AUTO),ValueTransition::BIT_STATE_OFF);
+    ValueTransition* runOn = new ValueTransition(toAddressMode(ManualModeDataBlock::BIT_1_RUN),ValueTransition::BIT_STATE_ON);
     engagedPLCOff->setTargetState(s0);
+    runOn->setTargetState(s2);
     s1->addTransition(engagedPLCOff);   //when manual mode offline
-    s1->addTransition(this,SIGNAL(operationTriggered()),s2);// when user triggered , TODO , triggered by RUN bit on?
-    connect(s1,&QState::exited,this,&ControllerManualMode::s1Exited);
+    s1->addTransition(runOn);// when user triggered , TODO , triggered by RUN bit on?
+    connect(s1,&QState::entered,this,&ControllerManualMode::s1Entered);
     //!
     //! s2
     ValueTransition* doneOn = new ValueTransition(toAddressMode(ManualModeDataBlock::BIT_1_DONE),ValueTransition::BIT_STATE_ON);
@@ -59,7 +61,6 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
     ValueTransition* doneOff = new ValueTransition(toAddressMode(ManualModeDataBlock::BIT_1_DONE),ValueTransition::BIT_STATE_OFF);
     doneOff->setTargetState(s0);
     s3->addTransition(doneOff); //when DONE off
-    connect(s3,&QState::exited,this,&ControllerManualMode::s3Exited);
     //!
     m_stateMachine->setInitialState(s0);
     m_stateMachine->start();
@@ -87,52 +88,45 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
         }
     }
     //!Operators
-    QList<ManualModeDataBlock::ManualContext> m_operator_list = {
-        ManualModeDataBlock::MON_CATEGRORY,
-        ManualModeDataBlock::MON_DEVICE_INDEX,
-        ManualModeDataBlock::COMMIT_CATEGRORY,
-        ManualModeDataBlock::COMMIT_DEVICE_INDEX,
-        ManualModeDataBlock::COMMIT_MODE,
-        ManualModeDataBlock::DATA_BLOCK_HEAD,
+    QList<QVariant> m_operator_list = {
+        QVariant::fromValue(ManualModeDataBlock::BIT_1_RUN),
+        QVariant::fromValue(ManualModeDataBlock::BIT_0_ENGAGED_HMI),
+        QVariant::fromValue(ManualModeDataBlock::MON_CATEGRORY),
+        QVariant::fromValue(ManualModeDataBlock::MON_DEVICE_INDEX),
+        QVariant::fromValue(ManualModeDataBlock::COMMIT_CATEGRORY),
+        QVariant::fromValue(ManualModeDataBlock::COMMIT_DEVICE_INDEX),
+        QVariant::fromValue(ManualModeDataBlock::COMMIT_MODE),
+        QVariant::fromValue(ManualModeDataBlock::DATA_BLOCK_HEAD),
     };
-    foreach (ManualModeDataBlock::ManualContext var, m_operator_list)
+    foreach (QVariant var, m_operator_list)
     {
-        auto qvar = QVariant::fromValue(var);
-        m_operator_propertyKeys[qvar.toString()] = qvar;
+        m_operator_propertyKeys[var.toString()] = var;
     }
 }
 
-void ControllerManualMode::s1Exited()
+void ControllerManualMode::s1Entered()
 {
-    //! commit block if need
-    //! Exit by triggered
-    if(static_cast<ManualModeDataBlock*>(m_monitor)->Value(ManualModeDataBlock::BIT_0_ENGAGED_SEMI_AUTO).toBool())
-    {
-        m_channel->Access(toAddressMode(ManualModeDataBlock::BIT_0_ENGAGED_HMI),true);
-        m_channel->Access(toAddressMode(ManualModeDataBlock::BIT_1_RUN),true);
-    }
+    emit operationReady();
+    m_channel->Access(toAddressMode(ManualModeDataBlock::BIT_0_ENGAGED_HMI),true);
 }
 void ControllerManualMode::s2Exited()
 {
-    //!
-    //! read out block if need
-    switch (static_cast<ManualModeDataBlock*>(m_monitor)->Value(ManualModeDataBlock::COMMIT_MODE).value<ManualModeDataBlock::CommitMode>())
-    {
-    case ManualModeDataBlock::MODE_UPLOAD_DATA_BLOCK:
-        //! should read full size
-        m_channel->Access(toAddressMode(ManualModeDataBlock::DATA_BLOCK_HEAD),QVariant::fromValue(CellDataBlock()));
-        break;
-    default:
-        break;
-    }
+//    //!
+//    //! read out block if need
+//    switch (static_cast<ManualModeDataBlock*>(m_monitor)->Value(ManualModeDataBlock::COMMIT_MODE).value<ManualModeDataBlock::CommitMode>())
+//    {
+//    case ManualModeDataBlock::MODE_UPLOAD_DATA_BLOCK:
+//        //! should read full size
+//        m_channel->Access(toAddressMode(ManualModeDataBlock::DATA_BLOCK_HEAD),QVariant::fromValue(CellDataBlock()));
+//        break;
+//    default:
+//        break;
+//    }
 
     //set RUN off
     m_channel->Access(toAddressMode(ManualModeDataBlock::BIT_1_RUN),false);
 }
-void ControllerManualMode::s3Exited()
-{
-    emit operationPerformed();//inform required operation had performed
-}
+
 
 //!
 //! \brief ControllerManualMode::m_monitor_propertyKeys
@@ -151,4 +145,20 @@ void ControllerManualMode::s3Exited()
 //    }
 
 //}
-
+void ControllerManualMode::m_operator_propertyChanged(QVariant key, QVariant value)
+{
+    if(key.toUInt() == ManualModeDataBlock::BIT_1_RUN && value.toBool())
+    {
+        //! Activated
+        m_channel->Access(toAddressMode(key.toUInt()),true);
+        setProperty(key.toString().toStdString().c_str(),false);
+    }
+    else if(key.toUInt() == ManualModeDataBlock::BIT_0_ENGAGED_HMI && !value.toBool())
+    {
+        //! Stop
+        m_channel->Access(toAddressMode(key.toUInt()),false);
+        setProperty(key.toString().toStdString().c_str(),true);
+    }
+    else
+        ControllerBase::m_operator_propertyChanged(key,value);
+}
