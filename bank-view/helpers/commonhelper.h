@@ -8,6 +8,9 @@
 #include <QWidget>
 #include <QDebug>
 
+#include <QSqlDatabase>
+#include <QSqlError>
+
 class CommonHelper : public QObject
 {
     Q_OBJECT
@@ -28,6 +31,15 @@ public:
             target->setStyleSheet(qss.readAll());
             qss.close();
         }
+    static void openSqlite3Database(const QString path)
+    {
+        qDebug() << QDir::currentPath();
+        QSqlDatabase m_database = QSqlDatabase::addDatabase("QSQLITE");//setup driver
+        m_database.setDatabaseName(path);
+        if(!m_database.open())
+            qDebug() << m_database.lastError().text();
+    }
+
 signals:
 
 public slots:

@@ -49,6 +49,7 @@ public:
 
         m_anchor = reinterpret_cast<MODBUS_U_WORD*>(new CellDataBlock());
         m_allocated = true;
+
     }
     //!
     //! \brief AbstractDataBlock
@@ -60,6 +61,7 @@ public:
     {
         m_anchor = anchor;
         m_allocated = false;
+
     }
 
     //!
@@ -78,6 +80,7 @@ public:
         memcpy(m_anchor,reinterpret_cast<const void*>(&other),sizeof (CellDataBlock));
         return *this;
     }
+    MODBUS_U_WORD* Anchor() const { return m_anchor;}
 
 
     ~AbstractDataBlock()
@@ -100,7 +103,7 @@ public:
         return QVariant::fromValue(m_anchor[key]);
     }
 
-    static QMap<DEF_BASIC_DIMENSION::Keys,qreal> *Dimension;
+    static QMap<DEF_BASIC_DIMENSION::Keys,qreal>* Dimension;
 
 protected:
     //!

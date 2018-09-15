@@ -33,6 +33,8 @@ SOURCES += \
     ../bank-view/definitionsbaselayer.cpp \
     ../bank-view/interfacechannel.cpp \
     ../bank-view/interfaceclient.cpp \
+    ../bank-view/utilities.cpp \
+    ../bank-view/definitionbasicblocks.cpp \
     ../bank-view/utilities.cpp
 
 HEADERS += \
@@ -47,6 +49,8 @@ HEADERS += \
     ../bank-view/interfacechannel.h \
     ../bank-view/interfaceclient.h \
     ../bank-view/interfacerequest.h \
+    ../bank-view/utilities.h \
+    ../bank-view/definitionbasicblocks.h \
     ../bank-view/utilities.h
 
 INCLUDEPATH += ../bank-view/ \

@@ -19,7 +19,8 @@
 //! \brief The AbstractSqlTableAdpater class
 //! Used to adapting SqlRecord into/from AbstractDataBlock
 //! According to inherited type
-class AbstractSqlTableAdpater : public QObject
+class AbstractSqlTableAdpater :
+        public QObject
 {
     Q_OBJECT
 public:
@@ -33,15 +34,23 @@ public:
     //! \brief AbstractSqlTableAdpater
     //! \param parent
     //! Parent should be QSqlTableModel
-    AbstractSqlTableAdpater(QObject* parent=nullptr) :
-        QObject(parent)
+    AbstractSqlTableAdpater(QSqlTableModel* table,
+                            QList<QVariant> headerList,
+                            AbstractDataBlock* concreteBlock) :
+        QObject(table),
+        m_model(table),
+        m_headerList(headerList),
+        m_concreteBlock(concreteBlock)
     {
-        //!duplication
-        __model = new QSqlTableModel(this,qobject_cast<QSqlTableModel*>(this->parent())->database());
-        __model->setTable(qobject_cast<QSqlTableModel*>(this->parent())->tableName());
-        //__model->select();
+        //! directly use parent rather create new one?
     }
-
+    //!
+    //! \brief Record
+    //! \param key
+    //! \param data
+    //! \param keyType
+    //! \param keyName
+    //! Write record by datablock
     void Record(int key,
                 const AbstractDataBlock& data,
                 KeyType keyType=KEY_ROW_ID,
@@ -51,17 +60,24 @@ public:
         int rowIndex = select(key,keyType,keyName);
 
         //! multi client write-in should use truncate?
-        if(!__model->setRecord(rowIndex,data2Record(data,rowIndex)))
+        if(!m_model->setRecord(rowIndex,data2Record(data,rowIndex)))
         {
             qDebug() << QString("%1:setRecord failed").arg(rowIndex);
-            qDebug() << QString("%1").arg(__model->lastError().text());
+            qDebug() << QString("%1").arg(m_model->lastError().text());
         }
     }
+    //!
+    //! \brief Record
+    //! \param key
+    //! \param keyType
+    //! \param keyName
+    //! \return
+    //! Read record and write into data block
     AbstractDataBlock& Record(int key,
                              KeyType keyType=KEY_ROW_ID,
                              const QVariant keyName=QVariant::fromValue(0))
     {
-        return record2Data(__model->record(select(key,keyType,keyName)));
+        return record2Data(m_model->record(select(key,keyType,keyName)));
     }
 
     //!
@@ -71,76 +87,73 @@ public:
     //! Assume that header list could be on-and-onto data block
     virtual AbstractDataBlock& record2Data(const QSqlRecord& record)
     {
-        //! clear all data
-//        *__concreteTypeBlock = AbstractDataBlock();
-
-        foreach (QVariant var, __headerList) {
+        foreach (QVariant var, m_headerList) {
             if(var.toInt() > INVALID_INDEX)
-                __concreteTypeBlock->Value(var.toUInt(),
+                m_concreteBlock->Value(var.toUInt(),
                                            record.value(utilities::trimNamespace(var)));
         }
 
-        return *__concreteTypeBlock;
+        return *m_concreteBlock;
     }
     virtual QSqlRecord data2Record(const AbstractDataBlock& data,int referenceRowIndex)
     {
-        QSqlRecord __record = __model->record(referenceRowIndex); //get default records as reference
-        *__concreteTypeBlock = data; //value assign only , keep vPtr as same
+        QSqlRecord m_record = m_model->record(referenceRowIndex); //get default records as reference
+        *m_concreteBlock = *reinterpret_cast<CellDataBlock*>(data.Anchor()); //value copy
 
-        foreach (QVariant var, __headerList) {
+        //! Set by name
+        foreach (QVariant var, m_headerList) {
             if(var.toInt() > INVALID_INDEX)
-                __record.setValue(utilities::trimNamespace(var),
-                                  __concreteTypeBlock->Value(var.toInt()));
+                m_record.setValue(utilities::trimNamespace(var),
+                                  m_concreteBlock->Value(var.toInt()));
         }
 
-        return __record;
+        return m_record;
     }
-    QSqlTableModel* Model() const {return __model;}
+    QSqlTableModel* Model() const {return m_model;}
 
 protected:
-    QSqlTableModel* __model;
+    QSqlTableModel* m_model;
     //!
     //! \brief __headerList
     //! Assume that QVariant carried Enum's Name-Value
-    QList<QVariant> __headerList;
-    AbstractDataBlock* __concreteTypeBlock;
+    QList<QVariant> m_headerList;
+    AbstractDataBlock* m_concreteBlock;
 
 
     int select(int key,KeyType keyType,const QVariant keyName){
 
-        //__model->select(); //update before operating
-        int __result = 0;
+                int m_index = 0;
 
         switch (keyType) {
         case KEY_ROW_ID:
-            __model->setFilter(nullptr);
-            __result = key;
+            m_model->setFilter(nullptr);
+            m_index = key;
             break;
         case KEY_NAMED_KEY:
-            __model->setFilter(utilities::generateFilterString(keyName,QVariant::fromValue(key)));
-            __result = 0;
+            m_model->setFilter(utilities::generateFilterString(keyName,QVariant::fromValue(key)));
+            m_index = 0;
             break;
         default:
             break;
         }
 
-        __model->select(); //update before operating
-        return __result;
+        m_model->select(); //update before operating
+        return m_index;
     }
 };
 
 template<typename TypeOfDataBlock,typename TypeOfEnumHeader>
-class GenericSqlTableAdapter : public AbstractSqlTableAdpater
+class GenericSqlTableAdapter :
+        public AbstractSqlTableAdpater
 {
 public:
-    GenericSqlTableAdapter<TypeOfDataBlock,TypeOfEnumHeader>(QObject* parent=nullptr) :
-    AbstractSqlTableAdpater(parent)
+    GenericSqlTableAdapter<TypeOfDataBlock,TypeOfEnumHeader>(QSqlTableModel* table) :
+    AbstractSqlTableAdpater(table,
+                            utilities::listupEnumVariant<TypeOfEnumHeader>(),
+                            new TypeOfDataBlock(table))
     {
-        __concreteTypeBlock = &__dataBlock;
-        __headerList = utilities::listupEnumVariant<TypeOfEnumHeader>();
+        //! Allocating
     }
-protected:
-    TypeOfDataBlock __dataBlock;
 };
 
 #endif // ABSTRACTQVARIANTSQLTABLE_H

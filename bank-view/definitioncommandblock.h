@@ -178,7 +178,6 @@ public:
     };
     Q_ENUM(OffsetPos)
 };
-Q_DECLARE_METATYPE(PosCommandBlock)
 
 
 class ZretCommandBlock :
