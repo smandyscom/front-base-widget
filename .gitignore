@@ -374,3 +374,6 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder
 .mfractor/
+bank-view/bank-view.app/Contents/Info.plist
+bank-view/bank-view.app/Contents/PkgInfo
+bank-view/bank-view.app/Contents/Resources/empty.lproj
