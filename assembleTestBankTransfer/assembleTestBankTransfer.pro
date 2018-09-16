@@ -27,7 +27,12 @@ SOURCES += \
         mainwindow.cpp \
     ../bank-view/controllerbanktransfer.cpp \
     ../bank-view/controllerbase.cpp \
-    ../bank-view/controllermanualmode.cpp
+    ../bank-view/controllermanualmode.cpp \
+    ../bank-view/interfacechannel.cpp \
+    ../bank-view/interfaceclient.cpp \
+    ../bank-view/definitionbasicblocks.cpp \
+    ../bank-view/definitionsbaselayer.cpp \
+    ../bank-view/utilities.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -36,12 +41,19 @@ HEADERS += \
     ../bank-view/definitionunitblocks.h \
     ../bank-view/definitions/definitionmanualblock.h \
     ../bank-view/controllermanualmode.h \
-    ../bank-view/abstractsqltableadpater.h
+    ../bank-view/abstractsqltableadpater.h \
+    ../bank-view/interfacechannel.h \
+    ../bank-view/interfaceclient.h \
+    ../bank-view/interfacerequest.h \
+    ../bank-view/definitionbasicblocks.h \
+    ../bank-view/definitionsbaselayer.h \
+    ../bank-view/utilities.h
 
 FORMS += \
         mainwindow.ui
 
-INCLUDEPATH += ../bank-view/definitions
+INCLUDEPATH += ../bank-view/definitions \
+                ../bank-view/
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

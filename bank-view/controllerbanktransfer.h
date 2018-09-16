@@ -47,10 +47,10 @@ public:
 //        return m_adaptors[key];
 //    }
 
-    void Direction(CommitBlock::CommitMode value)
-    {
-        __commitOption.Mode(value);
-    }
+//    void Direction(CommitBlock::CommitMode value)
+//    {
+//        __commitOption.Mode(value);
+//    }
 
     void PutTask(TransferTask task);
 
@@ -58,24 +58,27 @@ public:
     explicit ControllerBankTransfer(QObject *parent = nullptr);
 
 signals:
-    void dataTransfered();
-    void dataTransfering(TransferTask task);
+//    void dataTransfered();
+//    void dataTransfering(TransferTask task);
 public slots:
     //!
     //! \brief onTransferData
     //! \param mode
     //! \param rowIndex non -1, single mode, -1 ,batch mode
     //!
-    void onTransferData();
+//    void onTransferData();
     void onDataChanged();
 protected slots:
     //!
     //! \brief onOperationTrigger
     //! Internal loop link
-    void onOperationTrigger();
-    void onOperationReady();
+//    void onOperationTrigger();
+//    void onOperationReady();
 protected:
-
+    ManualModeDataBlock::Mode m_mode;
+    //! By task queue to write-in
+    ManualModeDataBlock::Categrories m_categrory;
+    int m_index;
     QMap<ManualModeDataBlock::Categrories,AbstractSqlTableAdpater*> m_adaptors;
 
     AbstractSqlTableAdpater* m_current_adaptor;
@@ -87,8 +90,12 @@ protected:
     void transfer();
     QQueue<TransferTask> m_tasksQueue;
 
-    void s2Entered() Q_DECL_OVERRIDE;
-    void s2Exited() Q_DECL_OVERRIDE;
+    //!
+    //! \brief doneOn
+    void plcReady() Q_DECL_OVERRIDE;
+    void runOn() Q_DECL_OVERRIDE;
+    void doneOn() Q_DECL_OVERRIDE;
+    void doneOff() Q_DECL_OVERRIDE;
 };
 
 #endif // CONTROLLERBANKMANAGER_H

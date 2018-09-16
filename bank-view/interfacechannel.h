@@ -35,8 +35,8 @@ public:
         //! link clients
         for(int i=0;i<clients.count();i++)
         {
-            __clients.append(clients[i]);
-            connect(__clients[i],&InterfaceClient::requestAcknowledged,this,&InterfaceChannel::onAcknowledged);
+            m_clients.append(clients[i]);
+            connect(m_clients[i],&InterfaceClient::requestAcknowledged,this,&InterfaceChannel::onAcknowledged);
         }
     }
 
@@ -50,18 +50,27 @@ public:
 
     MODBUS_U_WORD* Handle(ADDRESS_MODE address)
     {
-        return &(__clients[ADDRESS_CLIENT_ID(address)]->Cache()[ADDRESS_REGISTER(address)]);
+        return &(m_clients[ADDRESS_CLIENT_ID(address)]->Cache()[ADDRESS_REGISTER(address)]);
     }
 
+//    //!
+//    //!
+//    //! Read from internal buffer
+//    template<typename T>
+//    T Access(const ADDRESS_MODE address)
+//    {
+//        QVariant result = QVariant::fromValue(T());
+//        __update(address,result);
+//        return result.value<T>();
+//    }
     //!
+    //! \brief BeginRead
+    //! \param address
+    //! \param dataForm
     //!
-    //! Read from internal buffer
-    template<typename T>
-    T Access(const ADDRESS_MODE address)
+    void BeginRead(ADDRESS_MODE address,QVariant dataForm)
     {
-        QVariant result = QVariant::fromValue(T());
-        __update(address,result);
-        return result.value<T>();
+        m_remoteUpdate(address,dataForm);
     }
 
     //!
@@ -71,16 +80,16 @@ public:
     //! Write operation to remote , update internal buffer as well
     void Access(ADDRESS_MODE address,const QVariant value)
     {
-        __commit(address,value);
+        m_commit(address,value);
     }
     //!
     //!
     //!
-    template<typename T>
-    void Access(ADDRESS_MODE address,T value)
-    {
-        __commit(address,QVariant::fromValue(value));
-    }
+//    template<typename T>
+//    void Access(ADDRESS_MODE address,T value)
+//    {
+//        __commit(address,QVariant::fromValue(value));
+//    }
 signals:
     void ackownledged(InterfaceRequest ack);
 protected slots:
@@ -88,7 +97,7 @@ protected slots:
 protected:
     explicit InterfaceChannel(QObject *parent = nullptr);
 
-    QList<InterfaceClient*> __clients;
+    QList<InterfaceClient*> m_clients;
     QList<QStateMachine*> m_stateMachines;
     QMap<ADDRESS_MODE,int> __routines;
 
@@ -97,16 +106,16 @@ protected:
     //! \param address
     //! \param value
     //! Write to remote , and internal buffer
-    void __commit(ADDRESS_MODE address,QVariant value);
+    void m_commit(ADDRESS_MODE address,QVariant value);
     //!
     //! \brief __update
     //! \param address
     //! \param out
     //! Read value from internal buffer
-    void __update(ADDRESS_MODE address,QVariant& out);
+    void m_update(ADDRESS_MODE address,QVariant& out);
     //! Accessing interface
     //! Raising asynchrous updating operation to remote
-    void __remoteUpdate(ADDRESS_MODE address, QVariant dataForm);
+    void m_remoteUpdate(ADDRESS_MODE address, QVariant dataForm);
 
 
 

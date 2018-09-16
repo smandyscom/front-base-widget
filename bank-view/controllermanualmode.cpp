@@ -113,20 +113,16 @@ void ControllerManualMode::plcReady()
 }
 void ControllerManualMode::doneOn()
 {
-//    //!
-//    //! read out block if need
-//    switch (static_cast<ManualModeDataBlock*>(m_monitor)->Value(ManualModeDataBlock::COMMIT_MODE).value<ManualModeDataBlock::CommitMode>())
-//    {
-//    case ManualModeDataBlock::MODE_UPLOAD_DATA_BLOCK:
-//        //! should read full size
-//        m_channel->Access(toAddressMode(ManualModeDataBlock::DATA_BLOCK_HEAD),QVariant::fromValue(CellDataBlock()));
-//        break;
-//    default:
-//        break;
-//    }
-
     //set RUN off
     m_channel->Access(toAddressMode(ManualModeDataBlock::BIT_1_RUN),false);
+}
+void ControllerManualMode::doneOff()
+{
+
+}
+void ControllerManualMode::runOn()
+{
+
 }
 
 

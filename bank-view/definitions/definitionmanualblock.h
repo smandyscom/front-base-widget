@@ -24,7 +24,7 @@ public:
         SELECTION_UNIT = 5,
     };
     Q_ENUM(Categrories)
-    enum CommitMode
+    enum Mode
     {
         MODE_EXE_AXIS=SELECTION_AXIS,
         MODE_EXE_CYLINDER=SELECTION_CYLINDER,
@@ -37,7 +37,7 @@ public:
         MODE_DOWNLOAD_DATA_BLOCK = 15, //PLC<-HMI
         MODE_UPLOAD_DATA_BLOCK = 16,   //PLC->HMI
     };
-    Q_ENUM(CommitMode)
+    Q_ENUM(Mode)
     //!
     //! \brief The ManualContext enum
     //! Should do channel offset

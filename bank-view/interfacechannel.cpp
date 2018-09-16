@@ -10,19 +10,19 @@ InterfaceChannel::InterfaceChannel(QObject *parent) : QObject(parent)
 //! \param address
 //! \param dataForm
 //! Turns
-void InterfaceChannel::__remoteUpdate(ADDRESS_MODE address, QVariant dataForm)
+void InterfaceChannel::m_remoteUpdate(ADDRESS_MODE address, QVariant dataForm)
 {
     //! For bool type (bit access) , update whole word
     if(dataForm.type() == QVariant::Bool)
         dataForm = QVariant::fromValue(static_cast<quint16>(0));
 
     //! read via interface , put specific type of package into
-    __clients[ADDRESS_CLIENT_ID(address)]->pushRequest(InterfaceRequest(InterfaceRequest::READ,
+    m_clients[ADDRESS_CLIENT_ID(address)]->pushRequest(InterfaceRequest(InterfaceRequest::READ,
                                                                       address,
                                                                       dataForm));
 }
 
-void InterfaceChannel::__commit(uint address, QVariant value)
+void InterfaceChannel::m_commit(uint address, QVariant value)
 {
     QVariant temp = value;
 
@@ -30,7 +30,7 @@ void InterfaceChannel::__commit(uint address, QVariant value)
     case QVariant::Bool:
     {
         temp = QVariant::fromValue(static_cast<quint16>(0));
-        __update(address,temp); //get current value
+        m_update(address,temp); //get current value
         quint16 tempValue = 0;
         quint16 bitAccessor = ADDRESS_BIT_ACCESSOR(address);
         //bitwise manipulation
@@ -47,7 +47,7 @@ void InterfaceChannel::__commit(uint address, QVariant value)
     }
 
     //! write via interface , put specific type of package into
-    __clients[ADDRESS_CLIENT_ID(address)]->pushRequest(InterfaceRequest(InterfaceRequest::WRITE,
+    m_clients[ADDRESS_CLIENT_ID(address)]->pushRequest(InterfaceRequest(InterfaceRequest::WRITE,
                                                                       address,
                                                                       temp));
 }
@@ -57,7 +57,7 @@ void InterfaceChannel::__commit(uint address, QVariant value)
 //! \param address
 //! \param out
 //! Directly return cached data
-void InterfaceChannel::__update(uint address, QVariant &out)
+void InterfaceChannel::m_update(uint address, QVariant &out)
 {
     quint16* __baseAddress = Handle(address);
 
@@ -97,7 +97,7 @@ void InterfaceChannel::onAcknowledged(InterfaceRequest ack)
     {
         //! once this address had been registered as routine , query interval
         QTimer::singleShot(__routines[ack.Address()],this,[ack,this,__data](){
-            this->__remoteUpdate(ack.Address(),__data);
+            this->m_remoteUpdate(ack.Address(),__data);
         });
     }
     //! Dispatch signal to upper
@@ -110,7 +110,7 @@ void InterfaceChannel::RegisterRoutines(uint address, const QVariant dataFrom, i
     __routines[address] = interval;
 
     //! first shot
-    __remoteUpdate(address,dataFrom);
+    m_remoteUpdate(address,dataFrom);
 }
 
 
