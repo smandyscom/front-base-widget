@@ -49,18 +49,20 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
     runOn->setTargetState(s2);
     s1->addTransition(engagedPLCOff);   //when manual mode offline
     s1->addTransition(runOn);// when user triggered , TODO , triggered by RUN bit on?
-    connect(s1,&QState::entered,this,&ControllerManualMode::s1Entered);
+    connect(s1,&QState::entered,this,&ControllerManualMode::plcReady);
     //!
     //! s2
     ValueTransition* doneOn = new ValueTransition(toAddressMode(ManualModeDataBlock::BIT_1_DONE),ValueTransition::BIT_STATE_ON);
     doneOn->setTargetState(s3);
     s2->addTransition(doneOn); //when DONE on
-    connect(s2,&QState::exited,this,&ControllerManualMode::s2Exited);
+    connect(s2,&QState::entered,this,&ControllerManualMode::runOn);
+    connect(s2,&QState::exited,this,&ControllerManualMode::doneOn);
     //!
     //! s3
     ValueTransition* doneOff = new ValueTransition(toAddressMode(ManualModeDataBlock::BIT_1_DONE),ValueTransition::BIT_STATE_OFF);
     doneOff->setTargetState(s0);
     s3->addTransition(doneOff); //when DONE off
+    connect(s3,&QState::exited,this,&ControllerManualMode::doneOff);
     //!
     m_stateMachine->setInitialState(s0);
     m_stateMachine->start();
@@ -104,12 +106,12 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
     }
 }
 
-void ControllerManualMode::s1Entered()
+void ControllerManualMode::plcReady()
 {
     emit operationReady();
     m_channel->Access(toAddressMode(ManualModeDataBlock::BIT_0_ENGAGED_HMI),true);
 }
-void ControllerManualMode::s2Exited()
+void ControllerManualMode::doneOn()
 {
 //    //!
 //    //! read out block if need

@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui widgets
+QT       += core gui widgets sql
 
 TARGET = assembleTestBankTransfer
 TEMPLATE = app
@@ -35,7 +35,8 @@ HEADERS += \
     ../bank-view/controllerbase.h \
     ../bank-view/definitionunitblocks.h \
     ../bank-view/definitions/definitionmanualblock.h \
-    ../bank-view/controllermanualmode.h
+    ../bank-view/controllermanualmode.h \
+    ../bank-view/abstractsqltableadpater.h
 
 FORMS += \
         mainwindow.ui

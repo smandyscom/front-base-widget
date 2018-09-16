@@ -5,13 +5,13 @@ ControllerBankTransfer::ControllerBankTransfer(QObject *parent) :
     QObject(parent)
 {
     //setup
-    __commitOption.Selection(CommitBlock::SELECTION_COMMAND_BLOCK);
-    __controller = ControllerManualMode::Instance();
+//    __commitOption.Selection(CommitBlock::SELECTION_COMMAND_BLOCK);
+//    __controller = ControllerManualMode::Instance();
 
-    connect(this,&ControllerBankTransfer::dataTransfered,[=](){
-       //! cut link after done
-       disconnect(__controller,SIGNAL(operationReady()),this,SLOT(onControllerOperationReady()));
-    });
+//    connect(this,&ControllerBankTransfer::dataTransfered,[=](){
+//       //! cut link after done
+//       disconnect(__controller,SIGNAL(operationReady()),this,SLOT(onControllerOperationReady()));
+//    });
 }
 
 //!
@@ -30,7 +30,7 @@ void ControllerBankTransfer::onTransferData()
     }
 
     //! connect before operation
-    connect(__controller,SIGNAL(operationReady()),this,SLOT(onControllerOperationReady()));
+    connect(__controller,SIGNAL(operationReady()),this,SLOT(onOperationReady()));
      //!Raise asynchrons operation
     transfer();
 }
@@ -38,11 +38,11 @@ void ControllerBankTransfer::onTransferData()
 //!
 //! \brief ControllerBankTransfer::onOperationPerformed
 //! Would iteratlly perform opertion until index reached
-void ControllerBankTransfer::onControllerOperationReady()
+void ControllerBankTransfer::onOperationReady()
 {
-    if(__controller->CommitOption().Mode()!=CommitBlock::MODE_DOWNLOAD_DATA_BLOCK &&
-            __controller->CommitOption().Mode()!=CommitBlock::MODE_UPLOAD_DATA_BLOCK)
-        return; //ignored
+//    if(__controller->CommitOption().Mode()!=CommitBlock::MODE_DOWNLOAD_DATA_BLOCK &&
+//            __controller->CommitOption().Mode()!=CommitBlock::MODE_UPLOAD_DATA_BLOCK)
+//        return; //ignored
 
     TransferTask __task = __tasksQueue.dequeue();
 
@@ -65,15 +65,15 @@ void ControllerBankTransfer::onControllerOperationReady()
 void ControllerBankTransfer::transfer()
 {
     //! Following task instruction
-    TransferTask __task = __tasksQueue.head();
-    __commitOption.Selection(__task.first);
-    __commitOption.Index(__task.second);
-    //! Setup option
-    __controller->CommitOption(__commitOption);
-    //! Setup data pack
-    __controller->DataBlock(QVariant::fromValue(static_cast<CellDataBlock>(__adaptorMap[__task.first]->Record(__task.second)))); //Write-in anyway
+    TransferTask m_task = m_tasksQueue.head();
+//    __commitOption.Selection(__task.first);
+//    __commitOption.Index(__task.second);
+//    //! Setup option
+//    __controller->CommitOption(__commitOption);
+//    //! Setup data pack
+//    __controller->DataBlock(QVariant::fromValue(static_cast<CellDataBlock>(__adaptorMap[__task.first]->Record(__task.second)))); //Write-in anyway
 
-    emit dataTransfering(__tasksQueue.head());
+    emit dataTransfering(m_tasksQueue.head());
 
 //    QtConcurrent::run([=](){
 //        //! Wait until controller comes to right state
@@ -83,8 +83,69 @@ void ControllerBankTransfer::transfer()
 //    });
 
     //! raise state machine to work
-    emit __controller->operationTriggered();
+//    emit __controller->operationTriggered();
 
+}
+
+//!
+//! \brief ControllerBankTransfer::onOperationTrigger
+//! After RUN
+void ControllerBankTransfer::doneOn()
+{
+    mode = qobject_cast<ManualModeDataBlock*>(m_monitor)->Value(ManualModeDataBlock::COMMIT_MODE).value<ManualModeDataBlock::CommitMode>();
+
+    switch (mode) {
+    //! Once triggered as Transfer mode
+    case ManualModeDataBlock::MODE_DOWNLOAD_DATA_BLOCK:
+    case ManualModeDataBlock::MODE_UPLOAD_DATA_BLOCK:
+    {
+        //! no task
+        if(m_tasksQueue.isEmpty())
+            return;
+
+        //! By task queue to write-in
+        ManualModeDataBlock::Categrories categrory = m_tasksQueue.head().first;
+        int index = m_tasksQueue.head().second;
+        //!
+        m_channel->Access(toAddressMode(ManualModeDataBlock::COMMIT_CATEGRORY),QVariant::fromValue(categrory).value<MODBUS_U_WORD>());
+        m_channel->Access(toAddressMode(ManualModeDataBlock::COMMIT_DEVICE_INDEX),QVariant::fromValue(index).value<MODBUS_U_WORD>());
+
+        CellDataBlock* data =
+                reinterpret_cast<CellDataBlock*>(m_adaptors[categrory].Record(index).Anchor());
+        m_channel->Access(toAddressMode(ManualModeDataBlock::DATA_BLOCK_HEAD),QVariant::fromValue(*data));
+
+        break;
+    }
+    default:
+        break;
+    }
+    //!
+    ControllerManualMode::doneOn();
+}
+//!
+//! \brief ControllerBankTransfer::doneOff
+//! Once task queue not empty ,
+//! Re-initiate Run
+void ControllerBankTransfer::doneOff()
+{
+    TransferTask task = m_tasksQueue.dequeue();
+
+    switch (mode) {
+    case ManualModeDataBlock::MODE_UPLOAD_DATA_BLOCK:
+
+        break;
+    default:
+        break;
+    }
+
+    ControllerManualMode::doneOff();
+}
+
+
+void ControllerBankTransfer::onDataChanged()
+{
+    auto table = qobject_cast<QSqlTableModel*>(sender());
+    //! get modelIndex , put it on task queue
 }
 
 void ControllerBankTransfer::PutTask(TransferTask task)
@@ -93,22 +154,22 @@ void ControllerBankTransfer::PutTask(TransferTask task)
     case BATCH_ALL_MODE:
     {
         //! Populating
-        for(int i=0;i<__adaptorMap[task.first]->Model()->rowCount();i++)
-            __tasksQueue.enqueue(TransferTask(task.first,i));
+        for(int i=0;i<m_adaptors[task.first]->Model()->rowCount();i++)
+            m_tasksQueue.enqueue(TransferTask(task.first,i));
         break;
     }
     case BATCH_PRESCHEDUALED_MODE:
         //! Do nothing , let following procedure wipe out all things in queue
-        if(__tasksQueue.isEmpty())
+        if(m_tasksQueue.isEmpty())
             return; //nothing to do
         break;
     default:
         //! Singal mode (Positive index
         //! Find if repeated
-        if(!__tasksQueue.contains(task))
-            __tasksQueue.enqueue(task);
+        if(!m_tasksQueue.contains(task))
+            m_tasksQueue.enqueue(task);
         break;
     }
 }
 
-QMap<CommitBlock::CommitCategrories,AbstractSqlTableAdpater*> ControllerBankTransfer::__adaptorMap;
+

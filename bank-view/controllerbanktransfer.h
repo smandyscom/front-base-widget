@@ -4,9 +4,7 @@
 #include <QObject>
 #include <QMap>
 
-#include <controllerbase.h>
-#include <definitionmanualblock.h>
-
+#include <controllermanualmode.h>
 #include <abstractsqltableadpater.h>
 
 //！ Categrory and record index
@@ -15,7 +13,7 @@ typedef QPair<ManualModeDataBlock::Categrories,int> TransferTask;
 //! \brief The ControllerBankManager class
 //! Charge the operation about transfer from/to PLC
 class ControllerBankTransfer :
-        public ControllerBase
+        public ControllerManualMode
 {
     Q_OBJECT
 public:
@@ -32,20 +30,22 @@ public:
     Q_ENUM(ModeAndStatus)
 
     //! Status
-    int RestTasksCount() const {return __tasksQueue.count();}
-    bool IsProcessing() const {
-        return !__tasksQueue.isEmpty() ||
-                m_controller->CurrentState()!=ControllerManualMode::STATE_IDLE;
-    }
+//    int RestTasksCount() const {return __tasksQueue.count();}
+//    bool IsProcessing() const {
+//        return !__tasksQueue.isEmpty() ||
+//                m_controller->CurrentState()!=ControllerManualMode::STATE_IDLE;
+//    }
     //! Linkage and configuration
-    static void Adaptor(CommitBlock::CommitCategrories key,AbstractSqlTableAdpater* value)
+    void Adaptor(ManualModeDataBlock::Categrories key,AbstractSqlTableAdpater* value)
     {
         m_adaptors[key] = value;
+        //! Sense data changed and put task
+        connect(value->Model(),&QSqlTableModel::dataChanged,this,&ControllerBankTransfer::onDataChanged);
     }
-    static AbstractSqlTableAdpater* Adaptor(CommitBlock::CommitCategrories key)
-    {
-        return m_adaptors[key];
-    }
+//    AbstractSqlTableAdpater* Adaptor(ManualModeDataBlock::Categrories key)
+//    {
+//        return m_adaptors[key];
+//    }
 
     void Direction(CommitBlock::CommitMode value)
     {
@@ -67,13 +67,16 @@ public slots:
     //! \param rowIndex non -1, single mode, -1 ,batch mode
     //!
     void onTransferData();
+    void onDataChanged();
 protected slots:
-    void onControllerOperationReady();
+    //!
+    //! \brief onOperationTrigger
+    //! Internal loop link
+    void onOperationTrigger();
+    void onOperationReady();
 protected:
 
-    CommitBlock __commitOption;
-
-    static QMap<ManualModeDataBlock::Categrories,AbstractSqlTableAdpater*> m_adaptors;
+    QMap<ManualModeDataBlock::Categrories,AbstractSqlTableAdpater*> m_adaptors;
 
     AbstractSqlTableAdpater* m_current_adaptor;
     //!
@@ -84,12 +87,8 @@ protected:
     void transfer();
     QQueue<TransferTask> m_tasksQueue;
 
-    //!
-    //! \brief m_operator_propertyChanged
-    //! \param key
-    //! \param value
-    //!
-    void m_operator_propertyChanged(QVariant key,QVariant value) Q_DECL_OVERRIDE;
+    void s2Entered() Q_DECL_OVERRIDE;
+    void s2Exited() Q_DECL_OVERRIDE;
 };
 
 #endif // CONTROLLERBANKMANAGER_H

@@ -112,7 +112,7 @@ signals:
     //!
     //! \brief triggerOperation
     //! Linked to S1 transition condition
-//    void operationTriggered();
+    void operationTriggered();
 //    void operationPerformed();
     void operationReady();
 //protected slots:
@@ -128,8 +128,22 @@ protected:
     ManualState m_currentState;
 
     QStateMachine* m_stateMachine;
-    void s1Entered();
-    void s2Exited();
+    //!
+    //! \brief s1Entered
+    //! PLC ready
+    virtual void plcReady();
+    //!
+    //! \brief s2Existed
+    //! Run on
+    virtual void runOn();
+    //!
+    //! \brief s2Exited
+    //! Done on
+    virtual void doneOn();
+    //!
+    //! \brief s3Exited
+    //! Done off
+    virtual void doneOff();
 
     //!
     //! \brief m_monitor_categrories

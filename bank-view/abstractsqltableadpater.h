@@ -2,7 +2,7 @@
 #define ABSTRACTQVARIANTSQLTABLE_H
 
 #include <QObject>
-#include <QSqlRelationalTableModel>
+#include <QSqlTableModel>
 
 #include <QSqlRecord>
 #include <QSqlField>
