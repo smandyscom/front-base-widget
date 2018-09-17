@@ -31,8 +31,8 @@ protected:
     //! Auto find-out linked controller
     ControllerBase* m_controller;
 
-    virtual void dynamicPropertyChanged(QString key){}
-    virtual void dynamicPropertyChanged(int key){}
+    virtual void dynamicPropertyChanged(QString key,QVariant value){}
+    virtual void dynamicPropertyChanged(int key,QVariant value){}
 };
 
 #endif // FRONTCOMMON_H

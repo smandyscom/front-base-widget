@@ -15,6 +15,13 @@ public:
     explicit FrontTwinFilter2(QWidget *parent = 0);
     ~FrontTwinFilter2();
 
+    //!
+    //! \brief SelectedPrimaryId
+    //! \return
+    //! ID column
+    int SelectedPrimaryId() const { return 0;}
+    int SelectedSecondaryId() const {return 0;}
+
 private:
     Ui::FrontTwinFilter2 *ui;
 };
