@@ -31,3 +31,8 @@ bool FrontCommon::event(QEvent* event)
 
     return QWidget::event(event);
 }
+
+void FrontCommon::LinkController(QObject* controller)
+{
+    m_controller = controller;
+}
