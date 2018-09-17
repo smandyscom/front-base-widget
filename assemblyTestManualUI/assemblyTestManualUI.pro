@@ -37,7 +37,8 @@ SOURCES += \
     ../bank-view/fronts/frontaxisparameter.cpp \
     ../bank-view/definitions/definitionauxiliarykeys.cpp \
     ../bank-view/definitions/definitionbasicblocks.cpp \
-    ../bank-view/definitions/definitionsbaselayer.cpp
+    ../bank-view/definitions/definitionsbaselayer.cpp \
+    ../bank-view/fronts/frontcommonmanual.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -58,7 +59,8 @@ HEADERS += \
     ../bank-view/definitions/definitionbasicblocks.h \
     ../bank-view/definitions/definitioncommandblock.h \
     ../bank-view/definitions/definitionmanualblock.h \
-    ../bank-view/definitions/definitionsbaselayer.h
+    ../bank-view/definitions/definitionsbaselayer.h \
+    ../bank-view/fronts/frontcommonmanual.h
 
 INCLUDEPATH += ../bank-view/ \
                 ../bank-view/definitions/ \

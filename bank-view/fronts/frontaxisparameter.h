@@ -4,7 +4,7 @@
 #include <QWidget>
 #include <QString>
 
-#include <frontcommon.h>
+#include <frontcommonmanual.h>
 
 #include <definitionmanualblock.h>
 #include <definitionaxisblocks.h>
@@ -16,16 +16,13 @@ class FrontAxisParameter;
 }
 
 class FrontAxisParameter :
-        public FrontCommon
+        public FrontCommonManual
 {
     Q_OBJECT
 
 public:
     explicit FrontAxisParameter(QWidget *parent = 0);
     ~FrontAxisParameter();
-
-    //! Commons
-    bool showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
 
 protected slots:
     void onBankExecution();

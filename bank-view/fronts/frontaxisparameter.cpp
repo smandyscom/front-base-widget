@@ -2,7 +2,7 @@
 #include "ui_frontaxisparameter.h"
 
 FrontAxisParameter::FrontAxisParameter(QWidget *parent) :
-    FrontCommon(parent),
+    FrontCommonManual(parent),
     ui(new Ui::FrontAxisParameter)
 {
     ui->setupUi(this);
@@ -45,7 +45,7 @@ void FrontAxisParameter::onDirectExecution()
     m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_CATEGRORY).toString().toStdString().c_str(),
                               QVariant::fromValue(m_categrory));
 
-    ManualModeDataBlock mode;
+    ManualModeDataBlock::Mode mode;
     //! Prepare Commit Mode/Index , DataBlock , by different push button
     if(sender()==ui->pushButtonDirectAlarmClear ||
             sender()==ui->pushButtonDirectServoOn )
@@ -76,9 +76,10 @@ void FrontAxisParameter::onDirectExecution()
     {
         //! Prepare parameters
         PosCommandBlock m_postionBlock;
-        setCommonParameters(block);
+        setCommonParameters(m_postionBlock);
 
-        if(button==ui->pushButtonDirectAbsolute)
+//        if(button==ui->pushButtonDirectAbsolute)
+//            m_postionBlock.Value(PosCommandBlock::ECB)
 
 
     }

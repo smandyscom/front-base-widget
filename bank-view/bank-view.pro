@@ -26,11 +26,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    modbussetupwidget.cpp \
     utilities.cpp \
     enumcomboboxdynamic.cpp \
-    modbuschannel.cpp \
-    modbusserializedclient.cpp \
     controllermanualmode.cpp \
     frontmanaualmode.cpp \
     junctionbankdatabase.cpp \
@@ -39,9 +36,7 @@ SOURCES += \
     main.cpp \
     frontiooverride.cpp \
     frontcontrolpanel.cpp \
-    frontcylinderpanel.cpp \
     frontbanktransfer.cpp \
-    frontsinglefilter.cpp \
     fronttwinfilter.cpp \
     controllermainpanel.cpp \
     tablemodeliooverride.cpp \
@@ -56,7 +51,6 @@ SOURCES += \
     frontsafetypanel.cpp \
     controllerauth.cpp \
     abstractauthreceiver.cpp \
-    frontslot.cpp \
     frontmaterialselection.cpp \
     delegatematerialselector.cpp \
     frontmaterialselectionv2.cpp \
@@ -82,16 +76,13 @@ SOURCES += \
     delegatematerialselector.cpp \
     enumcomboboxdynamic.cpp \
     frontbanktransfer.cpp \
-    frontconfigurationtransfer.cpp \
     frontcontrolpanel.cpp \
-    frontcylinderpanel.cpp \
     frontiooverride.cpp \
     frontmanaualmode.cpp \
     frontmaterialselection.cpp \
     frontmaterialselectionv2.cpp \
     frontreportquerytable.cpp \
     frontsafetypanel.cpp \
-    frontsinglefilter.cpp \
     frontslot.cpp \
     fronttwinfilter.cpp \
     frontunitpanel.cpp \
@@ -100,9 +91,6 @@ SOURCES += \
     junctionbankdatabase.cpp \
     main.cpp \
     mainwindow.cpp \
-    modbuschannel.cpp \
-    modbusserializedclient.cpp \
-    modbussetupwidget.cpp \
     tablemodelcylindervisual.cpp \
     tablemodeliooverride.cpp \
     utilities.cpp \
@@ -110,14 +98,17 @@ SOURCES += \
     helpers/commonhelper.cpp \
     fronts/frontmainpanel.cpp \
     fronts/frontaxisparameter.cpp \
-    fronts/fronttwinfilter.cpp
+    fronts/fronttwinfilter.cpp \
+    fronts/frontcylinderpanel.cpp \
+    fronts/frontunitpanel.cpp \
+    fronts/frontsinglefilter.cpp \
+    fronts/fronttwinfilter2.cpp \
+    fronts/frontconfigurationtransfer.cpp \
+    fronts/frontcommonmanual.cpp
 HEADERS += \
-    modbussetupwidget.h \
     utilities.h \
     enumcomboboxdynamic.h \
     enumcomboboxgeneric.h \
-    modbuschannel.h \
-    modbusserializedclient.h \
     controllermanualmode.h \
     frontmanaualmode.h \
     junctionbankdatabase.h \
@@ -128,15 +119,7 @@ HEADERS += \
     frontcylinderpanel.h \
     frontbanktransfer.h \
     frontsinglefilter.h \
-    fronttwinfilter.h \
     controllermainpanel.h \
-    definitionaxisblocks.h \
-    definitionsbaselayer.h \
-    definitionbasicblocks.h \
-    definitionunitblocks.h \
-    definitioncommandblock.h \
-    definitioncylinderblock.h \
-    definitionsignalblock.h \
     tablemodeliooverride.h \
     abstractsqltableadpater.h \
     definitionioattributes.h \
@@ -201,16 +184,12 @@ HEADERS += \
     frontsafetypanel.h \
     frontsinglefilter.h \
     frontslot.h \
-    fronttwinfilter.h \
     frontunitpanel.h \
     interfacechannel.h \
     interfaceclient.h \
     interfacerequest.h \
     junctionbankdatabase.h \
     mainwindow.h \
-    modbuschannel.h \
-    modbusserializedclient.h \
-    modbussetupwidget.h \
     tablemodelcylindervisual.h \
     tablemodeliooverride.h \
     utilities.h \
@@ -219,7 +198,13 @@ HEADERS += \
     fronts/frontmainpanel.h \
     definitions/definitionmanualblock.h \
     fronts/frontaxisparameter.h \
-    fronts/fronttwinfilter.h
+    fronts/fronttwinfilter.h \
+    fronts/frontcylinderpanel.h \
+    fronts/frontunitpanel.h \
+    fronts/frontsinglefilter.h \
+    fronts/fronttwinfilter2.h \
+    fronts/frontconfigurationtransfer.h \
+    fronts/frontcommonmanual.h
 
 unix {
     target.path = /usr/lib
@@ -227,7 +212,6 @@ unix {
 }
 
 FORMS += \
-    modbussetupwidget.ui \
     frontmanaualmode.ui \
     mainwindow.ui \
     frontiooverride.ui \
@@ -235,9 +219,7 @@ FORMS += \
     frontcylinderpanel.ui \
     frontbanktransfer.ui \
     fronttwinfilter.ui \
-    frontsinglefilter.ui \
     frontunitpanel.ui \
-    frontconfigurationtransfer.ui \
     frontsafetypanel.ui \
     frontslot.ui \
     frontmaterialselection.ui \
@@ -245,7 +227,12 @@ FORMS += \
     frontreportquerytable.ui \
     fronts/frontmainpanel.ui \
     fronts/frontaxisparameter.ui \
-    fronts/fronttwinfilter.ui
+    fronts/fronttwinfilter.ui \
+    fronts/frontcylinderpanel.ui \
+    fronts/frontunitpanel.ui \
+    fronts/frontsinglefilter.ui \
+    fronts/fronttwinfilter2.ui \
+    fronts/frontconfigurationtransfer.ui
 
 INCLUDEPATH += C://TwinCAT/AdsApi/TcAdsDll/Include/ \
     fronts/ \

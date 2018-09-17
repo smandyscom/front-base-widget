@@ -3,6 +3,7 @@
 
 #include <QWidget>
 
+#include <frontcommonmanual.h>
 #include <frontbanktransfer.h>
 #include <frontsinglefilter.h>
 
@@ -35,10 +36,9 @@ protected slots:
 private:
     Ui::FrontConfigurationTransfer *ui;
 
-    FrontBankTransfer *__fbt;
     FrontSingleFilter *__fsf;
 
-    ControllerBankTransfer* __controllerTransfer;
+//    ControllerBankTransfer* __controllerTransfer;
 
     QSqlTableModel* __objectTable;
 

@@ -22,6 +22,9 @@ public:
     //! \return
     //! Handling DynamicProperty
     bool event(QEvent* event) Q_DECL_OVERRIDE;
+
+    void LinkController(QObject* controller);
+
 signals:
 
 public slots:
@@ -29,7 +32,7 @@ protected:
     //!
     //! \brief m_controller
     //! Auto find-out linked controller
-    ControllerBase* m_controller;
+    QObject* m_controller;
 
     virtual void dynamicPropertyChanged(QString key,QVariant value){}
     virtual void dynamicPropertyChanged(int key,QVariant value){}
