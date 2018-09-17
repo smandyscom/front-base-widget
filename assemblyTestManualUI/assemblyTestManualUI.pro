@@ -28,16 +28,16 @@ SOURCES += \
         mainwindow.cpp \
     ../bank-view/controllerbase.cpp \
     ../bank-view/controllermanualmode.cpp \
-    ../bank-view/definitionauxiliarykeys.cpp \
-    ../bank-view/definitionbasicblocks.cpp \
-    ../bank-view/definitionsbaselayer.cpp \
     ../bank-view/interfacechannel.cpp \
     ../bank-view/interfaceclient.cpp \
     ../bank-view/utilities.cpp \
     ../bank-view/fronts/frontcommon.cpp \
     ../bank-view/abstractauthreceiver.cpp \
     ../bank-view/fronts/fronttwinfilter2.cpp \
-    ../bank-view/fronts/frontaxisparameter.cpp
+    ../bank-view/fronts/frontaxisparameter.cpp \
+    ../bank-view/definitions/definitionauxiliarykeys.cpp \
+    ../bank-view/definitions/definitionbasicblocks.cpp \
+    ../bank-view/definitions/definitionsbaselayer.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -45,9 +45,6 @@ HEADERS += \
     ../bank-view/abstractsqltableadpater.h \
     ../bank-view/controllerbase.h \
     ../bank-view/controllermanualmode.h \
-    ../bank-view/definitionauxiliarykeys.h \
-    ../bank-view/definitionbasicblocks.h \
-    ../bank-view/definitionsbaselayer.h \
     ../bank-view/interfacechannel.h \
     ../bank-view/interfaceclient.h \
     ../bank-view/interfacerequest.h \
@@ -55,7 +52,13 @@ HEADERS += \
     ../bank-view/fronts/frontcommon.h \
     ../bank-view/abstractauthreceiver.h \
     ../bank-view/fronts/fronttwinfilter2.h \
-    ../bank-view/fronts/frontaxisparameter.h
+    ../bank-view/fronts/frontaxisparameter.h \
+    ../bank-view/definitions/definitionauxiliarykeys.h \
+    ../bank-view/definitions/definitionaxisblocks.h \
+    ../bank-view/definitions/definitionbasicblocks.h \
+    ../bank-view/definitions/definitioncommandblock.h \
+    ../bank-view/definitions/definitionmanualblock.h \
+    ../bank-view/definitions/definitionsbaselayer.h
 
 INCLUDEPATH += ../bank-view/ \
                 ../bank-view/definitions/ \
