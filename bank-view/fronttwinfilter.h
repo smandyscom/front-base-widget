@@ -23,6 +23,7 @@ class FrontTwinFilter : public QWidget,
 
 public:
     explicit FrontTwinFilter(QWidget *parent = nullptr);
+
     explicit FrontTwinFilter(QSqlTableModel* dataTable,
                              QVariant key1,
                              QSqlTableModel* primaryTable,

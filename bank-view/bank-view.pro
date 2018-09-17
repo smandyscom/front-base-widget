@@ -109,7 +109,8 @@ SOURCES += \
     fronts/frontcommon.cpp \
     helpers/commonhelper.cpp \
     fronts/frontmainpanel.cpp \
-    fronts/frontaxisparameter.cpp
+    fronts/frontaxisparameter.cpp \
+    fronts/fronttwinfilter.cpp
 HEADERS += \
     modbussetupwidget.h \
     utilities.h \
@@ -217,7 +218,8 @@ HEADERS += \
     helpers/commonhelper.h \
     fronts/frontmainpanel.h \
     definitions/definitionmanualblock.h \
-    fronts/frontaxisparameter.h
+    fronts/frontaxisparameter.h \
+    fronts/fronttwinfilter.h
 
 unix {
     target.path = /usr/lib
@@ -242,7 +244,8 @@ FORMS += \
     frontmaterialselectionv2.ui \
     frontreportquerytable.ui \
     fronts/frontmainpanel.ui \
-    fronts/frontaxisparameter.ui
+    fronts/frontaxisparameter.ui \
+    fronts/fronttwinfilter.ui
 
 INCLUDEPATH += C://TwinCAT/AdsApi/TcAdsDll/Include/ \
     fronts/ \

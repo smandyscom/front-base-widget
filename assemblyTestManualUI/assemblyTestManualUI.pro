@@ -34,8 +34,10 @@ SOURCES += \
     ../bank-view/interfacechannel.cpp \
     ../bank-view/interfaceclient.cpp \
     ../bank-view/utilities.cpp \
-    ../bank-view/definitionbasicblocks.cpp \
-    ../bank-view/utilities.cpp
+    ../bank-view/fronts/frontcommon.cpp \
+    ../bank-view/abstractauthreceiver.cpp \
+    ../bank-view/fronts/fronttwinfilter2.cpp \
+    ../bank-view/fronts/frontaxisparameter.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -50,12 +52,17 @@ HEADERS += \
     ../bank-view/interfaceclient.h \
     ../bank-view/interfacerequest.h \
     ../bank-view/utilities.h \
-    ../bank-view/definitionbasicblocks.h \
-    ../bank-view/utilities.h
+    ../bank-view/fronts/frontcommon.h \
+    ../bank-view/abstractauthreceiver.h \
+    ../bank-view/fronts/fronttwinfilter2.h \
+    ../bank-view/fronts/frontaxisparameter.h
 
 INCLUDEPATH += ../bank-view/ \
                 ../bank-view/definitions/ \
+                ../bank-view/fronts/
 
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    ../bank-view/fronts/fronttwinfilter2.ui \
+    ../bank-view/fronts/frontaxisparameter.ui
