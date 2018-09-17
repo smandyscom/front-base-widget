@@ -8,7 +8,7 @@
 #include <QMap>
 
 #include <abstractsqltableadpater.h>
-#include <QSqlRelationalTableModel>
+#include <QSqlTableModel>
 
 #include <abstractauthreceiver.h>
 
@@ -22,6 +22,7 @@ class FrontTwinFilter : public QWidget,
     Q_OBJECT
 
 public:
+    explicit FrontTwinFilter(QWidget *parent = nullptr);
     explicit FrontTwinFilter(QSqlTableModel* dataTable,
                              QVariant key1,
                              QSqlTableModel* primaryTable,

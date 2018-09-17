@@ -6,13 +6,7 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
     //!
     m_monitor = new ManualModeDataBlock(registerWatchList(ManualModeDataBlock::STATUS_WORD,QVariant::fromValue(static_cast<MODBUS_U_WORD>(0))),this);
     registerWatchList(ManualModeDataBlock::MONITOR_BLOCK_HEAD,QVariant::fromValue(CellDataBlock()));
-    //! Initiate Monitor Data Block
-//    MODBUS_U_WORD* m_monitor_anchor = m_channel->Handle(toAddressMode(ManualModeDataBlock::MONITOR_BLOCK_HEAD));
-//    m_monitor_categrories[ManualModeDataBlock::SELECTION_AXIS] = new AxisMonitorBlock(m_monitor_anchor,this);
-//    m_monitor_categrories[ManualModeDataBlock::SELECTION_CYLINDER] = new CylinderMonitorBlock(m_monitor_anchor,this);
-//    m_monitor_categrories[ManualModeDataBlock::SELECTION_SIGNAL] = new SignalMonitor(m_monitor_anchor,this);
-//    m_monitor_categrories[ManualModeDataBlock::SELECTION_UNIT] = new UnitMonitorBlock(m_monitor_anchor,this);
-    //!
+     //!
     //! \brief s1
     //!
     m_stateMachine = new QStateMachine(this);
