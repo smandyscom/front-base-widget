@@ -140,6 +140,8 @@ void FrontCylinderPanel::showEvent(QShowEvent *event)
     //! Set monitoring focus
     __controller->MonitorDeviceCategrory(CommitBlock::SELECTION_CYLINDER);
     __controller->onMonitorDeviceIndexChanged(__currentViewIndex);
+    //! Renew table
+    __cylinderTable->select();
     //!
     QWidget::showEvent(event);
 }
