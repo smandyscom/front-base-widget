@@ -511,7 +511,7 @@ p, li { white-space: pre-wrap; }
      <item row="0" column="0" rowspan="2">
       <layout class="QGridLayout" name="gridLayout_6">
        <item row="0" column="0">
-        <widget class="QWidget" name="widgetFilter" native="true">
+        <widget class="FrontTwinFilter2" name="widgetFilter" native="true">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
            <horstretch>0</horstretch>
@@ -1091,47 +1091,15 @@ p, li { white-space: pre-wrap; }
     </layout>
    </item>
   </layout>
-  <zorder></zorder>
-  <zorder>tabWidgetCommandPanel</zorder>
-  <zorder>textBrowserAlarmWarning</zorder>
-  <zorder>label_31</zorder>
-  <zorder>pushButtonFeedBackward</zorder>
-  <zorder>label_28</zorder>
-  <zorder>doubleSpinBoxCoordinate</zorder>
-  <zorder>pushButtonAbsolute</zorder>
-  <zorder>doubleSpinBoxStep</zorder>
-  <zorder>pushButtonStepMinus</zorder>
-  <zorder>pushButtonStepPlus</zorder>
-  <zorder>label_31</zorder>
-  <zorder>pushButtonFeedBackward</zorder>
-  <zorder>pushButtonFeedForward</zorder>
-  <zorder>label_5</zorder>
-  <zorder>doubleSpinBoxSpeedReference</zorder>
-  <zorder>label_6</zorder>
-  <zorder>doubleSpinBoxAccerlation</zorder>
-  <zorder>label_7</zorder>
-  <zorder>doubleSpinBoxDecerlation</zorder>
-  <zorder>label_8</zorder>
-  <zorder>doubleSpinBoxTorque</zorder>
-  <zorder>pushButtonParameterSet</zorder>
-  <zorder>label</zorder>
-  <zorder>lcdNumberPositionReference</zorder>
-  <zorder>label_13</zorder>
-  <zorder>label_2</zorder>
-  <zorder>lcdNumberPositionFeedback</zorder>
-  <zorder>label_14</zorder>
-  <zorder>pushButtonCoordinateSet</zorder>
-  <zorder>label_3</zorder>
-  <zorder>lcdNumberSpeedFeedback</zorder>
-  <zorder>label_15</zorder>
-  <zorder>label_4</zorder>
-  <zorder>lcdNumberTorqueFeedback</zorder>
-  <zorder>label_16</zorder>
-  <zorder>widgetFilter</zorder>
-  <zorder>widgetFilter</zorder>
-  <zorder>pushButtonBankExecution</zorder>
-  <zorder>tableViewCommandBlock</zorder>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>FrontTwinFilter2</class>
+   <extends>QWidget</extends>
+   <header>fronttwinfilter2.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
