@@ -56,6 +56,7 @@ void FrontAxisParameter::Setup(QSqlTableModel *commandBlockTable,
     connect(ui->widgetFilter,&FrontTwinFilter2::key1Selected,this,&FrontAxisParameter::onMonitorIndexChanged);
     //!
     m_axisTable = axisTable;
+    m_axisErrorTable = axisErrorTable;
 }
 
 FrontAxisParameter::~FrontAxisParameter()
@@ -85,9 +86,9 @@ void FrontAxisParameter::onDirectExecution(bool value)
 
     AbstractDataBlock* data = &(m_operationBlock);
 
-    //!
-    m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_CATEGRORY).toString().toStdString().c_str(),
-                              QVariant::fromValue(m_categrory));
+//    //!
+//    m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_CATEGRORY).toString().toStdString().c_str(),
+//                              QVariant::fromValue(m_categrory));
 
     ManualModeDataBlock::Mode mode;
     //! Prepare Commit Mode/Index , DataBlock , by different push button
@@ -199,6 +200,7 @@ void FrontAxisParameter::dynamicPropertyChanged(int key,QVariant value)
 {
     switch (key) {
     case ManualModeDataBlock::MONITOR_BLOCK_HEAD:
+    {
         *(static_cast<AbstractDataBlock*>(&m_monitorBlock)) =
                 value.value<CellDataBlock>(); //value assignment
 
@@ -206,9 +208,14 @@ void FrontAxisParameter::dynamicPropertyChanged(int key,QVariant value)
             m_lcdMap[var]->display(m_monitorBlock.Value(var).toReal());
         }
 
-        //! Todo , show axis error
+        //! show axis error
+        //! Alarm/Warning details
+        QString message =
+                utilities::getSqlTableSelectedRecord(m_axisErrorTable,QVariant::fromValue(HEADER_STRUCTURE::ID),m_monitorBlock.Value(AxisMonitorBlock::OFFSET_MONITOR_WARNINGS)).value(QVariant::fromValue(HEADER_STRUCTURE::zh_TW).toString()).toString();
+        ui->textBrowserAlarmWarning->setText(QString("%1").arg(message));
 
         break;
+    }
     default:
         break;
     }

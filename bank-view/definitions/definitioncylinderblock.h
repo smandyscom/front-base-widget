@@ -208,23 +208,23 @@ Q_ENUM_NS(DataBaseHeaders)
 //!
 //! \brief The CylinderSqlTableAdaptor class
 //! used to calculating sensor used count
-class CylinderSqlTableAdaptor : public AbstractSqlTableAdpater
+class CylinderSqlTableAdaptor :
+        public AbstractSqlTableAdpater
 {
     Q_OBJECT
 public:
-    CylinderSqlTableAdaptor(QObject* parent=nullptr):
-        AbstractSqlTableAdpater(parent)
+    CylinderSqlTableAdaptor(QSqlTableModel* parent=nullptr):
+        AbstractSqlTableAdpater(parent,
+                                utilities::listupEnumVariant<CylinderBlock::DataBaseHeaders>(),
+                                &m_block)
     {
-        __concreteTypeBlock = &__block;
-        __headerList = utilities::listupEnumVariant<CylinderBlock::DataBaseHeaders>();
-
-        __headerList.removeOne(QVariant::fromValue(CylinderBlock::A_SENSOR_USED_COUNT));
-        __headerList.removeOne(QVariant::fromValue(CylinderBlock::B_SENSOR_USED_COUNT));
+        m_headerList.removeOne(QVariant::fromValue(CylinderBlock::A_SENSOR_USED_COUNT));
+        m_headerList.removeOne(QVariant::fromValue(CylinderBlock::B_SENSOR_USED_COUNT));
     }
 
-    AbstractDataBlock record2Data(const QSqlRecord &record) Q_DECL_OVERRIDE
+    AbstractDataBlock& record2Data(const QSqlRecord &record) Q_DECL_OVERRIDE
     {
-       *__concreteTypeBlock =  AbstractSqlTableAdpater::record2Data(record);
+       *m_concreteBlock = *reinterpret_cast<CellDataBlock*>(AbstractSqlTableAdpater::record2Data(record).Anchor());
 
         //! Calculating sensor usage
         MODBUS_U_WORD counter=0;
@@ -237,10 +237,10 @@ public:
             CylinderContext::OFFSET_CONTEXT_SENSOR_A_4,
         };
         foreach (CylinderContext::OffsetContext var, __addressAList) {
-            if(__concreteTypeBlock->Value(var).toInt() != 0)
+            if(m_concreteBlock->Value(var).toInt() != 0)
                 counter++;
         }
-        __concreteTypeBlock->Value(CylinderContext::OFFSET_CONTEXT_A_SENSOR_USED_COUNT,QVariant::fromValue(counter));
+        m_concreteBlock->Value(CylinderContext::OFFSET_CONTEXT_A_SENSOR_USED_COUNT,QVariant::fromValue(counter));
 
         //! Sensor B used
         counter = 0;
@@ -251,16 +251,16 @@ public:
                     CylinderContext::OFFSET_CONTEXT_SENSOR_B_4,
         };
         foreach (CylinderContext::OffsetContext var, __addressBList) {
-            if(__concreteTypeBlock->Value(var).toInt() != 0)
+            if(m_concreteBlock->Value(var).toInt() != 0)
                 counter++;
         }
-        __concreteTypeBlock->Value(CylinderContext::OFFSET_CONTEXT_B_SENSOR_USED_COUNT,QVariant::fromValue(counter));
+        m_concreteBlock->Value(CylinderContext::OFFSET_CONTEXT_B_SENSOR_USED_COUNT,QVariant::fromValue(counter));
 
-        return *__concreteTypeBlock;
+        return *m_concreteBlock;
     }
 
 protected:
-    CylinderContext __block;
+    CylinderContext m_block;
 };
 
 
