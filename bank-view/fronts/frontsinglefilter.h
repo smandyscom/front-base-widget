@@ -28,7 +28,7 @@ public:
     void PrimaryTable(QSqlTableModel* model,QVariant column = QString("zh_TW"));
     void DataTable(QSqlTableModel* model)
     {
-        __dataTable = model;
+        m_dataTable = model;
     }
     void DataKey(QVariant key);
 protected slots:
@@ -37,8 +37,8 @@ protected slots:
 protected:
      Ui::FrontSingleFilter *ui;
 
-    QSqlTableModel* __dataTable;
-    QVariant __dataKey;
+    QSqlTableModel* m_dataTable;
+    QVariant m_dataKey;
 };
 
 #endif // FRONTSINGLEFILTER_H

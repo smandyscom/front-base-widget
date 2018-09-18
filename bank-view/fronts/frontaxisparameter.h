@@ -6,6 +6,7 @@
 
 #include <frontcommonmanual.h>
 
+#include <abstractsqltableadpater.h>
 #include <definitionmanualblock.h>
 #include <definitionaxisblocks.h>
 #include <definitioncommandblock.h>
@@ -24,30 +25,44 @@ public:
     explicit FrontAxisParameter(QWidget *parent = 0);
     ~FrontAxisParameter();
 
+    //!
+    //! \brief Setup
+    //! \param commandBlockTable
+    //! \param axisTable
+    //! \param regionTable
+    //! \param axisErrorTable
+    //!
+    void Setup(QSqlTableModel* commandBlockTable,
+               QSqlTableModel* axisTable,
+               QSqlTableModel* regionTable,
+               QSqlTableModel* axisErrorTable,
+               QSqlTableModel* commandBlockTableHeader);
+
+
 protected slots:
     void onBankExecution();
-    void onDirectExecution();
+    void onDirectExecution(bool value);
+    void onInterrupted(bool value);
 private:
     Ui::FrontAxisParameter *ui;
-    //! Commons
-    ManualModeDataBlock::Categrories m_categrory;
-    int m_index;
-
     //!
+    AbstractSqlTableAdpater* m_commblockAdaptor;
+    QSqlTableModel* m_axisTable;
+    QSqlTableModel* m_axisErrorTable;
     //! \brief m_monitorBlock
     //!
     AxisMonitorBlock m_monitorBlock;
-    //!
-    AxisOperationBlock m_operationBlock;
-    ExtendedCommandBlock m_commandBlock;
-    CellDataBlock* m_block;
 
     void setCommonParameters(PosCommandBlock& block);
+    int selectedCommandBlockIndex() const;
+    QVariant selectedAxisValue(int axisId,QVariant key) const;
 
     QMap<AxisMonitorBlock::OffsetMonitor,QLCDNumber*> m_lcdMap;
 
     void dynamicPropertyChanged(int key, QVariant value) Q_DECL_OVERRIDE;
 
+    int currentIndex() const Q_DECL_OVERRIDE;
+    QString currentFilter() const Q_DECL_OVERRIDE;
 };
 
 #endif // FRONTAXISPARAMETER_H

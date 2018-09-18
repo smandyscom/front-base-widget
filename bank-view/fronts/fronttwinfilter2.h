@@ -31,31 +31,41 @@ public:
     //! \brief SelectedPrimaryId
     //! \return
     //! ID column
-    int SelectedPrimaryId() const { return 0;}
-    int SelectedSecondaryId() const {return 0;}
+    int SelectedKey1() const { return m_value1.toInt();}
+    int SelectedKey2() const {return m_value2.toInt();}
+
+    QString Filter1() const {return m_filter1;}
+    QString Filter2() const {return m_filter2;}
+
 signals:
-    void primarySelected(QVariant primaryKey);
-    void secondarySelected(QVariant secondaryKey);
+    void key1Selected(QVariant primaryKey);
+    void key2Selected(QVariant secondaryKey);
 protected slots:
     void onSelectionChanged(int i);
     void onSelectAll();
 private:
     Ui::FrontTwinFilter2 *ui;
-
-    QSqlTableModel* __dataTable;
-    QVariant __key1;
+    //!
+    //! \brief __dataTable
+    //! The table to be manipulation
+    QSqlTableModel* m_dataTable;
+    QVariant m_key1;
+    QVariant m_value1;
+    QString m_filter1;
     //!
     //! \brief __primaryTable
     //! Load to
-    QSqlTableModel* __primaryTable;
-    QVariant __key2;
+    QSqlTableModel* m_keyTable1;
+    QVariant m_key2;
+    QVariant m_value2;
+    QString m_filter2;
     //!
     //! \brief __secondaryTable
     //!
-    QSqlTableModel* __secondaryTable;
+    QSqlTableModel* m_keyTable2;
 
     //!
-    QMap<QWidget*,QSqlTableModel*> __manipulateMap;
+    QMap<QWidget*,QSqlTableModel*> m_manipulateMap;
 };
 
 #endif // FRONTTWINFILTER2_H

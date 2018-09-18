@@ -7,8 +7,8 @@ FrontSingleFilter::FrontSingleFilter(QWidget *parent) :
 {
     ui->setupUi(this);
     //!
-    __dataKey = QString("REGION"); //default
-    ui->labelPrimary->setText(__dataKey.toString());
+    m_dataKey = QString("REGION"); //default
+    ui->labelPrimary->setText(m_dataKey.toString());
     //!
     connect(ui->comboBoxPrimary,SIGNAL(activated(int)),this,SLOT(onSelectedIndexChanged(int)));
     connect(ui->pushButtonSelectAll,SIGNAL(clicked(bool)),this,SLOT(onSelectAll()));
@@ -17,16 +17,17 @@ FrontSingleFilter::FrontSingleFilter(QWidget *parent) :
 
 void FrontSingleFilter::onSelectedIndexChanged(int i)
 {
-    QSqlTableModel* __primaryTable = reinterpret_cast<QSqlTableModel*>(ui->comboBoxPrimary->model());
-    int id = __primaryTable->record(i).value(QVariant::fromValue(ID).toString()).toInt();
+    QSqlTableModel* m_primaryTable = reinterpret_cast<QSqlTableModel*>(ui->comboBoxPrimary->model());
+    int id = m_primaryTable->record(i).value(QVariant::fromValue(ID).toString()).toInt();
 
-   __dataTable->setFilter( utilities::generateFilterString(__dataKey,QVariant::fromValue(id)));
+   m_dataTable->setFilter( utilities::generateFilterString(m_dataKey,QVariant::fromValue(id)));
+   m_dataTable->select();
 }
 
 void FrontSingleFilter::onSelectAll()
 {
-    __dataTable->setFilter(nullptr);
-    __dataTable->select();
+    m_dataTable->setFilter(nullptr);
+    m_dataTable->select();
 }
 
 void FrontSingleFilter::PrimaryTable(QSqlTableModel *model, QVariant showKey)
@@ -36,6 +37,6 @@ void FrontSingleFilter::PrimaryTable(QSqlTableModel *model, QVariant showKey)
 
 void FrontSingleFilter::DataKey(QVariant key)
 {
-    __dataKey = key;
-    ui->labelPrimary->setText(__dataKey.toString());
+    m_dataKey = key;
+    ui->labelPrimary->setText(m_dataKey.toString());
 }

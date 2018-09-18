@@ -4,6 +4,7 @@ FrontCommon::FrontCommon(QWidget *parent) :
     QWidget(parent),
     m_controller(nullptr)
 {
+    //!TODO , css loading?
 }
 
 

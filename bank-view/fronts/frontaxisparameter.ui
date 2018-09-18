@@ -32,7 +32,7 @@
       <enum>QAbstractItemView::SingleSelection</enum>
      </property>
      <property name="selectionBehavior">
-      <enum>QAbstractItemView::SelectItems</enum>
+      <enum>QAbstractItemView::SelectRows</enum>
      </property>
      <property name="textElideMode">
       <enum>Qt::ElideRight</enum>
@@ -779,6 +779,9 @@
                  <property name="text">
                   <string>負方向(-</string>
                  </property>
+                 <property name="checkable">
+                  <bool>true</bool>
+                 </property>
                 </widget>
                </item>
                <item row="2" column="3" colspan="2">
@@ -803,6 +806,9 @@
                  </property>
                  <property name="text">
                   <string>正方向(+</string>
+                 </property>
+                 <property name="checkable">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
@@ -868,7 +874,7 @@
             <number>1</number>
            </property>
            <item row="2" column="0">
-            <widget class="QPushButton" name="pushButtonDirectStop">
+            <widget class="QPushButton" name="pushButtonStop">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
                <horstretch>0</horstretch>

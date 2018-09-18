@@ -1,6 +1,7 @@
 #ifndef FRONTCOMMONMANUAL_H
 #define FRONTCOMMONMANUAL_H
 
+#include <QSqlTableModel>
 
 #include <frontcommon.h>
 #include <definitionmanualblock.h>
@@ -14,11 +15,15 @@ public:
 
     //! Commons
     void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
-
+protected slots:
+    void onMonitorIndexChanged();
 protected:
     //! Commons
     ManualModeDataBlock::Categrories m_categrory;
-    int m_index;
+    virtual int currentIndex() const;
+
+    QSqlTableModel* mainDataTable;
+    virtual QString currentFilter() const;
 };
 
 #endif // FRONTCOMMONMANUAL_H

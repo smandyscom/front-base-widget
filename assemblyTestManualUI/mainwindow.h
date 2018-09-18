@@ -3,8 +3,6 @@
 
 #include <QMainWindow>
 
-#include <fronttwinfilter.h>
-
 namespace Ui {
 class MainWindow;
 }
