@@ -49,6 +49,7 @@ void MessageRecorder::fileOpenByDate()
     if(!__currentFile->open(QFile::Append))
         qWarning() << __currentFile->fileName() << "not existed" ;
     __stream = new QTextStream(__currentFile);
+    __stream->setCodec("Big5");
     __currentDate = QDate::currentDate();
 //    __stream.setDevice(__currentFile); //would call flush for old device
 }

@@ -125,6 +125,7 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index, int channelInd
         m_currentGrade = static_cast<Grade>(__adb.Value(m_index_grade1).toInt() && __adb.Value(m_index_grade2).toInt());
         switch (m_currentGrade) {
         case OK:
+        case BYPASS:
             m_okCounter+=1;
             break;
         case NG:
@@ -133,13 +134,12 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index, int channelInd
         default:
             break;
         }
+        //! Main grade
+        m_currentGrade = static_cast<Grade>(__adb.Value(m_index_grade1).toInt());
 
        emit dataUpdated();
         __channel->Access<bool>(toOffseteAddress(DONE),false); //lead
        qDebug() << QString("%1,procedure elapsed,%2").arg(__slotIndex).arg(__procedureTimer.elapsed());
-
-
-
     });
 
     //! On reply

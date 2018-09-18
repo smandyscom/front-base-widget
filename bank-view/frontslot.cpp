@@ -79,7 +79,8 @@ void FrontSlot::onDataUpdated()
     ui->lcdNumberNGRate->display(__controller->NGRate());
     ui->labelOKNG->setText(QVariant::fromValue(__controller->CurrentGrade()).toString());
     utilities::colorChangeOver(ui->labelOKNG,
-                              __controller->CurrentGrade()==ControllerMaterialTransfer::OK,
+                              __controller->CurrentGrade()==ControllerMaterialTransfer::OK ||
+                               __controller->CurrentGrade()==ControllerMaterialTransfer::BYPASS,
                               Qt::green,
                               Qt::red);
 }

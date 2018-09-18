@@ -33,6 +33,7 @@ public:
     enum Grade
     {
         OK=1,
+        BYPASS=3,
         NG=0,
     };
     enum NameConstants

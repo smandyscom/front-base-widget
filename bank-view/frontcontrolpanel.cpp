@@ -1,6 +1,8 @@
 #include "frontcontrolpanel.h"
 #include "ui_frontcontrolpanel.h"
 
+#include <QDebug>
+
 FrontControlPanel::FrontControlPanel(QList<ControllerMaterialTransfer*> materialSlots,
                                      QWidget *parent) :
     QWidget(parent),
@@ -150,9 +152,12 @@ void FrontControlPanel::onErrorChanged(MODBUS_U_QUAD currentError)
                                           (__controller->ErrorCategrory() == CommitBlock::SELECTION_CYLINDER));
     //! given message
     if(currentError)
+    {
         ui->textBrowserErrorDescription->setText(QString("%1\n%2")
                                                  .arg(__controller->ErrorDevice())
                                                  .arg(__controller->ErrorDescription()));
+        qInfo() << ui->textBrowserErrorDescription->toPlainText(); //record alarm
+    }
     else
         ui->textBrowserErrorDescription->clear();
 }
