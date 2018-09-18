@@ -1,57 +1,54 @@
 #ifndef FRONTUNITPANEL_H
 #define FRONTUNITPANEL_H
 
-#include <QWidget>
-#include <QTimer>
-#include <QPushButton>
-#include <QSqlRelationalTableModel>
-
-#include <frontsinglefilter.h>
-#include <frontbanktransfer.h>
-
-#include <controllermanualmode.h>
-
+#include <frontcommonmanual.h>
+#include <definitionmanualblock.h>
 #include <definitionunitblocks.h>
 #include <utilities.h>
 
-#include <junctionbankdatabase.h>
-
-#include <abstractauthreceiver.h>
+//#include <abstractauthreceiver.h>
 
 namespace Ui {
 class FrontUnitPanel;
 }
 
-typedef QPair<ModbusDriverAddress,Qt::GlobalColor> VisualAspect;
+//typedef QPair<ModbusDriverAddress,Qt::GlobalColor> VisualAspect;
 
-class FrontUnitPanel : public QWidget,
-        public AbstractAuthReceiver
+class FrontUnitPanel : public FrontCommonManual
+//        public AbstractAuthReceiver
 {
     Q_OBJECT
 
 public:
     explicit FrontUnitPanel(QWidget *parent = 0);
     ~FrontUnitPanel();
+
+    void Setup(QSqlTableModel* unitTable, QSqlTableModel *unitTableHeader);
+
 protected slots:
     void onCommandClick();
-    void onViewSelectionChanged();
-    void onTimerTimeout();
+//    void onViewSelectionChanged();
+//    void onTimerTimeout();
 protected:
-    void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
+//    void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
 private:
     Ui::FrontUnitPanel *ui;
 
-    QSqlTableModel* __unitTable;
+//    QSqlTableModel* __unitTable;
 
-    QTimer* __timer;
-    MODBUS_U_WORD __currentViewIndex;
+//    QTimer* __timer;
+//    MODBUS_U_WORD __currentViewIndex;
 
-    ControllerManualMode* __controller;
+//    ControllerManualMode* __controller;
 
-    QMap<QWidget*,VisualAspect> __statusShowMap;
-    QMap<QPushButton*,ModbusDriverAddress> __controlMap;//Widget,Address
+//    QMap<QWidget*,VisualAspect> __statusShowMap;
+    QMap<QPushButton*,UnitOperationBlock::ControlBits> m_controlMap;//Widget,Address
 
-    QList<QWidget*> __busyInterlock;
+    UnitMonitorBlock m_monitor;
+//    QList<QWidget*> __busyInterlock;
+
+    //!Override
+    int currentIndex() const Q_DECL_OVERRIDE;
 };
 
 #endif // FRONTUNITPANEL_H

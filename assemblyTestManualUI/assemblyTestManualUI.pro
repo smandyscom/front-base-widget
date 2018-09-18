@@ -40,7 +40,8 @@ SOURCES += \
     ../bank-view/definitions/definitionsbaselayer.cpp \
     ../bank-view/fronts/frontcommonmanual.cpp \
     ../bank-view/fronts/frontcylinderpanel.cpp \
-    ../bank-view/fronts/frontsinglefilter.cpp
+    ../bank-view/fronts/frontsinglefilter.cpp \
+    ../bank-view/fronts/frontunitpanel.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -65,7 +66,9 @@ HEADERS += \
     ../bank-view/fronts/frontcommonmanual.h \
     ../bank-view/fronts/frontcylinderpanel.h \
     ../bank-view/fronts/frontsinglefilter.h \
-    ../bank-view/definitions/definitioncylinderblock.h
+    ../bank-view/definitions/definitioncylinderblock.h \
+    ../bank-view/fronts/frontunitpanel.h \
+    ../bank-view/definitions/definitionunitblocks.h
 
 INCLUDEPATH += ../bank-view/ \
                 ../bank-view/definitions/ \
@@ -77,4 +80,5 @@ FORMS += \
     ../bank-view/fronts/fronttwinfilter2.ui \
     ../bank-view/fronts/frontaxisparameter.ui \
     ../bank-view/fronts/frontcylinderpanel.ui \
-    ../bank-view/fronts/frontsinglefilter.ui
+    ../bank-view/fronts/frontsinglefilter.ui \
+    ../bank-view/fronts/frontunitpanel.ui
