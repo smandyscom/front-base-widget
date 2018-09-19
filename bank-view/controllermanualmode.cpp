@@ -1,15 +1,20 @@
 #include "controllermanualmode.h"
 #include <QDebug>
-ControllerManualMode::ControllerManualMode(QObject *parent) :
-    ControllerBase(0,1024,100,parent)
+ControllerManualMode::ControllerManualMode(quint8 clientId,
+                                           quint16 baseOffset,
+                                           int interval,
+                                           QObject *parent) :
+    ControllerBase(clientId,baseOffset,interval,parent)
 {
     //!
     m_monitor = new ManualModeDataBlock(registerWatchList(ManualModeDataBlock::STATUS_WORD,QVariant::fromValue(static_cast<MODBUS_U_WORD>(0))),this);
     registerWatchList(ManualModeDataBlock::MONITOR_BLOCK_HEAD,QVariant::fromValue(CellDataBlock()));
+
      //!
     //! \brief s1
     //!
     m_stateMachine = new QStateMachine(this);
+    m_channel->RegisterStateMachine(m_stateMachine);
     QState* s0 = new QState(m_stateMachine);
     QState* s1 = new QState(m_stateMachine);
     QState* s2 = new QState(m_stateMachine);
@@ -24,10 +29,7 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
     foreach (QState* s, m_stateMap.values())
     {
         //! Report current state
-        connect(s,&QState::entered,[=](){
-            //! trigger read action
-            m_currentState = m_stateMap.key(qobject_cast<QState*>(sender()));
-        });
+        connect(s,&QState::entered,this,&ControllerManualMode::onStateReport);
     }
 
     //!
@@ -100,6 +102,13 @@ ControllerManualMode::ControllerManualMode(QObject *parent) :
     }
 }
 
+void ControllerManualMode::onStateReport()
+{
+    //! trigger read action
+    m_currentState = m_stateMap.key(qobject_cast<QState*>(sender()));
+    qDebug() << QVariant::fromValue(m_currentState).toString();
+}
+
 void ControllerManualMode::plcReady()
 {
     emit operationReady();
@@ -119,38 +128,27 @@ void ControllerManualMode::runOn()
 
 }
 
-
-//!
-//! \brief ControllerManualMode::m_monitor_propertyKeys
-//! \param key
-//! \return
-//! Key had been mixed , cannot seperated by ENUM head
-//! Polyresolver left for front?
-//QVariant ControllerManualMode::m_monitor_propertyKeys(QVariant key)
-//{
-//    switch (key.userType()) {
-//    case value:
-//        return m_monitor->Value(key);
-//        break;
-//    default:
-//        break;
-//    }
-
-//}
 void ControllerManualMode::m_operator_propertyChanged(QVariant key, QVariant value)
 {
-    if(key.toUInt() == ManualModeDataBlock::BIT_1_RUN && value.toBool())
-    {
-        //! Activated
-        m_channel->Access(toAddressMode(key.toUInt()),true);
-        setProperty(key.toString().toStdString().c_str(),false);
-    }
-    else if(key.toUInt() == ManualModeDataBlock::BIT_0_ENGAGED_HMI && !value.toBool())
-    {
-        //! Stop
-        m_channel->Access(toAddressMode(key.toUInt()),false);
-        setProperty(key.toString().toStdString().c_str(),true);
-    }
-    else
+    switch (key.toUInt()) {
+    case ManualModeDataBlock::BIT_1_RUN:
+        if(value.toBool())
+        {
+            //! Activated
+            m_channel->Access(toAddressMode(key.toUInt()),true);
+            setProperty(key.toString().toStdString().c_str(),false);//reset
+        }
+        break;
+    case ManualModeDataBlock::BIT_0_ENGAGED_HMI:
+        if(!value.toBool())
+        {
+            //! Stop
+            m_channel->Access(toAddressMode(key.toUInt()),false);
+            setProperty(key.toString().toStdString().c_str(),true); //reset
+        }
+        break;
+    default:
         ControllerBase::m_operator_propertyChanged(key,value);
+        break;
+    }
 }

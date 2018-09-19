@@ -112,6 +112,9 @@ void InterfaceChannel::RegisterRoutines(uint address, const QVariant dataFrom, i
     //! first shot
     m_remoteUpdate(address,dataFrom);
 }
-
+void InterfaceChannel::RegisterStateMachine(QStateMachine *machine)
+{
+    m_stateMachines.append(machine);
+}
 
 InterfaceChannel* InterfaceChannel::__instance = nullptr;

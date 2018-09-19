@@ -2,30 +2,30 @@
 
 InterfaceClient::InterfaceClient(QObject *parent) :
     QObject(parent),
-    __isProcessing(false)
+    m_isProcessing(false)
 {
     //! Initialize internal cache
-    __cache = new quint16[USHRT_MAX];
-    memset(__cache,0,USHRT_MAX);
+    m_cache = new quint16[USHRT_MAX];
+    memset(m_cache,0,USHRT_MAX);
     //! create timer
-    __workingTimer = new QTimer(this);
-    connect(__workingTimer,SIGNAL(timeout()),this,SLOT(onPopRequest()));
+    m_workingTimer = new QTimer(this);
+    connect(m_workingTimer,SIGNAL(timeout()),this,SLOT(onPopRequest()));
 //    __workingTimer->start();
 }
 
 void InterfaceClient::pushRequest(InterfaceRequest request)
 {
-    __queue.enqueue(request);
+    m_queue.enqueue(request);
 }
 
 void InterfaceClient::operationDone()
 {
     //! dequeue from head
-    InterfaceRequest ack = __queue.dequeue(); //when fetched data , put into head
-    __isProcessing = false;
+    InterfaceRequest ack = m_queue.dequeue(); //when fetched data , put into head
+    m_isProcessing = false;
     //! write into cache
     ADDRESS_MODE __address = ack.Address();
-    memcpy(&__cache[ADDRESS_REGISTER(__address)],ack.Data().data(),utilities::sizeOf(ack.Data()));
+    memcpy(&m_cache[ADDRESS_REGISTER(__address)],ack.Data().data(),utilities::sizeOf(ack.Data()));
 
     emit requestAcknowledged(ack);
 }
@@ -33,9 +33,9 @@ void InterfaceClient::operationDone()
 void InterfaceClient::onPopRequest()
 {
     //!Automatic polling by request/acknowledge
-    if(__queue.isEmpty() || __isProcessing)
+    if(m_queue.isEmpty() || m_isProcessing)
         return;
-    __isProcessing = true;
+    m_isProcessing = true;
 //    onPopRequest();
 }
 

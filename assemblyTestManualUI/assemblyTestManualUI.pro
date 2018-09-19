@@ -41,7 +41,8 @@ SOURCES += \
     ../bank-view/fronts/frontcommonmanual.cpp \
     ../bank-view/fronts/frontcylinderpanel.cpp \
     ../bank-view/fronts/frontsinglefilter.cpp \
-    ../bank-view/fronts/frontunitpanel.cpp
+    ../bank-view/fronts/frontunitpanel.cpp \
+    ../bank-view/adsclient.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -68,7 +69,8 @@ HEADERS += \
     ../bank-view/fronts/frontsinglefilter.h \
     ../bank-view/definitions/definitioncylinderblock.h \
     ../bank-view/fronts/frontunitpanel.h \
-    ../bank-view/definitions/definitionunitblocks.h
+    ../bank-view/definitions/definitionunitblocks.h \
+    ../bank-view/adsclient.h
 
 INCLUDEPATH += ../bank-view/ \
                 ../bank-view/definitions/ \
@@ -82,3 +84,8 @@ FORMS += \
     ../bank-view/fronts/frontcylinderpanel.ui \
     ../bank-view/fronts/frontsinglefilter.ui \
     ../bank-view/fronts/frontunitpanel.ui
+
+win32: LIBS += -L$$PWD/../../../../../TwinCAT/AdsApi/TcAdsDll/Lib/ -lTcAdsDll
+
+INCLUDEPATH += $$PWD/../../../../../TwinCAT/AdsApi/TcAdsDll/Include
+DEPENDPATH += $$PWD/../../../../../TwinCAT/AdsApi/TcAdsDll/Include

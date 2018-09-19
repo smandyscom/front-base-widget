@@ -19,22 +19,22 @@ public:
 
     void pushRequest(InterfaceRequest request);
 
-    quint16* Cache(){return __cache;}
+    quint16* Cache(){return m_cache;}
 
 signals:
     void requestAcknowledged(InterfaceRequest acknowledge);
 public slots:
-    void onTimerStart() { __workingTimer->start();}
+    void onTimerStart() { m_workingTimer->start();}
 protected slots:
     virtual void onPopRequest() ;
 protected:
-    QTimer* __workingTimer; //driving consume
-    QQueue<InterfaceRequest> __queue;
+    QTimer* m_workingTimer; //driving consume
+    QQueue<InterfaceRequest> m_queue;
     //!
     //! \brief __cache
     //! data cache
-    quint16* __cache;
-    bool __isProcessing;
+    quint16* m_cache;
+    bool m_isProcessing;
     void operationDone();
 };
 

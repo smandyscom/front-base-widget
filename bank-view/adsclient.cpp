@@ -22,40 +22,40 @@ void AdsClient::onPopRequest()
 {
     //InterfaceClient::onPopRequest();
     //!Automatic polling by request/acknowledge
-    if(__queue.isEmpty() || __isProcessing)
+    if(m_queue.isEmpty() || m_isProcessing)
         return;
-    __isProcessing = true;
+    m_isProcessing = true;
 //    QtConcurrent::run(this, &AdsClient::executeRequest); //async call
     executeRequest();
 }
 
 void AdsClient::executeRequest()
 {
-    ADDRESS_MODE __address = __queue.head().Address();
+    ADDRESS_MODE __address = m_queue.head().Address();
     auto __register = ADDRESS_REGISTER(__address);
-    auto __size = utilities::sizeOf(__queue.head().Data());
+    auto __size = utilities::sizeOf(m_queue.head().Data());
 
-    switch (__queue.head().Access())
+    switch (m_queue.head().Access())
 	{
     case InterfaceRequest::READ:
         lastResult = AdsSyncReadReq(&__amsAddress,
             __group,
             __register * 2, //since counting in byte
             __size,
-            __queue.head().Data().data());
+            m_queue.head().Data().data());
 		break;
     case InterfaceRequest::WRITE:
         lastResult = AdsSyncWriteReq(&__amsAddress,
             __group,
             __register * 2,
             __size,
-            __queue.head().Data().data());
+            m_queue.head().Data().data());
 		break;
 	default:
 		break;
 	}
 
-    QVariant tempData = __queue.head().Data();
+    QVariant tempData = m_queue.head().Data();
 	//check if result success
 	//once done , remove first entity from queue
     switch (lastResult)

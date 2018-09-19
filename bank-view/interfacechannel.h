@@ -47,6 +47,7 @@ public:
     //! Register and trigger the routine access
     void RegisterRoutines(ADDRESS_MODE address,const QVariant dataFrom,int interval = 50);
 
+    void RegisterStateMachine(QStateMachine* machine);
 
     MODBUS_U_WORD* Handle(ADDRESS_MODE address)
     {

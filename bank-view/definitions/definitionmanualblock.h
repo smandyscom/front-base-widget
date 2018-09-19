@@ -44,18 +44,18 @@ public:
     enum ManualContext
     {
         STATUS_WORD=0x00000000,
-        CONTROL_WORD = 0x20,
+        CONTROL_WORD = 32,
 
-        MON_CATEGRORY=0x28,
-        MON_DEVICE_INDEX=0x29,
+        MON_CATEGRORY=40,
+        MON_DEVICE_INDEX=41,
 
-        COMMIT_MODE=0x2A,
-        COMMIT_CATEGRORY=0x2C,
-        COMMIT_DEVICE_INDEX=0x2E,
+        COMMIT_MODE=42,
+        COMMIT_CATEGRORY=44,
+        COMMIT_DEVICE_INDEX=46,
 
-        DATA_BLOCK_HEAD=0x40,
+        DATA_BLOCK_HEAD=64,
 
-        MONITOR_BLOCK_HEAD=0x80,
+        MONITOR_BLOCK_HEAD=128,
 //        IO_MON_OVERRIDE=0x02000100,
     };
     Q_ENUM(ManualContext)
