@@ -43,8 +43,12 @@ FrontMaterialSelectionV2::FrontMaterialSelectionV2(QSqlDatabase db, QWidget *par
 
     //!
     __dialog = new QDialog(this);
+
+    QGridLayout* gridLayout = new QGridLayout(__dialog);
     __report = new FrontReportQueryTable(db,__dialog);
-    __dialog->adjustSize();
+    __dialog->setLayout(gridLayout);
+    gridLayout->addWidget(__report);
+    __dialog->setWindowState(Qt::WindowMaximized);
 }
 
 FrontMaterialSelectionV2::~FrontMaterialSelectionV2()

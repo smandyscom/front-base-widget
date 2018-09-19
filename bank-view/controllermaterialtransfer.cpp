@@ -127,15 +127,17 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index, int channelInd
         case OK:
         case BYPASS:
             m_okCounter+=1;
+            //! Main grade
+            m_currentGrade = static_cast<Grade>(__adb.Value(m_index_grade1).toInt());
             break;
         case NG:
             m_ngCounter+=1;
+            m_currentGrade = Grade::NG;
             break;
         default:
             break;
         }
-        //! Main grade
-        m_currentGrade = static_cast<Grade>(__adb.Value(m_index_grade1).toInt());
+
 
        emit dataUpdated();
         __channel->Access<bool>(toOffseteAddress(DONE),false); //lead

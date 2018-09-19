@@ -19,6 +19,7 @@ FrontReportQueryTable::FrontReportQueryTable(QSqlDatabase db,QWidget *parent) :
     //!
     __reportPollTable = new QSqlTableModel(this,__db);
     __reportPollTable->setTable(QVariant::fromValue(REPORT_POLL).toString());
+    __reportPollTable->setEditStrategy(QSqlTableModel::OnRowChange);
     __reportPollTable->select();
     //!
     QList<TableNames> __names = {VIEW_MAT_TABLE_HOUSING,
@@ -97,12 +98,20 @@ void FrontReportQueryTable::onExportPerformed()
 void FrontReportQueryTable::onAddPerformed()
 {
     QSqlRecord __record = __reportSingleTable->record(0);
-    __reportPollTable->insertRecord(-1,__record); //insert to last
+    qDebug() << QString("__reportPollTable,insertRecord,%1").arg(__reportPollTable->insertRecord(-1,__record)); //insert to last
     __reportPollTable->select();
 
 }
 
 void FrontReportQueryTable::onClearPerformed()
 {
-    __reportPollTable->clear();
+//    qDebug() << QString("__reportPollTable->removeRows,%1").arg(__reportPollTable->removeRow(0));
+    while(__reportPollTable->rowCount()>0)
+    {
+        qDebug() << QString("__reportPollTable->removeRows,%1").arg(__reportPollTable->removeRow(0));
+         __reportPollTable->select();
+    }
+
+//    qDebug() << __reportPollTable->lastError().text();
+
 }

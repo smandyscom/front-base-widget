@@ -21,10 +21,11 @@ void MessageRecorder::onMessageReceived(QString arg)
     {
         //conclude file , and open a new one
         //QtConcurrent::run(this,&fileConcluded,__currentFile,__stream);
-        QtConcurrent::run([=]()
-        {
-            fileConcluded(__currentFile,__stream);
-        });
+//        QtConcurrent::run([=]()
+//        {
+//            fileConcluded(__currentFile,__stream);
+//        });
+        fileConcluded(__currentFile,__stream);
         fileOpenByDate();   //replace
     }
 
