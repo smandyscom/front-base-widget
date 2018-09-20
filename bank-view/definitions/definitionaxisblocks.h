@@ -18,6 +18,24 @@ public:
     AxisMonitorBlock(MODBUS_U_WORD* anchor,QObject* parent = nullptr) :
         AbstractDataBlock(anchor,parent){}
 
+    enum OffsetMonitor
+    {
+        OFFSET_MONITOR_TMR_ALM_COUNT_VALUE=5,
+        OFFSET_MONITOR_TMR_FOCUS_COUNT_VALUE=11,
+        //! Bit status
+        OFFSET_MONITOR_OPERATION=0,
+        OFFSET_MONITOR_RUN_STATUS=4,
+        OFFSET_MONITOR_WARNINGS=6,
+        OFFSET_MONITOR_ALARMS=8,
+        OFFSET_MONITOR_COMMAND_STATUS=10,
+        OFFSET_MONITOR_POS_STATUS=12,
+        //! Numeric
+        OFFSET_MONITOR_POS_COMMAND=2,
+        OFFSET_MONITOR_POS_FEEDBACK=14,
+        OFFSET_MONITOR_SPD_FEEDBACK=16,
+        OFFSET_MONITOR_TOR_FEEDBACK=18,
+    };
+    Q_ENUM(OffsetMonitor)
     enum MONITOR_OPERATION
     {
         MON_BIT0_SERVO_ON=0x000000,
@@ -77,12 +95,13 @@ public:
     };
     enum RUN_STATUS
     {
-        RS_DRIVER_READY=0,
-        RS_SERVO_ON,
-        RS_DRIVER_BUSY,
-        RS_SERVO_READY,
-        RS_LATCH_MODE,
+        RS_DRIVER_READY=0x000000 + OFFSET_MONITOR_RUN_STATUS,
+        RS_SERVO_ON=0x010000 + OFFSET_MONITOR_RUN_STATUS,
+        RS_DRIVER_BUSY=0x020000 + OFFSET_MONITOR_RUN_STATUS,
+        RS_SERVO_READY=0x030000+ OFFSET_MONITOR_RUN_STATUS,
+        RS_LATCH_MODE=0x040000 + OFFSET_MONITOR_RUN_STATUS,
     };
+    Q_ENUM(RUN_STATUS)
     enum POS_STATUS
     {
         PS_DEN=0,
@@ -95,24 +114,7 @@ public:
         PS_ABSLDE,
         PS_POSMAX,
     };
-    enum OffsetMonitor
-    {                
-        OFFSET_MONITOR_TMR_ALM_COUNT_VALUE=5,
-        OFFSET_MONITOR_TMR_FOCUS_COUNT_VALUE=11,
-        //! Bit status
-        OFFSET_MONITOR_OPERATION=0,
-        OFFSET_MONITOR_RUN_STATUS=4,
-        OFFSET_MONITOR_WARNINGS=6,
-        OFFSET_MONITOR_ALARMS=8,
-        OFFSET_MONITOR_COMMAND_STATUS=10,   
-        OFFSET_MONITOR_POS_STATUS=12,
-        //! Numeric
-        OFFSET_MONITOR_POS_COMMAND=2,
-        OFFSET_MONITOR_POS_FEEDBACK=14,
-        OFFSET_MONITOR_SPD_FEEDBACK=16,
-        OFFSET_MONITOR_TOR_FEEDBACK=18,
-    };
-    Q_ENUM(OffsetMonitor)
+
 
     //!
     //! \brief Value

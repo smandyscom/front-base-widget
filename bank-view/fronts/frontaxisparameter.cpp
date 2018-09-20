@@ -7,6 +7,9 @@ FrontAxisParameter::FrontAxisParameter(QWidget *parent) :
 {
     ui->setupUi(this);
     m_categrory = ManualModeDataBlock::SELECTION_AXIS;
+    m_monitorOperation = utilities::listupEnumVariant<AxisMonitorBlock::MONITOR_OPERATION>();
+    m_runStatus = utilities::listupEnumVariant<AxisMonitorBlock::RUN_STATUS>();
+
     //! QPushButton link
     foreach (QPushButton* var, findChildren<QPushButton*>(QRegExp("\\w+Bank\\w+"))) {
         //!
@@ -68,7 +71,31 @@ FrontAxisParameter::~FrontAxisParameter()
 //! Setup record
 void FrontAxisParameter::onBankExecution()
 {
+    if(!ui->tableViewCommandBlock->selectionModel()->hasSelection())
+        return;
 
+    QSqlRecord record = mainDataTable->record(selectedCommandBlockIndex());
+
+    if(sender()==ui->pushButtonBankCoordinateSet)
+    {
+        //setup field of coordinate
+        record.setValue(QVariant::fromValue(CommandBlock::COORD1).toString(),ui->lcdNumberPositionFeedback->value());
+    }
+    else if(sender()==ui->pushButtonBankParameterSet)
+    {
+        //setup field of parameters
+        record.setValue(QVariant::fromValue(CommandBlock::SPEED).toString(),ui->doubleSpinBoxSpeedReference->value());
+        record.setValue(QVariant::fromValue(CommandBlock::ACC_TIME).toString(),ui->doubleSpinBoxAccerlation->value());
+        record.setValue(QVariant::fromValue(CommandBlock::DEC_TIME).toString(),ui->doubleSpinBoxDecerlation->value());
+        record.setValue(QVariant::fromValue(CommandBlock::TORQUE_LIMIT).toString(),ui->doubleSpinBoxTorque->value());
+    }
+
+    //! cannot put while loop here , once setRecord fails , should call select to refresh data
+    if(!mainDataTable->setRecord(selectedCommandBlockIndex(),record))
+    {
+        qDebug() << QString("Bank set error:%1").arg(mainDataTable->lastError().text());
+    }
+    mainDataTable->select(); //re-load model
 }
 //!
 //! \brief FrontAxisParameter::onDirectExecution
@@ -215,6 +242,13 @@ void FrontAxisParameter::dynamicPropertyChanged(int key,QVariant value)
                 utilities::getSqlTableSelectedRecord(m_axisErrorTable,QVariant::fromValue(HEADER_STRUCTURE::ID),m_monitorBlock.Value(AxisMonitorBlock::OFFSET_MONITOR_WARNINGS)).value(QVariant::fromValue(HEADER_STRUCTURE::zh_TW).toString()).toString();
         ui->textBrowserAlarmWarning->setText(QString("%1").arg(message));
 
+        //! Self-raise Bit properties
+        foreach (QVariant var, m_monitorOperation) {
+            setProperty(var.toString().toStdString().c_str(),m_monitorBlock.Value(var.toUInt()));
+        }
+        foreach (QVariant var, m_runStatus) {
+            setProperty(var.toString().toStdString().c_str(),m_monitorBlock.Value(var.toUInt()));
+        }
         break;
     }
     default:
