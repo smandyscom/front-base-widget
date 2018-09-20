@@ -124,10 +124,11 @@ protected:
     }
     inline void Bit(uint key,bool value)
     {
+        quint16 mask = ADDRESS_BIT_ACCESSOR(key);
         if(value)
-            m_anchor[ADDRESS_REGISTER(key)] |= ADDRESS_BIT_ACCESSOR(key);
+            m_anchor[ADDRESS_REGISTER(key)] |= mask;
         else
-            m_anchor[ADDRESS_REGISTER(key)] &= ~ADDRESS_BIT_ACCESSOR(key);
+            m_anchor[ADDRESS_REGISTER(key)] &= ~mask;
     }
     inline bool Bit(uint key) const
     {

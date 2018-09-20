@@ -6,7 +6,7 @@ FrontAxisParameter::FrontAxisParameter(QWidget *parent) :
     ui(new Ui::FrontAxisParameter)
 {
     ui->setupUi(this);
-
+    m_categrory = ManualModeDataBlock::SELECTION_AXIS;
     //! QPushButton link
     foreach (QPushButton* var, findChildren<QPushButton*>(QRegExp("\\w+Bank\\w+"))) {
         //!
@@ -81,37 +81,32 @@ void FrontAxisParameter::onBankExecution()
 //! pushButtonDirectServoOn
 void FrontAxisParameter::onDirectExecution(bool value)
 {   
-    AxisOperationBlock m_operationBlock;
-    PosCommandBlock m_postionBlock;
+    CellDataBlock data;
+    AxisOperationBlock m_operationBlock(reinterpret_cast<MODBUS_U_WORD*>(&data));
+    PosCommandBlock m_postionBlock(reinterpret_cast<MODBUS_U_WORD*>(&data));
 
-    AbstractDataBlock* data = &(m_operationBlock);
+    CellDataBlock* anchor1 = &data;
+    CellDataBlock* anchor2 = reinterpret_cast<CellDataBlock*>(m_operationBlock.Anchor());
 
-//    //!
-//    m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_CATEGRORY).toString().toStdString().c_str(),
-//                              QVariant::fromValue(m_categrory));
-
-    ManualModeDataBlock::Mode mode;
+    //! Categrory
+    ManualModeDataBlock::Categrories categrory = ManualModeDataBlock::SELECTION_AXIS;
+    //! Mode
+    ManualModeDataBlock::Mode mode = ManualModeDataBlock::MODE_EXE_AXIS;
     //! Prepare Commit Mode/Index , DataBlock , by different push button
-    mode = (sender()==ui->pushButtonDirectAlarmClear ||
-            sender()==ui->pushButtonDirectServoOn ) ?
-                ManualModeDataBlock::MODE_EXE_AXIS :
-                ManualModeDataBlock::MODE_EXE_COMMAND_BLOCK;
-    //! Set mode
-    m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_MODE).toString().toStdString().c_str(),
-                              QVariant::fromValue(mode));
+
     //! Data block
     if(sender()==ui->pushButtonDirectAlarmClear )
     {
-        m_operationBlock.Value(AxisOperationBlock::OP_ALARM_CLEAR,true);
+        m_operationBlock.Value(AxisOperationBlock::OP_BIT15_ALARM_CLEAR,true);
     }
     else if(sender()==ui->pushButtonDirectServoOn)
     {
-        m_operationBlock.Value(AxisOperationBlock::OP_SERVO_ON,true);
+        m_operationBlock.Value(AxisOperationBlock::OP_BIT0_SERVO_ON,true);
     }
     else
     {
-        //! Link
-        data = &(m_postionBlock);
+        categrory = ManualModeDataBlock::SELECTION_COMMAND_BLOCK;
+        mode = ManualModeDataBlock::MODE_EXE_COMMAND_BLOCK;
         //! Prepare parameters
         setCommonParameters(m_postionBlock);
 
@@ -153,9 +148,15 @@ void FrontAxisParameter::onDirectExecution(bool value)
         }
     }
 
+    //! Set mode
+    m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_MODE).toString().toStdString().c_str(),
+                              QVariant::fromValue(mode));
+    //! Set categrory
+    m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_CATEGRORY).toString().toStdString().c_str(),
+                              QVariant::fromValue(categrory));
     //! Fire
     m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::DATA_BLOCK_HEAD).toString().toStdString().c_str(),
-                              QVariant::fromValue(*reinterpret_cast<CellDataBlock*>(data->Anchor())));
+                              QVariant::fromValue(data));
     m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_1_RUN).toString().toStdString().c_str(),
                               true);
 }
