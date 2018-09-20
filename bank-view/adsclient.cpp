@@ -22,9 +22,9 @@ void AdsClient::onPopRequest()
 {
     //InterfaceClient::onPopRequest();
     //!Automatic polling by request/acknowledge
-    if(m_queue.isEmpty() || m_isProcessing)
+    if(m_queue.isEmpty())
         return;
-    m_isProcessing = true;
+//    m_isProcessing = true;
 //    QtConcurrent::run(this, &AdsClient::executeRequest); //async call
     executeRequest();
 }

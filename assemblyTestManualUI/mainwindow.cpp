@@ -9,12 +9,25 @@ MainWindow::MainWindow(QWidget *parent) :
 
     qRegisterMetaType<InterfaceRequest>();
 
+    AbstractDataBlock::Dimension = new QMap<DEF_BASIC_DIMENSION::Keys,qreal>();
+    (*AbstractDataBlock::Dimension)[DEF_BASIC_DIMENSION::LENGTH] = 0.001;
+    (*AbstractDataBlock::Dimension)[DEF_BASIC_DIMENSION::TIME] = 0.001;
+    (*AbstractDataBlock::Dimension)[DEF_BASIC_DIMENSION::TORQUE_RATIO] = 0.001;
+
     AdsClient* m_client = new AdsClient(AmsAddr(),true,0x4020,this);
     QList<InterfaceClient*> m_clients = {m_client};
     InterfaceChannel::Instance()->Clients(m_clients);
     m_client->onTimerStart();
 
-    m_controller = new ControllerManualMode(0,512,100,this);
+    JunctionBankDatabase::Instance()->onInitialize();
+    ui->tab_2->Setup(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_COMMAND_BLOCKS),
+                     JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_AXIS),
+                     JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_REGION),
+                     JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::ERROR_CODE_AXIS),
+                     JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::HEADER_COMMAND_BLOCKS));
+
+    m_controller = new ControllerManualMode(0,512,100,ui->tab_2);
+
 }
 
 MainWindow::~MainWindow()

@@ -42,7 +42,8 @@ SOURCES += \
     ../bank-view/fronts/frontcylinderpanel.cpp \
     ../bank-view/fronts/frontsinglefilter.cpp \
     ../bank-view/fronts/frontunitpanel.cpp \
-    ../bank-view/adsclient.cpp
+    ../bank-view/adsclient.cpp \
+    ../bank-view/junctionbankdatabase.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -70,7 +71,8 @@ HEADERS += \
     ../bank-view/definitions/definitioncylinderblock.h \
     ../bank-view/fronts/frontunitpanel.h \
     ../bank-view/definitions/definitionunitblocks.h \
-    ../bank-view/adsclient.h
+    ../bank-view/adsclient.h \
+    ../bank-view/junctionbankdatabase.h
 
 INCLUDEPATH += ../bank-view/ \
                 ../bank-view/definitions/ \

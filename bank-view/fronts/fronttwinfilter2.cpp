@@ -9,8 +9,13 @@ FrontTwinFilter2::FrontTwinFilter2(QWidget *parent) :
 
 }
 
-void FrontTwinFilter2::Setup(QSqlTableModel *dataTable, QVariant key1, QSqlTableModel *primaryTable, QVariant key2, QSqlTableModel *secondaryTable)
+void FrontTwinFilter2::Setup(QSqlTableModel *dataTable, QVariant key1, QSqlTableModel *keyTable1, QVariant key2, QSqlTableModel *keyTable2)
 {
+    m_dataTable = dataTable;
+    m_keyTable1 = keyTable1;
+    m_keyTable2 = keyTable2;
+    m_key1 = key1;
+    m_key2 = key2;
     //!
     ui->comboBoxSecondary->setModel(m_keyTable2);
     ui->comboBoxPrimary->setModel(m_keyTable1);

@@ -18,7 +18,7 @@ QString FrontCommonManual::currentFilter() const
 
 void FrontCommonManual::onMonitorIndexChanged()
 {
-    m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_DEVICE_INDEX).toString().toStdString().c_str(),
+    m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::MON_DEVICE_INDEX).toString().toStdString().c_str(),
                               currentIndex());
 }
 

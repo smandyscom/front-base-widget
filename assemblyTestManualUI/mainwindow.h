@@ -5,6 +5,7 @@
 
 #include <controllermanualmode.h>
 #include <adsclient.h>
+#include <junctionbankdatabase.h>
 
 namespace Ui {
 class MainWindow;

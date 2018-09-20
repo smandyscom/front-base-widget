@@ -22,9 +22,9 @@ public:
 
     void Setup(QSqlTableModel* dataTable,
                QVariant key1,
-               QSqlTableModel* primaryTable,
+               QSqlTableModel* keyTable1,
                QVariant key2,
-               QSqlTableModel* secondaryTable);
+               QSqlTableModel* keyTable2);
 
 
     //!
