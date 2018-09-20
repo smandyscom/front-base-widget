@@ -4,6 +4,7 @@
 #include <QtWidgets>
 #include <QtEvents>
 
+#include <commonhelper.h>
 #include <controllerbase.h>
 
 class FrontCommon : public QWidget
@@ -28,6 +29,9 @@ public:
 signals:
 
 public slots:
+protected slots:
+    void onCustomContextMenuShowed(const QPoint position);
+    void onReloadQss();
 protected:
     //!
     //! \brief m_controller

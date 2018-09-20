@@ -7,6 +7,7 @@
 #include <QApplication>
 #include <QWidget>
 #include <QDebug>
+#include <QStyle>
 
 #include <QSqlDatabase>
 #include <QSqlError>
@@ -27,8 +28,11 @@ public:
     static void setStyle(const QString &style,QWidget* target) {
             QFile qss(style);
             qDebug() << QDir::currentPath();
+            qDebug() << qss.fileName();
             qss.open(QFile::ReadOnly);
             target->setStyleSheet(qss.readAll());
+            target->style()->unpolish(target);
+            target->style()->polish(target);
             qss.close();
         }
     static void openSqlite3Database(const QString path)

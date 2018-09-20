@@ -43,7 +43,8 @@ SOURCES += \
     ../bank-view/fronts/frontsinglefilter.cpp \
     ../bank-view/fronts/frontunitpanel.cpp \
     ../bank-view/adsclient.cpp \
-    ../bank-view/junctionbankdatabase.cpp
+    ../bank-view/junctionbankdatabase.cpp \
+    ../bank-view/helpers/commonhelper.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -72,11 +73,13 @@ HEADERS += \
     ../bank-view/fronts/frontunitpanel.h \
     ../bank-view/definitions/definitionunitblocks.h \
     ../bank-view/adsclient.h \
-    ../bank-view/junctionbankdatabase.h
+    ../bank-view/junctionbankdatabase.h \
+    ../bank-view/helpers/commonhelper.h
 
 INCLUDEPATH += ../bank-view/ \
                 ../bank-view/definitions/ \
-                ../bank-view/fronts/
+                ../bank-view/fronts/ \
+                ../bank-view/helpers/
 
 
 FORMS += \

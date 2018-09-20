@@ -4,9 +4,27 @@ FrontCommon::FrontCommon(QWidget *parent) :
     QWidget(parent),
     m_controller(nullptr)
 {
-    //!TODO , css loading?
+    //!css loading?
+    onReloadQss();
+    ///! https://stackoverflow.com/questions/24254006/rightclick-event-in-qt-to-open-a-context-menu
+    setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(this,&FrontCommon::customContextMenuRequested,this,&FrontCommon::onCustomContextMenuShowed);
 }
 
+void FrontCommon::onCustomContextMenuShowed(const QPoint position)
+{
+    QMenu contextMenu(tr("Context menu"),this);
+
+    QAction action1("Reload CSS", this);
+    connect(&action1,&QAction::triggered,this,&FrontCommon::onReloadQss);
+    contextMenu.addAction(&action1);
+    contextMenu.exec(mapToGlobal(position));
+}
+
+void FrontCommon::onReloadQss()
+{
+    CommonHelper::setStyle(QString("%1.qss").arg(objectName()),this);
+}
 
 bool FrontCommon::event(QEvent* event)
 {
