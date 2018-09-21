@@ -31,6 +31,7 @@ public:
             qDebug() << qss.fileName();
             qss.open(QFile::ReadOnly);
             target->setStyleSheet(qss.readAll());
+            qDebug() << target->styleSheet();
             target->style()->unpolish(target);
             target->style()->polish(target);
             qss.close();

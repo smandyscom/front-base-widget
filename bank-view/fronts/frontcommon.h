@@ -5,7 +5,7 @@
 #include <QtEvents>
 
 #include <commonhelper.h>
-#include <controllerbase.h>
+//#include <controllerbase.h>
 
 class FrontCommon : public QWidget
 {

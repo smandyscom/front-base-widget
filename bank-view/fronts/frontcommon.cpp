@@ -15,7 +15,7 @@ void FrontCommon::onCustomContextMenuShowed(const QPoint position)
 {
     QMenu contextMenu(tr("Context menu"),this);
 
-    QAction action1("Reload CSS", this);
+    QAction action1("Reload QSS", this);
     connect(&action1,&QAction::triggered,this,&FrontCommon::onReloadQss);
     contextMenu.addAction(&action1);
     contextMenu.exec(mapToGlobal(position));
@@ -46,8 +46,8 @@ bool FrontCommon::event(QEvent* event)
         break;
     }
 
-    if(m_controller == nullptr)
-        m_controller = findChild<ControllerBase*>();
+//    if(m_controller == nullptr)
+//        m_controller = findChild<ControllerBase*>();
 
 
     return QWidget::event(event);
