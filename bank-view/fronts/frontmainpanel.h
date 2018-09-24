@@ -2,9 +2,10 @@
 #define FRONTMAINPANEL_H
 
 #include <QWidget>
+#include <QSqlTableModel>
 
 #include <frontcommon.h>
-#include <junctionbankdatabase.h>
+//#include <junctionbankdatabase.h>
 
 #include <definitionmaincontrolblock.h>
 
@@ -31,6 +32,13 @@ public:
     explicit FrontMainPanel(QWidget *parent = 0);
     ~FrontMainPanel();
 
+    void Setup(QSqlTableModel* axisTable,
+               QSqlTableModel* cylinderTable,
+               QSqlTableModel* unitTable,
+               QSqlTableModel* axisErrorTable,
+               QSqlTableModel* cylinderErrorTable,
+               QSqlTableModel* unitErrorTable,
+               QSqlTableModel* typeTable);
 protected:
     Ui::FrontMainPanel *ui;
 
@@ -53,7 +61,7 @@ protected:
     //! Key 2: Error Code
     QMap<MODBUS_S_WORD,QSqlTableModel*> m_errorCodeMap;
 
-    void dynamicPropertyChanged(int key) Q_DECL_OVERRIDE;
+    void dynamicPropertyChanged(int key,QVariant value) Q_DECL_OVERRIDE;
 
 };
 

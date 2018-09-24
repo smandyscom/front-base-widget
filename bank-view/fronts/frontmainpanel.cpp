@@ -7,28 +7,38 @@ FrontMainPanel::FrontMainPanel(QWidget *parent) :
     locale(zh_TW)
 {
     ui->setupUi(this);
-
-    //!
-      m_errorDeviceMap[CommitBlock::SELECTION_AXIS] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_AXIS);
-      m_errorDeviceMap[CommitBlock::SELECTION_CYLINDER] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_CYLINDERS);
-      m_errorDeviceMap[CommitBlock::SELECTION_UNIT] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_UNITS);
-
-      m_errorCodeMap[CommitBlock::SELECTION_AXIS] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::ERROR_CODE_AXIS);
-      m_errorCodeMap[CommitBlock::SELECTION_CYLINDER] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::ERROR_CODE_CYLINDER);
-      m_errorCodeMap[CommitBlock::SELECTION_UNIT] = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::ERROR_CODE_UNIT);
-
-      m_deviceTable = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_OBJECT_TYPE);
 }
 
 FrontMainPanel::~FrontMainPanel()
 {
     delete ui;
 }
+
+void FrontMainPanel::Setup(QSqlTableModel* axisTable,
+                           QSqlTableModel* cylinderTable,
+                           QSqlTableModel* unitTable,
+                           QSqlTableModel* axisErrorTable,
+                           QSqlTableModel* cylinderErrorTable,
+                           QSqlTableModel* unitErrorTable,
+                           QSqlTableModel* typeTable)
+{
+    //!
+      m_errorDeviceMap[CommitBlock::SELECTION_AXIS] = axisTable;
+      m_errorDeviceMap[CommitBlock::SELECTION_CYLINDER] = cylinderTable;
+      m_errorDeviceMap[CommitBlock::SELECTION_UNIT] = unitTable;
+
+      m_errorCodeMap[CommitBlock::SELECTION_AXIS] = axisErrorTable;
+      m_errorCodeMap[CommitBlock::SELECTION_CYLINDER] = cylinderErrorTable;
+      m_errorCodeMap[CommitBlock::SELECTION_UNIT] = unitErrorTable;
+
+      m_deviceTable = typeTable;
+}
+
 //!
 //! \brief FrontMainPanel::dynamicPropertyChanged
 //! \param key
 //! Post Strings or rework properties
-void FrontMainPanel::dynamicPropertyChanged(int key)
+void FrontMainPanel::dynamicPropertyChanged(int key, QVariant value)
 {
     switch (key) {
     case MainMonitorBlock::ERROR_CODE:
