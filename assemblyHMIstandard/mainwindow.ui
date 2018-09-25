@@ -1,24 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow" >
-  <property name="geometry" >
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>650</width>
+    <height>513</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QMenuBar" name="menuBar" />
-  <widget class="QToolBar" name="mainToolBar" />
-  <widget class="QWidget" name="centralWidget" />
-  <widget class="QStatusBar" name="statusBar" />
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <property name="documentMode">
+       <bool>false</bool>
+      </property>
+      <property name="tabsClosable">
+       <bool>false</bool>
+      </property>
+      <property name="tabBarAutoHide">
+       <bool>false</bool>
+      </property>
+      <widget class="QWidget" name="tabMain">
+       <attribute name="title">
+        <string>主面板</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="tabHistory">
+       <attribute name="title">
+        <string>歷史訊息</string>
+       </attribute>
+      </widget>
+      <widget class="FrontAxisParameter" name="tabAxis">
+       <attribute name="title">
+        <string>伺服參數</string>
+       </attribute>
+      </widget>
+      <widget class="FrontCylinderPanel" name="tabCylinder">
+       <attribute name="title">
+        <string>汽缸參數</string>
+       </attribute>
+      </widget>
+      <widget class="FrontUnitPanel" name="tabUnit">
+       <attribute name="title">
+        <string>單站控制</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="tabIO">
+       <attribute name="title">
+        <string>I/O監視</string>
+       </attribute>
+      </widget>
+      <widget class="FrontConfigurationTransfer" name="tabConfiguration">
+       <attribute name="title">
+        <string>組態傳輸</string>
+       </attribute>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>650</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>關於</string>
+    </property>
+   </widget>
+   <addaction name="menu"/>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
  </widget>
- <layoutDefault spacing="6" margin="11" />
- <pixmapfunction></pixmapfunction>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>FrontAxisParameter</class>
+   <extends>QWidget</extends>
+   <header>frontaxisparameter.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>FrontCylinderPanel</class>
+   <extends>QWidget</extends>
+   <header>frontcylinderpanel.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>FrontUnitPanel</class>
+   <extends>QWidget</extends>
+   <header>frontunitpanel.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>FrontConfigurationTransfer</class>
+   <extends>QWidget</extends>
+   <header>frontconfigurationtransfer.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
