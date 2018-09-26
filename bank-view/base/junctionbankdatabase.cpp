@@ -5,12 +5,12 @@
 JunctionBankDatabase::JunctionBankDatabase(QString databaseName, QObject *parent) :
     QObject(parent)
 {
-    __database = QSqlDatabase::addDatabase("QSQLITE","base");//setup driver
-    __database.setDatabaseName(databaseName);
+    m_database = QSqlDatabase::addDatabase("QSQLITE","base");//setup driver
+    m_database.setDatabaseName(databaseName);
 }
 JunctionBankDatabase::~JunctionBankDatabase()
 {
-    __database.close();
+    m_database.close();
 }
 
 void JunctionBankDatabase::onInitialize()
@@ -21,35 +21,57 @@ void JunctionBankDatabase::onInitialize()
     if(!qf.exists())
         return;
 
-    if(!__database.open())
+    if(!m_database.open())
         return;
 
     qDebug() << qf.absoluteFilePath();
 
     //! Table name preparation
-    QList<TableNames> __tableList;
-    QMetaEnum __qme  =QMetaEnum::fromType<TableNames>();
-    for(int i=0;i<__qme.keyCount();i++)
+    QList<TableNames> tableList;
+    QMetaEnum qme  =QMetaEnum::fromType<TableNames>();
+    for(int i=0;i<qme.keyCount();i++)
     {
-        __tableList.append(TableNames(__qme.value(i)));
+        tableList.append(TableNames(qme.value(i)));
     }
     //! Open tables
-    foreach (TableNames var, __tableList) {
-        QSqlTableModel* __reference = new QSqlTableModel(this,__database);
+    foreach (TableNames var, tableList) {
+        QSqlTableModel* m_reference = new QSqlTableModel(this,m_database);
         bool result = false;
-        __reference->setEditStrategy(QSqlTableModel::OnFieldChange);
-        __reference->setTable(QVariant::fromValue(var).value<QString>());
-//        result = __reference->select();
-        __tableMap[var] = TableEntity(false,__reference);
-//        //! Output results
-//        qDebug() << QString("%1:%2")
-//                        .arg(QVariant::fromValue(var).value<QString>())
-//                        .arg(result);
+        m_reference->setEditStrategy(QSqlTableModel::OnFieldChange);
+        m_reference->setTable(QVariant::fromValue(var).value<QString>());
+        result = m_reference->select();
+        m_tableMap[var] = TableEntity(result,m_reference);
+        //! Output results
+        qDebug() << QString("%1:%2")
+                        .arg(QVariant::fromValue(var).value<QString>())
+                        .arg(result);
 
     }
 
 
     emit databaseOpened();
+}
+//!
+//! \brief JunctionBankDatabase::onReleaseHeaders
+//! Release header tables
+void JunctionBankDatabase::onReleaseHeaders()
+{
+
+}
+//!
+//! \brief JunctionBankDatabase::TableMap
+//! \param value
+//! \return
+//! Not duplicate new table
+//! Resource control
+QSqlTableModel* JunctionBankDatabase::TableMap(TableNames value)
+{
+    QSqlTableModel* result = nullptr;
+
+    if(m_tableMap.contains(value) && m_tableMap[value].first)
+        result = m_tableMap[value].second;
+
+    return result;
 }
 
 JunctionBankDatabase* JunctionBankDatabase::Instance()

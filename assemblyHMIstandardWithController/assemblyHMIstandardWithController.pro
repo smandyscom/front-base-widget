@@ -40,7 +40,8 @@ SOURCES += \
     ../bank-view/helpers/commonhelper.cpp \
     ../bank-view/base/junctionbankdatabase.cpp \
     ../bank-view/base/utilities.cpp \
-    ../bank-view/base/enumcomboboxdynamic.cpp
+    ../bank-view/base/enumcomboboxdynamic.cpp \
+    ../bank-view/helpers/loadinghelper.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -72,7 +73,8 @@ HEADERS += \
     ../bank-view/base/junctionbankdatabase.h \
     ../bank-view/base/utilities.h \
     ../bank-view/base/enumcomboboxdynamic.h \
-    ../bank-view/base/enumcomboboxgeneric.h
+    ../bank-view/base/enumcomboboxgeneric.h \
+    ../bank-view/helpers/loadinghelper.h
 
 FORMS += \
         mainwindow.ui \

@@ -72,25 +72,12 @@ public:
     static void DatabaseName(QString value){ __databaseName = value;}
     static QString DatabaseName(){return __databaseName;}
 
-    QSqlTableModel* TableMap(TableNames value)
-    {
-        QSqlTableModel* result = new QSqlTableModel(this,__database);
-        result->setEditStrategy(QSqlTableModel::OnFieldChange);
-        result->setTable(__tableMap[value].second->tableName());
-
-        bool bResult = result->select();
-        __tableMap[value].first = bResult;
-        //! Output results
-        qDebug() << QString("%1:%2")
-                        .arg(QVariant::fromValue(value).value<QString>())
-                        .arg(bResult);
-        return result;
-    }
-
+    QSqlTableModel* TableMap(TableNames value);
 signals:
     void databaseOpened();
 public slots:
     void onInitialize();
+    void onReleaseHeaders();
 protected:
     static JunctionBankDatabase* __instance;
     static QString __databaseName;
@@ -100,9 +87,9 @@ protected:
 
     virtual void decorateTable(){}
 
-    QSqlDatabase __database;
+    QSqlDatabase m_database;
 
-    QMap<TableNames,TableEntity> __tableMap;
+    QMap<TableNames,TableEntity> m_tableMap;
 
 };
 

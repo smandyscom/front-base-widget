@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <property name="documentMode">
        <bool>false</bool>
@@ -32,6 +32,16 @@
       <widget class="QWidget" name="tabMain">
        <attribute name="title">
         <string>主面板</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="0">
+         <widget class="FrontMainPanel" name="widgetMain" native="true"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tabSafety">
+       <attribute name="title">
+        <string>安全I/O</string>
        </attribute>
       </widget>
       <widget class="QWidget" name="tabHistory">
@@ -118,6 +128,12 @@
    <class>FrontConfigurationTransfer</class>
    <extends>QWidget</extends>
    <header>frontconfigurationtransfer.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>FrontMainPanel</class>
+   <extends>QWidget</extends>
+   <header>frontmainpanel.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

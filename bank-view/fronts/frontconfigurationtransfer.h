@@ -8,6 +8,12 @@
 //#include <frontsinglefilter.h>
 
 //#include <junctionbankdatabase.h>
+#include <definitioncommandblock.h>
+#include <definitioncylinderblock.h>
+#include <definitionaxisblocks.h>
+#include <definitionsignalblock.h>
+#include <definitionunitblocks.h>
+
 #include <definitionauxiliarykeys.h>
 
 //#include <controllerbanktransfer.h>
@@ -29,20 +35,29 @@ public:
     explicit FrontConfigurationTransfer(QWidget *parent = 0);
     ~FrontConfigurationTransfer();
 
+    void Setup(QSqlTableModel* commandTable,
+               QSqlTableModel* axisTable,
+               QSqlTableModel* cylinderTable,
+               QSqlTableModel* unitTable,
+               QSqlTableModel* signalTable,
+               QSqlTableModel* objectTable,
+               QSqlTableModel* regionTable);
+
 protected slots:
     void onTransferAll();
     void onObjectTypeSelected();
 private:
     Ui::FrontConfigurationTransfer *ui;
 
-//    FrontSingleFilter *__fsf;
+    QSqlTableModel* m_objectTable;
+    QSqlTableModel* m_regionTable;
 
-//    ControllerBankTransfer* __controllerTransfer;
+    QSqlTableModel* m_commandTable;
+    QSqlTableModel* m_axisTable;
+    QSqlTableModel* m_cylinderTable;
+    QSqlTableModel* m_unitTable;
+    QSqlTableModel* m_signalTable;
 
-    QSqlTableModel* __objectTable;
-
-    QSqlTableModel* __regionTable;
-    QSqlTableModel* __axisTable;
 };
 
 #endif // FRONTCONFIGURATIONTRANSFER_H

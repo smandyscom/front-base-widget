@@ -31,6 +31,21 @@ FrontConfigurationTransfer::~FrontConfigurationTransfer()
     delete ui;
 }
 
+void FrontConfigurationTransfer::Setup(QSqlTableModel* commandTable,
+            QSqlTableModel* axisTable,
+           QSqlTableModel* cylinderTable,
+           QSqlTableModel* unitTable,
+           QSqlTableModel* signalTable,
+           QSqlTableModel* objectTable,
+           QSqlTableModel* regionTable)
+{
+    m_commandTable = commandTable;
+    m_axisTable = axisTable;
+    m_cylinderTable = cylinderTable;
+    m_unitTable = unitTable;
+    m_signalTable = signalTable;
+}
+
 void FrontConfigurationTransfer::onObjectTypeSelected()
 {
     //!Change over Table view
