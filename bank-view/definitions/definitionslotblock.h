@@ -6,12 +6,22 @@
 //!
 //! \brief The SlotDataBlock class
 //! 64Words
-class SlotDataBlock : public AbstractDataBlock
+class SlotDataBlock :
+        public AbstractDataBlock
 {
 public:
+    SlotDataBlock(QObject* parent=nullptr) :
+        AbstractDataBlock(parent)
+    {
 
+    }
+    SlotDataBlock(MODBUS_U_WORD* anchor,QObject* parent=nullptr) :
+        AbstractDataBlock(anchor,parent)
+    {
+
+    }
 };
-Q_DECLARE_METATYPE(SlotDataBlock)
+//Q_DECLARE_METATYPE(SlotDataBlock)
 
 namespace SlotBlock {
     Q_NAMESPACE

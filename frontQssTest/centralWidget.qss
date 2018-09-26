@@ -1,0 +1,20 @@
+*{
+    border : solid 4px black;
+    font : 24px;
+}
+
+.QPushButton
+{
+    background-color : red;
+}
+
+.QLabel
+{
+    background-color : yellow;
+}
+
+.QTabWidget
+{
+    font : 36px;
+    background-color : green;
+}

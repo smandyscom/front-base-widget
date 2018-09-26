@@ -4,15 +4,15 @@
 #include <QWidget>
 
 #include <frontcommonmanual.h>
-#include <frontbanktransfer.h>
-#include <frontsinglefilter.h>
+//#include <frontbanktransfer.h>
+//#include <frontsinglefilter.h>
 
-#include <junctionbankdatabase.h>
+//#include <junctionbankdatabase.h>
 #include <definitionauxiliarykeys.h>
 
-#include <controllerbanktransfer.h>
+//#include <controllerbanktransfer.h>
 
-#include <abstractauthreceiver.h>
+//#include <abstractauthreceiver.h>
 
 namespace Ui {
 class FrontConfigurationTransfer;
@@ -21,8 +21,7 @@ class FrontConfigurationTransfer;
 
 using namespace HEADER_STRUCTURE;
 
-class FrontConfigurationTransfer : public QWidget ,
-        public AbstractAuthReceiver
+class FrontConfigurationTransfer : public QWidget
 {
     Q_OBJECT
 
@@ -36,7 +35,7 @@ protected slots:
 private:
     Ui::FrontConfigurationTransfer *ui;
 
-    FrontSingleFilter *__fsf;
+//    FrontSingleFilter *__fsf;
 
 //    ControllerBankTransfer* __controllerTransfer;
 

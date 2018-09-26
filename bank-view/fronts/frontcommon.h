@@ -5,7 +5,7 @@
 #include <QtEvents>
 
 #include <commonhelper.h>
-#include <controllerbase.h>
+//#include <controllerbase.h>
 
 class FrontCommon : public QWidget
 {
@@ -40,6 +40,8 @@ protected:
 
     virtual void dynamicPropertyChanged(QString key,QVariant value){}
     virtual void dynamicPropertyChanged(int key,QVariant value){}
+private:
+    bool m_isQSSInitialized;
 };
 
 #endif // FRONTCOMMON_H

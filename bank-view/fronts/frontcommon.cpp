@@ -2,10 +2,11 @@
 
 FrontCommon::FrontCommon(QWidget *parent) :
     QWidget(parent),
-    m_controller(nullptr)
+    m_controller(nullptr),
+    m_isQSSInitialized(false)
 {
     //!css loading?
-    onReloadQss();
+//    onReloadQss();
     ///! https://stackoverflow.com/questions/24254006/rightclick-event-in-qt-to-open-a-context-menu
     setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this,&FrontCommon::customContextMenuRequested,this,&FrontCommon::onCustomContextMenuShowed);
@@ -15,7 +16,7 @@ void FrontCommon::onCustomContextMenuShowed(const QPoint position)
 {
     QMenu contextMenu(tr("Context menu"),this);
 
-    QAction action1("Reload CSS", this);
+    QAction action1("Reload QSS", this);
     connect(&action1,&QAction::triggered,this,&FrontCommon::onReloadQss);
     contextMenu.addAction(&action1);
     contextMenu.exec(mapToGlobal(position));
@@ -42,12 +43,19 @@ bool FrontCommon::event(QEvent* event)
         style()->polish(this);
         break;
     }
+    case QEvent::Show:
+        if(!m_isQSSInitialized)
+        {
+            onReloadQss();
+            m_isQSSInitialized = true;
+        }
+        break;
     default:
         break;
     }
 
-    if(m_controller == nullptr)
-        m_controller = findChild<ControllerBase*>();
+//    if(m_controller == nullptr)
+//        m_controller = findChild<ControllerBase*>();
 
 
     return QWidget::event(event);

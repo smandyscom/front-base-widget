@@ -10,7 +10,7 @@
 #include <utilities.h>
 #include <definitionauxiliarykeys.h>
 
-#include <abstractauthreceiver.h>
+//#include <abstractauthreceiver.h>
 
 using namespace HEADER_STRUCTURE;
 
@@ -18,8 +18,7 @@ namespace Ui {
 class FrontSingleFilter;
 }
 
-class FrontSingleFilter : public QWidget,
-        public AbstractAuthReceiver
+class FrontSingleFilter : public QWidget
 {
     Q_OBJECT
 public:
