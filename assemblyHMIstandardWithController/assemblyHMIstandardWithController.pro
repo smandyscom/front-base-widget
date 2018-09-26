@@ -6,7 +6,7 @@
 
 QT       += core gui widgets sql
 
-TARGET = assemblyHMIstandardWithController
+TARGET = assemblyHMIstandard
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -38,6 +38,7 @@ SOURCES += \
     ../bank-view/definitions/definitionbasicblocks.cpp \
     ../bank-view/definitions/definitionsbaselayer.cpp \
     ../bank-view/helpers/commonhelper.cpp \
+    ../bank-view/utilities.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -64,9 +65,7 @@ HEADERS += \
     ../bank-view/definitions/definitionsignalblock.h \
     ../bank-view/definitions/definitionslotblock.h \
     ../bank-view/definitions/definitionunitblocks.h \
-    ../bank-view/helpers/commonhelper.h \
-    ../bank-view/utilities.h \
-    ../bank-view/abstractsqltableadpater.h
+    ../bank-view/helpers/commonhelper.h
 
 FORMS += \
         mainwindow.ui \
