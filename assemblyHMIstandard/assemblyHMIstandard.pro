@@ -81,6 +81,7 @@ FORMS += \
 INCLUDEPATH += ../bank-view/fronts/ \
                 ../bank-view/definitions/ \
                 ../bank-view/helpers/ \
+                ../bank-view/base/ \
                 ../bank-view/
 
 # Default rules for deployment.

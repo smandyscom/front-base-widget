@@ -38,7 +38,9 @@ SOURCES += \
     ../bank-view/definitions/definitionbasicblocks.cpp \
     ../bank-view/definitions/definitionsbaselayer.cpp \
     ../bank-view/helpers/commonhelper.cpp \
-    ../bank-view/utilities.cpp
+    ../bank-view/base/junctionbankdatabase.cpp \
+    ../bank-view/base/utilities.cpp \
+    ../bank-view/base/enumcomboboxdynamic.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -65,7 +67,12 @@ HEADERS += \
     ../bank-view/definitions/definitionsignalblock.h \
     ../bank-view/definitions/definitionslotblock.h \
     ../bank-view/definitions/definitionunitblocks.h \
-    ../bank-view/helpers/commonhelper.h
+    ../bank-view/helpers/commonhelper.h \
+    ../bank-view/base/abstractsqltableadpater.h \
+    ../bank-view/base/junctionbankdatabase.h \
+    ../bank-view/base/utilities.h \
+    ../bank-view/base/enumcomboboxdynamic.h \
+    ../bank-view/base/enumcomboboxgeneric.h
 
 FORMS += \
         mainwindow.ui \
@@ -80,6 +87,7 @@ FORMS += \
 INCLUDEPATH += ../bank-view/fronts/ \
                 ../bank-view/definitions/ \
                 ../bank-view/helpers/ \
+                ../bank-view/base/
                 ../bank-view/
 
 # Default rules for deployment.
