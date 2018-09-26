@@ -1,21 +1,22 @@
 #include "adsclient.h"
 #include <qdebug.h>
 
-AdsClient::AdsClient(AmsAddr address, bool isLocal, long group, QObject *parent):
+AdsClient::AdsClient(AmsAddr address, bool isLocal, long group, long baseOffset, QObject *parent):
     InterfaceClient(parent),
-    __group(group),
-    __amsAddress(address)
+    m_group(group),
+    m_amsAddress(address),
+    m_baseOffset(baseOffset)
 {
-    __client = AdsPortOpen();
+    m_client = AdsPortOpen();
     if (isLocal)
-        lastResult = AdsGetLocalAddress(&__amsAddress);
+        lastResult = AdsGetLocalAddress(&m_amsAddress);
     //!TC3 PLC port = 851
-    __amsAddress.port = 851;
+    m_amsAddress.port = 851;
 }
 
 AdsClient::~AdsClient()
 {
-    __client = AdsPortClose();
+    m_client = AdsPortClose();
 }
 
 void AdsClient::onPopRequest()
@@ -32,23 +33,23 @@ void AdsClient::onPopRequest()
 void AdsClient::executeRequest()
 {
     ADDRESS_MODE __address = m_queue.head().Address();
-    auto __register = ADDRESS_REGISTER(__address);
-    auto __size = utilities::sizeOf(m_queue.head().Data());
+    auto m_register = ADDRESS_REGISTER(__address);
+    auto m_size = utilities::sizeOf(m_queue.head().Data());
 
     switch (m_queue.head().Access())
 	{
     case InterfaceRequest::READ:
-        lastResult = AdsSyncReadReq(&__amsAddress,
-            __group,
-            __register * 2, //since counting in byte
-            __size,
+        lastResult = AdsSyncReadReq(&m_amsAddress,
+            m_group,
+            m_baseOffset + m_register * 2, //since counting in byte
+            m_size,
             m_queue.head().Data().data());
 		break;
     case InterfaceRequest::WRITE:
-        lastResult = AdsSyncWriteReq(&__amsAddress,
-            __group,
-            __register * 2,
-            __size,
+        lastResult = AdsSyncWriteReq(&m_amsAddress,
+            m_group,
+            m_baseOffset + m_register * 2,
+            m_size,
             m_queue.head().Data().data());
 		break;
 	default:

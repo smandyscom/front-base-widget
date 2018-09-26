@@ -22,9 +22,9 @@ public:
     enum OffsetMainMonitor
     {
         //! Monitors
-        ERROR_DEVICE_INDEX=0x00000022,
-        ERROR_CATEGRORY=0x00000024,
-        ERROR_CODE=0x00000026,
+        ERROR_DEVICE_INDEX=34,
+        ERROR_CATEGRORY=36,
+        ERROR_CODE=38,
 
 //        MAIN_STATE = 0x00000030,
 //        MON_DATA_1= 0x00000032,
@@ -72,7 +72,7 @@ class MainOperationBlock:
 public:
     enum OffsetMainOperation
     {
-        MANUAL_CONTROL_WORD=0x00000020,
+        MANUAL_CONTROL_WORD=32,
     };
     Q_ENUM(OffsetMainOperation)
     enum OperationBits

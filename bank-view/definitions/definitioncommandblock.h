@@ -27,7 +27,9 @@ public:
         OFFSET_ACB_SPD = 2,
         OFFSET_ACB_ACC_T = 4,
         OFFSET_ACB_DEC_T = 6,
-        OFFSET_ACB_TOR_LIMIT=8
+        OFFSET_ACB_TOR_LIMIT=8,
+        //! Indicate position bank index within specific axis
+        OFFSET_ACB_SUB_INDEX=10,
     };
     Q_ENUM(Offset)
     enum CommandType

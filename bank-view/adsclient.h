@@ -17,15 +17,19 @@ class AdsClient : public InterfaceClient
 	Q_OBJECT
 
 public:
-    AdsClient(AmsAddr address,bool isLocal = false,long group=0x4020,QObject *parent=nullptr);
+    AdsClient(AmsAddr address,bool isLocal = false,long group=0x4020,long baseOffset=0,QObject *parent=nullptr);
 	~AdsClient();
 
 protected slots:
     void onPopRequest() Q_DECL_OVERRIDE ;
 protected:
-    AmsAddr __amsAddress;
-    long __group;
-    long __client;
+    AmsAddr m_amsAddress;
+    long m_group;
+    long m_client;
+    //!
+    //! \brief m_baseOffset
+    //! Large base offset , e.g 510000
+    long m_baseOffset;
 
 	void executeRequest();
     long lastResult;
