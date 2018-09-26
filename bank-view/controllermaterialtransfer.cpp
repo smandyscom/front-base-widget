@@ -32,6 +32,7 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index, int channelInd
         __table = new QSqlTableModel(this,__database);
         QString __tableName = QString("%1%2").arg(QVariant::fromValue(MAT_DATA_SLOT).toString()).arg(__slotIndex);
         __table->setTable(QString("%1%2").arg(QVariant::fromValue(MAT_DATA_SLOT).toString()).arg(__slotIndex));
+//        __table->setEditStrategy(QSqlTableModel::OnManualSubmit); //control submit
         //bool result = __table->select();
         __adpator = new GenericSqlTableAdapter<SlotDataBlock,SlotBlock::DataBaseHeaders>(__table);
 //        if(!result)
@@ -51,6 +52,10 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index, int channelInd
     QState* s1 = new QState(this);
     __stateMap[WAIT_ACT_ON] = s0;
     __stateMap[WAIT_ACT_OFF] = s1;
+    //!log abnormals
+    connect(this,&ControllerMaterialTransfer::finished,[=](){qDebug() << QString("%1,finished").arg(__slotIndex);});
+    connect(this,&ControllerMaterialTransfer::stopped,[=](){qDebug() << QString("%1,stopped").arg(__slotIndex);});
+    connect(this,&ControllerMaterialTransfer::errorStateChanged,[=](){qDebug() << QString("%1,errorStateChanged").arg(__slotIndex);});
     //! Common
     foreach (QState* var, __stateMap.values()) {
         connect(var,&QState::entered,[this](){
@@ -68,7 +73,7 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index, int channelInd
         //! set DB engaged,
         __channel->Access<bool>(toOffseteAddress(DB_ENGAGED),true);
     });
-    connect(s0,&QState::exited,[this]()
+    connect(s0,&QState::exited,[=]()
     {
         __procedureTimer.start();
 
@@ -90,25 +95,24 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index, int channelInd
             *static_cast<CellDataBlock*>(&__adb) =
                     __channel->Access<CellDataBlock>(toOffseteAddress(BLOCK_DATA));
             //! Acknoledge
-            __channel->Access<bool>(toOffseteAddress(DONE),true);
             onUpdate();
             break;
         case ACTION_CREATE:
             onInsert();
             __channel->Access<MODBUS_U_LONG>(toOffseteAddress(MATERIAL_ID),__materialId);
-            __channel->Access<bool>(toOffseteAddress(DONE),true);
             break;
         case ACTION_QUERY:
             //!Write data
             //! find record by material id
             onQuery();
             __channel->Access<CellDataBlock>(toOffseteAddress(BLOCK_DATA),static_cast<CellDataBlock>(__adb));
-            __channel->Access<bool>(toOffseteAddress(DONE),true);
+
             break;
         default:
             break;
         }
 
+        __channel->Access<bool>(toOffseteAddress(DONE),true);
         //! Acknoledge
         //__channel->Access<bool>(toOffseteAddress(DONE),true);
         //__pollCyclic=0;//speed up
@@ -119,7 +123,7 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index, int channelInd
     ValueTransition* actOff = new ValueTransition(toOffseteAddress(ACT),ValueTransition::BIT_STATE_OFF);
     actOff->setTargetState(s0);
     s1->addTransition(actOff);
-    connect(s1,&QState::exited,[this](){
+    connect(s1,&QState::exited,[=](){
 
         //!OK/NG Counting
         m_currentGrade = static_cast<Grade>(__adb.Value(m_index_grade1).toInt() && __adb.Value(m_index_grade2).toInt());
@@ -186,7 +190,7 @@ void ControllerMaterialTransfer::onInsert()
     QElapsedTimer __timer;
     __timer.start();
 
-    __table->database().transaction();
+//    __table->database().transaction();
 
     //!insert record on table
     QSqlRecord __record = __table->record();
@@ -205,6 +209,16 @@ void ControllerMaterialTransfer::onInsert()
         qDebug() << __table->lastError().text();
     }
 
+//    if(__table->submitAll())
+//    {
+//        __table->database().commit();
+//    }
+//    else
+//    {
+//        __table->database().rollback();
+//        qDebug() << QString("database commit failed onInsert");
+//    }
+
     //! Carries largest id
     __table->setFilter(QString("%2 = (SELECT MAX(%2)  FROM %1)")
                        .arg(__table->tableName())
@@ -216,8 +230,8 @@ void ControllerMaterialTransfer::onInsert()
     __record = __table->record(0); //access last row
     __materialId = __record.value(QVariant::fromValue(SlotBlock::ID).toString()).toInt();
 
-    if(!__table->database().commit())
-        qDebug() << QString("database commit failed onInsert");
+
+
     qDebug() << QString("%1,onInsert elapsed,%2,%3").arg(__slotIndex).arg(__timer.elapsed()).arg(__materialId);
 
 
@@ -227,13 +241,13 @@ void ControllerMaterialTransfer::onQuery()
     QElapsedTimer __timer;
     __timer.start();
 
-    __table->database().transaction();
+//    __table->database().transaction();
     __adb = __adpator->Record(__materialId,
                               AbstractSqlTableAdpater::KEY_NAMED_KEY,
                               QVariant::fromValue(SlotBlock::ID));
 
-    if(!__table->database().commit())
-        qDebug() << QString("database commit failed onInsert");
+//    if(!__table->database().commit())
+//        qDebug() << QString("database commit failed onQuery");
     qDebug() << QString("%1,onQuery elapsed,%2,%3").arg(__slotIndex).arg(__timer.elapsed()).arg(__materialId);
 }
 void ControllerMaterialTransfer::onUpdate()
@@ -241,7 +255,7 @@ void ControllerMaterialTransfer::onUpdate()
     QElapsedTimer __timer;
     __timer.start();
 
-    __table->database().transaction();
+//    __table->database().transaction();
 
     //! Write in data base
     __adpator->Record(__materialId,
@@ -249,8 +263,8 @@ void ControllerMaterialTransfer::onUpdate()
                       AbstractSqlTableAdpater::KEY_NAMED_KEY,
                       QVariant::fromValue(SlotBlock::ID));
 
-    if(!__table->database().commit())
-        qDebug() << QString("database commit failed onInsert");
+//    if(!__table->database().commit())
+//        qDebug() << QString("database commit failed onUpdate");
 
     qDebug() << QString("%1,onUpdate elapsed,%2,%3").arg(__slotIndex).arg(__timer.elapsed()).arg(__materialId);
 }
