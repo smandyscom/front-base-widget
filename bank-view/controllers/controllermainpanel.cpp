@@ -1,7 +1,7 @@
 #include "controllermainpanel.h"
 
-ControllerMainPanel::ControllerMainPanel(QObject *parent) :
-    ControllerBase(0,256,100,parent)
+ControllerMainPanel::ControllerMainPanel(quint8 clientId, quint16 baseOffset, int interval, QObject *parent) :
+    ControllerBase(clientId,baseOffset,interval,parent)
 {
 
     //! register monitor , start routine service

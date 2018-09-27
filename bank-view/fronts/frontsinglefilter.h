@@ -25,10 +25,7 @@ public:
     explicit FrontSingleFilter(QWidget *parent = nullptr);
 
     void PrimaryTable(QSqlTableModel* model,QVariant column = QString("zh_TW"));
-    void DataTable(QSqlTableModel* model)
-    {
-        m_dataTable = model;
-    }
+    void DataTable(QSqlTableModel* model);
     void DataKey(QVariant key);
 protected slots:
     void onSelectedIndexChanged(int i);

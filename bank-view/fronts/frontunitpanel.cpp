@@ -132,3 +132,12 @@ void FrontUnitPanel::onCommandClick()
                                   true);
 }
 
+void FrontUnitPanel::showEvent(QShowEvent *event)
+{
+    //! Semi-auto mode
+    m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_2_ENGAGED_MANUAL).toString().toStdString().c_str(),
+                              false);
+
+    FrontCommonManual::showEvent(event);
+}
+

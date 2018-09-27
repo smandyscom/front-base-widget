@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <loadinghelper.h>
+#include <loadinghelpercontrollers.h>
 
 namespace Ui {
 class MainWindow;

@@ -73,6 +73,13 @@ public:
         BIT_1_RUN = 0x010000 + CONTROL_WORD
     };
     Q_ENUM(ControlBits)
+    enum TransferCommand
+    {
+        BATCH_PRESCHEDUALED_MODE,
+        BATCH_ALL_WRITE_MODE,
+        BATCH_ALL_READ_MODE
+    };
+    Q_ENUM(TransferCommand)
 
     ManualModeDataBlock(QObject* parent = nullptr)
         : AbstractDataBlock(parent)

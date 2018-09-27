@@ -47,6 +47,7 @@ void LoadingHelper::CombineModelViewV1(FrontAxisParameter* widget1,
                                        FrontConfigurationTransfer* widget4,
                                        FrontMainPanel* widget5)
 {
+    m_instance = JunctionBankDatabase::Instance();
     m_instance->onInitialize();
 
     LoadFrontAxis(widget1);
@@ -58,5 +59,10 @@ void LoadingHelper::CombineModelViewV1(FrontAxisParameter* widget1,
     m_instance->onReleaseHeaders();
 }
 
-JunctionBankDatabase* LoadingHelper::m_instance =
-        JunctionBankDatabase::Instance();
+void LoadingHelper::CrossLink(ControllerBase *controller, FrontCommon *front)
+{
+    controller->AttachReceiver(front);
+    front->LinkController(controller);
+}
+
+JunctionBankDatabase* LoadingHelper::m_instance = nullptr;

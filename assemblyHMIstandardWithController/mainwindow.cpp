@@ -8,8 +8,26 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
-    qDebug() << ui->tabCylinder->objectName();
+    //! Interface initialization
+    InterfaceClient* simuClient = new InterfaceClient(this);
+    InterfaceChannel::Instance()->Clients(QList<InterfaceClient*>{simuClient});
+    //! Load UI/Model
+    LoadingHelper::CombineModelViewV1(ui->tabAxis,
+                                      ui->tabCylinder,
+                                      ui->tabUnit,
+                                      ui->tabConfiguration,
+                                      ui->widgetMain);
+    //! Load controllers
+    LoadingHelperControllers::ControllersLoadingRoutineV1();
+    //! Link controller and fronts
+    QList<FrontCommon*> frontList{ui->tabAxis,
+                ui->tabCylinder,
+                ui->tabUnit,
+                ui->tabConfiguration};
+    foreach (FrontCommon* var, frontList) {
+        LoadingHelper::CrossLink(LoadingHelperControllers::m_controllerTransfer,var);
+    }
+    LoadingHelper::CrossLink(LoadingHelperControllers::m_controllerMain,ui->widgetMain);
 }
 
 MainWindow::~MainWindow()

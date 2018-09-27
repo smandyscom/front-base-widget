@@ -26,11 +26,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    ../bank-view/controllerbase.cpp \
-    ../bank-view/controllermanualmode.cpp \
-    ../bank-view/interfacechannel.cpp \
-    ../bank-view/interfaceclient.cpp \
-    ../bank-view/utilities.cpp \
     ../bank-view/fronts/frontcommon.cpp \
     ../bank-view/abstractauthreceiver.cpp \
     ../bank-view/fronts/fronttwinfilter2.cpp \
@@ -42,9 +37,6 @@ SOURCES += \
     ../bank-view/fronts/frontcylinderpanel.cpp \
     ../bank-view/fronts/frontsinglefilter.cpp \
     ../bank-view/fronts/frontunitpanel.cpp \
-    ../bank-view/adsclient.cpp \
-    ../bank-view/junctionbankdatabase.cpp \
-    ../bank-view/helpers/commonhelper.cpp
 
 HEADERS += \
         mainwindow.h \

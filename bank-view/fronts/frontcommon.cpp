@@ -2,7 +2,7 @@
 
 FrontCommon::FrontCommon(QWidget *parent) :
     QWidget(parent),
-    m_controller(nullptr),
+    m_controller(new QObject()),
     m_isQSSInitialized(false)
 {
     //!css loading?
@@ -63,5 +63,11 @@ bool FrontCommon::event(QEvent* event)
 
 void FrontCommon::LinkController(QObject* controller)
 {
+    delete m_controller;
     m_controller = controller;
+}
+
+QVariant FrontCommon::property(QVariant key) const
+{
+    return property(key.toString().toStdString().c_str());
 }

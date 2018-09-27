@@ -2,7 +2,7 @@
 #include "ui_frontconfigurationtransfer.h"
 
 FrontConfigurationTransfer::FrontConfigurationTransfer(QWidget *parent) :
-    QWidget(parent),
+    FrontCommonManual(parent),
     ui(new Ui::FrontConfigurationTransfer)
 {
     ui->setupUi(this);
@@ -71,13 +71,13 @@ void FrontConfigurationTransfer::onObjectTypeSelected()
 
 void FrontConfigurationTransfer::onTransferAll()
 {
-    QList<CommitBlock::CommitCategrories> __list = {
-        CommitBlock::SELECTION_AXIS,
-        CommitBlock::SELECTION_CYLINDER,
-        CommitBlock::SELECTION_SIGNAL,
-        CommitBlock::SELECTION_COMMAND_BLOCK,
-        CommitBlock::SELECTION_UNIT
-    };
+//    QList<CommitBlock::CommitCategrories> __list = {
+//        CommitBlock::SELECTION_AXIS,
+//        CommitBlock::SELECTION_CYLINDER,
+//        CommitBlock::SELECTION_SIGNAL,
+//        CommitBlock::SELECTION_COMMAND_BLOCK,
+//        CommitBlock::SELECTION_UNIT
+//    };
 //    foreach (CommitBlock::CommitCategrories var, __list) {
 //        __controllerTransfer->PutTask(TransferTask(var,ControllerBankTransfer::BATCH_ALL_MODE));
 //    }

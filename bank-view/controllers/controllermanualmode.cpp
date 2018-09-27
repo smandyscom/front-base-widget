@@ -20,9 +20,9 @@ ControllerManualMode::ControllerManualMode(quint8 clientId,
     QState* s2 = new QState(m_stateMachine);
     QState* s3 = new QState(m_stateMachine);
     m_stateMap[STATE_IN_AUTO] =s0;
-    m_stateMap[STATE_IDLE] = s1;
-    m_stateMap[STATE_COMPLETE] = s2;
-    m_stateMap[STATE_FINISH] = s3;
+    m_stateMap[STATE_PLC_READY] = s1;
+    m_stateMap[STATE_RUN_ON] = s2;
+    m_stateMap[STATE_DONE_ON] = s3;
 
     //!
     //! Common

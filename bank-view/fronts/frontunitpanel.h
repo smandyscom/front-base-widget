@@ -25,6 +25,8 @@ public:
 
     void Setup(QSqlTableModel* unitTable, QSqlTableModel *unitTableHeader);
 
+    void showEvent(QShowEvent* event) Q_DECL_OVERRIDE;
+
 protected slots:
     void onCommandClick();
 //    void onViewSelectionChanged();

@@ -1,0 +1,38 @@
+#ifndef LOADINGHELPERCONTROLLERS_H
+#define LOADINGHELPERCONTROLLERS_H
+
+#include <QObject>
+
+#include <definitionaxisblocks.h>
+#include <definitioncommandblock.h>
+#include <definitioncylinderblock.h>
+#include <definitionsignalblock.h>
+#include <definitionunitblocks.h>
+
+#include <controllerbanktransfer.h>
+#include <controllermainpanel.h>
+
+#include <junctionbankdatabase.h>
+
+class LoadingHelperControllers : public QObject
+{
+    Q_OBJECT
+public:
+    explicit LoadingHelperControllers(QObject *parent = nullptr);
+
+    static void LoadTransfer(quint8 clientId, quint16 baseOffset, int interval);
+
+    static void ControllersLoadingRoutineV1();
+
+    static JunctionBankDatabase* m_database;
+    static ControllerBankTransfer* m_controllerTransfer;
+    static ControllerMainPanel* m_controllerMain;
+signals:
+
+public slots:
+
+protected:
+
+};
+
+#endif // LOADINGHELPERCONTROLLERS_H

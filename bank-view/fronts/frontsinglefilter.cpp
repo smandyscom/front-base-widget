@@ -40,3 +40,8 @@ void FrontSingleFilter::DataKey(QVariant key)
     m_dataKey = key;
     ui->labelPrimary->setText(m_dataKey.toString());
 }
+
+void FrontSingleFilter::DataTable(QSqlTableModel *model)
+{
+    m_dataTable = model;
+}

@@ -37,6 +37,12 @@ protected:
     //! \brief m_controller
     //! Auto find-out linked controller
     QObject* m_controller;
+    //!
+    //! \brief property
+    //! \param key
+    //! \return
+    //! wrapper function
+    QVariant property(QVariant key) const;
 
     virtual void dynamicPropertyChanged(QString key,QVariant value){}
     virtual void dynamicPropertyChanged(int key,QVariant value){}

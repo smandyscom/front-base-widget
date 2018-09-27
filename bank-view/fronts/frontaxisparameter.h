@@ -38,6 +38,7 @@ public:
                QSqlTableModel* axisErrorTable,
                QSqlTableModel* commandBlockTableHeader);
 
+    void showEvent(QShowEvent* event) Q_DECL_OVERRIDE;
 
 protected slots:
     void onBankExecution();

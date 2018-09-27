@@ -11,6 +11,8 @@
 
 #include <junctionbankdatabase.h>
 
+#include <controllerbase.h>
+
 //!
 //! \brief The LoadingHelper class
 //! Collection of fronts , build routine loading
@@ -31,6 +33,8 @@ public:
                                    FrontUnitPanel* widget3,
                                    FrontConfigurationTransfer* widget4,
                                    FrontMainPanel* widget5);
+
+    static void CrossLink(ControllerBase* controller,FrontCommon* front);
 
 signals:
 

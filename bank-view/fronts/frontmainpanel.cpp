@@ -23,13 +23,13 @@ void FrontMainPanel::Setup(QSqlTableModel* axisTable,
                            QSqlTableModel* typeTable)
 {
     //!
-      m_errorDeviceMap[CommitBlock::SELECTION_AXIS] = axisTable;
-      m_errorDeviceMap[CommitBlock::SELECTION_CYLINDER] = cylinderTable;
-      m_errorDeviceMap[CommitBlock::SELECTION_UNIT] = unitTable;
+      m_errorDeviceMap[ManualModeDataBlock::SELECTION_AXIS] = axisTable;
+      m_errorDeviceMap[ManualModeDataBlock::SELECTION_CYLINDER] = cylinderTable;
+      m_errorDeviceMap[ManualModeDataBlock::SELECTION_UNIT] = unitTable;
 
-      m_errorCodeMap[CommitBlock::SELECTION_AXIS] = axisErrorTable;
-      m_errorCodeMap[CommitBlock::SELECTION_CYLINDER] = cylinderErrorTable;
-      m_errorCodeMap[CommitBlock::SELECTION_UNIT] = unitErrorTable;
+      m_errorCodeMap[ManualModeDataBlock::SELECTION_AXIS] = axisErrorTable;
+      m_errorCodeMap[ManualModeDataBlock::SELECTION_CYLINDER] = cylinderErrorTable;
+      m_errorCodeMap[ManualModeDataBlock::SELECTION_UNIT] = unitErrorTable;
 
       m_deviceTable = typeTable;
 }

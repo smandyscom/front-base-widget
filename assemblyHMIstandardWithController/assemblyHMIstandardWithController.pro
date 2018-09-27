@@ -41,7 +41,14 @@ SOURCES += \
     ../bank-view/base/junctionbankdatabase.cpp \
     ../bank-view/base/utilities.cpp \
     ../bank-view/base/enumcomboboxdynamic.cpp \
-    ../bank-view/helpers/loadinghelper.cpp
+    ../bank-view/helpers/loadinghelper.cpp \
+    ../bank-view/controllers/controllerbanktransfer.cpp \
+    ../bank-view/controllers/controllerbase.cpp \
+    ../bank-view/controllers/controllermainpanel.cpp \
+    ../bank-view/controllers/controllermanualmode.cpp \
+    ../bank-view/interface/interfacechannel.cpp \
+    ../bank-view/interface/interfaceclient.cpp \
+    ../bank-view/helpers/loadinghelpercontrollers.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -74,7 +81,15 @@ HEADERS += \
     ../bank-view/base/utilities.h \
     ../bank-view/base/enumcomboboxdynamic.h \
     ../bank-view/base/enumcomboboxgeneric.h \
-    ../bank-view/helpers/loadinghelper.h
+    ../bank-view/helpers/loadinghelper.h \
+    ../bank-view/controllers/controllerbanktransfer.h \
+    ../bank-view/controllers/controllerbase.h \
+    ../bank-view/controllers/controllermainpanel.h \
+    ../bank-view/controllers/controllermanualmode.h \
+    ../bank-view/interface/interfacechannel.h \
+    ../bank-view/interface/interfaceclient.h \
+    ../bank-view/interface/interfacerequest.h \
+    ../bank-view/helpers/loadinghelpercontrollers.h
 
 FORMS += \
         mainwindow.ui \
@@ -89,7 +104,9 @@ FORMS += \
 INCLUDEPATH += ../bank-view/fronts/ \
                 ../bank-view/definitions/ \
                 ../bank-view/helpers/ \
-                ../bank-view/base/
+                ../bank-view/base/ \
+                ../bank-view/controllers/ \
+                ../bank-view/interface/ \
                 ../bank-view/
 
 # Default rules for deployment.

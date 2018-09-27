@@ -254,6 +254,8 @@ void FrontAxisParameter::dynamicPropertyChanged(int key,QVariant value)
     default:
         break;
     }
+    //!Base method
+    FrontCommonManual::dynamicPropertyChanged(key,value);
 }
 
 int FrontAxisParameter::currentIndex() const
@@ -264,4 +266,16 @@ int FrontAxisParameter::currentIndex() const
 QString FrontAxisParameter::currentFilter() const
 {
     return ui->widgetFilter->Filter1();
+}
+
+//!
+//! \brief FrontAxisParameter::showEvent
+//! \param event
+//! Engaged as Manual mode
+void FrontAxisParameter::showEvent(QShowEvent *event)
+{
+    m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_2_ENGAGED_MANUAL).toString().toStdString().c_str(),
+                              true);
+
+    FrontCommonManual::showEvent(event);
 }

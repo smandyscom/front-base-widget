@@ -29,9 +29,9 @@ public:
     enum ManualState : int
     {
         STATE_IN_AUTO,
-        STATE_IDLE,
-        STATE_COMPLETE,
-        STATE_FINISH,
+        STATE_PLC_READY,
+        STATE_RUN_ON,
+        STATE_DONE_ON,
     };
     Q_ENUM(ManualState)
 

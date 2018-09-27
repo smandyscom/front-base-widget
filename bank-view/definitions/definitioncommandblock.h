@@ -243,10 +243,11 @@ enum DataBaseHeaders
     ID=INVALID_INDEX-1,
     NAME=INVALID_INDEX-2,
     COMMENT=INVALID_INDEX-3,
-    AXIS_ID=INVALID_INDEX-4,
+//    AXIS_ID=INVALID_INDEX-4,
     //! Data
     COMMAND_TYPE = AbstractCommandBlock::OFFSET_ACB_COMMAND_TYPE,
-    AXIS_ADDRESS = AbstractCommandBlock::OFFSET_ACB_AXIS_ID,
+//    AXIS_ADDRESS = AbstractCommandBlock::OFFSET_ACB_AXIS_ID,
+    AXIS_ID = AbstractCommandBlock::OFFSET_ACB_AXIS_ID,
     SPEED = AbstractCommandBlock::OFFSET_ACB_SPD,
     ACC_TIME = AbstractCommandBlock::OFFSET_ACB_ACC_T,
     DEC_TIME = AbstractCommandBlock::OFFSET_ACB_DEC_T,
@@ -257,6 +258,8 @@ enum DataBaseHeaders
     COORD1 = ExtendedCommandBlock::OFFSET_ECB_COORD1,
     COORD2 = ExtendedCommandBlock::OFFSET_ECB_COORD2,
     COORD3 = ExtendedCommandBlock::OFFSET_ECB_COORD3,
+    //! New feature
+    SUB_INDEX = ExtendedCommandBlock::OFFSET_ACB_SUB_INDEX,
 };
 Q_ENUM_NS(DataBaseHeaders)
 

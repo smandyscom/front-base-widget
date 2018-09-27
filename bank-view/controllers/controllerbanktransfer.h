@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QMap>
+#include <QQueue>
 
 #include <controllermanualmode.h>
 #include <abstractsqltableadpater.h>
@@ -17,17 +18,17 @@ class ControllerBankTransfer :
 {
     Q_OBJECT
 public:
-    enum ModeAndStatus
-    {
-        //! Mode
-        //! Transmit all record in categrory
-        BATCH_ALL_MODE=-1,
-        //! Transmit pre-schdualed records (index
-        BATCH_PRESCHEDUALED_MODE=-2,
-        //! Status
-        PROCESSING=-1,
-    };
-    Q_ENUM(ModeAndStatus)
+//    enum ModeAndStatus
+//    {
+//        //! Mode
+//        //! Transmit all record in categrory
+//        BATCH_ALL_MODE=-1,
+//        //! Transmit pre-schdualed records (index
+//        BATCH_PRESCHEDUALED_MODE=-2,
+//        //! Status
+//        PROCESSING=-1,
+//    };
+//    Q_ENUM(ModeAndStatus)
 
     //! Status
 //    int RestTasksCount() const {return __tasksQueue.count();}
@@ -36,26 +37,9 @@ public:
 //                m_controller->CurrentState()!=ControllerManualMode::STATE_IDLE;
 //    }
     //! Linkage and configuration
-    void Adaptor(ManualModeDataBlock::Categrories key,AbstractSqlTableAdpater* value)
-    {
-        m_adaptors[key] = value;
-        //! Sense data changed and put task
-        connect(value->Model(),&QSqlTableModel::dataChanged,this,&ControllerBankTransfer::onDataChanged);
-    }
-//    AbstractSqlTableAdpater* Adaptor(ManualModeDataBlock::Categrories key)
-//    {
-//        return m_adaptors[key];
-//    }
+    void Adaptor(ManualModeDataBlock::Categrories key,AbstractSqlTableAdpater* value);
 
-//    void Direction(CommitBlock::CommitMode value)
-//    {
-//        __commitOption.Mode(value);
-//    }
-
-    void PutTask(TransferTask task);
-
-
-    explicit ControllerBankTransfer(QObject *parent = nullptr);
+    explicit ControllerBankTransfer(quint8 clientId, quint16 baseOffset, int interval, QObject *parent = nullptr);
 
 signals:
 //    void dataTransfered();
@@ -67,7 +51,9 @@ public slots:
     //! \param rowIndex non -1, single mode, -1 ,batch mode
     //!
 //    void onTransferData();
-    void onDataChanged();
+    void onDataChanged(const QModelIndex &topLeft,
+                       const QModelIndex &bottomRight,
+                       const QVector<int> &roles = QVector<int>());
 protected slots:
     //!
     //! \brief onOperationTrigger
@@ -96,6 +82,9 @@ protected:
     void runOn() Q_DECL_OVERRIDE;
     void doneOn() Q_DECL_OVERRIDE;
     void doneOff() Q_DECL_OVERRIDE;
+
+    //!
+    void m_operator_propertyChanged(QVariant key,QVariant value) Q_DECL_OVERRIDE;
 };
 
 #endif // CONTROLLERBANKMANAGER_H

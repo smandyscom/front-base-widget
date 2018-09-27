@@ -8,6 +8,7 @@
 //#include <junctionbankdatabase.h>
 
 #include <definitionmaincontrolblock.h>
+#include <definitionmanualblock.h>
 
 using namespace HEADER_STRUCTURE;
 

@@ -80,6 +80,10 @@ void FrontCylinderPanel::Setup(QSqlTableModel* cylinderTable,
                                QSqlTableModel* cylinderTableHeader)
 {
     mainDataTable = cylinderTable;
+
+    ui->widgetFilter->DataTable(cylinderTable);
+    ui->widgetFilter->PrimaryTable(regionTable);
+
     //! Loading widgets
 //    FrontSingleFilter* __fsf =  new FrontSingleFilter(ui->widgetFilter);
 //    __fsf->DataTable(__cylinderTable);

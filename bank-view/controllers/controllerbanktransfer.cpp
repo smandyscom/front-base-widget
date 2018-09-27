@@ -1,8 +1,8 @@
 
 #include "controllerbanktransfer.h"
 
-ControllerBankTransfer::ControllerBankTransfer(QObject *parent) :
-    ControllerManualMode(parent)
+ControllerBankTransfer::ControllerBankTransfer(quint8 clientId, quint16 baseOffset, int interval=100, QObject *parent) :
+    ControllerManualMode(clientId,baseOffset,interval,parent)
 {
     //setup
 //    __commitOption.Selection(CommitBlock::SELECTION_COMMAND_BLOCK);
@@ -12,6 +12,13 @@ ControllerBankTransfer::ControllerBankTransfer(QObject *parent) :
 //       //! cut link after done
 //       disconnect(__controller,SIGNAL(operationReady()),this,SLOT(onControllerOperationReady()));
 //    });
+}
+
+void ControllerBankTransfer::Adaptor(ManualModeDataBlock::Categrories key,AbstractSqlTableAdpater* value)
+{
+    m_adaptors[key] = value;
+    //! Sense data changed and put task
+    connect(value->Model(),&QSqlTableModel::dataChanged,this,&ControllerBankTransfer::onDataChanged);
 }
 
 //!
@@ -86,6 +93,10 @@ ControllerBankTransfer::ControllerBankTransfer(QObject *parent) :
 ////    emit __controller->operationTriggered();
 
 //}
+
+//!
+//! \brief ControllerBankTransfer::plcReady
+//! Iteration begin
 void ControllerBankTransfer::plcReady()
 {
     switch (m_mode) {
@@ -183,32 +194,68 @@ void ControllerBankTransfer::doneOff()
 }
 
 
-void ControllerBankTransfer::onDataChanged()
+void ControllerBankTransfer::onDataChanged(const QModelIndex &topLeft,
+                                           const QModelIndex &bottomRight,
+                                           const QVector<int> &roles)
 {
-    auto table = qobject_cast<QSqlTableModel*>(sender());
-    //! get modelIndex , put it on task queue
+    AbstractSqlTableAdpater* adaptor = nullptr;
+    //! Search for Adaptor
+    foreach (AbstractSqlTableAdpater* var, m_adaptors.values()) {
+        if(var->Model()==sender())
+        {
+            adaptor = var;
+            break;
+        }
+    }
+    //!
+    TransferTask task;
+    task.first = m_adaptors.key(adaptor) ;
+    //! Turns into absolute row index
+    task.second =  adaptor->Model()->record( topLeft.row())
+             .value(QVariant::fromValue(HEADER_STRUCTURE::ID).toString())
+             .toInt();
+
+    m_tasksQueue.enqueue(task);
 }
 
-void ControllerBankTransfer::PutTask(TransferTask task)
+//!
+//! \brief ControllerBankTransfer::m_operator_propertyChanged
+//! \param key
+//! \param value
+//! Trigger transfer task
+void ControllerBankTransfer::m_operator_propertyChanged(QVariant key, QVariant value)
 {
-    switch (task.second) {
-    case BATCH_ALL_MODE:
-    {
-        //! Populating
-        for(int i=0;i<m_adaptors[task.first]->Model()->rowCount();i++)
-            m_tasksQueue.enqueue(TransferTask(task.first,i));
+    //! Prepare
+    switch (key.toUInt()) {
+    case ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE:
+        //! Clear task queue (Write
         break;
-    }
-    case BATCH_PRESCHEDUALED_MODE:
-        //! Do nothing , let following procedure wipe out all things in queue
-        if(m_tasksQueue.isEmpty())
-            return; //nothing to do
+    case ManualModeDataBlock::BATCH_ALL_WRITE_MODE:
+        //! Populating
+//        for(int i=0;i<m_adaptors[task.first]->Model()->rowCount();i++)
+//            m_tasksQueue.enqueue(TransferTask(task.first,i));
+//        break;
+    case ManualModeDataBlock::BATCH_ALL_READ_MODE:
         break;
     default:
-        //! Singal mode (Positive index
-        //! Find if repeated
-        if(!m_tasksQueue.contains(task))
-            m_tasksQueue.enqueue(task);
+//        //! Singal mode (Positive index
+//        //! Find if repeated
+//        if(!m_tasksQueue.contains(task))
+//            m_tasksQueue.enqueue(task);
+        break;
+    }
+    //!Action
+    switch (key.toUInt()) {
+    case ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE:
+    case ManualModeDataBlock::BATCH_ALL_WRITE_MODE:
+    case ManualModeDataBlock::BATCH_ALL_READ_MODE:
+        //! trigger operation
+        if(m_currentState = ManualState::STATE_PLC_READY)
+            m_channel->Access(toAddressMode(ManualModeDataBlock::BIT_1_RUN),true);
+        setProperty(key.toString().toStdString().c_str(),false); //reset property
+        break;
+    default:
+        ControllerManualMode::m_operator_propertyChanged(key,value);
         break;
     }
 }

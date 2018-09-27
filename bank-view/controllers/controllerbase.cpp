@@ -35,8 +35,10 @@ void ControllerBase::onAcknowledged(InterfaceRequest ack)
 
     //! Raising property updating (string copy , performance issue?
     foreach (QVariant var, m_monitor_propertyKeys) {
-       parent()->setProperty(var.toString().toStdString().c_str(),m_monitor_propertyValues(var));
-       parent()->setProperty(QString::number(var.toInt()).toStdString().c_str(),m_monitor_propertyValues(var));
+        foreach (QObject* receiver, m_receivers) {
+            receiver->setProperty(var.toString().toStdString().c_str(),m_monitor_propertyValues(var));
+            receiver->setProperty(QString::number(var.toInt()).toStdString().c_str(),m_monitor_propertyValues(var));
+        }
     }
 }
 
@@ -81,4 +83,9 @@ bool ControllerBase::event(QEvent *event)
     }
 
     return QObject::event(event);
+}
+
+void ControllerBase::AttachReceiver(QObject *receiver)
+{
+    m_receivers.append(receiver);
 }

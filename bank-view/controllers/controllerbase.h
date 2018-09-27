@@ -26,6 +26,8 @@ class ControllerBase : public QObject
 public:
     explicit ControllerBase(quint8 clientId,quint16 baseOffset,int interval,QObject *parent = nullptr);
 
+    void AttachReceiver(QObject* receiver);
+
     bool event(QEvent *event) Q_DECL_OVERRIDE;
 protected slots:
     //!
@@ -54,7 +56,8 @@ protected:
     //! Operator
     QMap<QString,QVariant> m_operator_propertyKeys;
     virtual void m_operator_propertyChanged(QVariant key,QVariant value);
-
+    //!
+    QList<QObject*> m_receivers;
 };
 
 #endif // CONTROLLERBASE_H

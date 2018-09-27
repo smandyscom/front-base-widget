@@ -27,7 +27,8 @@ class FrontConfigurationTransfer;
 
 using namespace HEADER_STRUCTURE;
 
-class FrontConfigurationTransfer : public QWidget
+class FrontConfigurationTransfer :
+        public FrontCommonManual
 {
     Q_OBJECT
 
