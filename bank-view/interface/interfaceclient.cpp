@@ -10,7 +10,7 @@ InterfaceClient::InterfaceClient(QObject *parent) :
     //! create timer
     m_workingTimer = new QTimer(this);
     connect(m_workingTimer,SIGNAL(timeout()),this,SLOT(onPopRequest()));
-//    __workingTimer->start();
+    m_workingTimer->start();
 }
 
 void InterfaceClient::pushRequest(InterfaceRequest request)

@@ -48,7 +48,8 @@ SOURCES += \
     ../bank-view/controllers/controllermanualmode.cpp \
     ../bank-view/interface/interfacechannel.cpp \
     ../bank-view/interface/interfaceclient.cpp \
-    ../bank-view/helpers/loadinghelpercontrollers.cpp
+    ../bank-view/helpers/loadinghelpercontrollers.cpp \
+    ../bank-view/interface/adsclient.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -89,7 +90,8 @@ HEADERS += \
     ../bank-view/interface/interfacechannel.h \
     ../bank-view/interface/interfaceclient.h \
     ../bank-view/interface/interfacerequest.h \
-    ../bank-view/helpers/loadinghelpercontrollers.h
+    ../bank-view/helpers/loadinghelpercontrollers.h \
+    ../bank-view/interface/adsclient.h
 
 FORMS += \
         mainwindow.ui \
@@ -116,3 +118,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 DISTFILES += \
     qss/tabAxis.qss
+
+win32: LIBS += -L$$PWD/../../../../../TwinCAT/AdsApi/TcAdsDll/Lib/ -lTcAdsDll
+
+INCLUDEPATH += $$PWD/../../../../../TwinCAT/AdsApi/TcAdsDll/Include
+DEPENDPATH += $$PWD/../../../../../TwinCAT/AdsApi/TcAdsDll/Include

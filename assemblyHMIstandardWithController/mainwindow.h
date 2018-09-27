@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <loadinghelper.h>
 #include <loadinghelpercontrollers.h>
+#include <adsclient.h>
 
 namespace Ui {
 class MainWindow;

@@ -105,73 +105,36 @@ void ControllerBankTransfer::Adaptor(ManualModeDataBlock::Categrories key,Abstra
 //! Iteration begin
 void ControllerBankTransfer::plcReady()
 {
-    switch (m_mode) {
+    switch (m_mode()) {
     case ManualModeDataBlock::MODE_DOWNLOAD_DATA_BLOCK:
     case ManualModeDataBlock::MODE_UPLOAD_DATA_BLOCK:
     {
         if(!m_tasksQueue.isEmpty())
         {
             //! Auto started
-            m_channel->Access(toAddressMode(ManualModeDataBlock::BIT_1_RUN),true);
+            transfer();
         }
         break;
     }
     default:
         break;
     }
+    //!Base method
+    ControllerManualMode::plcReady();
 }
-
-
-void ControllerBankTransfer::runOn()
-{
-    m_mode = qobject_cast<ManualModeDataBlock*>(m_monitor)->Value(ManualModeDataBlock::COMMIT_MODE).value<ManualModeDataBlock::Mode>();
-
-    switch (m_mode) {
-        //! Once triggered as Transfer mode
-        case ManualModeDataBlock::MODE_UPLOAD_DATA_BLOCK:
-        case ManualModeDataBlock::MODE_DOWNLOAD_DATA_BLOCK:
-        {
-            //! Vanish one
-            TransferTask task = m_tasksQueue.dequeue();
-            //! By task queue to write-in
-            m_categrory = task.first;
-            m_index = task.second;
-            //! Write-in commit categrory and index
-            m_channel->Access(toAddressMode(ManualModeDataBlock::COMMIT_CATEGRORY),QVariant::fromValue(m_categrory).value<MODBUS_U_WORD>());
-            m_channel->Access(toAddressMode(ManualModeDataBlock::COMMIT_DEVICE_INDEX),QVariant::fromValue(m_index).value<MODBUS_U_WORD>());
-            break;
-        }
-        default:
-            break;
-    }
-
-}
-
 //!
 //! \brief ControllerBankTransfer::onOperationTrigger
 //! After RUN
 void ControllerBankTransfer::doneOn()
 {   
-    switch (m_mode) {
+    switch (m_mode()) {
     //! Once triggered as Transfer mode
     case ManualModeDataBlock::MODE_UPLOAD_DATA_BLOCK:
-    {
         m_channel->BeginRead(toAddressMode(ManualModeDataBlock::DATA_BLOCK_HEAD),QVariant::fromValue(CellDataBlock()));
         break;
-    }
-    case ManualModeDataBlock::MODE_DOWNLOAD_DATA_BLOCK:
-    {
-        //! Write
-        CellDataBlock* data =
-                reinterpret_cast<CellDataBlock*>(m_adaptors[m_categrory]->Record(m_index).Anchor());
-        m_channel->Access(toAddressMode(ManualModeDataBlock::DATA_BLOCK_HEAD),QVariant::fromValue(*data));
-
-        break;
-    }
     default:
         break;
     }
-
 
     //!
     //! \brief ControllerManualMode::doneOn
@@ -184,14 +147,18 @@ void ControllerBankTransfer::doneOn()
 //! Re-initiate Run
 void ControllerBankTransfer::doneOff()
 {
-    switch (m_mode) {
+    switch (m_mode()) {
     case ManualModeDataBlock::MODE_UPLOAD_DATA_BLOCK:
     {
         //! Write back to Database
+        //! synced with BeginRead since Run off came after run
         CellDataBlock data =
                 qobject_cast<ManualModeDataBlock*>(m_monitor)->Value(ManualModeDataBlock::DATA_BLOCK_HEAD).value<CellDataBlock>();
         m_adaptors[m_categrory]->Record(m_index,AbstractDataBlock(reinterpret_cast<MODBUS_U_WORD*>(&data)));
     }
+    case ManualModeDataBlock::MODE_DOWNLOAD_DATA_BLOCK:
+        m_tasksQueue.dequeue(); //take one out
+        break;
     default:
         break;
     }
@@ -234,15 +201,20 @@ void ControllerBankTransfer::m_operator_propertyChanged(QVariant key, QVariant v
 {
     //! Prepare
     switch (key.toUInt()) {
-    case ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE:
-        //! Clear task queue (Write
-        break;
+
     case ManualModeDataBlock::BATCH_ALL_WRITE_MODE:
         //! Populating
 //        for(int i=0;i<m_adaptors[task.first]->Model()->rowCount();i++)
 //            m_tasksQueue.enqueue(TransferTask(task.first,i));
 //        break;
+    case ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE:
+        //! Clear task queue (Write
+        m_channel->Access(toAddressMode(ManualModeDataBlock::COMMIT_MODE),
+                          QVariant::fromValue(ManualModeDataBlock::MODE_DOWNLOAD_DATA_BLOCK));
+        break;
     case ManualModeDataBlock::BATCH_ALL_READ_MODE:
+        m_channel->Access(toAddressMode(ManualModeDataBlock::COMMIT_MODE),
+                          QVariant::fromValue(ManualModeDataBlock::MODE_UPLOAD_DATA_BLOCK));
         break;
     default:
 //        //! Singal mode (Positive index
@@ -260,9 +232,10 @@ void ControllerBankTransfer::m_operator_propertyChanged(QVariant key, QVariant v
         if(!value.toBool())
             return;
 
-        //! trigger operation
-        if(m_currentState == ManualState::STATE_PLC_READY && m_tasksQueue.count() > 0)
-            m_channel->Access(toAddressMode(ManualModeDataBlock::BIT_1_RUN),true);
+        //! trigger operation , raise first shot
+        if(m_currentState == ManualState::STATE_PLC_READY &&
+                !m_tasksQueue.isEmpty())
+            transfer();
 
         setProperty(key.toString().toStdString().c_str(),false); //reset property
         break;
@@ -272,4 +245,22 @@ void ControllerBankTransfer::m_operator_propertyChanged(QVariant key, QVariant v
     }
 }
 
+void ControllerBankTransfer::transfer()
+{
+    m_categrory = m_tasksQueue.head().first;
+    m_index = m_tasksQueue.head().second;
 
+    //! Write anyway
+    CellDataBlock* data =
+            reinterpret_cast<CellDataBlock*>(m_adaptors[m_categrory]->Record(m_index).Anchor());
+    m_channel->Access(toAddressMode(ManualModeDataBlock::DATA_BLOCK_HEAD),QVariant::fromValue(*data));
+
+    m_channel->Access(toAddressMode(ManualModeDataBlock::COMMIT_CATEGRORY),QVariant::fromValue(m_categrory));
+    m_channel->Access(toAddressMode(ManualModeDataBlock::COMMIT_DEVICE_INDEX),QVariant::fromValue(m_index));
+    m_channel->Access(toAddressMode(ManualModeDataBlock::BIT_1_RUN),true);
+}
+
+ManualModeDataBlock::Mode ControllerBankTransfer::m_mode()
+{
+    return qobject_cast<ManualModeDataBlock*>(m_monitor)->Value(ManualModeDataBlock::COMMIT_MODE).value<ManualModeDataBlock::Mode>();
+}

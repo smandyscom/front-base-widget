@@ -47,6 +47,7 @@ void LoadingHelper::CombineModelViewV1(FrontAxisParameter* widget1,
                                        FrontConfigurationTransfer* widget4,
                                        FrontMainPanel* widget5)
 {
+
     m_instance = JunctionBankDatabase::Instance();
     m_instance->onInitialize();
 

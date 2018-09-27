@@ -69,5 +69,5 @@ void FrontCommon::LinkController(QObject* controller)
 
 QVariant FrontCommon::property(QVariant key) const
 {
-    return property(key.toString().toStdString().c_str());
+    return QWidget::property(key.toString().toStdString().c_str());
 }

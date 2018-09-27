@@ -18,6 +18,12 @@ void LoadingHelperControllers::LoadTransfer(quint8 clientId, quint16 baseOffset,
 
 void LoadingHelperControllers::ControllersLoadingRoutineV1()
 {
+    //!
+    //! Convertor initialize
+    AbstractDataBlock::Dimension = new QMap<DEF_BASIC_DIMENSION::Keys,qreal>();
+    (*AbstractDataBlock::Dimension)[DEF_BASIC_DIMENSION::LENGTH] = 0.001;
+    (*AbstractDataBlock::Dimension)[DEF_BASIC_DIMENSION::TIME] = 0.001;
+    (*AbstractDataBlock::Dimension)[DEF_BASIC_DIMENSION::TORQUE_RATIO] = 0.001;
     //!TODO Follow Database to initiate interface channel
     m_database = JunctionBankDatabase::Instance();
     //!TODO Follow Database to decide offset/client

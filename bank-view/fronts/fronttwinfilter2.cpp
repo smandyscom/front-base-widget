@@ -3,7 +3,9 @@
 
 FrontTwinFilter2::FrontTwinFilter2(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::FrontTwinFilter2)
+    ui(new Ui::FrontTwinFilter2),
+    m_value1(0),
+    m_value2(0)
 {
     ui->setupUi(this);
 

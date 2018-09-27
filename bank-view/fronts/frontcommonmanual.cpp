@@ -27,7 +27,7 @@ void FrontCommonManual::showEvent(QShowEvent* event)
     //! Monitor selection
     if(m_controller!=nullptr)
     {
-        m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_CATEGRORY).toString().toStdString().c_str(),
+        m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::MON_CATEGRORY).toString().toStdString().c_str(),
                                   m_categrory);
         onMonitorIndexChanged();
     }

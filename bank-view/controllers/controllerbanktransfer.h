@@ -61,7 +61,7 @@ protected slots:
 //    void onOperationTrigger();
 //    void onOperationReady();
 protected:
-    ManualModeDataBlock::Mode m_mode;
+    ManualModeDataBlock::Mode m_mode();
     //! By task queue to write-in
     ManualModeDataBlock::Categrories m_categrory;
     int m_index;
@@ -79,7 +79,6 @@ protected:
     //!
     //! \brief doneOn
     void plcReady() Q_DECL_OVERRIDE;
-    void runOn() Q_DECL_OVERRIDE;
     void doneOn() Q_DECL_OVERRIDE;
     void doneOff() Q_DECL_OVERRIDE;
 
