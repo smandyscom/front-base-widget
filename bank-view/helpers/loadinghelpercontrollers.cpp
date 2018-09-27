@@ -19,7 +19,7 @@ void LoadingHelperControllers::LoadTransfer(quint8 clientId, quint16 baseOffset,
 void LoadingHelperControllers::ControllersLoadingRoutineV1()
 {
     //!TODO Follow Database to initiate interface channel
-
+    m_database = JunctionBankDatabase::Instance();
     //!TODO Follow Database to decide offset/client
     LoadTransfer(0,512,100);
 

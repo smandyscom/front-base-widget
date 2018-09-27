@@ -4,14 +4,20 @@
 ControllerBankTransfer::ControllerBankTransfer(quint8 clientId, quint16 baseOffset, int interval=100, QObject *parent) :
     ControllerManualMode(clientId,baseOffset,interval,parent)
 {
-    //setup
-//    __commitOption.Selection(CommitBlock::SELECTION_COMMAND_BLOCK);
-//    __controller = ControllerManualMode::Instance();
-
 //    connect(this,&ControllerBankTransfer::dataTransfered,[=](){
 //       //! cut link after done
 //       disconnect(__controller,SIGNAL(operationReady()),this,SLOT(onControllerOperationReady()));
 //    });
+    //!Operators
+    QList<QVariant> m_operator_list = {
+        QVariant::fromValue(ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE),
+        QVariant::fromValue(ManualModeDataBlock::BATCH_ALL_WRITE_MODE),
+        QVariant::fromValue(ManualModeDataBlock::BATCH_ALL_READ_MODE)
+    };
+    foreach (QVariant var, m_operator_list)
+    {
+        m_operator_propertyKeys[var.toString()] = var;
+    }
 }
 
 void ControllerBankTransfer::Adaptor(ManualModeDataBlock::Categrories key,AbstractSqlTableAdpater* value)
@@ -215,7 +221,8 @@ void ControllerBankTransfer::onDataChanged(const QModelIndex &topLeft,
              .value(QVariant::fromValue(HEADER_STRUCTURE::ID).toString())
              .toInt();
 
-    m_tasksQueue.enqueue(task);
+    if(!m_tasksQueue.contains(task))
+        m_tasksQueue.enqueue(task);
 }
 
 //!
@@ -249,9 +256,14 @@ void ControllerBankTransfer::m_operator_propertyChanged(QVariant key, QVariant v
     case ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE:
     case ManualModeDataBlock::BATCH_ALL_WRITE_MODE:
     case ManualModeDataBlock::BATCH_ALL_READ_MODE:
+        //! False , no action
+        if(!value.toBool())
+            return;
+
         //! trigger operation
-        if(m_currentState = ManualState::STATE_PLC_READY)
+        if(m_currentState == ManualState::STATE_PLC_READY && m_tasksQueue.count() > 0)
             m_channel->Access(toAddressMode(ManualModeDataBlock::BIT_1_RUN),true);
+
         setProperty(key.toString().toStdString().c_str(),false); //reset property
         break;
     default:
