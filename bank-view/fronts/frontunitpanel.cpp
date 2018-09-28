@@ -76,12 +76,6 @@ void FrontUnitPanel::Setup(QSqlTableModel* unitTable,
                                                      ui->tableViewUnit);
 }
 
-int FrontUnitPanel::currentIndex() const
-{
-    QSqlRecord record = mainDataTable->record(ui->tableViewUnit->selectionModel()->selectedRows().first().row());
-    //! Changeover monitor index
-    return record.value(QVariant::fromValue(UnitBlock::ID).toString()).toInt();
-}
 //void FrontUnitPanel::onTimerTimeout()
 //{
 //    //!
@@ -124,6 +118,8 @@ void FrontUnitPanel::onCommandClick()
     //! Set mode
     m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_MODE).toString().toStdString().c_str(),
                                   QVariant::fromValue(ManualModeDataBlock::MODE_EXE_UNIT));
+    m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_CATEGRORY).toString().toStdString().c_str(),
+                                  QVariant::fromValue(ManualModeDataBlock::SELECTION_UNIT));
     m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_DEVICE_INDEX).toString().toStdString().c_str(),
                                   currentIndex());
     m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::DATA_BLOCK_HEAD).toString().toStdString().c_str(),
@@ -134,10 +130,22 @@ void FrontUnitPanel::onCommandClick()
 
 void FrontUnitPanel::showEvent(QShowEvent *event)
 {
-    //! Semi-auto mode
+    //! Semi-auto mode(Keep unit running
     m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_2_ENGAGED_MANUAL).toString().toStdString().c_str(),
                               false);
 
     FrontCommonManual::showEvent(event);
+}
+
+int FrontUnitPanel::currentIndex()
+{
+    //!Renew current index
+    if(ui->tableViewUnit->selectionModel()->hasSelection())
+    {
+        auto table = static_cast<QSqlTableModel*>(ui->tableViewUnit->model());
+        auto record = table->record(ui->tableViewUnit->selectionModel()->selectedRows().first().row());
+        m_index = record.value(QVariant::fromValue(HEADER_STRUCTURE::ID).toString()).toInt();
+    }
+    return m_index;
 }
 

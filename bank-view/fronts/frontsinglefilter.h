@@ -27,14 +27,18 @@ public:
     void PrimaryTable(QSqlTableModel* model,QVariant column = QString("zh_TW"));
     void DataTable(QSqlTableModel* model);
     void DataKey(QVariant key);
+
+    QString Filter() const;
+
 protected slots:
     void onSelectedIndexChanged(int i);
     void onSelectAll();
 protected:
      Ui::FrontSingleFilter *ui;
+     QString m_filter;
 
-    QSqlTableModel* m_dataTable;
-    QVariant m_dataKey;
+     QSqlTableModel* m_dataTable;
+     QVariant m_dataKey;
 };
 
 #endif // FRONTSINGLEFILTER_H

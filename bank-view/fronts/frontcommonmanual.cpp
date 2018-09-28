@@ -7,7 +7,7 @@ FrontCommonManual::FrontCommonManual(QWidget *parent):
 
 }
 
-int FrontCommonManual::currentIndex() const
+int FrontCommonManual::currentIndex()
 {
     return 0;
 }

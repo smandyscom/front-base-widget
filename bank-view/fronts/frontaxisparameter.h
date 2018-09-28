@@ -64,7 +64,7 @@ private:
 
     void dynamicPropertyChanged(int key, QVariant value) Q_DECL_OVERRIDE;
 
-    int currentIndex() const Q_DECL_OVERRIDE;
+    int currentIndex()  Q_DECL_OVERRIDE;
     QString currentFilter() const Q_DECL_OVERRIDE;
 };
 

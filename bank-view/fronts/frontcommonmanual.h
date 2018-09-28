@@ -24,7 +24,7 @@ protected:
 
     //! Commons
     ManualModeDataBlock::Categrories m_categrory;
-    virtual int currentIndex() const;
+    virtual int currentIndex() ;
 
     QSqlTableModel* mainDataTable;
     virtual QString currentFilter() const;

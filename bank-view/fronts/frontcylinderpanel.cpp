@@ -3,60 +3,31 @@
 
 FrontCylinderPanel::FrontCylinderPanel(QWidget *parent) :
     FrontCommonManual(parent),
-    ui(new Ui::FrontCylinderPanel)
+    ui(new Ui::FrontCylinderPanel),
+    m_index(0)
 {
     ui->setupUi(this);
-
+    m_categrory = ManualModeDataBlock::SELECTION_CYLINDER;
+    m_status = utilities::listupEnumVariant<CylinderMonitorBlock::Status>();
     //!
     //! \brief connect
     //!
-    QList<QPushButton*> __buttonList = {ui->pushButtonGoA,
+    QList<QPushButton*> buttonList = {ui->pushButtonGoA,
                                         ui->pushButtonGoB};
-    foreach (QPushButton* var, __buttonList) {
+    foreach (QPushButton* var, buttonList) {
         connect(var,SIGNAL(clicked(bool)),this,SLOT(onCylinderCommandClicked()));
     }
-    //! Timer
-//    __timer = new QTimer(this);
-//    connect(__timer,SIGNAL(timeout()),this,SLOT(onTimerTimeout()));
-//    __timer->start();
-    //! Map
-//    __labelAddressMap[ui->labelDone] = CylinderMonitorBlock::MOR_DONE;
-//    __labelAddressMap[ui->labelMonA] = CylinderMonitorBlock::MOR_GROUP_A;
-//    __labelAddressMap[ui->labelMonB] = CylinderMonitorBlock::MOR_GROUP_B;
-//    __labelAddressMap[ui->labelSuppress] = CylinderMonitorBlock::CTL_SUPPRESS;
-//    __labelAddressMap[ui->labelTimeon] = CylinderMonitorBlock::INT_TMR_ON;
-//    __labelAddressMap[ui->labelWarn] = CylinderMonitorBlock::MOR_WARN;
+    //!
+    //! \brief connect
+    //! When monitor/opertion selection changed
+    connect(ui->tableViewCylinder,&QTableView::clicked,this,&FrontCylinderPanel::onMonitorIndexChanged);
 
-//    __labelColorMap[ui->labelDone] = Qt::yellow;
-//    __labelColorMap[ui->labelMonA] = Qt::green;
-//    __labelColorMap[ui->labelMonB] = Qt::green;
-//    __labelColorMap[ui->labelSuppress] = Qt::red;
-//    __labelColorMap[ui->labelTimeon] = Qt::green;
-//    __labelColorMap[ui->labelWarn] = Qt::red;
     //! Interlock
 //    __busyInterlock = {
 //        ui->pushButtonGoA,
 //        ui->pushButtonGoB,
 //        ui->tableViewCylinder,
 //    };
-    //!
-//    connect(__cylinderTable,&QSqlTableModel::dataChanged,[=](const QModelIndex &topLeft,
-//            const QModelIndex &bottomRight,
-//            const QVector<int> &roles = QVector<int>()){
-
-//        if(roles.count() >0)
-//            if(roles.first() == Qt::BackgroundColorRole)
-//                return; //background color changed only
-
-//        //!
-//        TransferTask __task;
-//        __task.first = CommitBlock::SELECTION_CYLINDER;
-//        //! Turns into absolute row index
-//        __task.second =  __cylinderTable->record( topLeft.row())
-//                .value(QVariant::fromValue(CylinderBlock::ID).toString())
-//                .toInt();
-//        emit dataChanged(__task);
-//    });
     //!
 //    __disableList[AUTH::ROLE_OPERATOR].append(this);
 
@@ -67,6 +38,7 @@ FrontCylinderPanel::FrontCylinderPanel(QWidget *parent) :
 //    connect(ui->tableViewCylinder,&QTableView::clicked,[=](){
 //        qobject_cast<TableModelCylinderVisual*>(__cylinderTable)->onAfterEditing();
 //    });
+
 }
 
 
@@ -83,12 +55,6 @@ void FrontCylinderPanel::Setup(QSqlTableModel* cylinderTable,
 
     ui->widgetFilter->DataTable(cylinderTable);
     ui->widgetFilter->PrimaryTable(regionTable);
-
-    //! Loading widgets
-//    FrontSingleFilter* __fsf =  new FrontSingleFilter(ui->widgetFilter);
-//    __fsf->DataTable(__cylinderTable);
-//    __fsf->PrimaryTable(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_REGION));
-
     //!
     ui->tableViewCylinder->setModel(cylinderTable);
     connect(ui->tableViewCylinder,&QTableView::clicked,this,&FrontCylinderPanel::onMonitorIndexChanged);
@@ -110,6 +76,8 @@ void FrontCylinderPanel::onCylinderCommandClicked()
     //! Set mode
     m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_MODE).toString().toStdString().c_str(),
                               QVariant::fromValue(ManualModeDataBlock::MODE_EXE_CYLINDER));
+    m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_CATEGRORY).toString().toStdString().c_str(),
+                              QVariant::fromValue(ManualModeDataBlock::SELECTION_CYLINDER));
     m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_DEVICE_INDEX).toString().toStdString().c_str(),
                               currentIndex());
     m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::DATA_BLOCK_HEAD).toString().toStdString().c_str(),
@@ -118,37 +86,54 @@ void FrontCylinderPanel::onCylinderCommandClicked()
                               true);
 }
 
-//void FrontCylinderPanel::onViewSelectionChanged(QModelIndex index)
-//{
-//    QSqlRecord __record = __cylinderTable->record(index.row());
-//    //! Changeover monitor index
-//    __currentViewIndex =  __record.value(QVariant::fromValue(CylinderBlock::ID).toString()).value<MODBUS_S_WORD>();
-//    __controller->onMonitorDeviceIndexChanged(__currentViewIndex);
-//}
-
 //void FrontCylinderPanel::onTimerTimeout()
 //{
-//    //! Update cylinder status
-//    CylinderMonitorBlock cmb;
-//    *static_cast<CellDataBlock*>(&cmb) = __controller->MonitorBlock();
-//    //! Show
-//    ModbusDriverAddress __address;
-//    __address.setRegisterAddress(CylinderMonitorBlock::OFFSET_MONITOR_STATUS_WORD);
-//    foreach (QWidget* var, __labelAddressMap.keys()) {
-//        __address.setBitIndex(__labelAddressMap[var]);
-//        utilities::colorChangeOver(var,cmb.Value(__address.getAddress()).toBool(),__labelColorMap[var]);
-//    }
 //    //! Interlock
 //    foreach (QWidget* var, __busyInterlock) {
 //        var->setEnabled(__controller->IsManualModeActiavted());
 //    }
 //}
+void FrontCylinderPanel::dynamicPropertyChanged(int key, QVariant value)
+{
+    switch (key) {
+    case ManualModeDataBlock::MONITOR_BLOCK_HEAD:
+    {
+        *(static_cast<AbstractDataBlock*>(&m_monitorBlock)) =
+                value.value<CellDataBlock>(); //value assignment
 
-//void FrontCylinderPanel::showEvent(QShowEvent *event)
-//{
-//    //! Set monitoring focus
-//    __controller->MonitorDeviceCategrory(CommitBlock::SELECTION_CYLINDER);
-//    __controller->onMonitorDeviceIndexChanged(__currentViewIndex);
-//    //!
-//    QWidget::showEvent(event);
-//}
+        //! Self-raise Bit properties
+        foreach (QVariant var, m_status) {
+            setProperty(var.toString().toStdString().c_str(),m_monitorBlock.Value(var.toUInt()).toBool());
+        }
+        break;
+    }
+    default:
+        break;
+    }
+}
+
+
+int FrontCylinderPanel::currentIndex()
+{
+    //!Renew current index
+    if(ui->tableViewCylinder->selectionModel()->hasSelection())
+    {
+        auto table = static_cast<QSqlTableModel*>(ui->tableViewCylinder->model());
+        auto record = table->record(ui->tableViewCylinder->selectionModel()->selectedRows().first().row());
+        m_index =  record.value(QVariant::fromValue(HEADER_STRUCTURE::ID).toString()).toInt();
+    }
+    return m_index;
+}
+
+QString FrontCylinderPanel::currentFilter() const
+{
+    return ui->widgetFilter->Filter();
+}
+
+void FrontCylinderPanel::showEvent(QShowEvent *event)
+{
+    //! Manual mode(Stop unit running
+    m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_2_ENGAGED_MANUAL).toString().toStdString().c_str(),
+                              true);
+    FrontCommonManual::showEvent(event);
+}

@@ -244,10 +244,10 @@ void FrontAxisParameter::dynamicPropertyChanged(int key,QVariant value)
 
         //! Self-raise Bit properties
         foreach (QVariant var, m_monitorOperation) {
-            setProperty(var.toString().toStdString().c_str(),m_monitorBlock.Value(var.toUInt()));
+            setProperty(var.toString().toStdString().c_str(),m_monitorBlock.Value(var.toUInt()).toBool());
         }
         foreach (QVariant var, m_runStatus) {
-            setProperty(var.toString().toStdString().c_str(),m_monitorBlock.Value(var.toUInt()));
+            setProperty(var.toString().toStdString().c_str(),m_monitorBlock.Value(var.toUInt()).toBool());
         }
         break;
     }
@@ -258,7 +258,7 @@ void FrontAxisParameter::dynamicPropertyChanged(int key,QVariant value)
     FrontCommonManual::dynamicPropertyChanged(key,value);
 }
 
-int FrontAxisParameter::currentIndex() const
+int FrontAxisParameter::currentIndex()
 {
     return ui->widgetFilter->SelectedKey1();
 }

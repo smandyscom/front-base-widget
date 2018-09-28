@@ -14,7 +14,8 @@ class FrontUnitPanel;
 
 //typedef QPair<ModbusDriverAddress,Qt::GlobalColor> VisualAspect;
 
-class FrontUnitPanel : public FrontCommonManual
+class FrontUnitPanel :
+        public FrontCommonManual
 //        public AbstractAuthReceiver
 {
     Q_OBJECT
@@ -50,7 +51,8 @@ private:
 //    QList<QWidget*> __busyInterlock;
 
     //!Override
-    int currentIndex() const Q_DECL_OVERRIDE;
+    int m_index;
+    int currentIndex() Q_DECL_OVERRIDE;
 };
 
 #endif // FRONTUNITPANEL_H

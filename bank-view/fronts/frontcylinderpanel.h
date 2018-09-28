@@ -31,6 +31,7 @@ public:
                QSqlTableModel* regionTable,
                QSqlTableModel* cylinderTableHeader);
 
+    void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
 //signals:
 //    void dataChanged(TransferTask task);
 protected slots:
@@ -55,8 +56,14 @@ private:
 //    QMap<QWidget*,Qt::GlobalColor> __labelColorMap;
 
 //    QList<QWidget*> __busyInterlock;
+    CylinderMonitorBlock m_monitorBlock;
+    QList<QVariant> m_status;
 
+    void dynamicPropertyChanged(int key, QVariant value) Q_DECL_OVERRIDE;
 
+    int m_index;
+    int currentIndex()  Q_DECL_OVERRIDE;
+    QString currentFilter() const Q_DECL_OVERRIDE;
 };
 
 #endif // FRONTCYLINDERPANEL_H

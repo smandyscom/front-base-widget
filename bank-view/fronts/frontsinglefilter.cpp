@@ -20,13 +20,16 @@ void FrontSingleFilter::onSelectedIndexChanged(int i)
     QSqlTableModel* m_primaryTable = reinterpret_cast<QSqlTableModel*>(ui->comboBoxPrimary->model());
     int id = m_primaryTable->record(i).value(QVariant::fromValue(ID).toString()).toInt();
 
-   m_dataTable->setFilter( utilities::generateFilterString(m_dataKey,QVariant::fromValue(id)));
-   m_dataTable->select();
+    m_filter = utilities::generateFilterString(m_dataKey,QVariant::fromValue(id));
+
+    m_dataTable->setFilter(m_filter);
+    m_dataTable->select();
 }
 
 void FrontSingleFilter::onSelectAll()
 {
-    m_dataTable->setFilter(nullptr);
+    m_filter = nullptr;
+    m_dataTable->setFilter(m_filter);
     m_dataTable->select();
 }
 
@@ -44,4 +47,9 @@ void FrontSingleFilter::DataKey(QVariant key)
 void FrontSingleFilter::DataTable(QSqlTableModel *model)
 {
     m_dataTable = model;
+}
+
+QString FrontSingleFilter::Filter() const
+{
+    return m_filter;
 }
