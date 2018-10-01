@@ -46,7 +46,8 @@ void ControllerBase::onAcknowledged(InterfaceRequest ack)
 
 MODBUS_U_WORD* ControllerBase::registerWatchList(ADDRESS_MODE unoffsetedAddress,QVariant form)
 {
-    ADDRESS_MODE offsettedAddress = toAddressMode(unoffsetedAddress);
+    //! Clean input address
+    ADDRESS_MODE offsettedAddress = toAddressMode(ADDRESS_REGISTER(unoffsetedAddress));
     m_channel->RegisterRoutines(offsettedAddress,form,m_interval);
 
     return m_channel->Handle(offsettedAddress);

@@ -61,6 +61,13 @@ public:
 
     static void renderViewHeader(QSqlTableModel* reference, QTableView* view, Headers key=zh_TW, bool isStrech = true);
 };
+//!
+//! \brief The ExtendedRoles enum
+//! Specify Model addtional role
+enum ExtendedRoles
+{
+    UserRole_OnOff = Qt::UserRole,
+}
 
 }
 

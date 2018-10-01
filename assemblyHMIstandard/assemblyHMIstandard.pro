@@ -38,6 +38,9 @@ SOURCES += \
     ../bank-view/definitions/definitionbasicblocks.cpp \
     ../bank-view/definitions/definitionsbaselayer.cpp \
     ../bank-view/helpers/commonhelper.cpp \
+    ../bank-view/delegates/delegatedataselector.cpp \
+    ../bank-view/delegates/delegatematerialselector.cpp \
+    ../bank-view/delegates/delegateviewitemfeaturemarker.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -66,7 +69,10 @@ HEADERS += \
     ../bank-view/definitions/definitionunitblocks.h \
     ../bank-view/helpers/commonhelper.h \
     ../bank-view/utilities.h \
-    ../bank-view/abstractsqltableadpater.h
+    ../bank-view/abstractsqltableadpater.h \
+    ../bank-view/delegates/delegatedataselector.h \
+    ../bank-view/delegates/delegatematerialselector.h \
+    ../bank-view/delegates/delegateviewitemfeaturemarker.h
 
 FORMS += \
         mainwindow.ui \

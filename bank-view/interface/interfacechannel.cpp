@@ -93,10 +93,10 @@ void InterfaceChannel::onAcknowledged(InterfaceRequest ack)
     }
 
     //! recycle polling
-    if (__routines.contains(ack.Address()))
+    if (m_routines.contains(ack.Address()))
     {
         //! once this address had been registered as routine , query interval
-        QTimer::singleShot(__routines[ack.Address()],this,[ack,this,__data](){
+        QTimer::singleShot(m_routines[ack.Address()],this,[ack,this,__data](){
             this->m_remoteUpdate(ack.Address(),__data);
         });
     }
@@ -107,7 +107,7 @@ void InterfaceChannel::onAcknowledged(InterfaceRequest ack)
 void InterfaceChannel::RegisterRoutines(uint address, const QVariant dataFrom, int interval)
 {
     //! registration
-    __routines[address] = interval;
+    m_routines[address] = interval;
 
     //! first shot
     m_remoteUpdate(address,dataFrom);
@@ -117,4 +117,4 @@ void InterfaceChannel::RegisterStateMachine(QStateMachine *machine)
     m_stateMachines.append(machine);
 }
 
-InterfaceChannel* InterfaceChannel::__instance = nullptr;
+InterfaceChannel* InterfaceChannel::m_instance = nullptr;

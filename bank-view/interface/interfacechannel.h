@@ -24,9 +24,9 @@ class InterfaceChannel : public QObject
 public:
     static InterfaceChannel* Instance()
     {
-        if(__instance == nullptr)
-            __instance = new InterfaceChannel(qApp);
-        return __instance;
+        if(m_instance == nullptr)
+            m_instance = new InterfaceChannel(qApp);
+        return m_instance;
     }
 
 
@@ -54,14 +54,12 @@ public:
         return &(m_clients[ADDRESS_CLIENT_ID(address)]->Cache()[ADDRESS_REGISTER(address)]);
     }
 
-//    //!
-//    //!
-//    //! Read from internal buffer
+    //! Read from internal buffer
 //    template<typename T>
-//    T Access(const ADDRESS_MODE address)
+//    T Update(const ADDRESS_MODE address)
 //    {
 //        QVariant result = QVariant::fromValue(T());
-//        __update(address,result);
+//        m_update(address,result);
 //        return result.value<T>();
 //    }
     //!
@@ -83,14 +81,7 @@ public:
     {
         m_commit(address,value);
     }
-    //!
-    //!
-    //!
-//    template<typename T>
-//    void Access(ADDRESS_MODE address,T value)
-//    {
-//        __commit(address,QVariant::fromValue(value));
-//    }
+
 signals:
     void ackownledged(InterfaceRequest ack);
 protected slots:
@@ -100,7 +91,7 @@ protected:
 
     QList<InterfaceClient*> m_clients;
     QList<QStateMachine*> m_stateMachines;
-    QMap<ADDRESS_MODE,int> __routines;
+    QMap<ADDRESS_MODE,int> m_routines;
 
     //!
     //! \brief __commit
@@ -122,7 +113,7 @@ protected:
 
 
     //!Singleton
-    static InterfaceChannel* __instance;
+    static InterfaceChannel* m_instance;
 
 
 };

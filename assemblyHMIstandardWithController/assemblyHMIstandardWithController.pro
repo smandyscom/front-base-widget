@@ -49,7 +49,8 @@ SOURCES += \
     ../bank-view/interface/interfacechannel.cpp \
     ../bank-view/interface/interfaceclient.cpp \
     ../bank-view/helpers/loadinghelpercontrollers.cpp \
-    ../bank-view/interface/adsclient.cpp
+    ../bank-view/interface/adsclient.cpp \
+    ../bank-view/controllers/controlleriomonitor.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -91,7 +92,8 @@ HEADERS += \
     ../bank-view/interface/interfaceclient.h \
     ../bank-view/interface/interfacerequest.h \
     ../bank-view/helpers/loadinghelpercontrollers.h \
-    ../bank-view/interface/adsclient.h
+    ../bank-view/interface/adsclient.h \
+    ../bank-view/controllers/controlleriomonitor.h
 
 FORMS += \
         mainwindow.ui \

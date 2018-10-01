@@ -10,13 +10,7 @@
 #include <definitionauxiliarykeys.h>
 #include <definitionmaincontrolblock.h>
 
-#include <junctionbankdatabase.h>
-
-//#include <controllerbanktransfer.h>
-
 #include <controllerbase.h>
-
-#include <QTimer>
 
 //!
 //! \brief The ControllerMainPanel class

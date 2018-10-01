@@ -104,7 +104,9 @@ SOURCES += \
     fronts/frontsinglefilter.cpp \
     fronts/fronttwinfilter2.cpp \
     fronts/frontconfigurationtransfer.cpp \
-    fronts/frontcommonmanual.cpp
+    fronts/frontcommonmanual.cpp \
+    model/tablemodelcylindervisual.cpp \
+    model/tablemodeliooverride.cpp
 HEADERS += \
     utilities.h \
     enumcomboboxdynamic.h \
@@ -204,7 +206,9 @@ HEADERS += \
     fronts/frontsinglefilter.h \
     fronts/fronttwinfilter2.h \
     fronts/frontconfigurationtransfer.h \
-    fronts/frontcommonmanual.h
+    fronts/frontcommonmanual.h \
+    model/tablemodelcylindervisual.h \
+    model/tablemodeliooverride.h
 
 unix {
     target.path = /usr/lib
