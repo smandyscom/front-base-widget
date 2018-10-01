@@ -8,6 +8,7 @@
 #include <frontunitpanel.h>
 #include <frontconfigurationtransfer.h>
 #include <frontmainpanel.h>
+#include <frontiooverride.h>
 
 #include <junctionbankdatabase.h>
 
@@ -28,11 +29,14 @@ public:
     static void LoadFrontConfiguration(FrontConfigurationTransfer* widget);
     static void LoadFrontMain(FrontMainPanel* widget);
 
+    static void LoadFrontIO(FrontIoOverride* widget);
+
     static void CombineModelViewV1(FrontAxisParameter* widget1,
                                    FrontCylinderPanel* widget2,
                                    FrontUnitPanel* widget3,
                                    FrontConfigurationTransfer* widget4,
-                                   FrontMainPanel* widget5);
+                                   FrontMainPanel* widget5,
+                                   FrontIoOverride* widget6);
 
     static void CrossLink(ControllerBase* controller,FrontCommon* front);
 

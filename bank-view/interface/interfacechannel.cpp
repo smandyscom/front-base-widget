@@ -22,7 +22,7 @@ void InterfaceChannel::m_remoteUpdate(ADDRESS_MODE address, QVariant dataForm)
                                                                       dataForm));
 }
 
-void InterfaceChannel::m_commit(uint address, QVariant value)
+void InterfaceChannel::m_commit(ADDRESS_MODE address, QVariant value)
 {
     QVariant temp = value;
 
@@ -57,7 +57,7 @@ void InterfaceChannel::m_commit(uint address, QVariant value)
 //! \param address
 //! \param out
 //! Directly return cached data
-void InterfaceChannel::m_update(uint address, QVariant &out)
+void InterfaceChannel::m_update(ADDRESS_MODE address, QVariant &out)
 {
     quint16* __baseAddress = Handle(address);
 
@@ -104,14 +104,26 @@ void InterfaceChannel::onAcknowledged(InterfaceRequest ack)
     emit ackownledged(ack);
 }
 
-void InterfaceChannel::RegisterRoutines(uint address, const QVariant dataFrom, int interval)
+void InterfaceChannel::RegisterRoutines(ADDRESS_MODE address, const QVariant dataFrom, int interval)
 {
+    if(ADDRESS_CLIENT_ID(address) >= m_clients.count())
+    {
+        qDebug() << QString("client id %1 , not found,").arg(ADDRESS_CLIENT_ID(address));
+        return;
+    }
+
     //! registration
     m_routines[address] = interval;
 
     //! first shot
     m_remoteUpdate(address,dataFrom);
 }
+
+QMap<ADDRESS_MODE,int> InterfaceChannel::Routines() const
+{
+    return m_routines;
+}
+
 void InterfaceChannel::RegisterStateMachine(QStateMachine *machine)
 {
     m_stateMachines.append(machine);

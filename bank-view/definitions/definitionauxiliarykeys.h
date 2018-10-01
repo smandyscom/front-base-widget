@@ -66,8 +66,9 @@ public:
 //! Specify Model addtional role
 enum ExtendedRoles
 {
-    UserRole_OnOff = Qt::UserRole,
-}
+    UserRole_MonitorOnOff = Qt::UserRole,
+    UserRole_OverrideOnOff = UserRole_MonitorOnOff+1,
+};
 
 }
 

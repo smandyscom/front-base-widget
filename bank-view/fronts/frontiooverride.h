@@ -2,19 +2,20 @@
 #define FRONTIOOVERRIDE_H
 
 #include <QWidget>
-#include <QSqlRelationalTableModel>
-#include <tablemodeliooverride.h>
-#include <modbuschannel.h>
+#include <QSqlTableModel>
 
-#include <frontsinglefilter.h>
-#include <junctionbankdatabase.h>
+#include <definitionauxiliarykeys.h>
+//#include <modbuschannel.h>
+
+//#include <frontsinglefilter.h>
+//#include <junctionbankdatabase.h>
 
 #include <utilities.h>
 
-#include <definitionsignalblock.h>
-#include <controllermanualmode.h>
+//#include <definitionsignalblock.h>
+//#include <controllermanualmode.h>
 
-#include <abstractauthreceiver.h>
+//#include <abstractauthreceiver.h>
 
 namespace Ui {
 class FrontIoOverride;
@@ -22,33 +23,40 @@ class FrontIoOverride;
 
 
 
-class FrontIoOverride : public QWidget ,
-        public AbstractAuthReceiver
+class FrontIoOverride : public QWidget /*,
+        public AbstractAuthReceiver*/
 {
     Q_OBJECT
 
 public:
     explicit FrontIoOverride(QWidget *parent = 0);
     ~FrontIoOverride();
+
+    void Setup(QSqlTableModel* input,
+               QSqlTableModel* output,
+               QSqlTableModel* region,
+               QSqlTableModel *header);
+
 protected slots:
     void onViewSelectionChanged(QModelIndex index);
     void onTimerTimeout();
+    void onOverrideClicked(QModelIndex index);
 protected:
-    void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
+//    void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
 private:
     Ui::FrontIoOverride *ui;
 
-    QSqlTableModel* __inputTable;
-    QSqlTableModel* __outputTable;
+//    QSqlTableModel* __inputTable;
+//    QSqlTableModel* __outputTable;
 
-    QSqlTableModel* __signalTable;
+//    QSqlTableModel* __signalTable;
 
-    QSqlTableModel* __regionTable;
+//    QSqlTableModel* __regionTable;
 
-    ControllerManualMode* __controller;
-    QTimer* __timer;
-    MODBUS_U_WORD __currentViewIndex;
-    QMap<QWidget*,SignalMonitor::WordOutBits> __labelAddressMap;
+//    ControllerManualMode* __controller;
+//    QTimer* __timer;
+//    MODBUS_U_WORD __currentViewIndex;
+//    QMap<QWidget*,SignalMonitor::WordOutBits> __labelAddressMap;
 
 };
 

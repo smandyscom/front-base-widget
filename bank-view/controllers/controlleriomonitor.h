@@ -14,8 +14,11 @@ class ControllerIOMonitor :
 {
     Q_OBJECT
 public:
-    explicit ControllerIOMonitor(quint8 clientId, int interval, QObject *parent = nullptr);
+    explicit ControllerIOMonitor(int interval, QObject *parent = nullptr);
 
+    void AttachReceiver(QObject* receiver) Q_DECL_OVERRIDE;
+
+    void AppendPair(QVariant address,QVariant name);
 signals:
 
 public slots:
@@ -26,19 +29,22 @@ protected slots:
     //! \param ack
     //! Routine
     void onAcknowledged(InterfaceRequest ack) Q_DECL_OVERRIDE;
-
+    //!
+    //! \brief onDataChanged
+    //! \param topLeft
+    //! \param bottomRight
+    //! \param roles
+    //! Output override
+    void onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles);
 protected:
-
+    //!
+    //! \brief m_model
+    //! First receiver
     QSqlTableModel* m_model;
     //!
     //! \brief m_addressNameTable
     //! pair of Address,Name
     QMap<QVariant,QVariant> m_addressNameTable;
-    //! TODO , Static? Or Direct use channel's routine to check
-    QList<ADDRESS_MODE> m_baseAddressTable;
-
-    int m_columnIndexAddress;
-    int m_columnIndexName;
 };
 
 #endif // CONTROLLERIOMONITOR_H

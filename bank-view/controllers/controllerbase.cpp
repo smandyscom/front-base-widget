@@ -26,6 +26,8 @@ ADDRESS_MODE ControllerBase::toAddressMode(ADDRESS_MODE unoffseted) const
 //! Pumping dynamic property values to parent (Routine update
 void ControllerBase::onAcknowledged(InterfaceRequest ack)
 {
+    //! TODO , return when not cared client
+
     //! could be overriden by derived
     if (!m_isInitialized)
     {

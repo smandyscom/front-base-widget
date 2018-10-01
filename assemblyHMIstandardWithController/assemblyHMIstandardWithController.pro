@@ -50,7 +50,12 @@ SOURCES += \
     ../bank-view/interface/interfaceclient.cpp \
     ../bank-view/helpers/loadinghelpercontrollers.cpp \
     ../bank-view/interface/adsclient.cpp \
-    ../bank-view/controllers/controlleriomonitor.cpp
+    ../bank-view/controllers/controlleriomonitor.cpp \
+    ../bank-view/fronts/frontiooverride.cpp \
+    ../bank-view/delegates/delegatedataselector.cpp \
+    ../bank-view/delegates/delegatematerialselector.cpp \
+    ../bank-view/delegates/delegateviewitemfeaturemarker.cpp \
+    ../bank-view/fronts/tableviewfeature.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -93,7 +98,13 @@ HEADERS += \
     ../bank-view/interface/interfacerequest.h \
     ../bank-view/helpers/loadinghelpercontrollers.h \
     ../bank-view/interface/adsclient.h \
-    ../bank-view/controllers/controlleriomonitor.h
+    ../bank-view/controllers/controlleriomonitor.h \
+    ../bank-view/fronts/frontiooverride.h \
+    ../bank-view/delegates/delegatedataselector.h \
+    ../bank-view/delegates/delegatematerialselector.h \
+    ../bank-view/delegates/delegateviewitemfeaturemarker.h \
+    ../bank-view/fronts/tableviewfeature.h \
+    ../bank-view/definitions/definitionioattributes.h
 
 FORMS += \
         mainwindow.ui \
@@ -103,7 +114,8 @@ FORMS += \
     ../bank-view/fronts/frontmainpanel.ui \
     ../bank-view/fronts/frontsinglefilter.ui \
     ../bank-view/fronts/fronttwinfilter2.ui \
-    ../bank-view/fronts/frontunitpanel.ui
+    ../bank-view/fronts/frontunitpanel.ui \
+    ../bank-view/fronts/frontiooverride.ui
 
 INCLUDEPATH += ../bank-view/fronts/ \
                 ../bank-view/definitions/ \
@@ -111,6 +123,7 @@ INCLUDEPATH += ../bank-view/fronts/ \
                 ../bank-view/base/ \
                 ../bank-view/controllers/ \
                 ../bank-view/interface/ \
+                ../bank-view/delegates/ \
                 ../bank-view/
 
 # Default rules for deployment.

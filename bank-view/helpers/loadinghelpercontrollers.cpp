@@ -16,6 +16,14 @@ void LoadingHelperControllers::LoadTransfer(quint8 clientId, quint16 baseOffset,
     m_controllerTransfer->Adaptor(ManualModeDataBlock::SELECTION_UNIT,new GenericSqlTableAdapter<UnitContextBlock,UnitBlock::DataBaseHeaders>(m_database->TableMap(JunctionBankDatabase::WHOLE_UNITS)));
 }
 
+void LoadingHelperControllers::LoadInputsMonitor(int interval)
+{
+    m_controllerInputMonitor = new ControllerIOMonitor(interval,qApp);
+    m_controllerInputMonitor->AppendPair(QVariant::fromValue(IoAttributes::HAL_ADDRESS),
+                                         QVariant::fromValue(IoAttributes::NAME));
+    m_controllerInputMonitor->AttachReceiver(m_database->TableMap(JunctionBankDatabase::WHOLE_INPUTS));
+}
+
 void LoadingHelperControllers::ControllersLoadingRoutineV1()
 {
     //!
@@ -27,11 +35,12 @@ void LoadingHelperControllers::ControllersLoadingRoutineV1()
     //!TODO Follow Database to initiate interface channel
     m_database = JunctionBankDatabase::Instance();
     //!TODO Follow Database to decide offset/client
-    LoadTransfer(0,512,100);
-
+    LoadTransfer(0,512,100);  
     m_controllerMain = new ControllerMainPanel(0,256,100,qApp);
+    LoadInputsMonitor(100);
 }
 
 JunctionBankDatabase* LoadingHelperControllers::m_database = nullptr;
 ControllerBankTransfer* LoadingHelperControllers::m_controllerTransfer = nullptr;
 ControllerMainPanel* LoadingHelperControllers::m_controllerMain = nullptr;
+ControllerIOMonitor* LoadingHelperControllers::m_controllerInputMonitor = nullptr;

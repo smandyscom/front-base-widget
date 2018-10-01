@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>6</number>
       </property>
       <property name="documentMode">
        <bool>false</bool>
@@ -64,7 +64,7 @@
         <string>單站控制</string>
        </attribute>
       </widget>
-      <widget class="QWidget" name="tabIO">
+      <widget class="FrontIoOverride" name="tabIO">
        <attribute name="title">
         <string>I/O監視</string>
        </attribute>
@@ -134,6 +134,12 @@
    <class>FrontMainPanel</class>
    <extends>QWidget</extends>
    <header>frontmainpanel.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>FrontIoOverride</class>
+   <extends>QWidget</extends>
+   <header>frontiooverride.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -46,6 +46,7 @@ public:
     //! \param dataFrom
     //! Register and trigger the routine access
     void RegisterRoutines(ADDRESS_MODE address,const QVariant dataFrom,int interval = 50);
+    QMap<ADDRESS_MODE,int> Routines() const;
 
     void RegisterStateMachine(QStateMachine* machine);
 

@@ -26,7 +26,7 @@ class ControllerBase : public QObject
 public:
     explicit ControllerBase(quint8 clientId,quint16 baseOffset,int interval,QObject *parent = nullptr);
 
-    void AttachReceiver(QObject* receiver);
+    virtual void AttachReceiver(QObject* receiver);
 
     bool event(QEvent *event) Q_DECL_OVERRIDE;
 protected slots:

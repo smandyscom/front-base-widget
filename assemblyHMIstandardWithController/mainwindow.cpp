@@ -16,7 +16,8 @@ MainWindow::MainWindow(QWidget *parent) :
                                       ui->tabCylinder,
                                       ui->tabUnit,
                                       ui->tabConfiguration,
-                                      ui->widgetMain);
+                                      ui->widgetMain,
+                                      ui->tabIO);
     //! Load controllers
     LoadingHelperControllers::ControllersLoadingRoutineV1();
     //! Link controller and fronts

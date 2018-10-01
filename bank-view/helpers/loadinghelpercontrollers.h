@@ -8,9 +8,11 @@
 #include <definitioncylinderblock.h>
 #include <definitionsignalblock.h>
 #include <definitionunitblocks.h>
+#include <definitionioattributes.h>
 
 #include <controllerbanktransfer.h>
 #include <controllermainpanel.h>
+#include <controlleriomonitor.h>
 
 #include <junctionbankdatabase.h>
 
@@ -21,12 +23,16 @@ public:
     explicit LoadingHelperControllers(QObject *parent = nullptr);
 
     static void LoadTransfer(quint8 clientId, quint16 baseOffset, int interval);
+    static void LoadInputsMonitor(int interval);
+//    static void LoadOutputsMonitor(quint8 clientId,int interval);
 
     static void ControllersLoadingRoutineV1();
 
     static JunctionBankDatabase* m_database;
     static ControllerBankTransfer* m_controllerTransfer;
     static ControllerMainPanel* m_controllerMain;
+
+    static ControllerIOMonitor* m_controllerInputMonitor;
 signals:
 
 public slots:
