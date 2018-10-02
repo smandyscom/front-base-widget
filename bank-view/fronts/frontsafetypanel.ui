@@ -34,7 +34,7 @@
       <item row="0" column="0">
        <layout class="QGridLayout" name="gridLayout_3">
         <item row="0" column="0">
-         <widget class="QTableView" name="tableViewMonitor">
+         <widget class="TableViewFeature" name="tableViewMonitor">
           <attribute name="horizontalHeaderVisible">
            <bool>false</bool>
           </attribute>
@@ -78,6 +78,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>TableViewFeature</class>
+   <extends>QTableView</extends>
+   <header>tableviewfeature.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

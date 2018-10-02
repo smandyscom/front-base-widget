@@ -45,7 +45,8 @@ SOURCES += \
     ../bank-view/base/utilities.cpp \
     ../bank-view/helpers/loadinghelper.cpp \
     ../bank-view/fronts/frontiooverride.cpp \
-    ../bank-view/fronts/tableviewfeature.cpp
+    ../bank-view/fronts/tableviewfeature.cpp \
+    ../bank-view/fronts/frontsafetypanel.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -83,7 +84,8 @@ HEADERS += \
     ../bank-view/base/utilities.h \
     ../bank-view/helpers/loadinghelper.h \
     ../bank-view/fronts/frontiooverride.h \
-    ../bank-view/fronts/tableviewfeature.h
+    ../bank-view/fronts/tableviewfeature.h \
+    ../bank-view/fronts/frontsafetypanel.h
 
 FORMS += \
         mainwindow.ui \
@@ -94,7 +96,8 @@ FORMS += \
     ../bank-view/fronts/frontsinglefilter.ui \
     ../bank-view/fronts/fronttwinfilter2.ui \
     ../bank-view/fronts/frontunitpanel.ui \
-    ../bank-view/fronts/frontiooverride.ui
+    ../bank-view/fronts/frontiooverride.ui \
+    ../bank-view/fronts/frontsafetypanel.ui
 
 INCLUDEPATH += ../bank-view/fronts/ \
                 ../bank-view/definitions/ \

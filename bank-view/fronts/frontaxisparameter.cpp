@@ -31,6 +31,8 @@ FrontAxisParameter::FrontAxisParameter(QWidget *parent) :
     m_lcdMap[AxisMonitorBlock::OFFSET_MONITOR_POS_FEEDBACK] = ui->lcdNumberPositionFeedback;
     m_lcdMap[AxisMonitorBlock::OFFSET_MONITOR_SPD_FEEDBACK] = ui->lcdNumberSpeedFeedback;
     m_lcdMap[AxisMonitorBlock::OFFSET_MONITOR_TOR_FEEDBACK] = ui->lcdNumberTorqueFeedback;
+    //!
+    connect(ui->tabWidgetCommandPanel,&QTabWidget::currentChanged,this,&FrontAxisParameter::onTabCurrentChanged);
 }
 //!
 //! \brief FrontAxisParameter::Setup
@@ -312,4 +314,14 @@ void FrontAxisParameter::onMonitorIndexChanged()
     m_axisTable->select();
 
     FrontCommonManual::onMonitorIndexChanged();
+}
+//!
+//! \brief FrontAxisParameter::onTabCurrentChanged
+//! Transmit axis parameter
+void FrontAxisParameter::onTabCurrentChanged()
+{
+    if(ui->tabWidgetCommandPanel->currentWidget() !=
+            ui->tabAxisSetting)
+        m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE).toString().toStdString().c_str(),
+                                  true);
 }

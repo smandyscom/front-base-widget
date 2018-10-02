@@ -44,7 +44,10 @@ public:
 protected slots:
     void onBankExecution();
     void onDirectExecution(bool value);
+
     void onAxisSet();
+    void onTabCurrentChanged();
+
     void onInterrupted(bool value);
     void onMonitorIndexChanged() Q_DECL_OVERRIDE;
 private:

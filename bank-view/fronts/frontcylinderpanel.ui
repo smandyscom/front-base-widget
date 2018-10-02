@@ -108,7 +108,7 @@
     </layout>
    </item>
    <item row="0" column="0">
-    <widget class="QTableView" name="tableViewCylinder">
+    <widget class="TableViewFeature" name="tableViewCylinder">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>0</horstretch>
@@ -203,6 +203,11 @@
    <extends>QWidget</extends>
    <header>frontsinglefilter.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>TableViewFeature</class>
+   <extends>QTableView</extends>
+   <header>tableviewfeature.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
