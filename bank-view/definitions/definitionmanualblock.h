@@ -22,6 +22,12 @@ public:
         SELECTION_COMMAND_BLOCK = 4,
 
         SELECTION_UNIT = 5,
+
+        SELECTION_ALL = SELECTION_AXIS +
+                        SELECTION_CYLINDER +
+                        SELECTION_SIGNAL +
+                        SELECTION_COMMAND_BLOCK +
+                        SELECTION_UNIT,
     };
     Q_ENUM(Categrories)
     enum Mode

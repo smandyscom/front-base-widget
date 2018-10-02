@@ -41,24 +41,19 @@ public:
                QSqlTableModel* cylinderTable,
                QSqlTableModel* unitTable,
                QSqlTableModel* signalTable,
-               QSqlTableModel* objectTable,
-               QSqlTableModel* regionTable);
+               QSqlTableModel* objectTable);
 
 protected slots:
-    void onTransferAll();
-    void onObjectTypeSelected();
+    void onObjectTypeSelected(int rowIndex);
+
+    void onPushButtonClicked();
 private:
     Ui::FrontConfigurationTransfer *ui;
 
-    QSqlTableModel* m_objectTable;
-    QSqlTableModel* m_regionTable;
+    int m_idColumn;
 
-    QSqlTableModel* m_commandTable;
-    QSqlTableModel* m_axisTable;
-    QSqlTableModel* m_cylinderTable;
-    QSqlTableModel* m_unitTable;
-    QSqlTableModel* m_signalTable;
-
+    ManualModeDataBlock::Categrories m_currentObject;
+    QMap<ManualModeDataBlock::Categrories,QSqlTableModel*> m_tables;
 };
 
 #endif // FRONTCONFIGURATIONTRANSFER_H

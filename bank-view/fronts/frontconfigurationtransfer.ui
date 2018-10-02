@@ -61,16 +61,6 @@
              </widget>
             </item>
             <item row="1" column="0">
-             <widget class="FrontSingleFilter" name="widgetFilter" native="true">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
              <layout class="QGridLayout" name="gridLayout">
               <item row="0" column="0">
                <widget class="QPushButton" name="pushButtonDownload">
@@ -164,14 +154,6 @@
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>FrontSingleFilter</class>
-   <extends>QWidget</extends>
-   <header>frontsinglefilter.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

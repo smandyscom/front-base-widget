@@ -17,6 +17,15 @@ class AdsClient : public InterfaceClient
 	Q_OBJECT
 
 public:
+    enum Specifications
+    {
+        TC3_ADS_PORT = 851,
+
+        PLCADS_RWM = 0x4020,
+        PLCADS_RWI = 0xF020,
+        PLCADS_RWQ = 0xF030
+    };
+
     AdsClient(AmsAddr address,bool isLocal = false,long group=0x4020,long baseOffset=0,QObject *parent=nullptr);
 	~AdsClient();
 

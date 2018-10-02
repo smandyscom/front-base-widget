@@ -7,21 +7,15 @@ FrontConfigurationTransfer::FrontConfigurationTransfer(QWidget *parent) :
 {
     ui->setupUi(this);
     //!
-//    __objectTable = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_OBJECT_TYPE);
-//    utilities::linkQComboBoxAndModel(ui->comboBoxItemSelection,
-//                                     __objectTable,
-//                                     QVariant::fromValue(zh_TW));
-//    connect(ui->comboBoxItemSelection,SIGNAL(currentIndexChanged(int)),this,SLOT(onObjectTypeSelected()));
-////    connect(ui->pushDownloadferAll,SIGNAL(clicked(bool)),this,SLOT(onTransferAll()));
-//    ui->comboBoxItemSelection->setCurrentIndex(0);
-//    //!
-////    __fbt = new FrontBankTransfer(ui->widgetTransfer);
-////    __fsf = new FrontSingleFilter(ui->widgetFilter);
-//    //!
-////    __controllerTransfer = __fbt->ControllerTransfer();
-//    //!
-//    __regionTable = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_REGION);
-//    __axisTable = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_AXIS);
+    QList<QPushButton*> buttons{
+                ui->pushButtonDownload,
+                ui->pushButtonDownloadAll,
+                ui->pushButtonUpload,
+                ui->pushButtonUploadAll
+    };
+    foreach (QPushButton* var, buttons) {
+        connect(var,&QPushButton::clicked,this,&FrontConfigurationTransfer::onPushButtonClicked);
+    }
 //    //!
 //    __disableList[AUTH::ROLE_ENGINEER].append(this);
 }
@@ -36,24 +30,33 @@ void FrontConfigurationTransfer::Setup(QSqlTableModel* commandTable,
            QSqlTableModel* cylinderTable,
            QSqlTableModel* unitTable,
            QSqlTableModel* signalTable,
-           QSqlTableModel* objectTable,
-           QSqlTableModel* regionTable)
+           QSqlTableModel* objectTable)
 {
-    m_commandTable = commandTable;
-    m_axisTable = axisTable;
-    m_cylinderTable = cylinderTable;
-    m_unitTable = unitTable;
-    m_signalTable = signalTable;
+    m_tables[ManualModeDataBlock::SELECTION_COMMAND_BLOCK] = commandTable;
+    m_tables[ManualModeDataBlock::SELECTION_AXIS] = axisTable;
+    m_tables[ManualModeDataBlock::SELECTION_CYLINDER] = cylinderTable;
+    m_tables[ManualModeDataBlock::SELECTION_SIGNAL] = signalTable;
+    m_tables[ManualModeDataBlock::SELECTION_UNIT] = unitTable;
+    //!
+    utilities::linkQComboBoxAndModel(ui->comboBoxItemSelection,
+                                     objectTable,
+                                     QVariant::fromValue(zh_TW));
+    connect(ui->comboBoxItemSelection,
+            SIGNAL(currentIndexChanged(int)),
+            this,
+            SLOT(onObjectTypeSelected(int)));
+
+    m_idColumn = objectTable->fieldIndex(QVariant::fromValue(HEADER_STRUCTURE::ID).toString());
 }
 
-void FrontConfigurationTransfer::onObjectTypeSelected()
+void FrontConfigurationTransfer::onObjectTypeSelected(int rowIndex)
 {
     //!Change over Table view
-//    int objectId =
-//            __objectTable->record(ui->comboBoxItemSelection->currentIndex()).value(QVariant::fromValue(ID).toString()).toInt();
-////    ui->tableView->setModel(ControllerBankTransfer::Adaptor(CommitBlock::CommitCategrories(objectId))->Model());
-//    //!Change over Bank transfer
-////    __fbt->Selection(CommitBlock::CommitCategrories(objectId));
+    m_currentObject =
+            ui->comboBoxItemSelection->model()->index(rowIndex,m_idColumn).data().value<ManualModeDataBlock::Categrories>();
+    ui->tableView->setModel(m_tables[m_currentObject]);
+    //!Change over Bank transfer
+//    __fbt->Selection(CommitBlock::CommitCategrories(objectId));
 //    //!Change over filter
 //    __fsf->DataTable(reinterpret_cast<QSqlTableModel*>(ui->tableView->model()));
 //    if(objectId==CommitBlock::SELECTION_COMMAND_BLOCK)
@@ -69,18 +72,26 @@ void FrontConfigurationTransfer::onObjectTypeSelected()
 
 }
 
-void FrontConfigurationTransfer::onTransferAll()
+void FrontConfigurationTransfer::onPushButtonClicked()
 {
-//    QList<CommitBlock::CommitCategrories> __list = {
-//        CommitBlock::SELECTION_AXIS,
-//        CommitBlock::SELECTION_CYLINDER,
-//        CommitBlock::SELECTION_SIGNAL,
-//        CommitBlock::SELECTION_COMMAND_BLOCK,
-//        CommitBlock::SELECTION_UNIT
-//    };
-//    foreach (CommitBlock::CommitCategrories var, __list) {
-//        __controllerTransfer->PutTask(TransferTask(var,ControllerBankTransfer::BATCH_ALL_MODE));
-//    }
-//    __controllerTransfer->Direction(CommitBlock::MODE_DOWNLOAD_DATA_BLOCK);
-//    __controllerTransfer->onTransferData();
+    if(sender() == ui->pushButtonDownloadAll)
+    {
+        m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::BATCH_ALL_WRITE_MODE).toString().toStdString().c_str(),
+                                  QVariant::fromValue(ManualModeDataBlock::SELECTION_ALL));
+    }
+    else if(sender() == ui->pushButtonUploadAll)
+    {
+        m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::BATCH_ALL_READ_MODE).toString().toStdString().c_str(),
+                                  QVariant::fromValue(ManualModeDataBlock::SELECTION_ALL));
+    }
+    else if(sender() == ui->pushButtonDownload)
+    {
+        m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::BATCH_ALL_WRITE_MODE).toString().toStdString().c_str(),
+                                  QVariant::fromValue(m_currentObject));
+    }
+    else if(sender() == ui->pushButtonUpload)
+    {
+        m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::BATCH_ALL_READ_MODE).toString().toStdString().c_str(),
+                                  QVariant::fromValue(m_currentObject));
+    }
 }

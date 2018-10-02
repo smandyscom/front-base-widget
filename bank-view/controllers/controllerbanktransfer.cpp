@@ -198,15 +198,43 @@ void ControllerBankTransfer::onDataChanged(const QModelIndex &topLeft,
 //! \param value
 //! Trigger transfer task
 void ControllerBankTransfer::m_operator_propertyChanged(QVariant key, QVariant value)
-{
+{  
     //! Prepare
+    switch (key.toUInt()) {
+    case ManualModeDataBlock::BATCH_ALL_WRITE_MODE:
+    case ManualModeDataBlock::BATCH_ALL_READ_MODE:
+        switch (value.value<ManualModeDataBlock::Categrories>()) {
+        case ManualModeDataBlock::SELECTION_ALL:
+            foreach (AbstractSqlTableAdpater* var, m_adaptors.values()) {
+                for(int i=0;i<var->Model()->rowCount();i++)
+                    m_tasksQueue.enqueue(TransferTask(m_adaptors.key(var),i));
+            }
+            break;
+        case ManualModeDataBlock::SELECTION_COMMAND_BLOCK:
+        case ManualModeDataBlock::SELECTION_AXIS:
+        case ManualModeDataBlock::SELECTION_CYLINDER:
+        case ManualModeDataBlock::SELECTION_UNIT:
+        case ManualModeDataBlock::SELECTION_SIGNAL:
+        {
+            ManualModeDataBlock::Categrories var = value.value<ManualModeDataBlock::Categrories>();
+            AbstractSqlTableAdpater* adaptor = m_adaptors[var];
+            for(int i=0;i<m_adaptors[var]->Model()->rowCount();i++)
+                m_tasksQueue.enqueue(TransferTask(var,i));
+            break;
+        }
+        default:
+            //!No action
+            break;
+        }
+        break;
+    default:
+        //!No action
+        break;
+    }
+
     switch (key.toUInt()) {
 
     case ManualModeDataBlock::BATCH_ALL_WRITE_MODE:
-        //! Populating
-//        for(int i=0;i<m_adaptors[task.first]->Model()->rowCount();i++)
-//            m_tasksQueue.enqueue(TransferTask(task.first,i));
-//        break;
     case ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE:
         //! Clear task queue (Write
         m_channel->Access(toAddressMode(ManualModeDataBlock::COMMIT_MODE),

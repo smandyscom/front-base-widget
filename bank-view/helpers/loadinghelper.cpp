@@ -27,7 +27,12 @@ void LoadingHelper::LoadFrontUnit(FrontUnitPanel* widget)
 
 void LoadingHelper::LoadFrontConfiguration(FrontConfigurationTransfer* widget)
 {
-
+    widget->Setup(m_instance->TableMap(JunctionBankDatabase::WHOLE_COMMAND_BLOCKS),
+                  m_instance->TableMap(JunctionBankDatabase::WHOLE_AXIS),
+                  m_instance->TableMap(JunctionBankDatabase::WHOLE_CYLINDERS),
+                  m_instance->TableMap(JunctionBankDatabase::WHOLE_UNITS),
+                  m_instance->TableMap(JunctionBankDatabase::WHOLE_SIGNALS),
+                  m_instance->TableMap(JunctionBankDatabase::DEF_OBJECT_TYPE));
 }
 
 void LoadingHelper::LoadFrontIO(FrontIoOverride *widget)

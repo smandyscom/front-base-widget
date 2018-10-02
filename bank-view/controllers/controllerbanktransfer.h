@@ -67,7 +67,6 @@ protected:
     int m_index;
     QMap<ManualModeDataBlock::Categrories,AbstractSqlTableAdpater*> m_adaptors;
 
-    AbstractSqlTableAdpater* m_current_adaptor;
     //!
     //! \brief __controller
     //! From the sigalton
