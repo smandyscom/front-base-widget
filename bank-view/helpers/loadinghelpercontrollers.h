@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+#include <frontcommon.h>
+
 #include <definitionaxisblocks.h>
 #include <definitioncommandblock.h>
 #include <definitioncylinderblock.h>
@@ -33,6 +35,9 @@ public:
     static ControllerMainPanel* m_controllerMain;
 
     static ControllerIOMonitor* m_controllerInputMonitor;
+
+    static void CrossLink(ControllerBase* controller,FrontCommon* front);
+
 signals:
 
 public slots:

@@ -40,6 +40,12 @@ void LoadingHelperControllers::ControllersLoadingRoutineV1()
     LoadInputsMonitor(100);
 }
 
+void LoadingHelperControllers::CrossLink(ControllerBase *controller, FrontCommon *front)
+{
+    controller->AttachReceiver(front);
+    front->LinkController(controller);
+}
+
 JunctionBankDatabase* LoadingHelperControllers::m_database = nullptr;
 ControllerBankTransfer* LoadingHelperControllers::m_controllerTransfer = nullptr;
 ControllerMainPanel* LoadingHelperControllers::m_controllerMain = nullptr;

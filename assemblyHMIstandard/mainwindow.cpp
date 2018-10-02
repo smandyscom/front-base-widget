@@ -3,13 +3,20 @@
 
 #include <QDebug>
 
+#include <loadinghelper.h>
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
-    qDebug() << ui->tabCylinder->objectName();
+    LoadingHelper::CombineModelViewV1(ui->tabAxis,
+                                      ui->tabCylinder,
+                                      ui->tabUnit,
+                                      ui->tabConfiguration,
+                                      ui->tabMain,
+                                      ui->tabIO);
 }
 
 MainWindow::~MainWindow()

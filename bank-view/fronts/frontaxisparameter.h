@@ -36,14 +36,17 @@ public:
                QSqlTableModel* axisTable,
                QSqlTableModel* regionTable,
                QSqlTableModel* axisErrorTable,
-               QSqlTableModel* commandBlockTableHeader);
+               QSqlTableModel* commandBlockTableHeader,
+               QSqlTableModel *axisTableHeader);
 
     void showEvent(QShowEvent* event) Q_DECL_OVERRIDE;
 
 protected slots:
     void onBankExecution();
     void onDirectExecution(bool value);
+    void onAxisSet();
     void onInterrupted(bool value);
+    void onMonitorIndexChanged() Q_DECL_OVERRIDE;
 private:
     Ui::FrontAxisParameter *ui;
     //!

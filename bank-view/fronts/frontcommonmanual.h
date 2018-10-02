@@ -18,7 +18,7 @@ public:
     void hideEvent(QHideEvent *event) Q_DECL_OVERRIDE;
 
 protected slots:
-    void onMonitorIndexChanged();
+    virtual void onMonitorIndexChanged();
 protected:
     bool m_isPanelBusy;
 

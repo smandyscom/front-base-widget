@@ -12,7 +12,7 @@
 
 #include <junctionbankdatabase.h>
 
-#include <controllerbase.h>
+//#include <controllerbase.h>
 
 //!
 //! \brief The LoadingHelper class
@@ -38,7 +38,6 @@ public:
                                    FrontMainPanel* widget5,
                                    FrontIoOverride* widget6);
 
-    static void CrossLink(ControllerBase* controller,FrontCommon* front);
 
 signals:
 

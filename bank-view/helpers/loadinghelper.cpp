@@ -11,7 +11,8 @@ void LoadingHelper::LoadFrontAxis(FrontAxisParameter* widget)
                   m_instance->TableMap(JunctionBankDatabase::WHOLE_AXIS),
                   m_instance->TableMap(JunctionBankDatabase::DEF_REGION),
                   m_instance->TableMap(JunctionBankDatabase::ERROR_CODE_AXIS),
-                  m_instance->TableMap(JunctionBankDatabase::HEADER_COMMAND_BLOCKS));
+                  m_instance->TableMap(JunctionBankDatabase::HEADER_COMMAND_BLOCKS),
+                  m_instance->TableMap(JunctionBankDatabase::HEADER_AXIS));
 }
 void LoadingHelper::LoadFrontCylinder(FrontCylinderPanel* widget)
 {
@@ -74,10 +75,6 @@ void LoadingHelper::CombineModelViewV1(FrontAxisParameter* widget1,
     m_instance->onReleaseHeaders();
 }
 
-void LoadingHelper::CrossLink(ControllerBase *controller, FrontCommon *front)
-{
-    controller->AttachReceiver(front);
-    front->LinkController(controller);
-}
+
 
 JunctionBankDatabase* LoadingHelper::m_instance = nullptr;

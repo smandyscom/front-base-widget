@@ -6,7 +6,7 @@
 
 QT       += core gui widgets sql
 
-TARGET = assemblyHMIstandardWithController
+TARGET = assemblyHMIstandard
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -40,7 +40,12 @@ SOURCES += \
     ../bank-view/helpers/commonhelper.cpp \
     ../bank-view/delegates/delegatedataselector.cpp \
     ../bank-view/delegates/delegatematerialselector.cpp \
-    ../bank-view/delegates/delegateviewitemfeaturemarker.cpp
+    ../bank-view/delegates/delegateviewitemfeaturemarker.cpp \
+    ../bank-view/base/junctionbankdatabase.cpp \
+    ../bank-view/base/utilities.cpp \
+    ../bank-view/helpers/loadinghelper.cpp \
+    ../bank-view/fronts/frontiooverride.cpp \
+    ../bank-view/fronts/tableviewfeature.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -72,7 +77,13 @@ HEADERS += \
     ../bank-view/abstractsqltableadpater.h \
     ../bank-view/delegates/delegatedataselector.h \
     ../bank-view/delegates/delegatematerialselector.h \
-    ../bank-view/delegates/delegateviewitemfeaturemarker.h
+    ../bank-view/delegates/delegateviewitemfeaturemarker.h \
+    ../bank-view/base/abstractsqltableadpater.h \
+    ../bank-view/base/junctionbankdatabase.h \
+    ../bank-view/base/utilities.h \
+    ../bank-view/helpers/loadinghelper.h \
+    ../bank-view/fronts/frontiooverride.h \
+    ../bank-view/fronts/tableviewfeature.h
 
 FORMS += \
         mainwindow.ui \
@@ -82,13 +93,15 @@ FORMS += \
     ../bank-view/fronts/frontmainpanel.ui \
     ../bank-view/fronts/frontsinglefilter.ui \
     ../bank-view/fronts/fronttwinfilter2.ui \
-    ../bank-view/fronts/frontunitpanel.ui
+    ../bank-view/fronts/frontunitpanel.ui \
+    ../bank-view/fronts/frontiooverride.ui
 
 INCLUDEPATH += ../bank-view/fronts/ \
                 ../bank-view/definitions/ \
                 ../bank-view/helpers/ \
                 ../bank-view/base/ \
-                ../bank-view/
+                ../bank-view/delegates/ \
+                ../bank-view
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

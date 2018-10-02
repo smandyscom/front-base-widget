@@ -57,16 +57,18 @@ void FrontTwinFilter2::onSelectionChanged(int i)
 {
     if(sender() == ui->comboBoxPrimary)
     {
-        m_value1 = m_keyTable1->record(i).value(FIRST_COLUMN);
+        m_value1 = m_keyTable1->record(ui->comboBoxPrimary->currentIndex()).value(FIRST_COLUMN);
         m_dataTable->setFilter(utilities::generateFilterString(m_key1,m_value1));
+        m_dataTable->select();
         //! Filter backup
         m_filter1 = m_dataTable->filter();
         emit key1Selected(m_value1);
     }
     else if(sender() == ui->comboBoxSecondary)
     {
-        m_value2 = m_keyTable2->record(i).value(FIRST_COLUMN);
+        m_value2 = m_keyTable2->record(ui->comboBoxSecondary->currentIndex()).value(FIRST_COLUMN);
         m_keyTable1->setFilter(utilities::generateFilterString(m_key2,m_value2));
+        m_keyTable1->select();
         m_filter2 = m_keyTable2->filter();
         emit key2Selected(m_value2);
     }

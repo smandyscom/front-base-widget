@@ -25,6 +25,7 @@ FrontAxisParameter::FrontAxisParameter(QWidget *parent) :
     connect(ui->pushButtonDirectBackward,&QPushButton::clicked,this,&FrontAxisParameter::onInterrupted);
     connect(ui->pushButtonStop,&QPushButton::clicked,this,&FrontAxisParameter::onInterrupted);
 
+    connect(ui->pushButtonAxisSet,&QPushButton::clicked,this,&FrontAxisParameter::onAxisSet);
     //! Map
     m_lcdMap[AxisMonitorBlock::OFFSET_MONITOR_POS_COMMAND] = ui->lcdNumberPositionReference;
     m_lcdMap[AxisMonitorBlock::OFFSET_MONITOR_POS_FEEDBACK] = ui->lcdNumberPositionFeedback;
@@ -42,17 +43,22 @@ void FrontAxisParameter::Setup(QSqlTableModel *commandBlockTable,
                                QSqlTableModel *axisTable,
                                QSqlTableModel *regionTable,
                                QSqlTableModel *axisErrorTable,
-                               QSqlTableModel *commandBlockTableHeader)
+                               QSqlTableModel *commandBlockTableHeader,
+                               QSqlTableModel *axisTableHeader)
 {
     mainDataTable = commandBlockTable;
     m_commblockAdaptor = new GenericSqlTableAdapter<ExtendedCommandBlock,CommandBlock::DataBaseHeaders>(mainDataTable);
 
     ui->tableViewCommandBlock->setModel(mainDataTable);
     HEADER_STRUCTURE::HeaderRender::renderViewHeader(commandBlockTableHeader,ui->tableViewCommandBlock);
-    //!
+    //! Would not influce the setting axis table
+    QSqlTableModel* cloneAxisTable = new QSqlTableModel(ui->widgetFilter,
+                                                        axisTable->database());
+    cloneAxisTable->setTable(axisTable->tableName());
+
     ui->widgetFilter->Setup(mainDataTable,
                             QVariant::fromValue(CommandBlock::AXIS_ID),
-                            axisTable,
+                            cloneAxisTable,
                             QVariant::fromValue(AxisBlock::REGION),
                             regionTable);
     //!
@@ -60,6 +66,10 @@ void FrontAxisParameter::Setup(QSqlTableModel *commandBlockTable,
     //!
     m_axisTable = axisTable;
     m_axisErrorTable = axisErrorTable;
+    //!
+    ui->tableViewAxis->setModel(axisTable);
+    HEADER_STRUCTURE::HeaderRender::renderViewHeader(axisTableHeader,
+                                                     ui->tableViewAxis);
 }
 
 FrontAxisParameter::~FrontAxisParameter()
@@ -188,6 +198,21 @@ void FrontAxisParameter::onDirectExecution(bool value)
                               true);
 }
 
+void FrontAxisParameter::onAxisSet()
+{
+    if(!ui->tableViewAxis->selectionModel()->hasSelection())
+        return;
+    QSqlRecord record =
+            m_axisTable->record(0);
+    qDebug() << record.value("ID");
+
+    record.setValue(ui->tableViewAxis->selectionModel()->selectedColumns().first().column(),
+                    ui->lcdNumberPositionFeedback->value());
+    if(!m_axisTable->setRecord(0,record))
+        qDebug() << QString("onAxisSet , error , %1").arg(m_axisTable->lastError().text());
+    m_axisTable->select();
+}
+
 void FrontAxisParameter::onInterrupted(bool value)
 {
     if(value)
@@ -278,4 +303,13 @@ void FrontAxisParameter::showEvent(QShowEvent *event)
                               true);
 
     FrontCommonManual::showEvent(event);
+}
+
+void FrontAxisParameter::onMonitorIndexChanged()
+{
+    m_axisTable->setFilter(utilities::generateFilterString(QVariant::fromValue(HEADER_STRUCTURE::ID),
+                                                           ui->widgetFilter->SelectedKey1()));
+    m_axisTable->select();
+
+    FrontCommonManual::onMonitorIndexChanged();
 }
