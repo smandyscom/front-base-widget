@@ -9,7 +9,9 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     //! Interface initialization
-    InterfaceClient* simuClient = new AdsClient(AmsAddr(),true);
+    AmsAddr addr{{5,60,134,238,1,1},
+                851};
+    InterfaceClient* simuClient = new AdsClient(addr);
     InterfaceChannel::Instance()->Clients(QList<InterfaceClient*>{simuClient});
     //! Load UI/Model
     LoadingHelper::CombineModelViewV1(ui->tabAxis,
