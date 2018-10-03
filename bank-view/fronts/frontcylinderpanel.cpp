@@ -7,6 +7,9 @@ FrontCylinderPanel::FrontCylinderPanel(QWidget *parent) :
     m_index(0)
 {
     ui->setupUi(this);
+    //! Manual mode required
+    setProperty(QVariant::fromValue(HEADER_STRUCTURE::STATE_MANUAL).toString().toStdString().c_str(),
+                true);
     m_categrory = ManualModeDataBlock::SELECTION_CYLINDER;
     m_status = utilities::listupEnumVariant<CylinderMonitorBlock::Status>();
     //!
@@ -130,10 +133,10 @@ QString FrontCylinderPanel::currentFilter() const
     return ui->widgetFilter->Filter();
 }
 
-void FrontCylinderPanel::showEvent(QShowEvent *event)
-{
-    //! Manual mode(Stop unit running
-    m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_2_ENGAGED_MANUAL).toString().toStdString().c_str(),
-                              true);
-    FrontCommonManual::showEvent(event);
-}
+//void FrontCylinderPanel::showEvent(QShowEvent *event)
+//{
+//    //! Manual mode(Stop unit running
+//    m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_2_ENGAGED_MANUAL).toString().toStdString().c_str(),
+//                              true);
+//    FrontCommonManual::showEvent(event);
+//}

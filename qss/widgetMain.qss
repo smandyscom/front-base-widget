@@ -1,0 +1,19 @@
+QWidget
+{
+    background-color : blue;
+}
+
+QPushButton#pushButtonPause[MAINSTATE="STATE_AUTO"]
+{
+    background-color : Green;
+}
+QPushButton#pushButtonPause[MAINSTATE="STATE_SEMI_AUTO"]
+{
+    background-color : RED;
+}
+
+
+/*.QPushButton#pushButtonPause
+{
+    background-color : RED;
+}*/

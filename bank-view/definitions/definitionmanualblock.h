@@ -69,6 +69,7 @@ public:
     {
         BIT_0_ENGAGED_SEMI_AUTO = 0x000000 + STATUS_WORD,
         BIT_1_DONE = 0x010000 + STATUS_WORD,
+        //! Depreciated
         BIT_2_ENGAGED_MANUAL = 0x020000 + STATUS_WORD,
         BIT_3_INITIALIZED = 0x030000 + STATUS_WORD
     };

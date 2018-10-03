@@ -70,6 +70,13 @@ enum ExtendedRoles
     UserRole_OverrideOnOff = UserRole_MonitorOnOff+1,
 };
 
+enum OperationModes
+{
+    STATE_AUTO,
+    STATE_SEMI_AUTO,
+    STATE_MANUAL,
+};
+Q_ENUM_NS(OperationModes)
 }
 
 namespace AUTH {

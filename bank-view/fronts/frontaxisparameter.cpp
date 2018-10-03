@@ -6,10 +6,13 @@ FrontAxisParameter::FrontAxisParameter(QWidget *parent) :
     ui(new Ui::FrontAxisParameter)
 {
     ui->setupUi(this);
+    //! Manual mode required
+    setProperty(QVariant::fromValue(HEADER_STRUCTURE::STATE_MANUAL).toString().toStdString().c_str(),
+                true);
+    //!
     m_categrory = ManualModeDataBlock::SELECTION_AXIS;
     m_monitorOperation = utilities::listupEnumVariant<AxisMonitorBlock::MONITOR_OPERATION>();
     m_runStatus = utilities::listupEnumVariant<AxisMonitorBlock::RUN_STATUS>();
-
     //! QPushButton link
     foreach (QPushButton* var, findChildren<QPushButton*>(QRegExp("\\w+Bank\\w+"))) {
         //!
@@ -295,17 +298,17 @@ QString FrontAxisParameter::currentFilter() const
     return ui->widgetFilter->Filter1();
 }
 
-//!
-//! \brief FrontAxisParameter::showEvent
-//! \param event
-//! Engaged as Manual mode
-void FrontAxisParameter::showEvent(QShowEvent *event)
-{
-    m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_2_ENGAGED_MANUAL).toString().toStdString().c_str(),
-                              true);
+////!
+////! \brief FrontAxisParameter::showEvent
+////! \param event
+////! Engaged as Manual mode
+//void FrontAxisParameter::showEvent(QShowEvent *event)
+//{
+//    m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_2_ENGAGED_MANUAL).toString().toStdString().c_str(),
+//                              true);
 
-    FrontCommonManual::showEvent(event);
-}
+//    FrontCommonManual::showEvent(event);
+//}
 
 void FrontAxisParameter::onMonitorIndexChanged()
 {

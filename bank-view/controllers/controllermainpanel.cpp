@@ -34,10 +34,18 @@ ControllerMainPanel::ControllerMainPanel(quint8 clientId, quint16 baseOffset, in
 //!
 void ControllerMainPanel::m_operator_propertyChanged(QVariant key, QVariant value)
 {
-    if(value.toBool())
-    {
-        m_channel->Access(this->toAddressMode(key.value<ADDRESS_MODE>()),true);
-        //! Reset after used
-        setProperty(key.toString().toStdString().c_str(),false);
+    switch (key.toUInt()) {
+    case MainOperationBlock::BIT_3_TOGGLE_MANUAL:
+        m_channel->Access(this->toAddressMode(key.value<ADDRESS_MODE>()),
+                          value.toBool());
+        break;
+    default:
+        if(value.toBool())
+        {
+            m_channel->Access(this->toAddressMode(key.value<ADDRESS_MODE>()),true);
+            //! Reset after used
+            setProperty(key.toString().toStdString().c_str(),false);
+        }
+        break;
     }
 }

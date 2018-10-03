@@ -31,6 +31,8 @@ MainWindow::MainWindow(QWidget *parent) :
         LoadingHelperControllers::CrossLink(LoadingHelperControllers::m_controllerTransfer,var);
     }
     LoadingHelperControllers::CrossLink(LoadingHelperControllers::m_controllerMain,ui->widgetMain);
+    //!
+    ui->tabWidget->Setup(LoadingHelperControllers::m_controllerMain);
 }
 
 MainWindow::~MainWindow()

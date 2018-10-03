@@ -10,7 +10,7 @@
 #include <QPair>
 #include <QList>
 
-#include <QSqlRelationalTableModel>.h>
+#include <QSqlTableModel>
 
 #include<QDebug>
 //!

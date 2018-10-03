@@ -128,14 +128,14 @@ void FrontUnitPanel::onCommandClick()
                                   true);
 }
 
-void FrontUnitPanel::showEvent(QShowEvent *event)
-{
-    //! Semi-auto mode(Keep unit running
-    m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_2_ENGAGED_MANUAL).toString().toStdString().c_str(),
-                              false);
+//void FrontUnitPanel::showEvent(QShowEvent *event)
+//{
+//    //! Semi-auto mode(Keep unit running
+//    m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_2_ENGAGED_MANUAL).toString().toStdString().c_str(),
+//                              false);
 
-    FrontCommonManual::showEvent(event);
-}
+//    FrontCommonManual::showEvent(event);
+//}
 
 int FrontUnitPanel::currentIndex()
 {

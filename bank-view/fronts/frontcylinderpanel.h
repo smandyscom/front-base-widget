@@ -31,7 +31,7 @@ public:
                QSqlTableModel* regionTable,
                QSqlTableModel* cylinderTableHeader);
 
-    void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
+//    void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
 //signals:
 //    void dataChanged(TransferTask task);
 protected slots:
