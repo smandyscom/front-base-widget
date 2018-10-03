@@ -40,7 +40,10 @@ bool FrontCommon::event(QEvent* event)
         int id = key.toInt(&result);
         if(result)
             dynamicPropertyChanged(id,value);
-        style()->polish(this);
+        foreach (QWidget* var, m_widgetsPolish) {
+            var->style()->polish(var);
+        }
+//        style()->polish(this);
         break;
     }
     case QEvent::Show:

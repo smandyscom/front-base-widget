@@ -33,6 +33,7 @@ protected slots:
     void onCustomContextMenuShowed(const QPoint position);
     void onReloadQss();
 protected:
+    QList<QWidget*> m_widgetsPolish;
     //!
     //! \brief m_controller
     //! Auto find-out linked controller

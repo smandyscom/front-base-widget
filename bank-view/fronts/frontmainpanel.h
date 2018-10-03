@@ -32,8 +32,10 @@ public:
     enum PresetProperty
     {
         RELATED_BIT,
+        MAINSTATE,
     };
     Q_ENUM(PresetProperty)
+    Q_PROPERTY(MainStates MAINSTATE MEMBER m_state)
 
     explicit FrontMainPanel(QWidget *parent = 0);
     ~FrontMainPanel();
@@ -53,6 +55,7 @@ protected:
     Ui::FrontMainPanel *ui;
 
     MainStates mainState(bool isPause,bool isManual);
+    MainStates m_state;
     //!
     //! \brief errorDescription
     //! \return

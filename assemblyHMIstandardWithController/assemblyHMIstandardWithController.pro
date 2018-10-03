@@ -132,7 +132,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
-    qss/tabAxis.qss
+    ../build-assemblyHMIstandardWithController-Desktop_Qt_5_9_1_MinGW_32bit-Debug/widgetMain.qss
 
 win32: LIBS += -L$$PWD/../../../../../TwinCAT/AdsApi/TcAdsDll/Lib/ -lTcAdsDll
 
