@@ -36,6 +36,10 @@ FrontAxisParameter::FrontAxisParameter(QWidget *parent) :
     m_lcdMap[AxisMonitorBlock::OFFSET_MONITOR_TOR_FEEDBACK] = ui->lcdNumberTorqueFeedback;
     //!
     connect(ui->tabWidgetCommandPanel,&QTabWidget::currentChanged,this,&FrontAxisParameter::onTabCurrentChanged);
+    //! Going to polishs
+    foreach (QWidget* var, findChildren<QPushButton*>()) {
+        m_widgetsPolish.append(var);
+    }
 }
 //!
 //! \brief FrontAxisParameter::Setup
@@ -136,6 +140,9 @@ void FrontAxisParameter::onDirectExecution(bool value)
     ManualModeDataBlock::Mode mode = ManualModeDataBlock::MODE_EXE_AXIS;
     //! Prepare Commit Mode/Index , DataBlock , by different push button
 
+    //! Axis index
+    m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_DEVICE_INDEX).toString().toStdString().c_str(),
+                              currentIndex());
     //! Data block
     if(sender()==ui->pushButtonDirectAlarmClear )
     {
