@@ -36,7 +36,7 @@ void LoadingHelperControllers::ControllersLoadingRoutineV1()
     m_database = JunctionBankDatabase::Instance();
     //!TODO Follow Database to decide offset/client
     LoadTransfer(0,512,100);  
-    m_controllerMain = new ControllerMainPanel(0,256,100,qApp);
+    m_controllerMain = new ControllerMainPanel(0,128,100,qApp);
     LoadInputsMonitor(100);
 }
 

@@ -29,6 +29,11 @@ public:
         STATE_MANUAL,
     };
     Q_ENUM(MainStates)
+    enum PresetProperty
+    {
+        RELATED_BIT,
+    };
+    Q_ENUM(PresetProperty)
 
     explicit FrontMainPanel(QWidget *parent = 0);
     ~FrontMainPanel();
@@ -40,7 +45,11 @@ public:
                QSqlTableModel* cylinderErrorTable,
                QSqlTableModel* unitErrorTable,
                QSqlTableModel* typeTable);
+protected slots:
+    void onButtonClicked();
 protected:
+
+
     Ui::FrontMainPanel *ui;
 
     MainStates mainState(bool isPause,bool isManual);

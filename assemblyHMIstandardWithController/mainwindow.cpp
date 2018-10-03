@@ -28,9 +28,9 @@ MainWindow::MainWindow(QWidget *parent) :
                 ui->tabUnit,
                 ui->tabConfiguration};
     foreach (FrontCommon* var, frontList) {
-        LoadingHelper::CrossLink(LoadingHelperControllers::m_controllerTransfer,var);
+        LoadingHelperControllers::CrossLink(LoadingHelperControllers::m_controllerTransfer,var);
     }
-    LoadingHelper::CrossLink(LoadingHelperControllers::m_controllerMain,ui->widgetMain);
+    LoadingHelperControllers::CrossLink(LoadingHelperControllers::m_controllerMain,ui->widgetMain);
 }
 
 MainWindow::~MainWindow()

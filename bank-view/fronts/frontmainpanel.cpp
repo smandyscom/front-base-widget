@@ -7,12 +7,33 @@ FrontMainPanel::FrontMainPanel(QWidget *parent) :
     locale(zh_TW)
 {
     ui->setupUi(this);
+    //! Bind
+    ui->pushButtonPause->setProperty(QVariant::fromValue(RELATED_BIT).toString().toStdString().c_str(),
+                                     QVariant::fromValue(MainOperationBlock::BIT_1_TOGGLE_PAUSE));
+    ui->pushButtonInitialize->setProperty(QVariant::fromValue(RELATED_BIT).toString().toStdString().c_str(),
+                                     QVariant::fromValue(MainOperationBlock::BIT_2_TOGGLE_INIT));
+    ui->pushButtonClear->setProperty(QVariant::fromValue(RELATED_BIT).toString().toStdString().c_str(),
+                                     QVariant::fromValue(MainOperationBlock::BIT_5_TOGGLE_CLEAR));
+    ui->pushButtonErrorReset->setProperty(QVariant::fromValue(RELATED_BIT).toString().toStdString().c_str(),
+                                     QVariant::fromValue(MainOperationBlock::BIT_0_ERROR_RESET));
+    ui->pushButtonErrorIgnore->setProperty(QVariant::fromValue(RELATED_BIT).toString().toStdString().c_str(),
+                                     QVariant::fromValue(MainOperationBlock::BIT_4_ERROR_IGNORE));
+    foreach (QPushButton* var, findChildren<QPushButton*>())
+        connect(var,&QPushButton::clicked,this,&FrontMainPanel::onButtonClicked);
 }
 
 FrontMainPanel::~FrontMainPanel()
 {
     delete ui;
 }
+
+void FrontMainPanel::onButtonClicked()
+{
+    m_controller->setProperty(sender()->property(QVariant::fromValue(RELATED_BIT).toString().toStdString().c_str())
+                              .toString().toStdString().c_str(),
+                              true);
+}
+
 
 void FrontMainPanel::Setup(QSqlTableModel* axisTable,
                            QSqlTableModel* cylinderTable,
@@ -50,10 +71,11 @@ void FrontMainPanel::dynamicPropertyChanged(int key, QVariant value)
         break;
     case MainOperationBlock::OFFSET_UOB_STATE_PAUSE:
     case MainOperationBlock::BIT_3_TOGGLE_MANUAL:
-        setProperty("MainState",QVariant::fromValue(mainState(
-                                                        property(QVariant::fromValue(MainOperationBlock::OFFSET_UOB_STATE_PAUSE).toString().toStdString().c_str()).toBool(),
-                                                        property(QVariant::fromValue(MainOperationBlock::BIT_3_TOGGLE_MANUAL).toString().toStdString().c_str()).toBool()
-                                                        )));
+        setProperty(QVariant::fromValue(MAINSTATE).toString().toStdString().c_str(),
+                    QVariant::fromValue(mainState(
+                                            property(QVariant::fromValue(MainOperationBlock::OFFSET_UOB_STATE_PAUSE).toString().toStdString().c_str()).toBool(),
+                                            property(QVariant::fromValue(MainOperationBlock::BIT_3_TOGGLE_MANUAL).toString().toStdString().c_str()).toBool()
+                                            )));
         break;
     default:
         break;
