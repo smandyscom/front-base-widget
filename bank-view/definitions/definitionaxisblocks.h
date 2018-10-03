@@ -214,6 +214,12 @@ public:
         OFFSET_CONTEXT_LIMIT_MINUS=36,
         OFFSET_CONTEXT_SPEED_MAX=38,
         OFFSET_CONTEXT_POS_TOLERANCE=40,
+        OFFSET_CONTEXT_BOOL_PARAMETER=42,
+    };
+    enum BOOL_PARAMETER
+    {
+        BP_BIT0_ENABLE_POSTIVE_LIMIT = 0x000000 + OFFSET_CONTEXT_BOOL_PARAMETER,
+        BP_BIT0_ENABLE_NEGTIVE_LIMIT = 0x010000 + OFFSET_CONTEXT_BOOL_PARAMETER,
     };
 
     void Value(uint key, QVariant value) Q_DECL_OVERRIDE
@@ -228,6 +234,10 @@ public:
         case OFFSET_CONTEXT_SPEED_MAX:
         case OFFSET_CONTEXT_POS_TOLERANCE:
             setData(key,static_cast<MODBUS_S_LONG>(value.toReal() / Dimension->value(LENGTH)));
+            break;
+        case BP_BIT0_ENABLE_POSTIVE_LIMIT:
+        case BP_BIT0_ENABLE_NEGTIVE_LIMIT:
+            Bit(key,value.toBool());
             break;
         default:
             AxisOperationBlock::Value(key,value);
@@ -246,6 +256,10 @@ public:
         case OFFSET_CONTEXT_SPEED_MAX:
         case OFFSET_CONTEXT_POS_TOLERANCE:
             return QVariant::fromValue(getData<MODBUS_S_LONG>(key) * Dimension->value(LENGTH));
+            break;
+        case BP_BIT0_ENABLE_POSTIVE_LIMIT:
+        case BP_BIT0_ENABLE_NEGTIVE_LIMIT:
+            return Bit(key);
             break;
         default:
             return AxisMonitorBlock::Value(key);
@@ -270,6 +284,9 @@ enum DataBaseHeaders
     LIMIT_PLUS = AxisContextBlock::OFFSET_CONTEXT_LIMIT_PLUS,
     POSITION_TOLERANCE = AxisContextBlock::OFFSET_CONTEXT_POS_TOLERANCE,
     SPEED_MAX = AxisContextBlock::OFFSET_CONTEXT_SPEED_MAX,
+    //!New
+    EN_LIMIT_MINUS = AxisContextBlock::BP_BIT0_ENABLE_NEGTIVE_LIMIT,
+    EN_LIMIT_PLUS = AxisContextBlock::BP_BIT0_ENABLE_POSTIVE_LIMIT,
 };
 Q_ENUM_NS(DataBaseHeaders)
 

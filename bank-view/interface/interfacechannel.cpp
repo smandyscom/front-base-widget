@@ -21,7 +21,11 @@ void InterfaceChannel::m_remoteUpdate(ADDRESS_MODE address, QVariant dataForm)
                                                                       address,
                                                                       dataForm));
 }
-
+//!
+//! \brief InterfaceChannel::m_commit
+//! \param address
+//! \param value
+//! for series bool setting , need to be pre-updated?
 void InterfaceChannel::m_commit(ADDRESS_MODE address, QVariant value)
 {
     QVariant temp = value;
@@ -29,17 +33,17 @@ void InterfaceChannel::m_commit(ADDRESS_MODE address, QVariant value)
     switch (value.type()) {
     case QVariant::Bool:
     {
-        temp = QVariant::fromValue(static_cast<quint16>(0));
-        m_update(address,temp); //get current value
-        quint16 tempValue = 0;
+//        temp = QVariant::fromValue(static_cast<quint16>(0));
+//        m_update(address,temp); //get current value
+        quint16* previousValue = Handle(address);
         quint16 bitAccessor = ADDRESS_BIT_ACCESSOR(address);
         //bitwise manipulation
         if(value.toBool())
-            tempValue = temp.value<quint16>() | bitAccessor;
+            *previousValue |= bitAccessor;
         else
-            tempValue = temp.value<quint16>() & ~bitAccessor;
+            *previousValue &= ~bitAccessor;
 
-        temp.setValue(tempValue);
+        temp = QVariant::fromValue(*previousValue);
         break;
     }
     default:
@@ -59,12 +63,12 @@ void InterfaceChannel::m_commit(ADDRESS_MODE address, QVariant value)
 //! Directly return cached data
 void InterfaceChannel::m_update(ADDRESS_MODE address, QVariant &out)
 {
-    quint16* __baseAddress = Handle(address);
+    quint16* baseAddress = Handle(address);
 
     switch (out.type()) {
     case QVariant::Bool:
     {
-        if(*__baseAddress & ADDRESS_BIT_ACCESSOR(address))
+        if(*baseAddress & ADDRESS_BIT_ACCESSOR(address))
             out.setValue(true);
         else
             out.setValue(false);
@@ -73,7 +77,7 @@ void InterfaceChannel::m_update(ADDRESS_MODE address, QVariant &out)
     default:
         //!Pack to QVariant
         memcpy(out.data(),
-               __baseAddress,
+               baseAddress,
                utilities::sizeOf(out)) ;
         break;
     }
