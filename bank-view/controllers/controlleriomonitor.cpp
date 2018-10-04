@@ -1,5 +1,5 @@
 #include "controlleriomonitor.h"
-
+#include <QSqlError>
 ControllerIOMonitor::ControllerIOMonitor(quint8 clientId, Mode mode, QObject *parent) :
     ControllerBase(clientId,0,0,parent),
     m_mode(mode)
@@ -24,10 +24,9 @@ void ControllerIOMonitor::onAcknowledged(InterfaceRequest ack)
     case POLLING:
     {
         int index  = m_addressList.indexOf(ackAddress);
+        index++;
         if(index >= m_addressList.count())
             index =0;
-        else
-            index++;
         //!request feedback
         m_channel->BeginRead(m_addressList[index],true);
         break;
@@ -62,11 +61,19 @@ void ControllerIOMonitor::findAndUpdate(ADDRESS_MODE address)
     if(!m_addressNameTable.contains(address))
         return;
     //! Direct access
-    bool state = *m_channel->Handle(address) & ADDRESS_BIT_ACCESSOR(address);
+    bool state = (*m_channel->Handle(address) & ADDRESS_BIT_ACCESSOR(address)) != 0;
+    QModelIndex index = m_addressNameTable[address].toModelIndex();
+//    QModelIndex index = m_model->index(0,1);
     //! Model user role
-    m_model->setData(m_addressNameTable[address].value<QModelIndex>(),
-                     state,
-                     HEADER_STRUCTURE::UserRole_MonitorOnOff);
+    bool result = m_model->setData(index,
+                                   state,
+                                   HEADER_STRUCTURE::UserRole_MonitorOnOff);
+    if(!result)
+    {
+       qDebug() << m_model->lastError().text();
+    }
+
+//    qDebug() << result;
 }
 
 void ControllerIOMonitor::setModel(QSqlTableModel* model,
@@ -100,4 +107,6 @@ void ControllerIOMonitor::setModel(QSqlTableModel* model,
             i++;
         }//!while
     }//!for-row
+    //!first shot
+    m_channel->BeginRead(m_addressList.first(),false);
 }

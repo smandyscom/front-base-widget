@@ -2,7 +2,7 @@
 #include "ui_frontiooverride.h"
 
 FrontIoOverride::FrontIoOverride(QWidget *parent) :
-    QWidget(parent),
+    FrontCommon(parent),
     ui(new Ui::FrontIoOverride)
 {
     ui->setupUi(this);

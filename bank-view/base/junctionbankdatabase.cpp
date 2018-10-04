@@ -35,7 +35,22 @@ void JunctionBankDatabase::onInitialize()
     }
     //! Open tables
     foreach (TableNames var, tableList) {
-        QSqlTableModel* m_reference = new QSqlTableModel(this,m_database);
+
+        QSqlTableModel* m_reference = nullptr;
+
+        //! I/O related table need to handling user-role
+        switch (var) {
+        case WHOLE_CYLINDERS:
+        case WHOLE_INPUTS:
+        case WHOLE_OUTPUTS:
+            m_reference = new ExtendSqlTableModel(this,m_database);
+            break;
+        default:
+            m_reference = new QSqlTableModel(this,m_database);
+            break;
+        }
+
+
         bool result = false;
         m_reference->setEditStrategy(QSqlTableModel::OnFieldChange);
         m_reference->setTable(QVariant::fromValue(var).value<QString>());

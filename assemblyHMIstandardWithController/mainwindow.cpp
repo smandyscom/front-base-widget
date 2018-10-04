@@ -11,8 +11,12 @@ MainWindow::MainWindow(QWidget *parent) :
     //! Interface initialization
     AmsAddr addr{{5,60,134,238,1,1},
                 851};
-    InterfaceClient* simuClient = new AdsClient(addr);
-    InterfaceChannel::Instance()->Clients(QList<InterfaceClient*>{simuClient});
+    InterfaceClient* mainClient = new AdsClient(addr);
+    InterfaceClient* inputClient = new AdsClient(addr,false,AdsClient::PLCADS_RWI,562852);
+    InterfaceChannel::Instance()->Clients(QList<InterfaceClient*>{
+                                              mainClient,
+                                              inputClient
+                                          });
     //! Load UI/Model
     LoadingHelper::CombineModelViewV1(ui->tabAxis,
                                       ui->tabCylinder,

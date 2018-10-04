@@ -11,6 +11,7 @@
 #include <QList>
 
 #include <QSqlTableModel>
+#include <extendsqltablemodel.h>
 
 #include<QDebug>
 //!

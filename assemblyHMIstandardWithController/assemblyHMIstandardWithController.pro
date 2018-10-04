@@ -56,7 +56,8 @@ SOURCES += \
     ../bank-view/delegates/delegatematerialselector.cpp \
     ../bank-view/delegates/delegateviewitemfeaturemarker.cpp \
     ../bank-view/fronts/tableviewfeature.cpp \
-    ../bank-view/fronts/tabwidgetoperationmode.cpp
+    ../bank-view/fronts/tabwidgetoperationmode.cpp \
+    ../bank-view/base/extendsqltablemodel.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -106,7 +107,8 @@ HEADERS += \
     ../bank-view/delegates/delegateviewitemfeaturemarker.h \
     ../bank-view/fronts/tableviewfeature.h \
     ../bank-view/definitions/definitionioattributes.h \
-    ../bank-view/fronts/tabwidgetoperationmode.h
+    ../bank-view/fronts/tabwidgetoperationmode.h \
+    ../bank-view/base/extendsqltablemodel.h
 
 FORMS += \
         mainwindow.ui \

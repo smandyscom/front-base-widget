@@ -71,7 +71,7 @@ void FrontUnitPanel::onCommandClick()
 {
     QPushButton* button = qobject_cast<QPushButton*>(sender());
 
-    UnitOperationBlock block(&m_monitor);
+    UnitOperationBlock block(&m_monitorBlock);
     //! Flip
     block.Value(m_controlMap[button],
             QVariant::fromValue(!block.Value(m_controlMap[button]).toBool()));

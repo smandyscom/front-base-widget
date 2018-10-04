@@ -18,10 +18,12 @@ void LoadingHelperControllers::LoadTransfer(quint8 clientId, quint16 baseOffset,
 
 void LoadingHelperControllers::LoadInputsMonitor(int interval)
 {
-    m_controllerInputMonitor = new ControllerIOMonitor(interval,qApp);
-    m_controllerInputMonitor->AppendPair(QVariant::fromValue(IoAttributes::HAL_ADDRESS),
-                                         QVariant::fromValue(IoAttributes::NAME));
-    m_controllerInputMonitor->AttachReceiver(m_database->TableMap(JunctionBankDatabase::WHOLE_INPUTS));
+    m_controllerInputMonitor = new ControllerIOMonitor(1);
+    QMap<QVariant,QVariant> map;
+    map[utilities::trimNamespace(QVariant::fromValue(IoAttributes::HAL_ADDRESS))] =
+            utilities::trimNamespace(QVariant::fromValue(IoAttributes::NAME));
+    m_controllerInputMonitor->setModel(m_database->TableMap(JunctionBankDatabase::WHOLE_INPUTS),
+                                       map);
 }
 
 void LoadingHelperControllers::ControllersLoadingRoutineV1()
