@@ -183,6 +183,32 @@ Q_NAMESPACE
 enum DataBaseHeaders
 {
     ID = -1,
+    //! NAME
+    ACT_A_1_N = -2,
+    ACT_A_2_N = -3,
+    ACT_B_1_N = -4,
+    ACT_B_2_N = -5,
+    SEN_A_1_N = -6,
+    SEN_A_2_N = -7,
+    SEN_A_3_N = -8,
+    SEN_A_4_N = -9,
+    SEN_B_1_N = -10,
+    SEN_B_2_N = -11,
+    SEN_B_3_N = -12,
+    SEN_B_4_N = -13,
+    //! HAL ADDRESS
+    ACT_A_1_H = -1,
+    ACT_A_2_H = -1,
+    ACT_B_1_H = -1,
+    ACT_B_2_H = -1,
+    SEN_A_1_H = -1,
+    SEN_A_2_H = -1,
+    SEN_A_3_H = -1,
+    SEN_A_4_H = -1,
+    SEN_B_1_H = -1,
+    SEN_B_2_H =  -1,
+    SEN_B_3_H = -1,
+    SEN_B_4_H = -1,
     //! Data
     TIMER_SET=CylinderContext::OFFSET_CONTEXT_TMR_SET_VALUE,
     A_SENSOR_USED_COUNT=CylinderContext::OFFSET_CONTEXT_A_SENSOR_USED_COUNT,

@@ -25,8 +25,9 @@ public:
     explicit LoadingHelperControllers(QObject *parent = nullptr);
 
     static void LoadTransfer(quint8 clientId, quint16 baseOffset, int interval);
-    static void LoadInputsMonitor(int interval);
-//    static void LoadOutputsMonitor(quint8 clientId,int interval);
+    static void LoadInputsMonitor();
+    static void LoadOutputsMonitor();
+    static void LoadCylinderMonitor();
 
     static void ControllersLoadingRoutineV1();
 
@@ -35,6 +36,9 @@ public:
     static ControllerMainPanel* m_controllerMain;
 
     static ControllerIOMonitor* m_controllerInputMonitor;
+    static ControllerIOMonitor* m_controllerOutputMonitor;
+    static ControllerIOMonitor* m_controllerCylinderMonitor;
+
 
     static void CrossLink(ControllerBase* controller,FrontCommon* front);
 
