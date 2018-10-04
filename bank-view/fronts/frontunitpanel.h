@@ -12,8 +12,6 @@ namespace Ui {
 class FrontUnitPanel;
 }
 
-//typedef QPair<ModbusDriverAddress,Qt::GlobalColor> VisualAspect;
-
 class FrontUnitPanel :
         public FrontCommonManual
 //        public AbstractAuthReceiver
@@ -26,29 +24,18 @@ public:
 
     void Setup(QSqlTableModel* unitTable, QSqlTableModel *unitTableHeader);
 
-//    void showEvent(QShowEvent* event) Q_DECL_OVERRIDE;
-
 protected slots:
     void onCommandClick();
-//    void onViewSelectionChanged();
-//    void onTimerTimeout();
 protected:
-//    void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
-private:
     Ui::FrontUnitPanel *ui;
 
-//    QSqlTableModel* __unitTable;
-
-//    QTimer* __timer;
-//    MODBUS_U_WORD __currentViewIndex;
-
-//    ControllerManualMode* __controller;
-
-//    QMap<QWidget*,VisualAspect> __statusShowMap;
     QMap<QPushButton*,UnitOperationBlock::ControlBits> m_controlMap;//Widget,Address
 
     UnitMonitorBlock m_monitor;
-//    QList<QWidget*> __busyInterlock;
+    QList<QVariant> m_status;
+    QList<QVariant> m_condition;
+
+    void dynamicPropertyChanged(int key, QVariant value) Q_DECL_OVERRIDE;
 
     //!Override
     int m_index;

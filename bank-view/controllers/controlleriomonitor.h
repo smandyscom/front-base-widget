@@ -8,17 +8,25 @@
 
 //!
 //! \brief The ControllerIOMonitor class
-//! Monitoring specific client
+//! Monitoring specific model
+//! Dedicated client
 class ControllerIOMonitor :
         public ControllerBase
 {
     Q_OBJECT
 public:
-    explicit ControllerIOMonitor(int interval, QObject *parent = nullptr);
+    enum Mode
+    {
+        POLLING,
+        //! No polling , handling model only
+        NO_POLLING,
+    };
 
-    void AttachReceiver(QObject* receiver) Q_DECL_OVERRIDE;
+    explicit ControllerIOMonitor(quint8 clientId,Mode mode=POLLING, QObject *parent = nullptr);
 
-    void AppendPair(QVariant address,QVariant name);
+    void setModel(QSqlTableModel *model,
+                  QMap<QVariant,QVariant> addressNameMap);
+
 signals:
 
 public slots:
@@ -37,6 +45,13 @@ protected slots:
     //! Output override
     void onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles);
 protected:
+    Mode m_mode;
+    void scanModel(QObject* target);
+    //! Store address and modelIndex relation(Name
+    QList<ADDRESS_MODE> m_addressList;
+    QMap<ADDRESS_MODE,QVariant> m_addressNameTable;
+    void findAndUpdate(ADDRESS_MODE address);
+
     //!
     //! \brief m_model
     //! First receiver
@@ -44,7 +59,7 @@ protected:
     //!
     //! \brief m_addressNameTable
     //! pair of Address,Name
-    QMap<QVariant,QVariant> m_addressNameTable;
+//    QMap<QVariant,QVariant> m_addressNameTable;
 };
 
 #endif // CONTROLLERIOMONITOR_H

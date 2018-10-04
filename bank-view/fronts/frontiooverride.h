@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include <QSqlTableModel>
-
+#include <frontcommon.h>
 #include <definitionauxiliarykeys.h>
 //#include <modbuschannel.h>
 
@@ -23,7 +23,7 @@ class FrontIoOverride;
 
 
 
-class FrontIoOverride : public QWidget /*,
+class FrontIoOverride : public FrontCommon /*,
         public AbstractAuthReceiver*/
 {
     Q_OBJECT
@@ -42,22 +42,7 @@ protected slots:
     void onTimerTimeout();
     void onOverrideClicked(QModelIndex index);
 protected:
-//    void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
-private:
     Ui::FrontIoOverride *ui;
-
-//    QSqlTableModel* __inputTable;
-//    QSqlTableModel* __outputTable;
-
-//    QSqlTableModel* __signalTable;
-
-//    QSqlTableModel* __regionTable;
-
-//    ControllerManualMode* __controller;
-//    QTimer* __timer;
-//    MODBUS_U_WORD __currentViewIndex;
-//    QMap<QWidget*,SignalMonitor::WordOutBits> __labelAddressMap;
-
 };
 
 #endif // FRONTIOOVERRIDE_H

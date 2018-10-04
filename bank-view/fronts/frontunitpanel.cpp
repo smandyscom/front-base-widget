@@ -4,37 +4,11 @@
 FrontUnitPanel::FrontUnitPanel(QWidget *parent) :
     FrontCommonManual(parent),
     ui(new Ui::FrontUnitPanel)
-//    __unitTable(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::WHOLE_UNITS))
 {
     ui->setupUi(this);
     //!
-    //FrontSingleFilter* __fsf = new FrontSingleFilter(ui->widgetFilter);
-    //__fsf->DataTable(__unitTable);
-    //__fsf->PrimaryTable(JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_REGION));
-    //!
-        //!
-//    __controller = ControllerManualMode::Instance();
-//    //! Timer
-//    __timer = new QTimer(this);
-//    connect(__timer,SIGNAL(timeout()),this,SLOT(onTimerTimeout()));
-//    __timer->start();
-    //!
-//    __statusShowMap[ui->labelCondition0] = VisualAspect(ModbusDriverAddress(0,UnitMonitorBlock::BIT_1_TEMP_CONDITION_1,UnitMonitorBlock::OFFSET_MONITOR_TRANSITION_WORD),Qt::green);
-//    __statusShowMap[ui->labelCondition1] = VisualAspect(ModbusDriverAddress(0,UnitMonitorBlock::BIT_2_TEMP_CONDITION_2,UnitMonitorBlock::OFFSET_MONITOR_TRANSITION_WORD),Qt::green);
-//    __statusShowMap[ui->labelCondition2] = VisualAspect(ModbusDriverAddress(0,UnitMonitorBlock::BIT_3_TEMP_CONDITION_3,UnitMonitorBlock::OFFSET_MONITOR_TRANSITION_WORD),Qt::green);
-//    __statusShowMap[ui->labelCondition3] = VisualAspect(ModbusDriverAddress(0,UnitMonitorBlock::BIT_4_TEMP_CONDITION_4,UnitMonitorBlock::OFFSET_MONITOR_TRANSITION_WORD),Qt::green);
-//    __statusShowMap[ui->labelCondition4] = VisualAspect(ModbusDriverAddress(0,UnitMonitorBlock::BIT_5_TEMP_CONDITION_5,UnitMonitorBlock::OFFSET_MONITOR_TRANSITION_WORD),Qt::green);
-//    __statusShowMap[ui->labelCondition5] = VisualAspect(ModbusDriverAddress(0,UnitMonitorBlock::BIT_6_TEMP_CONDITION_6,UnitMonitorBlock::OFFSET_MONITOR_TRANSITION_WORD),Qt::green);
-//    __statusShowMap[ui->labelCondition6] = VisualAspect(ModbusDriverAddress(0,UnitMonitorBlock::BIT_7_TEMP_CONDITION_7,UnitMonitorBlock::OFFSET_MONITOR_TRANSITION_WORD),Qt::green);
-//    __statusShowMap[ui->labelCondition7] = VisualAspect(ModbusDriverAddress(0,UnitMonitorBlock::BIT_8_TEMP_CONDITION_8,UnitMonitorBlock::OFFSET_MONITOR_TRANSITION_WORD),Qt::green);
-
-//    __statusShowMap[ui->pushButtonEnableStep] = VisualAspect(ModbusDriverAddress(UnitOperationBlock::OFFSET_UOB_EN_STEP),Qt::magenta);
-//    __statusShowMap[ui->pushButtonStep] = VisualAspect(ModbusDriverAddress(UnitOperationBlock::OFFSET_UOB_TRIG_STEP),Qt::green);
-//    __statusShowMap[ui->pushButtonWorking] = VisualAspect(ModbusDriverAddress(UnitOperationBlock::OFFSET_UOB_WORKING_OVERRIDE),Qt::cyan);
-//    __statusShowMap[ui->pushButtonPause] = VisualAspect(ModbusDriverAddress(UnitOperationBlock::OFFSET_UOB_STATE_PAUSE),Qt::yellow);
-//    __statusShowMap[ui->pushButtonMaterial] = VisualAspect(ModbusDriverAddress(UnitOperationBlock::OFFSET_UOB_MATERIAL_OVERRIDE),Qt::green);
-//    __statusShowMap[ui->pushButtonByPass] = VisualAspect(ModbusDriverAddress(UnitOperationBlock::OFFSET_UOB_IS_BYPASSED),Qt::blue);
-
+    m_condition =  utilities::listupEnumVariant<UnitMonitorBlock::TransitionBits>();
+    m_status =  utilities::listupEnumVariant<UnitOperationBlock::ControlBits>();
     //!
     m_controlMap[ui->pushButtonEnableStep] = (UnitOperationBlock::OFFSET_UOB_EN_STEP);
     m_controlMap[ui->pushButtonStep] = (UnitOperationBlock::OFFSET_UOB_TRIG_STEP);
@@ -78,19 +52,8 @@ void FrontUnitPanel::Setup(QSqlTableModel* unitTable,
 
 //void FrontUnitPanel::onTimerTimeout()
 //{
-//    //!
-//    UnitMonitorBlock umb;
-//    *static_cast<CellDataBlock*>(&umb) = __controller->MonitorBlock();
-//    //! Bit
-//    foreach (QWidget* var, __statusShowMap.keys()) {
-//        utilities::colorChangeOver(var,
-//                                   umb.Value(__statusShowMap[var].first.getAddress()).toBool(),
-//                                   __statusShowMap[var].second);
-//    }
-//    //!Numeric
-//    ui->lcdNumberState->display(umb.Value(UnitMonitorBlock::OFFSET_MONITOR_STATE).toInt());
-//    ui->lcdNumberNextState->display(umb.Value(UnitMonitorBlock::OFFSET_MONITOR_NEXT_STATE).toInt());
-//    ui->lcdNumberCycleTime->display(umb.Value(UnitMonitorBlock::OFFSET_MONITOR_WORKING_TIMER_CACHE).toReal());
+
+
 //    //! Interlock
 //    bool result1 = __controller->IsControllerInitialized();
 //    bool result2 = __controller->IsSemiAutoActivated();
@@ -109,9 +72,6 @@ void FrontUnitPanel::onCommandClick()
     QPushButton* button = qobject_cast<QPushButton*>(sender());
 
     UnitOperationBlock block(&m_monitor);
-    //!Fetch last status
-//    *reinterpret_cast<CellDataBlock*>(block.Anchor()) = m_monitor;
-//    *static_cast<CellDataBlock*>(&uob) = __controller->MonitorBlock();//update latest value
     //! Flip
     block.Value(m_controlMap[button],
             QVariant::fromValue(!block.Value(m_controlMap[button]).toBool()));
@@ -128,15 +88,6 @@ void FrontUnitPanel::onCommandClick()
                                   true);
 }
 
-//void FrontUnitPanel::showEvent(QShowEvent *event)
-//{
-//    //! Semi-auto mode(Keep unit running
-//    m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_2_ENGAGED_MANUAL).toString().toStdString().c_str(),
-//                              false);
-
-//    FrontCommonManual::showEvent(event);
-//}
-
 int FrontUnitPanel::currentIndex()
 {
     //!Renew current index
@@ -149,3 +100,30 @@ int FrontUnitPanel::currentIndex()
     return m_index;
 }
 
+void FrontUnitPanel::dynamicPropertyChanged(int key, QVariant value)
+{
+    switch (key) {
+    case ManualModeDataBlock::MONITOR_BLOCK_HEAD:
+    {
+        *(static_cast<AbstractDataBlock*>(&m_monitorBlock)) =
+                value.value<CellDataBlock>(); //value assignment
+
+        //! Self-raise Bit properties
+        foreach (QVariant var, m_status) {
+            setProperty(var.toString().toStdString().c_str(),
+                        m_monitorBlock.Value(var.toUInt()).toBool());
+        }
+        foreach (QVariant var, m_condition) {
+            setProperty(var.toString().toStdString().c_str(),
+                        m_monitorBlock.Value(var.toUInt()).toBool());
+        }
+        //!
+        ui->lcdNumberState->display(m_monitorBlock.Value(UnitMonitorBlock::OFFSET_MONITOR_STATE).toInt());
+        ui->lcdNumberNextState->display(m_monitorBlock.Value(UnitMonitorBlock::OFFSET_MONITOR_NEXT_STATE).toInt());
+        ui->lcdNumberCycleTime->display(m_monitorBlock.Value(UnitMonitorBlock::OFFSET_MONITOR_WORKING_TIMER_CACHE).toReal());
+        break;
+    }
+    default:
+        break;
+    }
+}

@@ -305,18 +305,6 @@ QString FrontAxisParameter::currentFilter() const
     return ui->widgetFilter->Filter1();
 }
 
-////!
-////! \brief FrontAxisParameter::showEvent
-////! \param event
-////! Engaged as Manual mode
-//void FrontAxisParameter::showEvent(QShowEvent *event)
-//{
-//    m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_2_ENGAGED_MANUAL).toString().toStdString().c_str(),
-//                              true);
-
-//    FrontCommonManual::showEvent(event);
-//}
-
 void FrontAxisParameter::onMonitorIndexChanged()
 {
     m_axisTable->setFilter(utilities::generateFilterString(QVariant::fromValue(HEADER_STRUCTURE::ID),
@@ -331,7 +319,17 @@ void FrontAxisParameter::onMonitorIndexChanged()
 void FrontAxisParameter::onTabCurrentChanged()
 {
     if(ui->tabWidgetCommandPanel->currentWidget() !=
-            ui->tabAxisSetting)
+            ui->tabAxisSetting){
         m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE).toString().toStdString().c_str(),
                                   true);
+        //!Backup filter
+        m_axisTableFilter = m_axisTable->filter();
+    }
+    else
+    {
+        //!Switch to current tab
+        m_axisErrorTable->setFilter(m_axisTableFilter);
+        m_axisErrorTable->select();
+    }
+
 }

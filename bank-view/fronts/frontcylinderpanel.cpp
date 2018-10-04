@@ -28,6 +28,9 @@ FrontCylinderPanel::FrontCylinderPanel(QWidget *parent) :
     foreach (QPushButton* var, findChildren<QPushButton*>()) {
         m_widgetsPolish.append(var);
     }
+    foreach (QLabel* var, findChildren<QLabel*>()) {
+        m_widgetsPolish.append(var);
+    }
     //! Interlock
 //    __busyInterlock = {
 //        ui->pushButtonGoA,
@@ -102,7 +105,8 @@ void FrontCylinderPanel::dynamicPropertyChanged(int key, QVariant value)
 
         //! Self-raise Bit properties
         foreach (QVariant var, m_status) {
-            setProperty(var.toString().toStdString().c_str(),m_monitorBlock.Value(var.toUInt()).toBool());
+            setProperty(var.toString().toStdString().c_str(),
+                        m_monitorBlock.Value(var.toUInt()).toBool());
         }
         //!Last command
         setProperty(QVariant::fromValue(CylinderMonitorBlock::OFFSET_MONITOR_LAST_COMMAND).toString().toStdString().c_str(),
@@ -131,11 +135,3 @@ QString FrontCylinderPanel::currentFilter() const
 {
     return ui->widgetFilter->Filter();
 }
-
-//void FrontCylinderPanel::showEvent(QShowEvent *event)
-//{
-//    //! Manual mode(Stop unit running
-//    m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_2_ENGAGED_MANUAL).toString().toStdString().c_str(),
-//                              true);
-//    FrontCommonManual::showEvent(event);
-//}

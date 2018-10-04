@@ -5,7 +5,6 @@
 #include <QTimer>
 #include <QMap>
 #include <QList>
-#include <QWidget>
 #include <QDebug>
 #include <QVariant>
 
