@@ -42,7 +42,7 @@ public:
         OP_COMMAND_A=1,
         OP_COMMAND_B=2,
     };
-
+    Q_ENUM(Operation)
     //!
     //! \brief Value
     //! \param index

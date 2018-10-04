@@ -24,7 +24,10 @@ FrontCylinderPanel::FrontCylinderPanel(QWidget *parent) :
     //! \brief connect
     //! When monitor/opertion selection changed
     connect(ui->tableViewCylinder,&QTableView::clicked,this,&FrontCylinderPanel::onMonitorIndexChanged);
-
+    //!
+    foreach (QPushButton* var, findChildren<QPushButton*>()) {
+        m_widgetsPolish.append(var);
+    }
     //! Interlock
 //    __busyInterlock = {
 //        ui->pushButtonGoA,
@@ -89,13 +92,6 @@ void FrontCylinderPanel::onCylinderCommandClicked()
                               true);
 }
 
-//void FrontCylinderPanel::onTimerTimeout()
-//{
-//    //! Interlock
-//    foreach (QWidget* var, __busyInterlock) {
-//        var->setEnabled(__controller->IsManualModeActiavted());
-//    }
-//}
 void FrontCylinderPanel::dynamicPropertyChanged(int key, QVariant value)
 {
     switch (key) {
@@ -108,6 +104,9 @@ void FrontCylinderPanel::dynamicPropertyChanged(int key, QVariant value)
         foreach (QVariant var, m_status) {
             setProperty(var.toString().toStdString().c_str(),m_monitorBlock.Value(var.toUInt()).toBool());
         }
+        //!Last command
+        setProperty(QVariant::fromValue(CylinderMonitorBlock::OFFSET_MONITOR_LAST_COMMAND).toString().toStdString().c_str(),
+                    m_monitorBlock.Value(CylinderMonitorBlock::OFFSET_MONITOR_LAST_COMMAND).value<CylinderMonitorBlock::Operation>());
         break;
     }
     default:
@@ -122,7 +121,7 @@ int FrontCylinderPanel::currentIndex()
     if(ui->tableViewCylinder->selectionModel()->hasSelection())
     {
         auto table = static_cast<QSqlTableModel*>(ui->tableViewCylinder->model());
-        auto record = table->record(ui->tableViewCylinder->selectionModel()->selectedRows().first().row());
+        auto record = table->record(ui->tableViewCylinder->selectionModel()->selectedIndexes().first().row());
         m_index =  record.value(QVariant::fromValue(HEADER_STRUCTURE::ID).toString()).toInt();
     }
     return m_index;
