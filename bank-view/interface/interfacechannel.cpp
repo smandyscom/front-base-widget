@@ -16,6 +16,12 @@ void InterfaceChannel::m_remoteUpdate(ADDRESS_MODE address, QVariant dataForm)
     if(dataForm.type() == QVariant::Bool)
         dataForm = QVariant::fromValue(static_cast<quint16>(0));
 
+    if(ADDRESS_CLIENT_ID(address) >= m_clients.count())
+    {
+        qDebug() << QString("interface client %1 not found").arg(ADDRESS_CLIENT_ID(address));
+        return;
+    }
+
     //! read via interface , put specific type of package into
     m_clients[ADDRESS_CLIENT_ID(address)]->pushRequest(InterfaceRequest(InterfaceRequest::READ,
                                                                       address,

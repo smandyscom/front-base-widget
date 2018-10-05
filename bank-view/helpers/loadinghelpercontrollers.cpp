@@ -38,18 +38,18 @@ void LoadingHelperControllers::LoadCylinderMonitor()
 {
     m_controllerCylinderMonitor = new ControllerIOMonitor(1,ControllerIOMonitor::NO_POLLING);
     QMap<QVariant,QVariant> map{
-        {utilities::trimNamespace(QVariant::fromValue(CylinderBlock::ACT_A_1_H)),utilities::trimNamespace(QVariant::fromValue(CylinderBlock::ACT_A_1_N)},
-        {utilities::trimNamespace(QVariant::fromValue(CylinderBlock::ACT_A_2_H)),utilities::trimNamespace(QVariant::fromValue(CylinderBlock::ACT_A_2_N)},
-        {utilities::trimNamespace(QVariant::fromValue(CylinderBlock::ACT_B_1_H)),utilities::trimNamespace(QVariant::fromValue(CylinderBlock::ACT_B_1_N)},
-        {utilities::trimNamespace(QVariant::fromValue(CylinderBlock::ACT_B_2_H)),utilities::trimNamespace(QVariant::fromValue(CylinderBlock::ACT_B_2_N)},
-        {utilities::trimNamespace(QVariant::fromValue(CylinderBlock::SEN_A_1_H)),utilities::trimNamespace(QVariant::fromValue(CylinderBlock::SEN_A_1_N)},
-        {utilities::trimNamespace(QVariant::fromValue(CylinderBlock::SEN_A_2_H)),utilities::trimNamespace(QVariant::fromValue(CylinderBlock::SEN_A_2_N)},
-        {utilities::trimNamespace(QVariant::fromValue(CylinderBlock::SEN_A_3_H)),utilities::trimNamespace(QVariant::fromValue(CylinderBlock::SEN_A_3_N)},
-        {utilities::trimNamespace(QVariant::fromValue(CylinderBlock::SEN_A_4_H)),utilities::trimNamespace(QVariant::fromValue(CylinderBlock::SEN_A_4_N)},
-        {utilities::trimNamespace(QVariant::fromValue(CylinderBlock::SEN_B_1_H)),utilities::trimNamespace(QVariant::fromValue(CylinderBlock::SEN_B_1_N)},
-        {utilities::trimNamespace(QVariant::fromValue(CylinderBlock::SEN_B_2_H)),utilities::trimNamespace(QVariant::fromValue(CylinderBlock::SEN_B_2_N)},
-        {utilities::trimNamespace(QVariant::fromValue(CylinderBlock::SEN_B_3_H)),utilities::trimNamespace(QVariant::fromValue(CylinderBlock::SEN_B_3_N)},
-        {utilities::trimNamespace(QVariant::fromValue(CylinderBlock::SEN_B_4_H)),utilities::trimNamespace(QVariant::fromValue(CylinderBlock::SEN_B_4_N)},
+        {utilities::trimNamespace(QVariant::fromValue(CylinderBlock::ACT_A_1_H)),utilities::trimNamespace(QVariant::fromValue(CylinderBlock::ACT_A_1_N))},
+        {utilities::trimNamespace(QVariant::fromValue(CylinderBlock::ACT_A_2_H)),utilities::trimNamespace(QVariant::fromValue(CylinderBlock::ACT_A_2_N))},
+        {utilities::trimNamespace(QVariant::fromValue(CylinderBlock::ACT_B_1_H)),utilities::trimNamespace(QVariant::fromValue(CylinderBlock::ACT_B_1_N))},
+        {utilities::trimNamespace(QVariant::fromValue(CylinderBlock::ACT_B_2_H)),utilities::trimNamespace(QVariant::fromValue(CylinderBlock::ACT_B_2_N))},
+        {utilities::trimNamespace(QVariant::fromValue(CylinderBlock::SEN_A_1_H)),utilities::trimNamespace(QVariant::fromValue(CylinderBlock::SEN_A_1_N))},
+        {utilities::trimNamespace(QVariant::fromValue(CylinderBlock::SEN_A_2_H)),utilities::trimNamespace(QVariant::fromValue(CylinderBlock::SEN_A_2_N))},
+        {utilities::trimNamespace(QVariant::fromValue(CylinderBlock::SEN_A_3_H)),utilities::trimNamespace(QVariant::fromValue(CylinderBlock::SEN_A_3_N))},
+        {utilities::trimNamespace(QVariant::fromValue(CylinderBlock::SEN_A_4_H)),utilities::trimNamespace(QVariant::fromValue(CylinderBlock::SEN_A_4_N))},
+        {utilities::trimNamespace(QVariant::fromValue(CylinderBlock::SEN_B_1_H)),utilities::trimNamespace(QVariant::fromValue(CylinderBlock::SEN_B_1_N))},
+        {utilities::trimNamespace(QVariant::fromValue(CylinderBlock::SEN_B_2_H)),utilities::trimNamespace(QVariant::fromValue(CylinderBlock::SEN_B_2_N))},
+        {utilities::trimNamespace(QVariant::fromValue(CylinderBlock::SEN_B_3_H)),utilities::trimNamespace(QVariant::fromValue(CylinderBlock::SEN_B_3_N))},
+        {utilities::trimNamespace(QVariant::fromValue(CylinderBlock::SEN_B_4_H)),utilities::trimNamespace(QVariant::fromValue(CylinderBlock::SEN_B_4_N))},
     };
 
     m_controllerCylinderMonitor->setModel(m_database->TableMap(JunctionBankDatabase::WHOLE_CYLINDERS),
@@ -71,8 +71,8 @@ void LoadingHelperControllers::ControllersLoadingRoutineV1()
     m_controllerMain = new ControllerMainPanel(0,128,100,qApp);
     //!
     LoadInputsMonitor();
-    LoadOutputsMonitor();
-    LoadCylinderMonitor();
+//    LoadOutputsMonitor();
+//    LoadCylinderMonitor();
 }
 
 void LoadingHelperControllers::CrossLink(ControllerBase *controller, FrontCommon *front)

@@ -10,7 +10,7 @@ ExtendSqlTableModel::ExtendSqlTableModel(QObject *parent,QSqlDatabase db) :
 
 bool ExtendSqlTableModel::select()
 {
-    bool result = select();
+    bool result = QSqlTableModel::select();
 
     if(!m_initialized){
         for(int rowIndex=0;rowIndex<rowCount();rowIndex++)

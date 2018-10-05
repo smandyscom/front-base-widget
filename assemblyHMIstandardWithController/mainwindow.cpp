@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
     AmsAddr addr{{5,60,134,238,1,1},
                 851};
     InterfaceClient* mainClient = new AdsClient(addr);
-    InterfaceClient* inputClient = new AdsClient(addr,false,AdsClient::PLCADS_RWI,562852);
+    InterfaceClient* inputClient = new AdsClient(addr,false,AdsClient::PLCADS_RWI,525231);
     InterfaceChannel::Instance()->Clients(QList<InterfaceClient*>{
                                               mainClient,
                                               inputClient
