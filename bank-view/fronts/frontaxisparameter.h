@@ -72,9 +72,6 @@ private:
 
     int currentIndex()  Q_DECL_OVERRIDE;
     QString currentFilter() const Q_DECL_OVERRIDE;
-
-    //!
-    QString m_axisTableFilter;
 };
 
 #endif // FRONTAXISPARAMETER_H

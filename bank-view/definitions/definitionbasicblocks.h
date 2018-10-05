@@ -61,7 +61,6 @@ public:
     {
         m_anchor = anchor;
         m_allocated = false;
-
     }
 
     //!

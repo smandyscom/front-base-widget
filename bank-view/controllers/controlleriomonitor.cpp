@@ -48,7 +48,10 @@ void ControllerIOMonitor::onDataChanged(const QModelIndex &topLeft,
                                         const QVector<int> &roles)
 {
     //! Handling override request only
-    if(roles.first() != HEADER_STRUCTURE::UserRole_OverrideOnOff)
+    if(roles.isEmpty())
+        return;
+
+    if (roles.first() != HEADER_STRUCTURE::UserRole_OverrideOnOff)
         return;
     //! Take address by name and set
     ADDRESS_MODE address = m_addressNameTable.key(topLeft);

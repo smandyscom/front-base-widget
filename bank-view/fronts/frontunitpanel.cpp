@@ -3,10 +3,12 @@
 
 FrontUnitPanel::FrontUnitPanel(QWidget *parent) :
     FrontCommonManual(parent),
-    ui(new Ui::FrontUnitPanel)
+    ui(new Ui::FrontUnitPanel),
+    m_index(0)
 {
     ui->setupUi(this);
     //!
+    m_categrory = ManualModeDataBlock::SELECTION_UNIT;
     m_condition =  utilities::listupEnumVariant<UnitMonitorBlock::TransitionBits>();
     m_status =  utilities::listupEnumVariant<UnitOperationBlock::ControlBits>();
     //!
@@ -19,6 +21,7 @@ FrontUnitPanel::FrontUnitPanel(QWidget *parent) :
 
     foreach (QPushButton* var, m_controlMap.keys()) {
         connect(var,SIGNAL(clicked(bool)),this,SLOT(onCommandClick()));
+        m_widgetsPolish.append(var);
     }
     //! Interlock
 //    __busyInterlock = {
@@ -71,10 +74,10 @@ void FrontUnitPanel::onCommandClick()
 {
     QPushButton* button = qobject_cast<QPushButton*>(sender());
 
-    UnitOperationBlock block(&m_monitorBlock);
+    UnitOperationBlock block(m_monitorBlock.Anchor());
+    bool value = block.Value(m_controlMap[button]).toBool();
     //! Flip
-    block.Value(m_controlMap[button],
-            QVariant::fromValue(!block.Value(m_controlMap[button]).toBool()));
+    block.Value(m_controlMap[button],!value);
     //! Set mode
     m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_MODE).toString().toStdString().c_str(),
                                   QVariant::fromValue(ManualModeDataBlock::MODE_EXE_UNIT));
@@ -94,7 +97,7 @@ int FrontUnitPanel::currentIndex()
     if(ui->tableViewUnit->selectionModel()->hasSelection())
     {
         auto table = static_cast<QSqlTableModel*>(ui->tableViewUnit->model());
-        auto record = table->record(ui->tableViewUnit->selectionModel()->selectedRows().first().row());
+        auto record = table->record(ui->tableViewUnit->selectionModel()->selectedIndexes().first().row());
         m_index = record.value(QVariant::fromValue(HEADER_STRUCTURE::ID).toString()).toInt();
     }
     return m_index;

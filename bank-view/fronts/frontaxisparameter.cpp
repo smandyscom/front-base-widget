@@ -308,7 +308,7 @@ QString FrontAxisParameter::currentFilter() const
 void FrontAxisParameter::onMonitorIndexChanged()
 {
     m_axisTable->setFilter(utilities::generateFilterString(QVariant::fromValue(HEADER_STRUCTURE::ID),
-                                                           ui->widgetFilter->SelectedKey1()));
+                                                           currentIndex()));
     m_axisTable->select();
 
     FrontCommonManual::onMonitorIndexChanged();
@@ -319,17 +319,13 @@ void FrontAxisParameter::onMonitorIndexChanged()
 void FrontAxisParameter::onTabCurrentChanged()
 {
     if(ui->tabWidgetCommandPanel->currentWidget() !=
-            ui->tabAxisSetting){
+            ui->tabAxisSetting){       
         m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE).toString().toStdString().c_str(),
                                   true);
-        //!Backup filter
-        m_axisTableFilter = m_axisTable->filter();
     }
     else
     {
         //!Switch to current tab
-        m_axisErrorTable->setFilter(m_axisTableFilter);
-        m_axisErrorTable->select();
+        onMonitorIndexChanged();
     }
-
 }
