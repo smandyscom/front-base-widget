@@ -70,7 +70,7 @@ void FrontCylinderPanel::Setup(QSqlTableModel* cylinderTable,
     HEADER_STRUCTURE::HeaderRender::renderViewHeader(cylinderTableHeader,
                                                      ui->tableViewCylinder,
                                                      HEADER_STRUCTURE::zh_TW,
-                                                     false);
+                                                     true);
 }
 
 void FrontCylinderPanel::onCylinderCommandClicked()

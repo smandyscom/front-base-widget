@@ -15,9 +15,5 @@ void DelegateViewItemFeatureMarker::paint(QPainter *painter,
     //! Set Style option by UserRole
     QStyleOptionViewItem opt = option;
     opt.features.setFlag(QStyleOptionViewItem::Alternate,index.data(Qt::UserRole).toBool());
-
-    if(index.data(Qt::UserRole).toBool())
-        qDebug() << "true;";
-
     QStyledItemDelegate::paint(painter,opt,index);
 }

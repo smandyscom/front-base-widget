@@ -72,7 +72,7 @@ void LoadingHelperControllers::ControllersLoadingRoutineV1()
     //!
     LoadInputsMonitor();
 //    LoadOutputsMonitor();
-//    LoadCylinderMonitor();
+    LoadCylinderMonitor();
 }
 
 void LoadingHelperControllers::CrossLink(ControllerBase *controller, FrontCommon *front)

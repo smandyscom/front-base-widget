@@ -76,6 +76,11 @@ void ControllerIOMonitor::findAndUpdate(ADDRESS_MODE address)
 //    qDebug() << result;
 }
 
+//!
+//! \brief ControllerIOMonitor::setModel
+//! \param model
+//! \param addressNameMap
+//! TODO , A register address could be map to multiple ModelIndex
 void ControllerIOMonitor::setModel(QSqlTableModel* model,
                                    QMap<QVariant,QVariant> addressNameMap)
 {
