@@ -13,9 +13,12 @@ MainWindow::MainWindow(QWidget *parent) :
                 851};
     InterfaceClient* mainClient = new AdsClient(addr);
     InterfaceClient* inputClient = new AdsClient(addr,false,AdsClient::PLCADS_RWI,525231);
+    InterfaceClient* outputClient = new AdsClient(addr,false,AdsClient::PLCADS_RWQ,520917);
+
     InterfaceChannel::Instance()->Clients(QList<InterfaceClient*>{
                                               mainClient,
-                                              inputClient
+                                              inputClient,
+                                              outputClient
                                           });
     //! Load UI/Model
     LoadingHelper::CombineModelViewV1(ui->tabAxis,

@@ -171,6 +171,11 @@ void ControllerBankTransfer::onDataChanged(const QModelIndex &topLeft,
                                            const QModelIndex &bottomRight,
                                            const QVector<int> &roles)
 {
+    if(roles.count() > 0)
+        if ((roles.first() == HEADER_STRUCTURE::UserRole_MonitorOnOff ||
+            roles.first() == HEADER_STRUCTURE::UserRole_OverrideOnOff))
+            return;
+
     AbstractSqlTableAdpater* adaptor = nullptr;
     //! Search for Adaptor
     foreach (AbstractSqlTableAdpater* var, m_adaptors.values()) {

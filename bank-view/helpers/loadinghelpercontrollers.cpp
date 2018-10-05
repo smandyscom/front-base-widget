@@ -27,7 +27,7 @@ void LoadingHelperControllers::LoadInputsMonitor()
 }
 void LoadingHelperControllers::LoadOutputsMonitor()
 {
-    m_controllerOutputMonitor = new ControllerIOMonitor(1);
+    m_controllerOutputMonitor = new ControllerIOMonitor(2);
     QMap<QVariant,QVariant> map;
     map[utilities::trimNamespace(QVariant::fromValue(IoAttributes::HAL_ADDRESS))] =
             utilities::trimNamespace(QVariant::fromValue(IoAttributes::NAME));
@@ -71,7 +71,7 @@ void LoadingHelperControllers::ControllersLoadingRoutineV1()
     m_controllerMain = new ControllerMainPanel(0,128,100,qApp);
     //!
     LoadInputsMonitor();
-//    LoadOutputsMonitor();
+    LoadOutputsMonitor();
     LoadCylinderMonitor();
 }
 
