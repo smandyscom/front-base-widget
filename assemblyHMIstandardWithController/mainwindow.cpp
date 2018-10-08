@@ -43,6 +43,8 @@ MainWindow::MainWindow(QWidget *parent) :
     LoadingHelperControllers::CrossLink(LoadingHelperControllers::m_controllerMain,ui->widgetMain);
     //!
     ui->tabWidget->Setup(LoadingHelperControllers::m_controllerMain);
+	//!
+	showFullScreen();
 }
 
 MainWindow::~MainWindow()
