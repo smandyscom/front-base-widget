@@ -41,6 +41,7 @@ protected slots:
     void onETThresholdChanged();
     void onETCounterCleared();
     void onETNGMindChecked();
+    void onETNGThreadholdChanged();
 private:
     Ui::frontControlPanel *ui;
 
