@@ -48,6 +48,13 @@ void ControllerMainPanel::onReply()
         if(ErrorCode() != __lastError)
             emit errorChanged(ErrorCode());
         __lastError = ErrorCode();
+
+
+        if(!m_firstAcknowledge)
+        {
+            emit firstTimeAck();
+            m_firstAcknowledge = true;
+        }
         break;
     default:
         break;

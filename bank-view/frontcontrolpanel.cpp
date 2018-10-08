@@ -37,11 +37,12 @@ FrontControlPanel::FrontControlPanel(QList<ControllerMaterialTransfer*> material
     //!
     connect(__controller,&ControllerMainPanel::stateChanged,this,&FrontControlPanel::onStateChanged);
     connect(__controller,&ControllerMainPanel::errorChanged,this,&FrontControlPanel::onErrorChanged);
+    connect(__controller,&ControllerMainPanel::firstTimeAck,this,&FrontControlPanel::onFirstTimeAck);
     //!
     connect(ui->pushButtonInletClear,&QPushButton::clicked,this,&FrontControlPanel::onInletCleared);
     connect(ui->pushButtonETUsageClear,&QPushButton::clicked,this,&FrontControlPanel::onETCounterCleared);
     connect(ui->spinBoxETUsageAlarm,&QSpinBox::editingFinished,this,&FrontControlPanel::onETThresholdChanged);
-
+    connect(ui->checkBoxETNgAlarm,&QCheckBox::toggled,this,&FrontControlPanel::onETNGMindChecked);
     //! Safety I/O monitor
     FrontSafetyPanel* fsp = new FrontSafetyPanel(ui->widgetSafetyIO);
     //!
@@ -162,6 +163,11 @@ void FrontControlPanel::onErrorChanged(MODBUS_U_QUAD currentError)
         ui->textBrowserErrorDescription->clear();
 }
 
+void FrontControlPanel::onFirstTimeAck()
+{
+    ui->checkBoxETNgAlarm->setChecked(__controller->Data(ControllerMainPanel::ET_NG_MIND).toBool());
+}
+
 void FrontControlPanel::onETThresholdChanged()
 {
     __controller->Data(ControllerMainPanel::ET_USAGE_THRESHOLD,QVariant::fromValue(ui->spinBoxETUsageAlarm->value()));
@@ -170,6 +176,11 @@ void FrontControlPanel::onETCounterCleared()
 {
     __controller->Data(ControllerMainPanel::ET_USAGE_COUNTER,QVariant::fromValue(0));
 }
+void FrontControlPanel::onETNGMindChecked()
+{
+    __controller->Data(ControllerMainPanel::ET_NG_MIND,ui->checkBoxETNgAlarm->isChecked());
+}
+
 
 void FrontControlPanel::onInletCleared()
 {

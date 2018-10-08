@@ -34,11 +34,13 @@ protected slots:
     void onCheckedChanged(bool toggled);
     void onStateChanged(ControllerMainPanel::MainStates currentState);
     void onErrorChanged(quint64 currentError);
+    void onFirstTimeAck();
 
     void onInletCleared();
 
     void onETThresholdChanged();
     void onETCounterCleared();
+    void onETNGMindChecked();
 private:
     Ui::frontControlPanel *ui;
 

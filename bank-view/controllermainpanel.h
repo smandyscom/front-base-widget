@@ -54,6 +54,7 @@ public:
 
         ET_USAGE_THRESHOLD = MON_DATA_1,
         ET_USAGE_COUNTER = MON_DATA_2,
+        ET_NG_MIND = MON_DATA_3,
 
         OFFSET_CONTEXT_LUID_PARENT = 0x03000000+UnitContextBlock::OFFSET_CONTEXT_LUID_PARENT,
     };
@@ -211,6 +212,7 @@ public:
 signals:
     void stateChanged(MainStates currentState);
     void errorChanged(MODBUS_U_QUAD currentError);
+    void firstTimeAck();
 public slots:
     void onDataChanged(TransferTask task);
 protected slots:
@@ -240,6 +242,8 @@ protected:
     ControllerBankTransfer* __controllerTransfer;
 
     static ControllerMainPanel* __instace;
+
+    bool m_firstAcknowledge;
 };
 
 #endif // CONTROLLERMAINPANEL_H

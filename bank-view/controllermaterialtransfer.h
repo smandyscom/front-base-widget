@@ -88,7 +88,7 @@ public:
     //! Current material id this slot held
     int MaterialId() const
     {
-        return __materialId;
+        return m_materialId;
     }
     int Index() const
     {
@@ -175,7 +175,8 @@ protected:
     int __slotIndex;
     int __channelIndex;
 
-    int __materialId;
+    int m_materialId;
+    int m_lastMaterialId;
     bool __isValid;
     //SlotType __role;
 

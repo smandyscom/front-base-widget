@@ -4,7 +4,7 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index, int channelInd
     QStateMachine(parent),
     __slotIndex(index),
     __pollCyclic(100),
-    __materialId(0),
+    m_materialId(0),
     __channelIndex(channelIndex),
     m_totalCounter(0),
     m_okCounter(0),
@@ -77,12 +77,13 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index, int channelInd
     {
         __procedureTimer.start();
 
-        __materialId = __channel->Access<MODBUS_U_WORD>(toOffseteAddress(MATERIAL_ID));
+        m_materialId = __channel->Access<MODBUS_U_WORD>(toOffseteAddress(MATERIAL_ID));
         __isValid = __channel->Access<bool>(toOffseteAddress(IS_VALID));
         __request = SyncRequests(__channel->Access<MODBUS_U_WORD>(toOffseteAddress(SYNC_ACTION)));
 
         //! Count up
-        m_totalCounter +=1;
+        if(m_lastMaterialId!=m_materialId)
+            m_totalCounter +=1;
 
         //! According sync request perform DB manipulation
         switch (__request) {
@@ -99,7 +100,7 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index, int channelInd
             break;
         case ACTION_CREATE:
             onInsert();
-            __channel->Access<MODBUS_U_LONG>(toOffseteAddress(MATERIAL_ID),__materialId);
+            __channel->Access<MODBUS_U_LONG>(toOffseteAddress(MATERIAL_ID),m_materialId);
             break;
         case ACTION_QUERY:
             //!Write data
@@ -130,18 +131,22 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index, int channelInd
         switch (m_currentGrade) {
         case OK:
         case BYPASS:
-            m_okCounter+=1;
+            if(m_lastMaterialId!=m_materialId)
+                m_okCounter+=1;
             //! Main grade
             m_currentGrade = static_cast<Grade>(__adb.Value(m_index_grade1).toInt());
             break;
         case NG:
-            m_ngCounter+=1;
+            if(m_lastMaterialId!=m_materialId)
+                m_ngCounter+=1;
             m_currentGrade = Grade::NG;
             break;
         default:
             break;
         }
 
+        //!memorize
+        m_lastMaterialId = m_materialId;
 
        emit dataUpdated();
         __channel->Access<bool>(toOffseteAddress(DONE),false); //lead
@@ -228,11 +233,11 @@ void ControllerMaterialTransfer::onInsert()
     int __rowCount = __table->rowCount();
 
     __record = __table->record(0); //access last row
-    __materialId = __record.value(QVariant::fromValue(SlotBlock::ID).toString()).toInt();
+    m_materialId = __record.value(QVariant::fromValue(SlotBlock::ID).toString()).toInt();
 
 
 
-    qDebug() << QString("%1,onInsert elapsed,%2,%3").arg(__slotIndex).arg(__timer.elapsed()).arg(__materialId);
+    qDebug() << QString("%1,onInsert elapsed,%2,%3").arg(__slotIndex).arg(__timer.elapsed()).arg(m_materialId);
 
 
 }
@@ -242,13 +247,13 @@ void ControllerMaterialTransfer::onQuery()
     __timer.start();
 
 //    __table->database().transaction();
-    __adb = __adpator->Record(__materialId,
+    __adb = __adpator->Record(m_materialId,
                               AbstractSqlTableAdpater::KEY_NAMED_KEY,
                               QVariant::fromValue(SlotBlock::ID));
 
 //    if(!__table->database().commit())
 //        qDebug() << QString("database commit failed onQuery");
-    qDebug() << QString("%1,onQuery elapsed,%2,%3").arg(__slotIndex).arg(__timer.elapsed()).arg(__materialId);
+    qDebug() << QString("%1,onQuery elapsed,%2,%3").arg(__slotIndex).arg(__timer.elapsed()).arg(m_materialId);
 }
 void ControllerMaterialTransfer::onUpdate()
 {
@@ -258,7 +263,7 @@ void ControllerMaterialTransfer::onUpdate()
 //    __table->database().transaction();
 
     //! Write in data base
-    __adpator->Record(__materialId,
+    __adpator->Record(m_materialId,
                       __adb,
                       AbstractSqlTableAdpater::KEY_NAMED_KEY,
                       QVariant::fromValue(SlotBlock::ID));
@@ -266,7 +271,7 @@ void ControllerMaterialTransfer::onUpdate()
 //    if(!__table->database().commit())
 //        qDebug() << QString("database commit failed onUpdate");
 
-    qDebug() << QString("%1,onUpdate elapsed,%2,%3").arg(__slotIndex).arg(__timer.elapsed()).arg(__materialId);
+    qDebug() << QString("%1,onUpdate elapsed,%2,%3").arg(__slotIndex).arg(__timer.elapsed()).arg(m_materialId);
 }
 
 void ControllerMaterialTransfer::onAboutToLeave()
