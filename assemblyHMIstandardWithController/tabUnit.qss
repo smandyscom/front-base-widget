@@ -1,0 +1,25 @@
+/*labels*/
+QWidget[OFFSET_UOB_IS_BYPASSED="true"] #pushButtonByPass
+{
+    background-color : Green;
+}
+QWidget[OFFSET_UOB_STATE_PAUSE="true"] #pushButtonPause
+{
+    background-color : Green;
+}
+QWidget[OFFSET_UOB_MATERIAL_OVERRIDE="true"] #pushButtonMaterial
+{
+    background-color : Green;
+}
+QWidget[OFFSET_UOB_WORKING_OVERRIDE="true"] #pushButtonWorking
+{
+    background-color : Green;
+}
+QWidget[OFFSET_UOB_EN_STEP="true"] #pushButtonEnableStep
+{
+    background-color : Green;
+}
+QWidget[OFFSET_UOB_TRIG_STEP="true"] #pushButtonStep
+{
+    background-color : Green;
+}

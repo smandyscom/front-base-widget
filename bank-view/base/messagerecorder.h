@@ -5,7 +5,8 @@
 #include <QDir>
 #include <QFile>
 #include <QDate>
-#include <QtConcurrent>
+#include <qtextstream.h>
+
 #include <messagereceiver.h>
 #include <messagehandler.h>
 
@@ -16,28 +17,28 @@ public:
 
     static MessageRecorder* Instance()
     {
-        if(__instance ==nullptr)
-            __instance = new MessageRecorder();
+        if(m_instance ==nullptr)
+            m_instance = new MessageRecorder();
 
-        return __instance;
+        return m_instance;
     }
 
 protected slots:
     void onMessageReceived(QString arg);
 protected:
     explicit MessageRecorder(QObject *parent = nullptr);
-    MessageReceiver* __receiver;
+    MessageReceiver* m_receiver;
 
     void fileConcluded(QFile* file, QTextStream *stream);
     void fileOpenByDate();
 
-    QString __logDirectory = "Log";
+    QString m_logDirectory;
 
-    QDate __currentDate;
-    QTextStream* __stream;
-    QFile* __currentFile;
+    QDate m_currentDate;
+    QTextStream* m_stream;
+    QFile* m_currentFile;
 
-    static MessageRecorder* __instance;
+    static MessageRecorder* m_instance;
 };
 
 #endif // MESSAGERECORDER_H

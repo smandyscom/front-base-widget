@@ -12,6 +12,8 @@ void HEADER_STRUCTURE::HeaderRender::renderViewHeader(QSqlTableModel *reference,
                                                       Headers key,
                                                       bool isStrech)
 {
+	reference->setFilter(nullptr);
+	reference->select();
     //! Hide all
     for(int i=0;i<view->model()->columnCount();i++)
         view->hideColumn(i);

@@ -27,9 +27,9 @@ public:
 
     static MessageHandler* Instance()
     {
-        if(__instance==nullptr)
-            __instance = new MessageHandler;
-        return __instance;
+        if(m_instance==nullptr)
+            m_instance = new MessageHandler;
+        return m_instance;
     }
 
 
@@ -44,10 +44,10 @@ protected :
 
 
     static void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &str);
-    static QList<MessageReceiver*> __list;
+    static QList<MessageReceiver*> m_list;
     static QString timeformat;
-    static MessageHandler* __instance;
-    static QtMessageHandler __default;
+    static MessageHandler* m_instance;
+    static QtMessageHandler m_default;
 };
 
 #endif // MESSAGEHANDLER_H

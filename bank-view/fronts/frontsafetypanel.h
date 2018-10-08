@@ -4,12 +4,8 @@
 #include <QWidget>
 #include <QTimer>
 
-//#include <junctionbankdatabase.h>
-
 #include <definitionioattributes.h>>
 #include <definitionauxiliarykeys.h>
-
-//#include <controllersafety.h>
 
 #include <utilities.h>
 
@@ -27,14 +23,12 @@ class FrontSafetyPanel : public QWidget
 public:
     explicit FrontSafetyPanel(QWidget *parent = 0);
     ~FrontSafetyPanel();
-protected slots:
-//   void onInitialized();
+
+	void Setup(QSqlTableModel* input,
+		QSqlTableModel* output,
+		QSqlTableModel* header);
 private:
     Ui::FrontSafetyPanel *ui;
-
-//    TableModelIOOverride* __monitorTable;
-
-//    ControllerSafety* __controller;
 };
 
 #endif // FRONTSAFETYPANEL_H

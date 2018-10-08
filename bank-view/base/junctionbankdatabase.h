@@ -12,6 +12,7 @@
 
 #include <QSqlTableModel>
 #include <extendsqltablemodel.h>
+#include <debugsqltablemodel.h>
 
 #include<QDebug>
 //!
@@ -58,6 +59,9 @@ public:
         //! I/O Tables
         WHOLE_INPUTS,
         WHOLE_OUTPUTS,
+		//! Safe I/O
+		WHOLE_SAFETY_INPUTS,
+		WHOLE_SAFETY_OUTPUTS,
         //! Header
         HEADER_AXIS,
         HEADER_CYLINDERS,

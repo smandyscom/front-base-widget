@@ -11,8 +11,8 @@ FrontMessageShow::FrontMessageShow(QWidget *parent) :
     ui(new Ui::FrontMessageShow)
 {
     ui->setupUi(this);
-    __receiver = new MessageReceiver(this);
-    connect(__receiver,SIGNAL(messageReceivedFormatted(QString)),this,SLOT(onMessageReceived(QString)));
+    m_receiver = new MessageReceiver(this);
+    connect(m_receiver,SIGNAL(messageReceivedFormatted(QString)),this,SLOT(onMessageReceived(QString)));
 
     ui->plainTextEdit->document()->setMaximumBlockCount(50); //limited buffer
 }

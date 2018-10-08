@@ -44,6 +44,15 @@ void LoadingHelper::LoadFrontIO(FrontIoOverride *widget)
                   m_instance->TableMap(JunctionBankDatabase::HEADER_IO));
 }
 
+void LoadingHelper::LoadSafeIO(FrontSafetyPanel * widget)
+{
+	widget->Setup(m_instance->TableMap(JunctionBankDatabase::WHOLE_SAFETY_INPUTS),
+		m_instance->TableMap(JunctionBankDatabase::WHOLE_SAFETY_OUTPUTS),
+		m_instance->TableMap(JunctionBankDatabase::HEADER_IO));
+}
+
+
+
 void LoadingHelper::LoadFrontMain(FrontMainPanel* widget)
 {
     widget->Setup(m_instance->TableMap(JunctionBankDatabase::WHOLE_AXIS),
@@ -59,7 +68,9 @@ void LoadingHelper::CombineModelViewV1(FrontAxisParameter* widget1,
                                        FrontCylinderPanel* widget2,
                                        FrontUnitPanel* widget3,
                                        FrontConfigurationTransfer* widget4,
-                                       FrontMainPanel* widget5, FrontIoOverride *widget6)
+                                       FrontMainPanel* widget5, 
+	FrontIoOverride *widget6,
+	FrontSafetyPanel* widget7)
 {
 
     m_instance = JunctionBankDatabase::Instance();
@@ -71,6 +82,7 @@ void LoadingHelper::CombineModelViewV1(FrontAxisParameter* widget1,
     LoadFrontConfiguration(widget4);
     LoadFrontMain(widget5);
     LoadFrontIO(widget6);
+	LoadSafeIO(widget7);
 
     m_instance->onReleaseHeaders();
 }

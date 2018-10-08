@@ -4,13 +4,14 @@
 #include <QObject>
 #include <QSqlTableModel>
 
+#include <debugsqltablemodel.h>
 #include <definitionauxiliarykeys.h>
 
 //!
 //! \brief The ExtendSqlTableModel class
 //! With user role storage and handling method
 class ExtendSqlTableModel :
-        public QSqlTableModel
+        public DebugSqlTableModel
 {
     Q_OBJECT
 public:

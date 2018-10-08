@@ -1,0 +1,39 @@
+/*pushbutton*/
+QWidget[OFFSET_MONITOR_LAST_COMMAND="2"] QPushButton#pushButtonGoB
+{
+    background-color : Green;
+}
+QWidget[OFFSET_MONITOR_LAST_COMMAND="1"] QPushButton#pushButtonGoA
+{
+    background-color : Green;
+}
+/*labels*/
+QWidget[MOR_WARN="true"] QLabel#labelWarn
+{
+    background-color : Green;
+}
+QWidget[MOR_GROUP_A="true"] QLabel#labelMonA
+{
+    background-color : Green;
+}
+QWidget[MOR_GROUP_B="true"] QLabel#labelMonB
+{
+    background-color : Green;
+}
+QWidget[CTL_SUPPRESS="true"] QLabel#labelSuppress
+{
+    background-color : Green;
+}
+QWidget[INT_TMR_ON="v"] QLabel#labelTimeon
+{
+    background-color : Green;
+}
+QWidget[MOR_DONE="true"] QLabel#labelDone
+{
+    background-color : Green;
+}
+/*Table item*/
+QWidget QAbstractItemView::item:alternate
+{
+    background: #FFB934;
+}

@@ -5,10 +5,6 @@
 #include <QSqlTableModel>
 #include <frontcommon.h>
 #include <definitionauxiliarykeys.h>
-//#include <modbuschannel.h>
-
-//#include <frontsinglefilter.h>
-//#include <junctionbankdatabase.h>
 
 #include <utilities.h>
 
@@ -37,10 +33,6 @@ public:
                QSqlTableModel* region,
                QSqlTableModel *header);
 
-protected slots:
-    void onViewSelectionChanged(QModelIndex index);
-    void onTimerTimeout();
-    void onOverrideClicked(QModelIndex index);
 protected:
     Ui::FrontIoOverride *ui;
 };

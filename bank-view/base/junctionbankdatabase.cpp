@@ -46,7 +46,7 @@ void JunctionBankDatabase::onInitialize()
             m_reference = new ExtendSqlTableModel(this,m_database);
             break;
         default:
-            m_reference = new QSqlTableModel(this,m_database);
+            m_reference = new DebugSqlTableModel(this,m_database);
             break;
         }
 

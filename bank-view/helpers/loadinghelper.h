@@ -9,9 +9,13 @@
 #include <frontconfigurationtransfer.h>
 #include <frontmainpanel.h>
 #include <frontiooverride.h>
+#include <frontsafetypanel.h>
 
 #include <junctionbankdatabase.h>
 
+#include <messagehandler.h>
+#include <messagereceiver.h>
+#include <messagerecorder.h>
 //#include <controllerbase.h>
 
 //!
@@ -30,13 +34,15 @@ public:
     static void LoadFrontMain(FrontMainPanel* widget);
 
     static void LoadFrontIO(FrontIoOverride* widget);
+	static void LoadSafeIO(FrontSafetyPanel* widget);
 
     static void CombineModelViewV1(FrontAxisParameter* widget1,
                                    FrontCylinderPanel* widget2,
                                    FrontUnitPanel* widget3,
                                    FrontConfigurationTransfer* widget4,
                                    FrontMainPanel* widget5,
-                                   FrontIoOverride* widget6);
+                                   FrontIoOverride* widget6,
+		FrontSafetyPanel* widget7);
 
 
 signals:

@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="TabWidgetOperationMode" name="tabWidget">
       <property name="currentIndex">
-       <number>6</number>
+       <number>0</number>
       </property>
       <property name="documentMode">
        <bool>false</bool>
@@ -37,17 +37,21 @@
         <item row="0" column="0">
          <widget class="FrontMainPanel" name="widgetMain" native="true"/>
         </item>
+        <item row="0" column="1">
+         <widget class="QTableView" name="tableViewMonitor_2"/>
+        </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tabSafety">
+      <widget class="FrontSafetyPanel" name="tabSafety">
        <attribute name="title">
         <string>安全I/O</string>
        </attribute>
       </widget>
-      <widget class="QWidget" name="tabHistory">
+      <widget class="FrontMessageShow" name="tabHistory">
        <attribute name="title">
         <string>歷史訊息</string>
        </attribute>
+       <layout class="QGridLayout" name="gridLayout_3"/>
       </widget>
       <widget class="FrontAxisParameter" name="tabAxis">
        <attribute name="title">
@@ -84,7 +88,7 @@
      <x>0</x>
      <y>0</y>
      <width>650</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">
@@ -146,6 +150,18 @@
    <class>TabWidgetOperationMode</class>
    <extends>QTabWidget</extends>
    <header>tabwidgetoperationmode.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>FrontMessageShow</class>
+   <extends>QWidget</extends>
+   <header>frontmessageshow.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>FrontSafetyPanel</class>
+   <extends>QWidget</extends>
+   <header>frontsafetypanel.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

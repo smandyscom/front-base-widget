@@ -1,0 +1,4 @@
+QWidget QAbstractItemView::item:alternate
+{
+    background: #FFB934;
+}

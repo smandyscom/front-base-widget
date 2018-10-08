@@ -66,7 +66,7 @@ void AdsClient::executeRequest()
         operationDone();
 		break;
 	default:
-        qDebug() << "ADS Error:" + lastResult;
+        qDebug() << QString("ADS Error:%1").arg(lastResult);
 		break;
 	}
 }

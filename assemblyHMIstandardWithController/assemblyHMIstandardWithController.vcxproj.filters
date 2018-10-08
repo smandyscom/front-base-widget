@@ -1,0 +1,426 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Distribution Files">
+      <UniqueIdentifier>{B83CAF91-C7BF-462F-B76C-EA11631F866C}</UniqueIdentifier>
+      <Extensions>*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\bank-view\interface\adsclient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\helpers\commonhelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\controllers\controllerbanktransfer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\controllers\controllerbase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\controllers\controlleriomonitor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\controllers\controllermainpanel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\controllers\controllermanualmode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\definitions\definitionauxiliarykeys.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\definitions\definitionbasicblocks.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\definitions\definitionsbaselayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\delegates\delegatedataselector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\delegates\delegatematerialselector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\delegates\delegateviewitemfeaturemarker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\base\enumcomboboxdynamic.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\base\extendsqltablemodel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\fronts\frontaxisparameter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\fronts\frontcommon.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\fronts\frontcommonmanual.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\fronts\frontconfigurationtransfer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\fronts\frontcylinderpanel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\fronts\frontiooverride.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\fronts\frontmainpanel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\fronts\frontsinglefilter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\fronts\fronttwinfilter2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\fronts\frontunitpanel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\interface\interfacechannel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\interface\interfaceclient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\base\junctionbankdatabase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\helpers\loadinghelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\helpers\loadinghelpercontrollers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mainwindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\fronts\tableviewfeature.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\fronts\tabwidgetoperationmode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\base\utilities.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\base\debugsqltablemodel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\fronts\frontmessageshow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\base\messagehandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\base\messagereceiver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\base\messagerecorder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\fronts\frontsafetypanel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\fronts\tableviewfeatureoverride.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="..\bank-view\base\abstractsqltableadpater.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\interface\adsclient.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\helpers\commonhelper.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\controllers\controllerbanktransfer.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\controllers\controllerbase.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\controllers\controlleriomonitor.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\controllers\controllermainpanel.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\controllers\controllermanualmode.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\definitions\definitionauxiliarykeys.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\definitions\definitionaxisblocks.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\definitions\definitionbasicblocks.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\definitions\definitioncommandblock.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\definitions\definitioncylinderblock.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\definitions\definitionioattributes.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\definitions\definitionmaincontrolblock.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\definitions\definitionmanualblock.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\definitions\definitionmaterialkeys.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="..\bank-view\definitions\definitionsbaselayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="..\bank-view\definitions\definitionsignalblock.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\definitions\definitionslotblock.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\definitions\definitionunitblocks.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\delegates\delegatedataselector.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\delegates\delegatematerialselector.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\delegates\delegateviewitemfeaturemarker.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\base\enumcomboboxdynamic.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\base\enumcomboboxgeneric.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\base\extendsqltablemodel.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\fronts\frontaxisparameter.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\fronts\frontcommon.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\fronts\frontcommonmanual.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\fronts\frontconfigurationtransfer.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\fronts\frontcylinderpanel.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\fronts\frontiooverride.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\fronts\frontmainpanel.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\fronts\frontsinglefilter.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\fronts\fronttwinfilter2.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\fronts\frontunitpanel.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\interface\interfacechannel.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\interface\interfaceclient.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="..\bank-view\interface\interfacerequest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="..\bank-view\base\junctionbankdatabase.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\helpers\loadinghelper.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\helpers\loadinghelpercontrollers.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="mainwindow.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\fronts\tableviewfeature.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\fronts\tabwidgetoperationmode.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="..\bank-view\base\utilities.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="..\bank-view\base\debugsqltablemodel.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\fronts\frontmessageshow.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\base\messagehandler.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\base\messagereceiver.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\base\messagerecorder.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\fronts\frontsafetypanel.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\fronts\tableviewfeatureoverride.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="debug\moc_predefs.h.cbt">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="release\moc_predefs.h.cbt">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
+    <ClInclude Include="ui_frontaxisparameter.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ui_frontconfigurationtransfer.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ui_frontcylinderpanel.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ui_frontiooverride.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ui_frontmainpanel.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ui_frontsinglefilter.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ui_fronttwinfilter2.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ui_frontunitpanel.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ui_mainwindow.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <CustomBuild Include="resource.qrc">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="..\bank-view\fronts\frontaxisparameter.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="..\bank-view\fronts\frontconfigurationtransfer.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="..\bank-view\fronts\frontcylinderpanel.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="..\bank-view\fronts\frontiooverride.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="..\bank-view\fronts\frontmainpanel.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="..\bank-view\fronts\frontsinglefilter.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="..\bank-view\fronts\fronttwinfilter2.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="..\bank-view\fronts\frontunitpanel.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="mainwindow.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="..\bank-view\fronts\frontmessageshow.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="..\bank-view\fronts\frontsafetypanel.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="tabAxis.qss" />
+    <None Include="tabCylinder.qss" />
+    <None Include="tabIO.qss" />
+    <None Include="tabUnit.qss" />
+    <None Include="widgetMain.qss" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

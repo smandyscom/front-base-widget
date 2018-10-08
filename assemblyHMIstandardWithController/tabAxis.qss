@@ -1,0 +1,15 @@
+QWidget[MON_BIT0_SERVO_ON="true"] QPushButton#pushButtonDirectServoOn
+{
+    background-color : Green;
+}
+
+QWidget[MON_BIT15_ALARM_CLEAR="true"] QPushButton#pushButtonDirectAlarmClear
+{
+    background-color : Red;
+}
+
+QWidget[RS_SERVO_READY="false"] QTextBrowser#textBrowserAlarmWarning
+{
+    background-color : Red;
+}
+

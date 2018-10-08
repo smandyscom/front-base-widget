@@ -28,7 +28,7 @@ private:
     Ui::FrontMessageShow *ui;
 protected:
     void lineCheck();
-    MessageReceiver* __receiver;
+    MessageReceiver* m_receiver;
 };
 
 #endif // FRONTMESSAGESHOW_H

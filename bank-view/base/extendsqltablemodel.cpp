@@ -1,7 +1,7 @@
 #include "extendsqltablemodel.h"
 
 ExtendSqlTableModel::ExtendSqlTableModel(QObject *parent,QSqlDatabase db) :
-    QSqlTableModel(parent,db),
+    DebugSqlTableModel(parent,db),
     m_initialized(false)
 {
 
@@ -10,7 +10,7 @@ ExtendSqlTableModel::ExtendSqlTableModel(QObject *parent,QSqlDatabase db) :
 
 bool ExtendSqlTableModel::select()
 {
-    bool result = QSqlTableModel::select();
+    bool result = DebugSqlTableModel::select();
 
     if(!m_initialized){
         for(int rowIndex=0;rowIndex<rowCount();rowIndex++)
@@ -36,7 +36,7 @@ bool ExtendSqlTableModel::setData(const QModelIndex &index, const QVariant &valu
         emit dataChanged(index,index,QVector<int>{role});
         return true;
     default:
-        return QSqlTableModel::setData(index,value,role);
+        return DebugSqlTableModel::setData(index,value,role);
     }
 }
 
@@ -48,6 +48,6 @@ QVariant ExtendSqlTableModel::data(const QModelIndex &index, int role) const
     case HEADER_STRUCTURE::UserRole_OverrideOnOff:
         return m_overrideOnOff[index.row()][index.column()];
     default:
-        return QSqlTableModel::data(index,role);
+        return DebugSqlTableModel::data(index,role);
     }
 }

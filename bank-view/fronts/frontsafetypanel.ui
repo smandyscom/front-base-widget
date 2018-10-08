@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>292</width>
-    <height>584</height>
+    <width>827</width>
+    <height>686</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -26,55 +26,37 @@
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
    <item row="0" column="0">
-    <widget class="QGroupBox" name="groupBox">
-     <property name="title">
-      <string>安全I/O</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="0">
-       <layout class="QGridLayout" name="gridLayout_3">
-        <item row="0" column="0">
-         <widget class="TableViewFeature" name="tableViewMonitor">
-          <attribute name="horizontalHeaderVisible">
-           <bool>false</bool>
-          </attribute>
-          <attribute name="verticalHeaderVisible">
-           <bool>false</bool>
-          </attribute>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QCheckBox" name="checkBoxInterlockBypass">
-          <property name="text">
-           <string>安全裝置除能</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QCheckBox" name="checkBoxLightgateBypass">
-          <property name="text">
-           <string>光閘除能</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QCheckBox" name="checkBoxSolenoid">
-          <property name="text">
-           <string>安全門鎖定</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0">
-         <widget class="QCheckBox" name="checkBoxAirChoke">
-          <property name="text">
-           <string>氣壓開啟</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-     </layout>
-    </widget>
+    <layout class="QGridLayout" name="gridLayout_3">
+     <item row="1" column="0">
+      <widget class="TableViewFeatureOverride" name="tableViewOverride">
+       <property name="editTriggers">
+        <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
+       <property name="cornerButtonEnabled">
+        <bool>false</bool>
+       </property>
+       <attribute name="horizontalHeaderVisible">
+        <bool>true</bool>
+       </attribute>
+       <attribute name="verticalHeaderVisible">
+        <bool>false</bool>
+       </attribute>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="TableViewFeature" name="tableViewMonitor">
+       <property name="editTriggers">
+        <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
+       <property name="cornerButtonEnabled">
+        <bool>false</bool>
+       </property>
+       <attribute name="verticalHeaderVisible">
+        <bool>false</bool>
+       </attribute>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>
@@ -83,6 +65,11 @@
    <class>TableViewFeature</class>
    <extends>QTableView</extends>
    <header>tableviewfeature.h</header>
+  </customwidget>
+  <customwidget>
+   <class>TableViewFeatureOverride</class>
+   <extends>QTableView</extends>
+   <header>tableviewfeatureoverride.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

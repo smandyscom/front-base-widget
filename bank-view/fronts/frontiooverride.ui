@@ -162,7 +162,7 @@
             <item row="0" column="0">
              <layout class="QVBoxLayout" name="verticalLayout_3">
               <item>
-               <widget class="TableViewFeature" name="tableViewOutputs">
+               <widget class="TableViewFeatureOverride" name="tableViewOutputs">
                 <property name="maximumSize">
                  <size>
                   <width>16777215</width>
@@ -210,8 +210,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>1242</width>
-        <height>749</height>
+        <width>271</width>
+        <height>230</height>
        </rect>
       </property>
       <attribute name="label">
@@ -403,15 +403,20 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>TableViewFeature</class>
+   <extends>QTableView</extends>
+   <header>tableviewfeature.h</header>
+  </customwidget>
+  <customwidget>
+   <class>TableViewFeatureOverride</class>
+   <extends>QTableView</extends>
+   <header>tableviewfeatureoverride.h</header>
+  </customwidget>
+  <customwidget>
    <class>FrontSingleFilter</class>
    <extends>QWidget</extends>
    <header>frontsinglefilter.h</header>
    <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>TableViewFeature</class>
-   <extends>QTableView</extends>
-   <header>tableviewfeature.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
