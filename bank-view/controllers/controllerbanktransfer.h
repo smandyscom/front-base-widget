@@ -41,7 +41,7 @@ protected:
     //! From the sigalton
     QObject* m_controller;
 
-    void transfer(QVariant key);
+    void transfer();
     QQueue<TransferTask> m_tasksQueue;
 
     //!
