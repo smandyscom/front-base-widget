@@ -164,9 +164,15 @@ void FrontAxisParameter::onDirectExecution(bool value)
             int m_commandBlockId = mainDataTable->record(selectedCommandBlockIndex())
                     .value(utilities::trimNamespace(QVariant::fromValue(CommandBlock::ID)))
                     .toInt();
-            m_commblockAdaptor->Record(m_commandBlockId,
+
+			*reinterpret_cast<CellDataBlock*>(m_postionBlock.Anchor()) = 
+				*reinterpret_cast<CellDataBlock*>( m_commblockAdaptor->Record(m_commandBlockId,
                                        AbstractSqlTableAdpater::KEY_NAMED_KEY,
-                                       QVariant::fromValue(CommandBlock::ID));
+                                       QVariant::fromValue(CommandBlock::ID)).Anchor());
+
+			//! Resume current filter
+			m_commblockAdaptor->Model()->setFilter(currentFilter());
+			m_commblockAdaptor->Model()->select();
         }
         else if(sender()==ui->pushButtonDirectAbsolute)
         {
@@ -237,7 +243,7 @@ void FrontAxisParameter::onInterrupted(bool value)
 
 void FrontAxisParameter::setCommonParameters(PosCommandBlock& block)
 {
-    block.Value(AbstractCommandBlock::OFFSET_ACB_AXIS_ID,ui->widgetFilter->SelectedKey1());
+    block.Value(AbstractCommandBlock::OFFSET_ACB_AXIS_ID,currentIndex());
     block.Value(AbstractCommandBlock::OFFSET_ACB_SPD,ui->doubleSpinBoxSpeedReference->value());//unit/sec
     block.Value(AbstractCommandBlock::OFFSET_ACB_ACC_T,ui->doubleSpinBoxAccerlation->value());//ms
     block.Value(AbstractCommandBlock::OFFSET_ACB_DEC_T,ui->doubleSpinBoxDecerlation->value());//ms
