@@ -325,7 +325,8 @@ void FrontAxisParameter::onMonitorIndexChanged()
 void FrontAxisParameter::onTabCurrentChanged()
 {
     if(ui->tabWidgetCommandPanel->currentWidget() !=
-            ui->tabAxisSetting){       
+            ui->tabAxisSetting){
+		//!trigger axis parameter transfer
         m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE).toString().toStdString().c_str(),
                                   true);
     }

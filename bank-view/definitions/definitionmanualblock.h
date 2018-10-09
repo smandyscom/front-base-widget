@@ -13,7 +13,7 @@ class ManualModeDataBlock :
 {
     Q_OBJECT
 public:
-    enum Categrories
+    enum Categrories : MODBUS_U_WORD
     {
         SELECTION_AXIS = 0,
         SELECTION_CYLINDER = 1,
@@ -30,7 +30,7 @@ public:
                         SELECTION_UNIT,
     };
     Q_ENUM(Categrories)
-    enum Mode
+    enum Mode : MODBUS_U_WORD
     {
         MODE_EXE_AXIS=SELECTION_AXIS,
         MODE_EXE_CYLINDER=SELECTION_CYLINDER,

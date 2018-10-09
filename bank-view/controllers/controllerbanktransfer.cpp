@@ -28,79 +28,6 @@ void ControllerBankTransfer::Adaptor(ManualModeDataBlock::Categrories key,Abstra
 }
 
 //!
-//! \brief ControllerBankTransfer::onTransferData
-//! First time raising transfering operation
-//void ControllerBankTransfer::onTransferData()
-//{
-//    /*if(__commitOption.Mode()!=CommitBlock::MODE_DOWNLOAD_DATA_BLOCK &&
-//            __commitOption.Mode() != CommitBlock::MODE_UPLOAD_DATA_BLOCK)
-//        return;*/ // invalid mode
-
-//    if(__tasksQueue.isEmpty())
-//    {
-//        emit dataTransfered();
-//        return;
-//    }
-
-//    //! connect before operation
-//    connect(__controller,SIGNAL(operationReady()),this,SLOT(onOperationReady()));
-//     //!Raise asynchrons operation
-//    transfer();
-//}
-
-//!
-//! \brief ControllerBankTransfer::onOperationPerformed
-//! Would iteratlly perform opertion until index reached
-//void ControllerBankTransfer::onOperationReady()
-//{
-////    if(__controller->CommitOption().Mode()!=CommitBlock::MODE_DOWNLOAD_DATA_BLOCK &&
-////            __controller->CommitOption().Mode()!=CommitBlock::MODE_UPLOAD_DATA_BLOCK)
-////        return; //ignored
-
-//    TransferTask __task = __tasksQueue.dequeue();
-
-//    AbstractDataBlock __temp;
-//    *static_cast<CellDataBlock*>(&__temp) = __controller->DataBlock<CellDataBlock>().value<CellDataBlock>();
-//    __adaptorMap[__task.first]->
-//            Record(__task.second,
-//                   __temp);
-
-//    if(__tasksQueue.isEmpty())
-//    {
-//        emit dataTransfered();
-//        return; //no next trigger
-//    }
-
-//    //! Raise next operation
-//    transfer();
-//}
-
-//void ControllerBankTransfer::transfer()
-//{
-//    //! Following task instruction
-//    TransferTask m_task = m_tasksQueue.head();
-////    __commitOption.Selection(__task.first);
-////    __commitOption.Index(__task.second);
-////    //! Setup option
-////    __controller->CommitOption(__commitOption);
-////    //! Setup data pack
-////    __controller->DataBlock(QVariant::fromValue(static_cast<CellDataBlock>(__adaptorMap[__task.first]->Record(__task.second)))); //Write-in anyway
-
-//    emit dataTransfering(m_tasksQueue.head());
-
-////    QtConcurrent::run([=](){
-////        //! Wait until controller comes to right state
-////        while (__controller->CurrentState()!=ControllerManualMode::STATE_IDLE) {}
-////        //! raise state machine to work
-////        emit __controller->operationTriggered();
-////    });
-
-//    //! raise state machine to work
-////    emit __controller->operationTriggered();
-
-//}
-
-//!
 //! \brief ControllerBankTransfer::plcReady
 //! Iteration begin
 void ControllerBankTransfer::plcReady()
@@ -109,11 +36,16 @@ void ControllerBankTransfer::plcReady()
     case ManualModeDataBlock::MODE_DOWNLOAD_DATA_BLOCK:
     case ManualModeDataBlock::MODE_UPLOAD_DATA_BLOCK:
     {
-        if(!m_tasksQueue.isEmpty())
-        {
-            //! Auto started
-            transfer();
-        }
+		if (!m_tasksQueue.isEmpty())
+		{
+			//! Auto started
+			transfer(QVariant::fromValue(m_mode()));
+		}
+		else
+		{
+			//setProperty();
+
+		}
         break;
     }
     default:
@@ -157,7 +89,10 @@ void ControllerBankTransfer::doneOff()
         m_adaptors[m_categrory]->Record(m_index,AbstractDataBlock(reinterpret_cast<MODBUS_U_WORD*>(&data)));
     }
     case ManualModeDataBlock::MODE_DOWNLOAD_DATA_BLOCK:
-        m_tasksQueue.dequeue(); //take one out
+		if (m_tasksQueue.isEmpty())
+			qDebug() << "Bank transfer error with empty queue";
+		else
+			m_tasksQueue.dequeue(); //take one out
         break;
     default:
         break;
@@ -208,6 +143,9 @@ void ControllerBankTransfer::m_operator_propertyChanged(QVariant key, QVariant v
     switch (key.toUInt()) {
     case ManualModeDataBlock::BATCH_ALL_WRITE_MODE:
     case ManualModeDataBlock::BATCH_ALL_READ_MODE:
+		if (!value.toBool())
+			return;
+		//! First time enter mode
         switch (value.value<ManualModeDataBlock::Categrories>()) {
         case ManualModeDataBlock::SELECTION_ALL:
             foreach (AbstractSqlTableAdpater* var, m_adaptors.values()) {
@@ -237,25 +175,7 @@ void ControllerBankTransfer::m_operator_propertyChanged(QVariant key, QVariant v
         break;
     }
 
-    switch (key.toUInt()) {
-
-    case ManualModeDataBlock::BATCH_ALL_WRITE_MODE:
-    case ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE:
-        //! Clear task queue (Write
-		setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_MODE).toString().toStdString().c_str(),
-			QVariant::fromValue(ManualModeDataBlock::MODE_DOWNLOAD_DATA_BLOCK));
-        break;
-    case ManualModeDataBlock::BATCH_ALL_READ_MODE:
-		setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_MODE).toString().toStdString().c_str(),
-			QVariant::fromValue(ManualModeDataBlock::MODE_UPLOAD_DATA_BLOCK));
-        break;
-    default:
-//        //! Singal mode (Positive index
-//        //! Find if repeated
-//        if(!m_tasksQueue.contains(task))
-//            m_tasksQueue.enqueue(task);
-        break;
-    }
+    
     //!Action
     switch (key.toUInt()) {
     case ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE:
@@ -268,9 +188,9 @@ void ControllerBankTransfer::m_operator_propertyChanged(QVariant key, QVariant v
         //! trigger operation , raise first shot
         if(m_currentState == ManualState::STATE_PLC_READY &&
                 !m_tasksQueue.isEmpty())
-            transfer();
+            transfer(key);
 
-        setProperty(key.toString().toStdString().c_str(),false); //reset property
+        //setProperty(key.toString().toStdString().c_str(),false); //reset property
         break;
     default:
         ControllerManualMode::m_operator_propertyChanged(key,value);
@@ -278,10 +198,27 @@ void ControllerBankTransfer::m_operator_propertyChanged(QVariant key, QVariant v
     }
 }
 
-void ControllerBankTransfer::transfer()
+void ControllerBankTransfer::transfer(QVariant mode)
 {
     m_categrory = m_tasksQueue.head().first;
     m_index = m_tasksQueue.head().second;
+
+	//! Write mode
+	switch (mode.toUInt()) {
+
+	case ManualModeDataBlock::BATCH_ALL_WRITE_MODE:
+	case ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE:
+		//! Clear task queue (Write
+		setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_MODE).toString().toStdString().c_str(),
+			QVariant::fromValue(ManualModeDataBlock::MODE_DOWNLOAD_DATA_BLOCK));
+		break;
+	case ManualModeDataBlock::BATCH_ALL_READ_MODE:
+		setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_MODE).toString().toStdString().c_str(),
+			QVariant::fromValue(ManualModeDataBlock::MODE_UPLOAD_DATA_BLOCK));
+		break;
+	default:
+		break;
+	}
 
     //! Write anyway
     CellDataBlock* data =

@@ -75,7 +75,7 @@ protected:
     //! \return
     //! Overrides
 //    QVariant m_monitor_propertyValues(QVariant key) Q_DECL_OVERRIDE;
-    void m_operator_propertyChanged(QVariant key,QVariant value) Q_DECL_OVERRIDE;
+    //void m_operator_propertyChanged(QVariant key,QVariant value) Q_DECL_OVERRIDE;
 };
 
 #endif // CONTROLLERMANUALMODE_H

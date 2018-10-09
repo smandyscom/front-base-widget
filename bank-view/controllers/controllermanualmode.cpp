@@ -104,12 +104,16 @@ void ControllerManualMode::onStateReport()
 void ControllerManualMode::plcReady()
 {
     emit operationReady();
-    m_channel->Access(toAddressMode(ManualModeDataBlock::BIT_0_ENGAGED_HMI),true);
+    //m_channel->Access(toAddressMode(ManualModeDataBlock::BIT_0_ENGAGED_HMI),true);
+	setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_0_ENGAGED_HMI).toString().toStdString().c_str(), 
+		true);
 }
 void ControllerManualMode::doneOn()
 {
     //set RUN off
-    m_channel->Access(toAddressMode(ManualModeDataBlock::BIT_1_RUN),false);
+    //m_channel->Access(toAddressMode(ManualModeDataBlock::BIT_1_RUN),false);
+	setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_1_RUN).toString().toStdString().c_str(),
+		false);
 }
 void ControllerManualMode::doneOff()
 {
@@ -119,28 +123,28 @@ void ControllerManualMode::runOn()
 {
 
 }
-
-void ControllerManualMode::m_operator_propertyChanged(QVariant key, QVariant value)
-{
-    switch (key.toUInt()) {
-    case ManualModeDataBlock::BIT_1_RUN:
-        if(value.toBool())
-        {
-            //! Activated
-            m_channel->Access(toAddressMode(key.toUInt()),true);
-            setProperty(key.toString().toStdString().c_str(),false);//reset
-        }
-        break;
-    case ManualModeDataBlock::BIT_0_ENGAGED_HMI:
-        if(!value.toBool())
-        {
-            //! Stop
-            m_channel->Access(toAddressMode(key.toUInt()),false);
-            setProperty(key.toString().toStdString().c_str(),true); //reset
-        }
-        break;
-    default:
-        ControllerBase::m_operator_propertyChanged(key,value);
-        break;
-    }
-}
+//
+//void ControllerManualMode::m_operator_propertyChanged(QVariant key, QVariant value)
+//{
+//    switch (key.toUInt()) {
+//    case ManualModeDataBlock::BIT_1_RUN:
+//        if(value.toBool())
+//        {
+//            //! Activated
+//            m_channel->Access(toAddressMode(key.toUInt()),true);
+//            setProperty(key.toString().toStdString().c_str(),false);//reset
+//        }
+//        break;
+//    case ManualModeDataBlock::BIT_0_ENGAGED_HMI:
+//        if(!value.toBool())
+//        {
+//            //! Stop
+//            m_channel->Access(toAddressMode(key.toUInt()),false);
+//            setProperty(key.toString().toStdString().c_str(),true); //reset
+//        }
+//        break;
+//    default:
+//        ControllerBase::m_operator_propertyChanged(key,value);
+//        break;
+//    }
+//}
