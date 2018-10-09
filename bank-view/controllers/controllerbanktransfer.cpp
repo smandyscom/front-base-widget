@@ -242,12 +242,12 @@ void ControllerBankTransfer::m_operator_propertyChanged(QVariant key, QVariant v
     case ManualModeDataBlock::BATCH_ALL_WRITE_MODE:
     case ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE:
         //! Clear task queue (Write
-        m_channel->Access(toAddressMode(ManualModeDataBlock::COMMIT_MODE),
-                          QVariant::fromValue(ManualModeDataBlock::MODE_DOWNLOAD_DATA_BLOCK));
+		setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_MODE).toString().toStdString().c_str(),
+			QVariant::fromValue(ManualModeDataBlock::MODE_DOWNLOAD_DATA_BLOCK));
         break;
     case ManualModeDataBlock::BATCH_ALL_READ_MODE:
-        m_channel->Access(toAddressMode(ManualModeDataBlock::COMMIT_MODE),
-                          QVariant::fromValue(ManualModeDataBlock::MODE_UPLOAD_DATA_BLOCK));
+		setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_MODE).toString().toStdString().c_str(),
+			QVariant::fromValue(ManualModeDataBlock::MODE_UPLOAD_DATA_BLOCK));
         break;
     default:
 //        //! Singal mode (Positive index
@@ -286,11 +286,13 @@ void ControllerBankTransfer::transfer()
     //! Write anyway
     CellDataBlock* data =
             reinterpret_cast<CellDataBlock*>(m_adaptors[m_categrory]->Record(m_index).Anchor());
-    m_channel->Access(toAddressMode(ManualModeDataBlock::DATA_BLOCK_HEAD),QVariant::fromValue(*data));
-
-    m_channel->Access(toAddressMode(ManualModeDataBlock::COMMIT_CATEGRORY),QVariant::fromValue(m_categrory));
-    m_channel->Access(toAddressMode(ManualModeDataBlock::COMMIT_DEVICE_INDEX),QVariant::fromValue(m_index));
-    m_channel->Access(toAddressMode(ManualModeDataBlock::BIT_1_RUN),true);
+	setProperty(QVariant::fromValue(ManualModeDataBlock::DATA_BLOCK_HEAD).toString().toStdString().c_str(),
+		QVariant::fromValue(*data));
+	setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_CATEGRORY).toString().toStdString().c_str(),
+		QVariant::fromValue(m_categrory));
+	setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_DEVICE_INDEX).toString().toStdString().c_str(),
+		QVariant::fromValue(m_index));
+	setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_1_RUN).toString().toStdString().c_str(),true);
 }
 
 ManualModeDataBlock::Mode ControllerBankTransfer::m_mode()

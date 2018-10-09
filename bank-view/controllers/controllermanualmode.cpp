@@ -66,17 +66,9 @@ ControllerManualMode::ControllerManualMode(quint8 clientId,
     //!Monitor and Operator
     QList<QList<QVariant>> m_list=
     {
-        //!
-        //! \brief utilities::listupEnumVariant<ManualModeDataBlock::ManualContext>
-        //! for MONITOR_DATA_HEAD , would return CellDataBlock
             utilities::listupEnumVariant<ManualModeDataBlock::ManualContext>(),
             utilities::listupEnumVariant<ManualModeDataBlock::StatusBits>(),
             utilities::listupEnumVariant<ManualModeDataBlock::ControlBits>(),
-        //! Monitor post
-//            utilities::listupEnumVariant<AxisMonitorBlock::OffsetMonitor>(),
-//            utilities::listupEnumVariant<CylinderMonitorBlock::OffsetMonitor>(),
-//            utilities::listupEnumVariant<SignalMonitor::OffsetMonitor>(),
-//            utilities::listupEnumVariant<UnitMonitorBlock::OffsetMonitor>()
     };
     foreach (QList<QVariant> var, m_list)
     {

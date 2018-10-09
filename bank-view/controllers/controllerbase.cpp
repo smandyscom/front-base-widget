@@ -54,7 +54,7 @@ MODBUS_U_WORD* ControllerBase::registerWatchList(ADDRESS_MODE unoffsetedAddress,
 
     return m_channel->Handle(offsettedAddress);
 }
-
+/// Write in
 QVariant ControllerBase::m_monitor_propertyValues(QVariant key)
 {
     return m_monitor->Value(key.toUInt());
