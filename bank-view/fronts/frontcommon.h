@@ -3,6 +3,7 @@
 
 #include <QtWidgets>
 #include <QtEvents>
+#include <qfilesystemwatcher.h>
 
 #include <commonhelper.h>
 //#include <controllerbase.h>
@@ -32,6 +33,7 @@ public slots:
 protected slots:
     void onCustomContextMenuShowed(const QPoint position);
     void onReloadQss();
+	void onLinkQSSFile();
 protected:
     QList<QWidget*> m_widgetsPolish;
     //!
@@ -49,6 +51,7 @@ protected:
     virtual void dynamicPropertyChanged(int key,QVariant value){}
 private:
     bool m_isQSSInitialized;
+	QFileSystemWatcher* m_watcher;
 };
 
 #endif // FRONTCOMMON_H

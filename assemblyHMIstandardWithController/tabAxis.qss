@@ -1,3 +1,36 @@
+*{
+    font-size : 24px;
+}
+QLCDNumber
+{
+    /*position : relative;*/
+    /*text-align : center;*/
+    /*font-size : 48px;*/
+    /*background-color : greenyellow;*/
+    max-width : 200px;
+    margin-left : 0px;
+    margin-right : 0px;
+}
+#pushButtonDirectExecution{
+    max-width : 200px;
+    max-height : 100px;
+}
+#pushButtonBankCoordinateSet {
+    max-height : 100px;
+    /*max-width : 100px;*/
+}
+#textBrowserAlarmWarning {
+    max-height : 150px;
+}
+#widgetFilter QComboBox{
+    border : 1px solid red;
+    margin-top : 20px;
+    margin-bottom : 0px;
+}
+
+
+
+/*dynamic properties*/
 QWidget[MON_BIT0_SERVO_ON="true"] QPushButton#pushButtonDirectServoOn
 {
     background-color : Green;

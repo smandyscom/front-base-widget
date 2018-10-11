@@ -4,7 +4,10 @@ FrontCommonManual::FrontCommonManual(QWidget *parent):
     FrontCommon (parent),
     mainDataTable(nullptr)
 {
-
+	for each (QPushButton* var in findChildren<QPushButton*>())
+	{
+		m_widgetLockList.append(var);
+	}
 }
 
 int FrontCommonManual::currentIndex()
@@ -56,14 +59,17 @@ void FrontCommonManual::hideEvent(QHideEvent *event)
 void FrontCommonManual::dynamicPropertyChanged(int key, QVariant value)
 {
     switch (key) {
-    case ManualModeDataBlock::BIT_1_RUN:
-    case ManualModeDataBlock::BIT_1_DONE:
-    case ManualModeDataBlock::BIT_0_ENGAGED_SEMI_AUTO:
-        m_isPanelBusy = !(property(QVariant::fromValue(ManualModeDataBlock::BIT_1_RUN)).toBool() ||
-                property(QVariant::fromValue(ManualModeDataBlock::BIT_1_DONE)).toBool()) &&
-                property(QVariant::fromValue(ManualModeDataBlock::BIT_0_ENGAGED_SEMI_AUTO)).toBool();
-        break;
+    case ManualModeDataBlock::PROP_MAIN_STATE:
+		m_isPanelBusy = value.value<ManualModeDataBlock::ManualState>() ==
+			ManualModeDataBlock::STATE_PLC_READY;
+		for each (QWidget* var in m_widgetLockList)
+		{
+			var->setEnabled(m_isPanelBusy);
+		}
     default:
+		FrontCommon::dynamicPropertyChanged(key, value);
         break;
     }
+
+
 }

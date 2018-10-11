@@ -20,8 +20,8 @@ public:
 protected slots:
     virtual void onMonitorIndexChanged();
 protected:
-    bool m_isPanelBusy;
-
+	QList<QWidget*> m_widgetLockList;
+	bool m_isPanelBusy;
     //! Commons
     ManualModeDataBlock::Categrories m_categrory;
     virtual int currentIndex() ;

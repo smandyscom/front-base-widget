@@ -148,7 +148,7 @@ void ControllerBankTransfer::m_operator_propertyChanged(QVariant key, QVariant v
     switch (key.toUInt()) {
     case ManualModeDataBlock::BATCH_ALL_WRITE_MODE:
     case ManualModeDataBlock::BATCH_ALL_READ_MODE:
-		if (!value.toBool())
+		if (value.type() == QVariant::Bool)
 			break;
 		//! First time enter mode
         switch (value.value<ManualModeDataBlock::Categrories>()) {
@@ -174,32 +174,14 @@ void ControllerBankTransfer::m_operator_propertyChanged(QVariant key, QVariant v
             //!No action
             break;
         }
+		//!as triiger
+		setProperty(key.toString().toStdString().c_str(), true);
+		return;
         break;
     default:
         //!No action
         break;
     }
-
-	//! Write mode
-	switch (key.toUInt()) {
-
-	case ManualModeDataBlock::BATCH_ALL_WRITE_MODE:
-	case ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE:
-		if (!value.toBool())
-			break;
-		//! Clear task queue (Write
-		setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_MODE).toString().toStdString().c_str(),
-			QVariant::fromValue(ManualModeDataBlock::MODE_DOWNLOAD_DATA_BLOCK));
-		break;
-	case ManualModeDataBlock::BATCH_ALL_READ_MODE:
-		if (!value.toBool())
-			break;
-		setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_MODE).toString().toStdString().c_str(),
-			QVariant::fromValue(ManualModeDataBlock::MODE_UPLOAD_DATA_BLOCK));
-		break;
-	default:
-		break;
-	}
 
     //!Action
     switch (key.toUInt()) {
@@ -209,10 +191,19 @@ void ControllerBankTransfer::m_operator_propertyChanged(QVariant key, QVariant v
         
         //! trigger operation , raise first shot
 		if (value.toBool() &&
-			m_currentState == ManualState::STATE_PLC_READY &&
+			m_currentState == ManualModeDataBlock::STATE_PLC_READY &&
 			!m_tasksQueue.isEmpty())
+		{
+			//! Write mode
+			setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_MODE).toString().toStdString().c_str(),
+				QVariant::fromValue(key.toUInt() == ManualModeDataBlock::BATCH_ALL_READ_MODE ?
+					ManualModeDataBlock::MODE_UPLOAD_DATA_BLOCK :
+					ManualModeDataBlock::MODE_DOWNLOAD_DATA_BLOCK));
+
 			transfer();
+		}
 		else
+			//! nothing to do
 			setProperty(key.toString().toStdString().c_str(), false);
 
         break;

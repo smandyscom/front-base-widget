@@ -40,6 +40,8 @@ FrontAxisParameter::FrontAxisParameter(QWidget *parent) :
     foreach (QWidget* var, findChildren<QPushButton*>()) {
         m_widgetsPolish.append(var);
     }
+	//!
+	
 }
 //!
 //! \brief FrontAxisParameter::Setup

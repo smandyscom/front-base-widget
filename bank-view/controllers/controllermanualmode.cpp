@@ -19,10 +19,10 @@ ControllerManualMode::ControllerManualMode(quint8 clientId,
     QState* s1 = new QState(m_stateMachine);
     QState* s2 = new QState(m_stateMachine);
     QState* s3 = new QState(m_stateMachine);
-    m_stateMap[STATE_IN_AUTO] =s0;
-    m_stateMap[STATE_PLC_READY] = s1;
-    m_stateMap[STATE_RUN_ON] = s2;
-    m_stateMap[STATE_DONE_ON] = s3;
+    m_stateMap[ManualModeDataBlock::STATE_IN_AUTO] =s0;
+    m_stateMap[ManualModeDataBlock::STATE_PLC_READY] = s1;
+    m_stateMap[ManualModeDataBlock::STATE_RUN_ON] = s2;
+    m_stateMap[ManualModeDataBlock::STATE_DONE_ON] = s3;
 
     //!
     //! Common
@@ -98,20 +98,22 @@ void ControllerManualMode::onStateReport()
 {
     //! trigger read action
     m_currentState = m_stateMap.key(qobject_cast<QState*>(sender()));
+	for each (QObject* var in m_receivers)
+	{
+		var->setProperty(QVariant::fromValue(ManualModeDataBlock::PROP_MAIN_STATE).toString().toStdString().c_str(), 
+			QVariant::fromValue(m_currentState));
+	}
     qDebug() << QVariant::fromValue(m_currentState).toString();
 }
 
 void ControllerManualMode::plcReady()
 {
-    emit operationReady();
-    //m_channel->Access(toAddressMode(ManualModeDataBlock::BIT_0_ENGAGED_HMI),true);
 	setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_0_ENGAGED_HMI).toString().toStdString().c_str(), 
 		true);
 }
 void ControllerManualMode::doneOn()
 {
     //set RUN off
-    //m_channel->Access(toAddressMode(ManualModeDataBlock::BIT_1_RUN),false);
 	setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_1_RUN).toString().toStdString().c_str(),
 		false);
 }

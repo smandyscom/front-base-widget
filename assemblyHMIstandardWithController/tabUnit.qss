@@ -1,3 +1,13 @@
+QLabel {
+    max-height : 50px;
+    border : 2px dashed blue;
+    /*background-color : green;*/
+}
+#groupBoxMonitor
+{
+    margin : 0px 0px 0px 0px;
+    padding-top : 50px;
+}
 /*labels*/
 QWidget[OFFSET_UOB_IS_BYPASSED="true"] #pushButtonByPass
 {
@@ -22,4 +32,8 @@ QWidget[OFFSET_UOB_EN_STEP="true"] #pushButtonEnableStep
 QWidget[OFFSET_UOB_TRIG_STEP="true"] #pushButtonStep
 {
     background-color : Green;
+}
+
+* {
+    font-size : 36px;
 }

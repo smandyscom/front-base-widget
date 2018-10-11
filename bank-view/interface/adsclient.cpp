@@ -64,9 +64,11 @@ void AdsClient::executeRequest()
 	case ADSERR_NOERR:
         //once it is read request , return read value back along with signal (had been processed by ADS API)
         operationDone();
+		m_workingTimer->setInterval(0);
 		break;
 	default:
         qDebug() << QString("ADS Error:%1").arg(lastResult);
+		m_workingTimer->setInterval(1000);
 		break;
 	}
 }

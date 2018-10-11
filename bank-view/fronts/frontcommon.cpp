@@ -10,6 +10,12 @@ FrontCommon::FrontCommon(QWidget *parent) :
     ///! https://stackoverflow.com/questions/24254006/rightclick-event-in-qt-to-open-a-context-menu
     setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this,&FrontCommon::customContextMenuRequested,this,&FrontCommon::onCustomContextMenuShowed);
+
+	m_watcher = new QFileSystemWatcher(this);
+	connect(m_watcher,&QFileSystemWatcher::fileChanged, this, &FrontCommon::onReloadQss);
+
+	onLinkQSSFile();
+	connect(this, &FrontCommon::objectNameChanged, this, &FrontCommon::onLinkQSSFile);
 }
 
 void FrontCommon::onCustomContextMenuShowed(const QPoint position)
@@ -25,6 +31,11 @@ void FrontCommon::onCustomContextMenuShowed(const QPoint position)
 void FrontCommon::onReloadQss()
 {
     CommonHelper::setStyle(QString("%1.qss").arg(objectName()),this);
+}
+void FrontCommon::onLinkQSSFile()
+{
+	m_watcher->removePaths(m_watcher->files());
+	m_watcher->addPath(QString("%1.qss").arg(objectName()));
 }
 
 bool FrontCommon::event(QEvent* event)

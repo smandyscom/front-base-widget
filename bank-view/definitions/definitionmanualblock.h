@@ -89,6 +89,19 @@ public:
         BATCH_ALL_READ_MODE = 0xffff04
     };
     Q_ENUM(TransferCommand)
+	enum ManualState : int
+	{
+		STATE_IN_AUTO,
+		STATE_PLC_READY,
+		STATE_RUN_ON,
+		STATE_DONE_ON,
+	};
+	Q_ENUM(ManualState)
+	enum PropertyKeys
+	{
+		PROP_MAIN_STATE = 0xeeff00,
+	};
+	Q_ENUM(PropertyKeys)
 
     ManualModeDataBlock(QObject* parent = nullptr)
         : AbstractDataBlock(parent)

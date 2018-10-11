@@ -26,31 +26,19 @@ class ControllerManualMode :
 {
     Q_OBJECT
 public:
-    enum ManualState : int
-    {
-        STATE_IN_AUTO,
-        STATE_PLC_READY,
-        STATE_RUN_ON,
-        STATE_DONE_ON,
-    };
-    Q_ENUM(ManualState)
+    
 
     explicit ControllerManualMode(quint8 clientId, quint16 baseOffset, int interval=100, QObject *parent=nullptr);
 
-    ManualState CurrentState() const { return m_currentState;}
+    ManualModeDataBlock::ManualState CurrentState() const { return m_currentState;}
 
 signals:
-    //!
-    //! \brief triggerOperation
-    //! Linked to S1 transition condition
-    void operationTriggered();
-    void operationReady();
 protected slots:
     void onStateReport();
 protected:
 
-    QMap<ManualState,QState*> m_stateMap;
-    ManualState m_currentState;
+    QMap<ManualModeDataBlock::ManualState,QState*> m_stateMap;
+	ManualModeDataBlock::ManualState m_currentState;
 
     QStateMachine* m_stateMachine;
     //!
@@ -69,13 +57,6 @@ protected:
     //! \brief s3Exited
     //! Done off
     virtual void doneOff();
-    //!
-    //! \brief m_monitor_propertyValues
-    //! \param key
-    //! \return
-    //! Overrides
-//    QVariant m_monitor_propertyValues(QVariant key) Q_DECL_OVERRIDE;
-    //void m_operator_propertyChanged(QVariant key,QVariant value) Q_DECL_OVERRIDE;
 };
 
 #endif // CONTROLLERMANUALMODE_H

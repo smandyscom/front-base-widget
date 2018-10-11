@@ -2,15 +2,15 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <loadinghelper.h>
-#include <loadinghelpercontrollers.h>
-#include <adsclient.h>
+#include <mainwindowcommon.h>
+
+
 
 namespace Ui {
 class MainWindow;
 }
 
-class MainWindow : public QMainWindow
+class MainWindow : public MainWindowCommon
 {
     Q_OBJECT
 

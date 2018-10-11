@@ -1,3 +1,12 @@
+QLabel {
+    max-height : 100px;
+    border : 2px dashed blue;
+    /*background-color : green;*/
+}
+#widgetFilter {
+    max-height : 200px;
+}
+
 /*pushbutton*/
 QWidget[OFFSET_MONITOR_LAST_COMMAND="2"] QPushButton#pushButtonGoB
 {

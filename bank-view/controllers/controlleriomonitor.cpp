@@ -27,7 +27,7 @@ void ControllerIOMonitor::onAcknowledged(InterfaceRequest ack)
         index++;
         if(index >= m_addressList.count())
             index =0;
-        //!request feedback
+        //!request feedback , boolean format query
         m_channel->BeginRead(m_addressList[index],true);
         break;
     }

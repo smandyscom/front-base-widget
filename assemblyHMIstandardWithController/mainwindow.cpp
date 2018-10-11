@@ -1,12 +1,14 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <loadinghelper.h>
+#include <loadinghelpercontrollers.h>
+#include <adsclient.h>
+
 #include <QDebug>
 
-
-
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
+    MainWindowCommon(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
@@ -14,14 +16,18 @@ MainWindow::MainWindow(QWidget *parent) :
     AmsAddr addr{{5,60,134,238,1,1},
                 851};
     InterfaceClient* mainClient = new AdsClient(addr);
-    InterfaceClient* inputClient = new AdsClient(addr,false,AdsClient::PLCADS_RWI,525231);
-    InterfaceClient* outputClient = new AdsClient(addr,false,AdsClient::PLCADS_RWQ,520917);
+    InterfaceClient* inputClient1 = new AdsClient(addr,false,AdsClient::PLCADS_RWI,522054);
+	InterfaceClient* inputClient2 = new AdsClient(addr, false, AdsClient::PLCADS_RWI, 586928);
+    InterfaceClient* outputClient1 = new AdsClient(addr,false,AdsClient::PLCADS_RWQ,522054);
+	InterfaceClient* outputClient2 = new AdsClient(addr, false, AdsClient::PLCADS_RWQ, 634002);
 
     InterfaceChannel::Instance()->Clients(QList<InterfaceClient*>{
-                                              mainClient,
-                                              inputClient,
-                                              outputClient
-                                          });
+		mainClient,
+			inputClient1,
+			inputClient2,
+			outputClient1,
+			outputClient2
+	});
     //! Load UI/Model
     LoadingHelper::CombineModelViewV1(ui->tabAxis,
                                       ui->tabCylinder,
