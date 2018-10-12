@@ -3,58 +3,30 @@
 
 #include <QDebug>
 
-FrontSlot::FrontSlot(ControllerMaterialTransfer *controller,bool isShowCounters, QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::FrontSlot),
-    __controller(controller)
+FrontSlot::FrontSlot(QWidget *parent) :
+    FrontCommon(parent),
+    ui(new Ui::FrontSlot)
 {
     ui->setupUi(this);
     //!
 //    ui->lcdNumberSlot->display(__controller->Index());
-    ui->frameInspection->setVisible(isShowCounters);
+    //ui->frameInspection->setVisible(isShowCounters);
     //! Prepare dialog
 
-        __dialog = new QDialog(this);
-        __dialog->setGeometry(__dialog->geometry().x(),
-                              __dialog->geometry().y() + 120,
-                              1024,
-                              240);
-        __dialog->setSizePolicy(QSizePolicy::Expanding,
-                                QSizePolicy::Expanding);
-        auto __layout = new QFormLayout(__dialog);
-        __layout->setFieldGrowthPolicy(QFormLayout::AllNonFixedFieldsGrow);
-        __dialog->setLayout(__layout);
-
-        __view = new QTableView(__dialog);
-        __view->setSizePolicy(QSizePolicy::Expanding,
-                              QSizePolicy::Expanding);
-        __view->verticalHeader()->setVisible(false);
-        __view->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-        __view->setModel(__controller->Table());
-        emit
-
-        __layout->addWidget(__view);
-        //! Fetch headers
-        QSqlTableModel* __reference = new QSqlTableModel(this,__controller->DataBase());
-        __reference->setTable(QString("MAT_HEADER_SLOT%1").arg(__controller->Index()));
-        bool result = __reference->select();
-        qDebug() << QString("%1:%2").arg(__reference->tableName()).arg(result);
-        __reference->deleteLater();
-        HEADER_STRUCTURE::HeaderRender::renderViewHeader(__reference,__view);
+       
         //! Set title
-        __reference = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_REGION);
+       /* __reference = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_REGION);
         __reference->setTable("DEF_REGION");
         __reference->setFilter(QString("ID=%1").arg(__controller->Index()));
         __reference->select();
         ui->labelName->setText(__reference->record(0).value("zh_Tw").toString());
-        __reference->deleteLater();
+        __reference->deleteLater();*/
         //!
-        connect(ui->toolButtonDialog,&QToolButton::clicked,this,&FrontSlot::onDataRaise);
-        connect(__controller,&ControllerMaterialTransfer::dataUpdated,this,&FrontSlot::onDataUpdated);
-        connect(ui->pushButtonMaterialOverrideOff,&QPushButton::clicked,this,&FrontSlot::onMaterialOverrideOff);
-        connect(ui->pushButtonClear,&QPushButton::clicked,this,&FrontSlot::onClear);
-
-
+		for each (QPushButton* var in findChildren<QPushButton*>())
+		{
+			connect(var, QPushButton::click, this, &FrontSlot::onButtonClicked);
+			m_widgetsPolish.append(var);
+		}
 }
 
 FrontSlot::~FrontSlot()
@@ -62,44 +34,103 @@ FrontSlot::~FrontSlot()
     delete ui;
 }
 
-void FrontSlot::onDataUpdated()
+void FrontSlot::Setup(QSqlTableModel* slot,
+	QSqlTableModel* header)
 {
-    utilities::colorChangeOver(ui->labelIsValid,
-                               __controller->IsValid());
-    ui->lcdNumberID->display(__controller->MaterialId());
+	connect(slot, &QSqlTableModel::dataChanged, this, &FrontSlot::onDataChanged);
+	//Initialize detail view
+	m_dialog = new QDialog(this);
+	m_dialog->setGeometry(m_dialog->geometry().x(),
+		m_dialog->geometry().y() + 120,
+		1024,
+		240);
+	m_dialog->setSizePolicy(QSizePolicy::Expanding,
+		QSizePolicy::Expanding);
+	auto layout = new QFormLayout(m_dialog);
+	layout->setFieldGrowthPolicy(QFormLayout::AllNonFixedFieldsGrow);
+	m_dialog->setLayout(layout);
 
-    //! enable button once valid
-    ui->pushButtonMaterialOverrideOff->setEnabled(__controller->IsValid());
+	m_view = new QTableView(m_dialog);
+	m_view->setSizePolicy(QSizePolicy::Expanding,
+		QSizePolicy::Expanding);
+	m_view->verticalHeader()->setVisible(false);
+	m_view->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+	m_view->setModel(slot);
 
-    //!
-    ui->lcdNumberTotalCounter->display(__controller->TotalCount());
-    ui->lcdNumberOKCounter->display(__controller->OKCount());
-    ui->lcdNumberNGCounter->display(__controller->NGCount());
-    ui->lcdNumberOKRate->display(__controller->OKRate());
-    ui->lcdNumberNGRate->display(__controller->NGRate());
-    ui->labelOKNG->setText(QVariant::fromValue(__controller->CurrentGrade()).toString());
-    utilities::colorChangeOver(ui->labelOKNG,
-                              __controller->CurrentGrade()==ControllerMaterialTransfer::OK,
-                              Qt::green,
-                              Qt::red);
+	layout->addWidget(m_view);
+	//! Fetch headers
+	HEADER_STRUCTURE::HeaderRender::renderViewHeader(header, m_view);
 }
 
-void FrontSlot::onDataRaise()
+void FrontSlot::dynamicPropertyChanged(int key, QVariant value)
 {
-    //! Show current datas
-    QSqlTableModel* __table = qobject_cast<QSqlTableModel*>(__view->model());
-    __table->setFilter(utilities::generateFilterString(QVariant::fromValue(HEADER_STRUCTURE::ID),
-                                                       QVariant::fromValue(__controller->MaterialId())));
-    __table->select();
-    __dialog->exec();
+	switch (key)
+	{
+	case SlotDataBlock::BIT1_ACT:
+	case SlotDataBlock::BIT1_DONE:
+		break;
+	default:
+		break;
+	}
+	ui->pushButtonMaterialOverrideOff->setEnabled(property(QVariant::fromValue(SlotDataBlock::BIT2_VALID)).toBool());
 }
 
-void FrontSlot::onMaterialOverrideOff()
+//! Show last record
+void FrontSlot::onDataChanged(const QModelIndex &topLeft,
+	const QModelIndex &bottomRight,
+	const QVector<int> &roles)
 {
-    __controller->MaterialOverride(false);
-    ui->pushButtonMaterialOverrideOff->setEnabled(false);
+	auto model = qobject_cast<QSqlTableModel*>(sender());
+
+	QSqlRecord record = utilities::getSqlTableSelectedRecord(model,
+		QVariant::fromValue(HEADER_STRUCTURE::ID),
+		topLeft.data());
+
+	m_currentId = record.value(QVariant::fromValue(HEADER_STRUCTURE::ID).toString()).toUInt();
+	//!
+	if (m_currentId != m_lastId)
+		m_totalCounter += 1;
+	//!
+	update();
 }
-void FrontSlot::onClear()
+
+void FrontSlot::onButtonClicked()
 {
-    __controller->CounterClear();
+	if (sender() == ui->pushButtonMaterialOverrideOff)
+	{
+		m_controller->setProperty(QVariant::fromValue(SlotDataBlock::BIT2_VALID).toString().toStdString().c_str(),
+			false);
+	}
+	else if (sender() == ui->toolButtonDialog)
+	{
+		//! Show current data , model had been selected when dataChanged
+		m_dialog->exec();
+	}
+	else if (sender() == ui->pushButtonClear)
+	{
+		m_totalCounter = 0;
+		m_okCounter = 0;
+		m_ngCounter = 0;
+
+		update();
+	}
+}
+
+void FrontSlot::update()
+{
+	//!
+	ui->lcdNumberID->display(m_currentId);
+	ui->lcdNumberTotalCounter->display(m_totalCounter);
+	ui->lcdNumberOKCounter->display(m_okCounter);
+	ui->lcdNumberNGCounter->display(m_ngCounter);
+	if (m_totalCounter != 0) {
+		ui->lcdNumberOKRate->display(m_okCounter / m_totalCounter);
+		ui->lcdNumberNGRate->display(m_ngCounter / m_totalCounter);
+	}
+	else
+	{
+		ui->lcdNumberOKRate->display(0);
+		ui->lcdNumberNGRate->display(0);
+	}
+	//ui->labelOKNG->setText(QVariant::fromValue(__controller->CurrentGrade()).toString());
 }

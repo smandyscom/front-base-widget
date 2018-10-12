@@ -10,6 +10,27 @@ class SlotDataBlock :
         public AbstractDataBlock
 {
 public:
+	enum Offset
+	{
+		//! PLC->DB
+		WORD_OUT = 0x0000,
+		//! PLC<-DB
+		WORD_IN = 0x0008,
+		//! Mutual
+		MATERIAL_ID = 0x0010, //move to first 8 words
+		BLOCK_DATA = 0x0014,
+	};
+	Q_ENUM(Offset)
+	enum Bits
+	{
+		BIT1_ACT = 0x10000 + WORD_OUT,
+		BIT2_VALID = 0x20000 + WORD_OUT,
+
+		BIT0_DB_ENGAGED = 0x00000+WORD_IN,
+		BIT1_DONE = 0x10000+WORD_IN,
+	};
+	Q_ENUM(Bits)
+
     SlotDataBlock(QObject* parent=nullptr) :
         AbstractDataBlock(parent)
     {
@@ -20,6 +41,33 @@ public:
     {
 
     }
+
+	//!
+	QVariant Value(uint key) const Q_DECL_OVERRIDE
+	{
+		switch (key)
+		{
+		case MATERIAL_ID:
+			return getData<MODBUS_U_LONG>(key);
+		default:
+			return Bit(key);
+			break;
+		}
+	}
+	void Value(uint key, QVariant value) Q_DECL_OVERRIDE
+	{
+		switch (key)
+		{
+		case BIT0_DB_ENGAGED:
+		case BIT1_DONE:
+		case BIT2_VALID:
+			Bit(key, value.toBool());
+		default:
+			//do nothing
+			break;
+		}
+	}
+
 };
 //Q_DECLARE_METATYPE(SlotDataBlock)
 
