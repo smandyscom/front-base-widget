@@ -6,7 +6,6 @@
 
 #include <QSqlRelationalTableModel>
 #include <QFileInfo>
-#include <QtConcurrent>
 #include <QElapsedTimer>
 
 #include <modbuschannel.h>
@@ -85,7 +84,7 @@ public:
     ~ControllerMaterialTransfer();
 
     //! Current material id this slot held
-    int MaterialId() const
+   /* int MaterialId() const
     {
         return __materialId;
     }
@@ -100,7 +99,7 @@ public:
     bool ConnectionEngaged() const
     {
         return __connectionEngaged;
-    }
+    }*/
 //    SlotType Role() const
 //    {
 //        return __role;

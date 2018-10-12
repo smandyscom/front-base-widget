@@ -152,9 +152,6 @@
     <ClCompile Include="..\bank-view\base\utilities.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\bank-view\base\debugsqltablemodel.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\bank-view\fronts\frontmessageshow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -176,10 +173,7 @@
     <ClCompile Include="..\bank-view\fronts\mainwindowcommon.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\bank-view\fronts\frontslot.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\bank-view\controllers\controllermaterialtransfer.cpp">
+    <ClCompile Include="..\bank-view\base\debugsqltablemodel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -347,9 +341,6 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="..\bank-view\fronts\frontslot.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="..\bank-view\controllers\controllermaterialtransfer.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
