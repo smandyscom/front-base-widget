@@ -45,8 +45,8 @@ void ControllerBankTransfer::plcReady()
 		{
 			//! Reset all 
 			for each (QVariant var in QList<QVariant>{QVariant::fromValue(ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE),
-				QVariant::fromValue(ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE),
-				QVariant::fromValue(ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE)})
+				QVariant::fromValue(ManualModeDataBlock::BATCH_ALL_WRITE_MODE),
+				QVariant::fromValue(ManualModeDataBlock::BATCH_ALL_READ_MODE)})
 			{
 				setProperty(var.toString().toStdString().c_str(), false);
 			}
@@ -204,7 +204,7 @@ void ControllerBankTransfer::m_operator_propertyChanged(QVariant key, QVariant v
 		}
 		else
 			//! nothing to do
-			setProperty(key.toString().toStdString().c_str(), false);
+			//setProperty(key.toString().toStdString().c_str(), false);
 
         break;
     default:

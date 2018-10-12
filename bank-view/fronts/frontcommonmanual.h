@@ -31,6 +31,8 @@ protected:
 
 
     void dynamicPropertyChanged(int key,QVariant value) Q_DECL_OVERRIDE;
+
+	bool m_isInitialized;
 };
 
 #endif // FRONTCOMMONMANUAL_H

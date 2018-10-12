@@ -100,7 +100,7 @@ void ControllerManualMode::onStateReport()
     m_currentState = m_stateMap.key(qobject_cast<QState*>(sender()));
 	for each (QObject* var in m_receivers)
 	{
-		var->setProperty(QVariant::fromValue(ManualModeDataBlock::PROP_MAIN_STATE).toString().toStdString().c_str(), 
+		var->setProperty(QString::number(ManualModeDataBlock::PROP_MAIN_STATE).toStdString().c_str(), 
 			QVariant::fromValue(m_currentState));
 	}
     qDebug() << QVariant::fromValue(m_currentState).toString();

@@ -2,12 +2,14 @@
 
 FrontCommonManual::FrontCommonManual(QWidget *parent):
     FrontCommon (parent),
-    mainDataTable(nullptr)
+    mainDataTable(nullptr),
+	m_isInitialized(false)
 {
-	for each (QPushButton* var in findChildren<QPushButton*>())
+	//Error , Ui not initialized
+	/*for each (QPushButton* var in findChildren<QPushButton*>())
 	{
 		m_widgetLockList.append(var);
-	}
+	}*/
 }
 
 int FrontCommonManual::currentIndex()
@@ -42,6 +44,15 @@ void FrontCommonManual::showEvent(QShowEvent* event)
     }
     //! Base method
     FrontCommon::showEvent(event);
+
+	if (!m_isInitialized)
+	{
+		for each (QPushButton* var in findChildren<QPushButton*>())
+		{
+		m_widgetLockList.append(var);
+		}
+		m_isInitialized = true;
+	}
 }
 //!
 //! \brief FrontCommonManual::hideEvent
