@@ -24,7 +24,7 @@ QString FrontCommonManual::currentFilter() const
 void FrontCommonManual::onMonitorIndexChanged()
 {
     m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::MON_DEVICE_INDEX).toString().toStdString().c_str(),
-                              currentIndex());
+                              QVariant::fromValue(static_cast<MODBUS_U_WORD>(currentIndex())));
 }
 
 void FrontCommonManual::showEvent(QShowEvent* event)
@@ -60,9 +60,13 @@ void FrontCommonManual::showEvent(QShowEvent* event)
 //! Raise transfer
 void FrontCommonManual::hideEvent(QHideEvent *event)
 {
-   //! Trigger
-   m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE).toString().toStdString().c_str(),
-                             true);
+	QString str = QVariant::fromValue(ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE).toString();
+	if (!m_controller->property(str.toStdString().c_str()).toBool())
+		//! Trigger
+		m_controller->setProperty(str.toStdString().c_str(), true);
+	else
+		qDebug() << "ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE, true";
+   
    //! Base method
    FrontCommon::hideEvent(event);
 }

@@ -125,28 +125,3 @@ void ControllerManualMode::runOn()
 {
 
 }
-//
-//void ControllerManualMode::m_operator_propertyChanged(QVariant key, QVariant value)
-//{
-//    switch (key.toUInt()) {
-//    case ManualModeDataBlock::BIT_1_RUN:
-//        if(value.toBool())
-//        {
-//            //! Activated
-//            m_channel->Access(toAddressMode(key.toUInt()),true);
-//            setProperty(key.toString().toStdString().c_str(),false);//reset
-//        }
-//        break;
-//    case ManualModeDataBlock::BIT_0_ENGAGED_HMI:
-//        if(!value.toBool())
-//        {
-//            //! Stop
-//            m_channel->Access(toAddressMode(key.toUInt()),false);
-//            setProperty(key.toString().toStdString().c_str(),true); //reset
-//        }
-//        break;
-//    default:
-//        ControllerBase::m_operator_propertyChanged(key,value);
-//        break;
-//    }
-//}

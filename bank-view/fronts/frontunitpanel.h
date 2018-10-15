@@ -39,7 +39,7 @@ protected:
 
     //!Override
     int m_index;
-    int currentIndex() Q_DECL_OVERRIDE;
+	int currentIndex() Q_DECL_OVERRIDE;
 };
 
 #endif // FRONTUNITPANEL_H

@@ -32,30 +32,22 @@ void ControllerBankTransfer::Adaptor(ManualModeDataBlock::Categrories key,Abstra
 //! Iteration begin
 void ControllerBankTransfer::plcReady()
 {
-    switch (m_mode()) {
-    case ManualModeDataBlock::MODE_DOWNLOAD_DATA_BLOCK:
-    case ManualModeDataBlock::MODE_UPLOAD_DATA_BLOCK:
-    {
-		if (!m_tasksQueue.isEmpty())
+	if (!m_tasksQueue.isEmpty())
+	{
+		//! Auto started
+		transfer();
+	}
+	else
+	{
+		//! Reset all 
+		for each (QVariant var in QList<QVariant>{QVariant::fromValue(ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE),
+			QVariant::fromValue(ManualModeDataBlock::BATCH_ALL_WRITE_MODE),
+			QVariant::fromValue(ManualModeDataBlock::BATCH_ALL_READ_MODE)})
 		{
-			//! Auto started
-			transfer();
+			setProperty(var.toString().toStdString().c_str(), false);
 		}
-		else
-		{
-			//! Reset all 
-			for each (QVariant var in QList<QVariant>{QVariant::fromValue(ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE),
-				QVariant::fromValue(ManualModeDataBlock::BATCH_ALL_WRITE_MODE),
-				QVariant::fromValue(ManualModeDataBlock::BATCH_ALL_READ_MODE)})
-			{
-				setProperty(var.toString().toStdString().c_str(), false);
-			}
-		}
-        break;
-    }
-    default:
-        break;
-    }
+	}
+
     //!Base method
     ControllerManualMode::plcReady();
 }
@@ -148,8 +140,9 @@ void ControllerBankTransfer::m_operator_propertyChanged(QVariant key, QVariant v
     switch (key.toUInt()) {
     case ManualModeDataBlock::BATCH_ALL_WRITE_MODE:
     case ManualModeDataBlock::BATCH_ALL_READ_MODE:
-		if (value.type() == QVariant::Bool)
+		if (!value.toBool())
 			break;
+
 		//! First time enter mode
         switch (value.value<ManualModeDataBlock::Categrories>()) {
         case ManualModeDataBlock::SELECTION_ALL:
@@ -194,17 +187,11 @@ void ControllerBankTransfer::m_operator_propertyChanged(QVariant key, QVariant v
 			m_currentState == ManualModeDataBlock::STATE_PLC_READY &&
 			!m_tasksQueue.isEmpty())
 		{
-			//! Write mode
-			setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_MODE).toString().toStdString().c_str(),
-				QVariant::fromValue(key.toUInt() == ManualModeDataBlock::BATCH_ALL_READ_MODE ?
-					ManualModeDataBlock::MODE_UPLOAD_DATA_BLOCK :
-					ManualModeDataBlock::MODE_DOWNLOAD_DATA_BLOCK));
-
 			transfer();
 		}
-		else
+		else if(m_tasksQueue.isEmpty())
 			//! nothing to do
-			//setProperty(key.toString().toStdString().c_str(), false);
+			setProperty(key.toString().toStdString().c_str(), false);
 
         break;
     default:
@@ -221,6 +208,14 @@ void ControllerBankTransfer::transfer()
     //! Write anyway
     CellDataBlock* data =
             reinterpret_cast<CellDataBlock*>(m_adaptors[m_categrory]->Record(m_index).Anchor());
+	//! Write mode
+	auto mode = QVariant::fromValue(property(QVariant::fromValue(ManualModeDataBlock::BATCH_ALL_READ_MODE).toString().toStdString().c_str()).toBool() ?
+		QVariant::fromValue(ManualModeDataBlock::MODE_UPLOAD_DATA_BLOCK) :
+		QVariant::fromValue(ManualModeDataBlock::MODE_DOWNLOAD_DATA_BLOCK));
+
+	setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_MODE).toString().toStdString().c_str(),
+		mode);
+
 	setProperty(QVariant::fromValue(ManualModeDataBlock::DATA_BLOCK_HEAD).toString().toStdString().c_str(),
 		QVariant::fromValue(*data));
 	setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_CATEGRORY).toString().toStdString().c_str(),
