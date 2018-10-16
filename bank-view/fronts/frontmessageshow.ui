@@ -19,16 +19,9 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <property name="styleSheet">
-   <string notr="true">background-color: rgb(85, 85, 255);</string>
-  </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
-    <widget class="QPlainTextEdit" name="plainTextEdit">
-     <property name="styleSheet">
-      <string notr="true">background-color: rgb(255, 255, 255);</string>
-     </property>
-    </widget>
+    <widget class="QPlainTextEdit" name="plainTextEdit"/>
    </item>
   </layout>
  </widget>
