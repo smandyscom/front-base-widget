@@ -1263,12 +1263,28 @@ QDateEdit::down-arrow:focus {
     /*left: 5px;*/
 }
 
-QTableView#tableViewMonitor_2 {
+/*QTableView#tableViewMonitor_2 {
     max-width : 600px;
-    /*border : 1px solid red;*/
-}
+    
+}*/
 
  #tabHistory #plainTextEdit 
  {
      font-size: 24px;
  }
+
+#widgetMain {
+    max-height : 500px;
+}
+
+
+FrontSlot QLabel {
+    font-size : 24px;
+    max-height : 35px;
+    /*background-color : green;*/
+    outline : solid 2px green;
+}
+FrontSlot QPushButton {
+    font-size : 24px;
+}
+

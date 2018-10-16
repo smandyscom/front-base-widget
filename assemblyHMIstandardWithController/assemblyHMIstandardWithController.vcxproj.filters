@@ -176,6 +176,9 @@
     <ClCompile Include="..\bank-view\base\debugsqltablemodel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\bank-view\fronts\frontslot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="..\bank-view\base\abstractsqltableadpater.h">
@@ -426,7 +429,7 @@
     <None Include="tabIO.qss" />
     <None Include="tabUnit.qss" />
     <None Include="MainWindow.qss" />
-    <None Include="tabMain.qss" />
+    <None Include="widgetMain.qss" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">

@@ -33,12 +33,33 @@
        <attribute name="title">
         <string>主面板</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_2">
+       <layout class="QGridLayout" name="gridLayout_4">
         <item row="0" column="0">
          <widget class="FrontMainPanel" name="widgetMain" native="true"/>
         </item>
-        <item row="0" column="1">
-         <widget class="QTableView" name="tableViewMonitor_2"/>
+        <item row="1" column="0">
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="0" column="0">
+           <widget class="FrontSlot" name="widgetSlot1" native="true"/>
+          </item>
+          <item row="0" column="1">
+           <widget class="FrontSlot" name="widgetSlot2" native="true"/>
+          </item>
+          <item row="0" column="2">
+           <widget class="FrontSlot" name="widgetSlot3" native="true">
+            <zorder>widgetMain</zorder>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="FrontSlot" name="widgetSlot4" native="true"/>
+          </item>
+          <item row="0" column="4">
+           <widget class="FrontSlot" name="widgetSlot5" native="true"/>
+          </item>
+          <item row="0" column="5">
+           <widget class="FrontSlot" name="widgetSlot6" native="true"/>
+          </item>
+         </layout>
         </item>
        </layout>
       </widget>
@@ -162,6 +183,12 @@
    <class>FrontSafetyPanel</class>
    <extends>QWidget</extends>
    <header>frontsafetypanel.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>FrontSlot</class>
+   <extends>QWidget</extends>
+   <header>frontslot.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

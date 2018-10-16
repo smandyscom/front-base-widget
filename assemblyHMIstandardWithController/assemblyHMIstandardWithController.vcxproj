@@ -189,6 +189,7 @@
     <ClCompile Include="..\bank-view\base\messagerecorder.cpp" />
     <ClCompile Include="..\bank-view\fronts\frontmessageshow.cpp" />
     <ClCompile Include="..\bank-view\fronts\frontsafetypanel.cpp" />
+    <ClCompile Include="..\bank-view\fronts\frontslot.cpp" />
     <ClCompile Include="..\bank-view\fronts\mainwindowcommon.cpp" />
     <ClCompile Include="..\bank-view\fronts\tableviewfeatureoverride.cpp" />
     <ClCompile Include="..\bank-view\interface\adsclient.cpp" />
@@ -694,8 +695,8 @@
     <None Include="tabAxis.qss" />
     <None Include="tabCylinder.qss" />
     <None Include="tabIO.qss" />
+    <None Include="widgetMain.qss" />
     <None Include="tabUnit.qss" />
-    <None Include="tabMain.qss" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="resource.qrc">
