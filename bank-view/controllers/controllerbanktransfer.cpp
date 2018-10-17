@@ -25,6 +25,8 @@ void ControllerBankTransfer::Adaptor(ManualModeDataBlock::Categrories key,Abstra
     m_adaptors[key] = value;
     //! Sense data changed and put task
     connect(value->Model(),&QSqlTableModel::dataChanged,this,&ControllerBankTransfer::onDataChanged);
+	//! replace with duplicated table
+	value->Model(utilities::duplicate(value->Model()));
 }
 
 //!
@@ -109,9 +111,11 @@ void ControllerBankTransfer::onDataChanged(const QModelIndex &topLeft,
             return;
 
     AbstractSqlTableAdpater* adaptor = nullptr;
+	QSqlTableModel* model = qobject_cast<QSqlTableModel*>(sender());
     //! Search for Adaptor
     foreach (AbstractSqlTableAdpater* var, m_adaptors.values()) {
-        if(var->Model()==sender())
+        if(var->Model()->tableName()==
+			model->tableName())
         {
             adaptor = var;
             break;
@@ -121,7 +125,7 @@ void ControllerBankTransfer::onDataChanged(const QModelIndex &topLeft,
     TransferTask task;
     task.first = m_adaptors.key(adaptor) ;
     //! Turns into absolute row index
-    task.second =  adaptor->Model()->record( topLeft.row())
+    task.second = model->record( topLeft.row())
              .value(QVariant::fromValue(HEADER_STRUCTURE::ID).toString())
              .toInt();
 

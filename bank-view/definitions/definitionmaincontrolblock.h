@@ -26,14 +26,14 @@ public:
         ERROR_CATEGRORY=36,
         ERROR_CODE=38,
 
-//        MAIN_STATE = 0x00000030,
-//        MON_DATA_1= 0x00000032,
-//        MON_DATA_2= 0x00000034,
-//        MON_DATA_3= 0x00000036,
-//        MON_DATA_4= 0x00000038,
-//        MON_DATA_5= 0x0000003A,
-//        MON_DATA_6= 0x0000003C,
-//        MON_DATA_7= 0x0000003E,
+        MON_DATA_0 = 48,
+        MON_DATA_1= 50,
+        MON_DATA_2= 52,
+        MON_DATA_3= 54,
+        MON_DATA_4= 56,
+        MON_DATA_5= 58,
+        MON_DATA_6= 60,
+        MON_DATA_7= 62,
     };
     Q_ENUM(OffsetMainMonitor)
 
@@ -52,6 +52,16 @@ public:
         case ERROR_CODE:
             return QVariant::fromValue(getData<MODBUS_U_QUAD>(key));
             break;
+		case MON_DATA_0 :
+		case MON_DATA_1 :
+		case MON_DATA_2 :
+		case MON_DATA_3 :
+		case MON_DATA_4 :
+		case MON_DATA_5 :
+		case MON_DATA_6 :
+		case MON_DATA_7 :
+			return QVariant::fromValue(getData<MODBUS_U_LONG>(key));
+			break;
         default:
             return UnitOperationBlock::Value(key);
             break;

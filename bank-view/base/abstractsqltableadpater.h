@@ -109,7 +109,10 @@ public:
 
         return m_record;
     }
+
+
     QSqlTableModel* Model() const {return m_model;}
+	void Model(QSqlTableModel* model) { m_model = model; }
 
 protected:
     QSqlTableModel* m_model;

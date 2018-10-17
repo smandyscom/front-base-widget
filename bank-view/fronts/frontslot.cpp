@@ -22,11 +22,11 @@ FrontSlot::FrontSlot(QWidget *parent) :
         ui->labelName->setText(__reference->record(0).value("zh_Tw").toString());
         __reference->deleteLater();*/
         //!
-		for each (QPushButton* var in findChildren<QPushButton*>())
+	/*	for each (QPushButton* var in findChildren<QPushButton*>())
 		{
 			connect(var, QPushButton::click, this, &FrontSlot::onButtonClicked);
 			m_widgetsPolish.append(var);
-		}
+		}*/
 }
 
 FrontSlot::~FrontSlot()
@@ -119,7 +119,7 @@ void FrontSlot::onButtonClicked()
 void FrontSlot::update()
 {
 	//!
-	ui->lcdNumberID->display(m_currentId);
+	/*ui->lcdNumberID->display(m_currentId);
 	ui->lcdNumberTotalCounter->display(m_totalCounter);
 	ui->lcdNumberOKCounter->display(m_okCounter);
 	ui->lcdNumberNGCounter->display(m_ngCounter);
@@ -131,6 +131,6 @@ void FrontSlot::update()
 	{
 		ui->lcdNumberOKRate->display(0);
 		ui->lcdNumberNGRate->display(0);
-	}
+	}*/
 	//ui->labelOKNG->setText(QVariant::fromValue(__controller->CurrentGrade()).toString());
 }

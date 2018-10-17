@@ -66,6 +66,8 @@ public:
     static void sqlTableModel2Csv(QSqlTableModel* source,QString filename,QString delimiter=",");
     static QString sqlRecord2DelimitedString(QSqlRecord record,QString delimiter=",");
 
+	static QSqlTableModel* duplicate(QSqlTableModel* source);
+
 protected:
     //!connection name/table model
     static QMap<QString,QSqlTableModel*> __cachedTables;

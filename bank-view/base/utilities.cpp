@@ -110,4 +110,11 @@ QString utilities::sqlRecord2DelimitedString(QSqlRecord record, QString delimite
     return __output;
 }
 
+QSqlTableModel * utilities::duplicate(QSqlTableModel * source)
+{
+	QSqlTableModel* result = new QSqlTableModel(source->parent(), source->database());
+	result->setTable(source->tableName());
+	return result;
+}
+
 QMap<QString,QSqlTableModel*> utilities::__cachedTables;
