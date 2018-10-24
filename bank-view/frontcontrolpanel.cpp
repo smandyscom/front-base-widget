@@ -16,7 +16,8 @@ FrontControlPanel::FrontControlPanel(QList<ControllerMaterialTransfer*> material
     connect(ui->pushButtonInitialize,&QPushButton::clicked,__controller,&ControllerMainPanel::Initialize);
     connect(ui->pushButtonErrorReset,&QPushButton::clicked,__controller,&ControllerMainPanel::ErrorReset);
     connect(ui->pushButtonErrorIgnore,&QPushButton::clicked,__controller,&ControllerMainPanel::ErrorIgnore);
-    connect(ui->pushButtonClear,&QPushButton::clicked,__controller,&ControllerMainPanel::Clear);
+
+    connect(ui->pushButtonClear,&QPushButton::clicked,this,&FrontControlPanel::onClearClicked);
 
     //! Timer activated
     __timer = new QTimer(this);
@@ -190,4 +191,23 @@ void FrontControlPanel::onETNGThreadholdChanged()
 void FrontControlPanel::onInletCleared()
 {
     __controller->Data(ControllerMainPanel::MON_DATA_0,QVariant::fromValue(0));
+}
+
+void FrontControlPanel::onClearClicked()
+{
+    qDebug() << "";
+    QMessageBox msg;
+
+    msg.setText("是否確定清料");
+    msg.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+    msg.setDefaultButton(QMessageBox::Cancel);
+    msg.setIcon(QMessageBox::Question);
+    int ret = msg.exec();
+    switch (ret) {
+    case QMessageBox::Ok:
+        __controller->Clear();
+        break;
+    default:
+        break;
+    }
 }

@@ -2,6 +2,7 @@
 #define FRONTCONTROLPANEL_H
 
 #include <QWidget>
+#include <QMessageBox>
 
 #include <controllermainpanel.h>
 #include <QTimer>
@@ -42,6 +43,8 @@ protected slots:
     void onETCounterCleared();
     void onETNGMindChecked();
     void onETNGThreadholdChanged();
+
+    void onClearClicked();
 private:
     Ui::frontControlPanel *ui;
 
