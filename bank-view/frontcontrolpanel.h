@@ -38,7 +38,7 @@ protected slots:
 
     void onInletCleared();
 
-    void onETThresholdChanged();
+    void onETUsageAlarmChanged();
     void onETCounterCleared();
     void onETNGMindChecked();
     void onETNGThreadholdChanged();

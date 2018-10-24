@@ -41,7 +41,7 @@ FrontControlPanel::FrontControlPanel(QList<ControllerMaterialTransfer*> material
     //!
     connect(ui->pushButtonInletClear,&QPushButton::clicked,this,&FrontControlPanel::onInletCleared);
     connect(ui->pushButtonETUsageClear,&QPushButton::clicked,this,&FrontControlPanel::onETCounterCleared);
-    connect(ui->spinBoxETUsageAlarm,&QSpinBox::editingFinished,this,&FrontControlPanel::onETThresholdChanged);
+    connect(ui->spinBoxETUsageAlarm,&QSpinBox::editingFinished,this,&FrontControlPanel::onETUsageAlarmChanged);
     connect(ui->checkBoxETNgAlarm,&QCheckBox::toggled,this,&FrontControlPanel::onETNGMindChecked);
     connect(ui->spinBoxNGThreshold,&QSpinBox::editingFinished,this,&FrontControlPanel::onETNGThreadholdChanged);
     //! Safety I/O monitor
@@ -83,7 +83,7 @@ void FrontControlPanel::onTimerTimeout()
     ui->lcdNumberCycleTime->display(__controller->Data(ControllerMainPanel::MON_DATA_4).toReal());
     ui->lcdNumberETUsageCounter->display(__controller->Data(ControllerMainPanel::ET_USAGE_COUNTER).toInt());
     //! Activate clear
-    ui->pushButtonETUsageClear->setEnabled(ui->lcdNumberETUsageCounter->value()>=ui->spinBoxETUsageAlarm->value());
+//    ui->pushButtonETUsageClear->setEnabled(ui->lcdNumberETUsageCounter->value()>=ui->spinBoxETUsageAlarm->value());
         //!
     switch (__controller->InitializingState()) {
         case ControllerMainPanel::WAIT_INITIAL:
@@ -170,9 +170,9 @@ void FrontControlPanel::onFirstTimeAck()
     ui->spinBoxNGThreshold->setValue(__controller->Data(ControllerMainPanel::ET_NG_THRESHOLD).toInt());
 }
 
-void FrontControlPanel::onETThresholdChanged()
+void FrontControlPanel::onETUsageAlarmChanged()
 {
-    __controller->Data(ControllerMainPanel::ET_USAGE_THRESHOLD,QVariant::fromValue(ui->spinBoxNGThreshold->value()));
+    __controller->Data(ControllerMainPanel::ET_USAGE_THRESHOLD,ui->spinBoxETUsageAlarm->value());
 }
 void FrontControlPanel::onETCounterCleared()
 {
