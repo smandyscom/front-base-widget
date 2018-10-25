@@ -691,6 +691,9 @@
     </QtUic>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\..\..\TwinCAT\AdsApi\TcAdsDll\TcAdsDll.dll">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
     <None Include="MainWindow.qss" />
     <None Include="tabAxis.qss" />
     <None Include="tabCylinder.qss" />
