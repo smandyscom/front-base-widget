@@ -42,6 +42,7 @@ public:
 
     static void CrossLink(ControllerBase* controller,FrontCommon* front);
 
+	
 signals:
 
 public slots:

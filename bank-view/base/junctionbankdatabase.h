@@ -34,6 +34,7 @@ public:
     {
         //!
         DEF_OBJECT_TYPE,
+		CLIENTS_CONFIG,
         //! Data tables
         WHOLE_AXIS,
         WHOLE_CYLINDERS,

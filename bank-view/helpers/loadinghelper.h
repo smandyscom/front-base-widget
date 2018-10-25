@@ -27,6 +27,8 @@ class LoadingHelper : public QObject
 public:
     explicit LoadingHelper(QObject *parent = nullptr);
 
+	static void LoadBaseDatabase();
+
     static void LoadFrontAxis(FrontAxisParameter* widget);
     static void LoadFrontCylinder(FrontCylinderPanel* widget);
     static void LoadFrontUnit(FrontUnitPanel* widget);

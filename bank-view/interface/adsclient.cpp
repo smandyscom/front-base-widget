@@ -19,6 +19,32 @@ AdsClient::~AdsClient()
     m_client = AdsPortClose();
 }
 
+AdsClient * AdsClient::genClient(QSqlRecord record)
+{
+	QString address = record.value(QVariant::fromValue(ADDRESS).toString()).toString();
+	QStringList list = address.split(".");
+	unsigned char values[6];
+	int counter = 0;
+	foreach(QString var, list) {
+		values[counter] = var.toUInt();
+		counter++;
+	}
+	AmsAddr addr{ {
+			values[0],
+			values[1],
+			values[2],
+			values[3],
+			values[4],
+			values[5],
+		},
+		record.value(QVariant::fromValue(PORT).toString()).toInt() };
+
+	return new AdsClient(addr,
+		record.value(QVariant::fromValue(IS_LOCAL).toString()).toBool(),
+		record.value(QVariant::fromValue(GROUP).toString()).toUInt(),
+		record.value(QVariant::fromValue(BASE_OFFSET).toString()).toUInt());
+}
+
 void AdsClient::onPopRequest()
 {
     //InterfaceClient::onPopRequest();

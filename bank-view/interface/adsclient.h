@@ -25,9 +25,20 @@ public:
         PLCADS_RWI = 0xF020,
         PLCADS_RWQ = 0xF030
     };
+	enum DefinitionRecord
+	{
+		ADDRESS,
+		PORT,
+		IS_LOCAL,
+		GROUP,
+		BASE_OFFSET
+	};
+	Q_ENUM(DefinitionRecord)
 
     AdsClient(AmsAddr address,bool isLocal = false,long group=0x4020,long baseOffset=0,QObject *parent=nullptr);
 	~AdsClient();
+
+	static AdsClient* genClient(QSqlRecord record);
 
 protected slots:
     void onPopRequest() Q_DECL_OVERRIDE ;

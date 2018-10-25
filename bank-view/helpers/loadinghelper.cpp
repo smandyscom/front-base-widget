@@ -5,6 +5,11 @@ LoadingHelper::LoadingHelper(QObject *parent) : QObject(parent)
 
 }
 
+void LoadingHelper::LoadBaseDatabase()
+{
+	JunctionBankDatabase::Instance()->onInitialize();
+}
+
 void LoadingHelper::LoadFrontAxis(FrontAxisParameter* widget)
 {
     widget->Setup(m_instance->TableMap(JunctionBankDatabase::WHOLE_COMMAND_BLOCKS),
@@ -74,7 +79,6 @@ void LoadingHelper::CombineModelViewV1(FrontAxisParameter* widget1,
 {
 
     m_instance = JunctionBankDatabase::Instance();
-    m_instance->onInitialize();
 
     LoadFrontAxis(widget1);
     LoadFrontCylinder(widget2);
