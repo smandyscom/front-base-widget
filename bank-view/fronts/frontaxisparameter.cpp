@@ -40,7 +40,6 @@ FrontAxisParameter::FrontAxisParameter(QWidget *parent) :
     foreach (QWidget* var, findChildren<QPushButton*>()) {
         m_widgetsPolish.append(var);
     }
-	//!
 	
 }
 //!
@@ -129,6 +128,9 @@ void FrontAxisParameter::onBankExecution()
 //! pushButtonDirectServoOn
 void FrontAxisParameter::onDirectExecution(bool value)
 {   
+	//! Not lock stop , TODO , bad implementation
+	m_widgetLockList.removeOne(ui->pushButtonStop);
+
     CellDataBlock data;
     AxisOperationBlock m_operationBlock(reinterpret_cast<MODBUS_U_WORD*>(&data));
     PosCommandBlock m_postionBlock(reinterpret_cast<MODBUS_U_WORD*>(&data));
