@@ -10,9 +10,9 @@ ControllerIOMonitor::ControllerIOMonitor(quint8 clientId, Mode mode, QObject *pa
 void ControllerIOMonitor::onAcknowledged(InterfaceRequest ack)
 {
     ADDRESS_MODE ackAddress = ack.Address();
-
+	quint8 clientId = ADDRESS_CLIENT_ID(ackAddress);
     //! Not my cared client
-    if(ADDRESS_CLIENT_ID(ackAddress) != m_clientId)
+    if(clientId != m_clientId)
         return;
     //!
     //!

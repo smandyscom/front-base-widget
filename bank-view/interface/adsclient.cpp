@@ -41,8 +41,8 @@ AdsClient * AdsClient::genClient(QSqlRecord record)
 
 	return new AdsClient(addr,
 		record.value(QVariant::fromValue(IS_LOCAL).toString()).toBool(),
-		record.value(QVariant::fromValue(GROUP).toString()).toUInt(),
-		record.value(QVariant::fromValue(BASE_OFFSET).toString()).toUInt());
+		record.value(QVariant::fromValue(GROUP).toString()).toLongLong(),
+		record.value(QVariant::fromValue(BASE_OFFSET).toString()).toLongLong());
 }
 
 void AdsClient::onPopRequest()

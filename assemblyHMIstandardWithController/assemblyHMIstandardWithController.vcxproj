@@ -192,6 +192,7 @@
     <ClCompile Include="..\bank-view\fronts\frontslot.cpp" />
     <ClCompile Include="..\bank-view\fronts\mainwindowcommon.cpp" />
     <ClCompile Include="..\bank-view\fronts\tableviewfeatureoverride.cpp" />
+    <ClCompile Include="..\bank-view\helpers\loadinghelperinterface.cpp" />
     <ClCompile Include="..\bank-view\interface\adsclient.cpp" />
     <ClCompile Include="..\bank-view\helpers\commonhelper.cpp" />
     <ClCompile Include="..\bank-view\controllers\controllerbanktransfer.cpp" />
@@ -583,6 +584,12 @@
       <Define Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">_WINDOWS;UNICODE;WIN32;QT_DEPRECATED_WARNINGS;QT_NO_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_SQL_LIB;QT_CORE_LIB;NDEBUG</Define>
     </QtMoc>
     <QtMoc Include="..\bank-view\fronts\frontslot.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\$(ConfigurationName)\.;.\GeneratedFiles;.;.\..\bank-view\fronts;.\..\bank-view\definitions;.\..\bank-view\helpers;.\..\bank-view\base;.\..\bank-view\controllers;.\..\bank-view\interface;.\..\bank-view\delegates;.\..\bank-view;C:\TwinCAT\AdsApi\TcAdsDll\Include;$(QTDIR)\include;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtSql;$(QTDIR)\include\QtCore;.\debug;$(QTDIR)\mkspecs\win32-msvc</IncludePath>
+      <Define Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_WINDOWS;UNICODE;WIN32;QT_DEPRECATED_WARNINGS;QT_WIDGETS_LIB;QT_GUI_LIB;QT_SQL_LIB;QT_CORE_LIB</Define>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ConfigurationName)\.;.\GeneratedFiles;.;.\..\bank-view\fronts;.\..\bank-view\definitions;.\..\bank-view\helpers;.\..\bank-view\base;.\..\bank-view\controllers;.\..\bank-view\interface;.\..\bank-view\delegates;.\..\bank-view;C:\TwinCAT\AdsApi\TcAdsDll\Include;$(QTDIR)\include;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtSql;$(QTDIR)\include\QtCore;.\release;$(QTDIR)\mkspecs\win32-msvc</IncludePath>
+      <Define Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">_WINDOWS;UNICODE;WIN32;QT_DEPRECATED_WARNINGS;QT_NO_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_SQL_LIB;QT_CORE_LIB;NDEBUG</Define>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\helpers\loadinghelperinterface.h">
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\$(ConfigurationName)\.;.\GeneratedFiles;.;.\..\bank-view\fronts;.\..\bank-view\definitions;.\..\bank-view\helpers;.\..\bank-view\base;.\..\bank-view\controllers;.\..\bank-view\interface;.\..\bank-view\delegates;.\..\bank-view;C:\TwinCAT\AdsApi\TcAdsDll\Include;$(QTDIR)\include;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtSql;$(QTDIR)\include\QtCore;.\debug;$(QTDIR)\mkspecs\win32-msvc</IncludePath>
       <Define Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_WINDOWS;UNICODE;WIN32;QT_DEPRECATED_WARNINGS;QT_WIDGETS_LIB;QT_GUI_LIB;QT_SQL_LIB;QT_CORE_LIB</Define>
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ConfigurationName)\.;.\GeneratedFiles;.;.\..\bank-view\fronts;.\..\bank-view\definitions;.\..\bank-view\helpers;.\..\bank-view\base;.\..\bank-view\controllers;.\..\bank-view\interface;.\..\bank-view\delegates;.\..\bank-view;C:\TwinCAT\AdsApi\TcAdsDll\Include;$(QTDIR)\include;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtSql;$(QTDIR)\include\QtCore;.\release;$(QTDIR)\mkspecs\win32-msvc</IncludePath>
