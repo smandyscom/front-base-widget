@@ -156,6 +156,23 @@ void MainWindow::closeEvent(QCloseEvent *event)
 {
     qDebug() << "closeEvent";
 
+    //!Raise confirm
+    QMessageBox msg;
+
+    msg.setText("是否確定離開");
+    msg.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+    msg.setDefaultButton(QMessageBox::Cancel);
+    msg.setIcon(QMessageBox::Question);
+    int ret = msg.exec();
+    switch (ret) {
+    case QMessageBox::Cancel :
+        event->ignore();
+        return; //!dont go further
+        break;
+    default:
+        break;
+    }
+
     if(!__isClosing)
     {
         //! inform material transfer to send DB_ENGAGED
