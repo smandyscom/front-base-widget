@@ -3,9 +3,19 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
+	qputenv("QT_IM_MODULE", QByteArray("qtvirtualkeyboard"));
 
-    return a.exec();
+	try
+	{
+		QApplication a(argc, argv);
+		MainWindow w;
+		w.show();
+		a.exec();
+	}
+	catch (const std::exception &e)
+	{
+		qDebug() << e.what();
+	}
+
+	return 0;
 }

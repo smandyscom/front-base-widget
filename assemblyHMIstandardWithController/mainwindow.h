@@ -18,6 +18,8 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+protected slots:
+	void onClosing();
 private:
     Ui::MainWindow *ui;
 };

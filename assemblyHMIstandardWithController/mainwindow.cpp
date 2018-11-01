@@ -12,22 +12,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    //! Interface initialization
- //   AmsAddr addr{{5,60,134,238,1,1},
- //               851};
- //   InterfaceClient* mainClient = new AdsClient(addr);
- //   InterfaceClient* inputClient1 = new AdsClient(addr,false,AdsClient::PLCADS_RWI,517960);
-	////InterfaceClient* inputClient2 = new AdsClient(addr, false, AdsClient::PLCADS_RWI, 586928);
- //   InterfaceClient* outputClient1 = new AdsClient(addr,false,AdsClient::PLCADS_RWQ, 513417);
-	////InterfaceClient* outputClient2 = new AdsClient(addr, false, AdsClient::PLCADS_RWQ, 634002);
-
- //   InterfaceChannel::Instance()->Clients(QList<InterfaceClient*>{
-	//	mainClient,
-	//		inputClient1,
-	//		//inputClient2,
-	//		outputClient1,
-	//		//outputClient2
-	//});
+	connect(ui->actionExit, &QAction::triggered, this, &MainWindow::onClosing);
+   
 	LoadingHelper::LoadBaseDatabase();
 	LoadingHelperInterface::LoadingInterfaceV1();
 
@@ -60,4 +46,9 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::onClosing()
+{
+	close(); //trigger form to close
 }

@@ -46,9 +46,7 @@
            <widget class="FrontSlot" name="widgetSlot2" native="true"/>
           </item>
           <item row="0" column="2">
-           <widget class="FrontSlot" name="widgetSlot3" native="true">
-            <zorder>widgetMain</zorder>
-           </widget>
+           <widget class="FrontSlot" name="widgetSlot3" native="true"/>
           </item>
           <item row="0" column="3">
            <widget class="FrontSlot" name="widgetSlot4" native="true"/>
@@ -109,7 +107,7 @@
      <x>0</x>
      <y>0</y>
      <width>650</width>
-     <height>21</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">
@@ -117,6 +115,19 @@
      <string>關於</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menuAuth">
+    <property name="title">
+     <string>權限</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menuSystem">
+    <property name="title">
+     <string>系統</string>
+    </property>
+    <addaction name="actionExit"/>
+   </widget>
+   <addaction name="menuSystem"/>
+   <addaction name="menuAuth"/>
    <addaction name="menu"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
@@ -128,6 +139,11 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionExit">
+   <property name="text">
+    <string>結束</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
