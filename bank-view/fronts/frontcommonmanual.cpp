@@ -69,7 +69,7 @@ void FrontCommonManual::hideEvent(QHideEvent *event)
 void FrontCommonManual::dynamicPropertyChanged(int key, QVariant value)
 {
     switch (key) {
-    case ManualModeDataBlock::PROP_MAIN_STATE:
+    case ManualModeDataBlock::PROP_MANUAL_STATE:
 		m_isPanelBusy = value.value<ManualModeDataBlock::ManualState>() ==
 			ManualModeDataBlock::STATE_PLC_READY;
 		for each (QWidget* var in m_widgetLockList)

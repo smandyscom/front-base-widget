@@ -99,7 +99,7 @@ public:
 	Q_ENUM(ManualState)
 	enum PropertyKeys
 	{
-		PROP_MAIN_STATE = 0xeeff00,
+		PROP_MANUAL_STATE = 0xeeff00,
 	};
 	Q_ENUM(PropertyKeys)
 
