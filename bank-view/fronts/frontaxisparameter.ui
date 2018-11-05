@@ -143,7 +143,7 @@
                 <enum>QLCDNumber::Flat</enum>
                </property>
                <property name="value" stdset="0">
-                <double>123.677999999999997</double>
+                <double>124.000000000000000</double>
                </property>
                <property name="intValue" stdset="0">
                 <number>124</number>
@@ -606,7 +606,7 @@
             </sizepolicy>
            </property>
            <property name="currentIndex">
-            <number>0</number>
+            <number>2</number>
            </property>
            <widget class="QWidget" name="tabPositioning">
             <property name="sizePolicy">
@@ -816,6 +816,9 @@
                  <property name="decimals">
                   <number>3</number>
                  </property>
+                 <property name="maximum">
+                  <double>1000.000000000000000</double>
+                 </property>
                  <property name="value">
                   <double>10.000000000000000</double>
                  </property>
@@ -862,6 +865,20 @@
               <widget class="QPushButton" name="pushButtonAxisSet">
                <property name="text">
                 <string>帶入實際位置</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="tabMisc">
+            <attribute name="title">
+             <string>其他</string>
+            </attribute>
+            <layout class="QGridLayout" name="gridLayout_13">
+             <item row="0" column="0">
+              <widget class="QPushButton" name="pushButtonDirectZero">
+               <property name="text">
+                <string>軸座標歸零</string>
                </property>
               </widget>
              </item>

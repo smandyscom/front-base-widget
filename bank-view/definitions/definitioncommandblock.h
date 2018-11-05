@@ -37,8 +37,10 @@ public:
         BCT_NOP=0,
         BCT_POS_I=1,
         BCT_ZRET=3,
-        BCT_POS_II=64,
-        BCT_POS_III=65,
+        //BCT_POS_II=64,
+        //BCT_POS_III=65,
+
+		BCT_SET_ZERO=0xff,
     };
     Q_ENUM(CommandType)
 
@@ -230,6 +232,23 @@ public:
         INPUT_C_PULSE=18,
         INPUT_ONLY=19,
     };
+};
+
+class SetZeroCommandBlock :
+	public ExtendedCommandBlock
+{
+	Q_OBJECT
+public:
+	SetZeroCommandBlock(QObject* parent = nullptr) :
+		ExtendedCommandBlock(parent)
+	{
+		ExtendedCommandBlock::Value(OFFSET_ACB_COMMAND_TYPE, BCT_SET_ZERO);
+	}
+	SetZeroCommandBlock(MODBUS_U_WORD* anchor, QObject* parent = nullptr) :
+		ExtendedCommandBlock(anchor, parent)
+	{
+		ExtendedCommandBlock::Value(OFFSET_ACB_COMMAND_TYPE, BCT_SET_ZERO);
+	}
 };
 
 namespace CommandBlock {

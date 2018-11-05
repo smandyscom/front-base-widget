@@ -158,6 +158,8 @@ void FrontAxisParameter::onDirectExecution(bool value)
     }
     else
     {
+		//! Command block series
+
         categrory = ManualModeDataBlock::SELECTION_COMMAND_BLOCK;
         mode = ManualModeDataBlock::MODE_EXE_COMMAND_BLOCK;
         //! Prepare parameters
@@ -197,6 +199,10 @@ void FrontAxisParameter::onDirectExecution(bool value)
                                      selectedAxisValue(ui->widgetFilter->SelectedKey1(),QVariant::fromValue(AxisBlock::LIMIT_MINUS))));
             m_postionBlock.Value(PosCommandBlock::OFFSET_POS_ABS_REL,true);//Always in ABS
         }
+		else if (sender() == ui->pushButtonDirectZero)
+		{
+			SetZeroCommandBlock m_zeroBlock(reinterpret_cast<MODBUS_U_WORD*>(&data));
+		}
         else
         {
             //! Step mode
