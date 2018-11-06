@@ -51,6 +51,7 @@ protected slots:
 
     void onInterrupted(bool value);
     void onMonitorIndexChanged() Q_DECL_OVERRIDE;
+	void onTimerScan() Q_DECL_OVERRIDE;
 private:
     Ui::FrontAxisParameter *ui;
     //!
@@ -68,6 +69,7 @@ private:
     QVariant selectedAxisValue(int axisId,QVariant key) const;
 
     QMap<AxisMonitorBlock::OffsetMonitor,QLCDNumber*> m_lcdMap;
+	QList<QPushButton*> m_bankButtons;
 
     void dynamicPropertyChanged(int key, QVariant value) Q_DECL_OVERRIDE;
 

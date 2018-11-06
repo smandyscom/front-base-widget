@@ -14,7 +14,8 @@ FrontAxisParameter::FrontAxisParameter(QWidget *parent) :
     m_monitorOperation = utilities::listupEnumVariant<AxisMonitorBlock::MONITOR_OPERATION>();
     m_runStatus = utilities::listupEnumVariant<AxisMonitorBlock::RUN_STATUS>();
     //! QPushButton link
-    foreach (QPushButton* var, findChildren<QPushButton*>(QRegExp("\\w+Bank\\w+"))) {
+	m_bankButtons = findChildren<QPushButton*>(QRegExp("\\w+Bank\\w+"));
+    foreach (QPushButton* var, m_bankButtons) {
         //!
         //! \brief connect
         //! no jog mode/stop
@@ -100,9 +101,6 @@ FrontAxisParameter::~FrontAxisParameter()
 //! Setup record
 void FrontAxisParameter::onBankExecution()
 {
-    if(!ui->tableViewCommandBlock->selectionModel()->hasSelection())
-        return;
-
     QSqlRecord record = mainDataTable->record(selectedCommandBlockIndex());
 
     if(sender()==ui->pushButtonBankCoordinateSet)
@@ -351,4 +349,16 @@ void FrontAxisParameter::onTabCurrentChanged()
         //!Switch to current tab
         onMonitorIndexChanged();
     }
+}
+//!
+void FrontAxisParameter::onTimerScan()
+{
+	FrontCommonManual::onTimerScan(); //base method
+
+	bool isSelected = ui->tableViewCommandBlock->selectionModel()->hasSelection();
+	foreach (QPushButton* var , m_bankButtons)
+	{	
+		var->setEnabled(isSelected && this->isEnabled());
+	}
+	ui->pushButtonDirectExecution->setEnabled(isSelected && this->isEnabled());
 }
