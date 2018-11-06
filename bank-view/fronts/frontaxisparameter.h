@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QString>
 
+
 #include <frontcommonmanual.h>
 
 #include <abstractsqltableadpater.h>

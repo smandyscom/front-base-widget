@@ -22,16 +22,12 @@ protected slots:
 	virtual void onTimerScan();
 protected:
 	QList<QWidget*> m_widgetLockList;
-	bool m_isPanelBusy;
     //! Commons
     ManualModeDataBlock::Categrories m_categrory;
     virtual int currentIndex() ;
 
     QSqlTableModel* mainDataTable;
     virtual QString currentFilter() const;
-
-
-    void dynamicPropertyChanged(int key,QVariant value) Q_DECL_OVERRIDE;
 
 	bool m_isInitialized;
 

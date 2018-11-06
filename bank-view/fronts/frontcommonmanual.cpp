@@ -42,15 +42,6 @@ void FrontCommonManual::showEvent(QShowEvent* event)
     }
     //! Base method
     FrontCommon::showEvent(event);
-
-	if (!m_isInitialized)
-	{
-		for each (QPushButton* var in findChildren<QPushButton*>())
-		{
-			m_widgetLockList.append(var);
-		}
-		m_isInitialized = true;
-	}
 }
 //!
 //! \brief FrontCommonManual::hideEvent
@@ -69,28 +60,14 @@ void FrontCommonManual::hideEvent(QHideEvent *event)
    FrontCommon::hideEvent(event);
 }
 
-void FrontCommonManual::dynamicPropertyChanged(int key, QVariant value)
-{
-    switch (key) {
-    case ManualModeDataBlock::PROP_MANUAL_STATE:
-		m_isPanelBusy = value.value<ManualModeDataBlock::ManualState>() ==
-			ManualModeDataBlock::STATE_PLC_READY;
-		/*for each (QWidget* var in m_widgetLockList)
-		{
-			var->setEnabled(m_isPanelBusy);
-		}*/
-    default:
-		FrontCommon::dynamicPropertyChanged(key, value);
-        break;
-    }
-
-
-}
-
 void FrontCommonManual::onTimerScan()
 {
 	QVariant value =
 		property(QVariant::fromValue(ManualModeDataBlock::PROP_MANUAL_STATE));
-	setEnabled(value.value<ManualModeDataBlock::ManualState>() ==
-		ManualModeDataBlock::STATE_PLC_READY);
+
+	for each (QWidget* var in m_widgetLockList)
+	{
+		var->setEnabled(value.value<ManualModeDataBlock::ManualState>() ==
+			ManualModeDataBlock::STATE_PLC_READY);
+	}
 }
