@@ -102,6 +102,8 @@ void ControllerManualMode::onStateReport()
 	{
 		var->setProperty(QString::number(ManualModeDataBlock::PROP_MANUAL_STATE).toStdString().c_str(), 
 			QVariant::fromValue(m_currentState));
+		var->setProperty(QVariant::fromValue(ManualModeDataBlock::PROP_MANUAL_STATE).toString().toStdString().c_str(),
+			QVariant::fromValue(m_currentState));
 	}
     qDebug() << QVariant::fromValue(m_currentState).toString();
 }

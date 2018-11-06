@@ -5,6 +5,9 @@ FrontCommonManual::FrontCommonManual(QWidget *parent):
     mainDataTable(nullptr),
 	m_isInitialized(false)
 {
+	m_timer = new QTimer(this);
+	connect(m_timer, &QTimer::timeout, this, &FrontCommonManual::onTimerScan);
+	m_timer->start();
 }
 
 int FrontCommonManual::currentIndex()
@@ -72,14 +75,22 @@ void FrontCommonManual::dynamicPropertyChanged(int key, QVariant value)
     case ManualModeDataBlock::PROP_MANUAL_STATE:
 		m_isPanelBusy = value.value<ManualModeDataBlock::ManualState>() ==
 			ManualModeDataBlock::STATE_PLC_READY;
-		for each (QWidget* var in m_widgetLockList)
+		/*for each (QWidget* var in m_widgetLockList)
 		{
 			var->setEnabled(m_isPanelBusy);
-		}
+		}*/
     default:
 		FrontCommon::dynamicPropertyChanged(key, value);
         break;
     }
 
 
+}
+
+void FrontCommonManual::onTimerScan()
+{
+	QVariant value =
+		property(QVariant::fromValue(ManualModeDataBlock::PROP_MANUAL_STATE));
+	setEnabled(value.value<ManualModeDataBlock::ManualState>() ==
+		ManualModeDataBlock::STATE_PLC_READY);
 }

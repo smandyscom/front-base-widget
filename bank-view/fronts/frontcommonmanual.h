@@ -19,6 +19,7 @@ public:
 
 protected slots:
     virtual void onMonitorIndexChanged();
+	virtual void onTimerScan();
 protected:
 	QList<QWidget*> m_widgetLockList;
 	bool m_isPanelBusy;
@@ -33,6 +34,8 @@ protected:
     void dynamicPropertyChanged(int key,QVariant value) Q_DECL_OVERRIDE;
 
 	bool m_isInitialized;
+
+	QTimer* m_timer;
 };
 
 #endif // FRONTCOMMONMANUAL_H
