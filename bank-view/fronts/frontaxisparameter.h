@@ -75,6 +75,8 @@ private:
 
     int currentIndex()  Q_DECL_OVERRIDE;
     QString currentFilter() const Q_DECL_OVERRIDE;
+
+	
 };
 
 #endif // FRONTAXISPARAMETER_H

@@ -16,6 +16,13 @@ FrontCommon::FrontCommon(QWidget *parent) :
 
 	onLinkQSSFile();
 	connect(this, &FrontCommon::objectNameChanged, this, &FrontCommon::onLinkQSSFile);
+	//! BLINK
+	m_blinkTimer = new QTimer(this);
+	connect(m_blinkTimer, &QTimer::timeout, [=]() {
+		setProperty(QVariant::fromValue(PROP_BLINK).toString().toStdString().c_str(),
+			!property(QVariant::fromValue(PROP_BLINK).toString().toStdString().c_str()).toBool());
+	});
+	m_blinkTimer->start(1000);// every 1 second blink once
 }
 
 void FrontCommon::onCustomContextMenuShowed(const QPoint position)

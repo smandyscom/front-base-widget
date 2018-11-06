@@ -41,6 +41,7 @@ FrontAxisParameter::FrontAxisParameter(QWidget *parent) :
     foreach (QWidget* var, findChildren<QPushButton*>()) {
         m_widgetsPolish.append(var);
     }
+	m_widgetsPolish.append(ui->textBrowserAlarmWarning);
 	//! Widget lock list
 	for each (QPushButton* var in findChildren<QPushButton*>())
 	{
@@ -361,4 +362,13 @@ void FrontAxisParameter::onTimerScan()
 		var->setEnabled(isSelected && this->isEnabled());
 	}
 	ui->pushButtonDirectExecution->setEnabled(isSelected && this->isEnabled());
+	//! Axis error message
+	MODBUS_U_LONG errorCode = m_monitorBlock.Value(AxisMonitorBlock::OFFSET_MONITOR_WARNINGS).value<MODBUS_U_LONG>();
+	QString queriedString = utilities::getSqlTableSelectedRecord(m_axisErrorTable,
+		QVariant::fromValue(HEADER_STRUCTURE::ID),
+		errorCode).value(QVariant::fromValue(HEADER_STRUCTURE::zh_TW).toString()).toString();
+
+	if (queriedString.isEmpty() || queriedString.isNull())
+		queriedString = QString("0x%1").arg(QString::number(errorCode, 16)); //represented in hex
+	ui->textBrowserAlarmWarning->setText(queriedString);
 }

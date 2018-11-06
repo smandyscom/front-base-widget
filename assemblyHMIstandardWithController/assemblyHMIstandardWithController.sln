@@ -5,6 +5,11 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "assemblyHMIstandardWithController", "assemblyHMIstandardWithController.vcxproj", "{8A6E872D-3068-3FE2-A07C-714CA51629D8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{11E47CFA-304F-448F-A2F7-14A1EF1DE760}"
+	ProjectSection(SolutionItems) = preProject
+		base.db = base.db
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86

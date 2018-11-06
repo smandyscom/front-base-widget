@@ -41,16 +41,16 @@ int utilities::getSelectedValue(QTableView *target, const QString &keyName)
 QSqlRecord utilities::getSqlTableSelectedRecord(QSqlTableModel *target, QVariant keyName, QVariant keyValue)
 {
     //!append one record if there is not existed in cache
-    if(!__cachedTables.contains(target->database().connectionName()))
-        __cachedTables[target->database().connectionName()] = new QSqlTableModel(nullptr,target->database());
+    if(!m_cachedTables.contains(target->database().connectionName()))
+        m_cachedTables[target->database().connectionName()] = new QSqlTableModel(nullptr,target->database());
 
-    QSqlTableModel* __dup = __cachedTables[target->database().connectionName()];
+    QSqlTableModel* m_dup = m_cachedTables[target->database().connectionName()];
 
-    __dup->setTable(target->tableName());
-    __dup->select();
+    m_dup->setTable(target->tableName());
+    m_dup->select();
 
-    __dup->setFilter(generateFilterString(trimNamespace(keyName),trimNamespace(keyValue)));
-    QSqlRecord result = __dup->record(0);
+    m_dup->setFilter(generateFilterString(trimNamespace(keyName),trimNamespace(keyValue)));
+    QSqlRecord result = m_dup->record(0);
     return result;
 }
 
@@ -117,4 +117,4 @@ QSqlTableModel * utilities::duplicate(QSqlTableModel * source)
 	return result;
 }
 
-QMap<QString,QSqlTableModel*> utilities::__cachedTables;
+QMap<QString,QSqlTableModel*> utilities::m_cachedTables;

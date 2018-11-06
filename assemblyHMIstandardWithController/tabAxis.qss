@@ -20,7 +20,7 @@ QLCDNumber
     /*max-width : 100px;*/
 }
 #textBrowserAlarmWarning {
-    max-height : 150px;
+    max-height : 50px;
 }
 #widgetFilter QComboBox{
     border : 1px solid red;
@@ -41,8 +41,16 @@ QWidget[MON_BIT15_ALARM_CLEAR="true"] QPushButton#pushButtonDirectAlarmClear
     background-color : Red;
 }
 
-QWidget[RS_SERVO_READY="false"] QTextBrowser#textBrowserAlarmWarning
+/*QWidget[RS_SERVO_READY="false"] QTextBrowser#textBrowserAlarmWarning
+{
+    background-color : Red;
+}*/
+
+QWidget[RS_SERVO_READY="false"][PROP_BLINK="true"] QTextBrowser#textBrowserAlarmWarning
 {
     background-color : Red;
 }
-
+/*QWidget[BLINK="false"] QTextBrowser#textBrowserAlarmWarning
+{
+    background-color : Green;
+}*/

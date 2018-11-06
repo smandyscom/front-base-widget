@@ -12,6 +12,11 @@ class FrontCommon : public QWidget
 {
     Q_OBJECT
 public:
+	enum CommandProperty
+	{
+		PROP_BLINK,
+	};
+	Q_ENUM(CommandProperty)
     //!
     //! \brief FrontCommon
     //! \param parent
@@ -52,6 +57,7 @@ protected:
 private:
     bool m_isQSSInitialized;
 	QFileSystemWatcher* m_watcher;
+	QTimer* m_blinkTimer;
 };
 
 #endif // FRONTCOMMON_H

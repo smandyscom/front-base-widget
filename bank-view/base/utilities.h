@@ -70,7 +70,7 @@ public:
 
 protected:
     //!connection name/table model
-    static QMap<QString,QSqlTableModel*> __cachedTables;
+    static QMap<QString,QSqlTableModel*> m_cachedTables;
 };
 
 #endif // UTILITIES_H
