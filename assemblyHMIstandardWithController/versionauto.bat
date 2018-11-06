@@ -1,0 +1,1 @@
+echo #define APP_VER "%date%,%time%" > version.h

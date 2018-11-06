@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
 
 #include <loadinghelper.h>
@@ -12,8 +12,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-	connect(ui->actionExit, &QAction::triggered, this, &MainWindow::onClosing);
-   
+	ui->menuVersion->setTitle(QString("build %1").arg(APP_VER));
+	//
+	QAction* exitAction = ui->menuBar->addAction(tr("Exit"));
+	connect(exitAction, &QAction::triggered, this, &MainWindow::onClosing);
+	//
 	LoadingHelper::LoadBaseDatabase();
 	LoadingHelperInterface::LoadingInterfaceV1();
 

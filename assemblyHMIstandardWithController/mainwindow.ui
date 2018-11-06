@@ -14,11 +14,11 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
      <widget class="TabWidgetOperationMode" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <property name="documentMode">
        <bool>false</bool>
@@ -110,25 +110,19 @@
      <height>26</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menu">
-    <property name="title">
-     <string>關於</string>
-    </property>
-   </widget>
    <widget class="QMenu" name="menuAuth">
     <property name="title">
      <string>權限</string>
     </property>
+    <addaction name="actionOperator"/>
    </widget>
-   <widget class="QMenu" name="menuSystem">
+   <widget class="QMenu" name="menuVersion">
     <property name="title">
-     <string>系統</string>
+     <string>版本</string>
     </property>
-    <addaction name="actionExit"/>
    </widget>
-   <addaction name="menuSystem"/>
    <addaction name="menuAuth"/>
-   <addaction name="menu"/>
+   <addaction name="menuVersion"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -142,6 +136,11 @@
   <action name="actionExit">
    <property name="text">
     <string>結束</string>
+   </property>
+  </action>
+  <action name="actionOperator">
+   <property name="text">
+    <string>Operator</string>
    </property>
   </action>
  </widget>

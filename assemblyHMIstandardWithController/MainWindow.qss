@@ -1288,3 +1288,14 @@ FrontSlot QPushButton {
     font-size : 24px;
 }
 
+QMenuBar {
+    font-size : 24px;
+    background-color : darkslategrey;
+}
+
+
+/*QMenuBar QMenu#menuVersion {
+    border : 1px solid red;
+    font-size : 96px;
+    
+}*/
