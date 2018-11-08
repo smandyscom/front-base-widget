@@ -8,9 +8,6 @@ ControllerMainPanel::ControllerMainPanel(quint8 clientId, quint16 baseOffset, in
     m_monitor =
             new MainMonitorBlock(registerWatchList(static_cast<ADDRESS_MODE>(UnitContextBlock::OFFSET_CONTEXT_LUID_PARENT),
                                                    QVariant::fromValue(CellDataBlock())));
-    //!
-//    __controllerTransfer = new ControllerBankTransfer(this);
-//    connect(__controllerTransfer,SIGNAL(dataTransfered()),this,SLOT(onDataTransfered()));
     //! sync with PLC
     m_monitor_propertyKeys << (QVariant::fromValue(UnitOperationBlock::OFFSET_UOB_STATE_PAUSE));
     foreach(QVariant var,utilities::listupEnumVariant<MainOperationBlock::OperationBits>())

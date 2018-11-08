@@ -107,27 +107,36 @@ QString FrontMainPanel::errorDescription(int deviceCategrory,int deviceIndex,int
                                                  QVariant::fromValue(ID),
                                                  QVariant::fromValue(deviceCategrory));
     if(errorCode==0)
-        return QString("");
+        return QString(""); //clear screen
 
-    QSqlTableModel* __lookupTable = m_errorCodeMap[deviceCategrory];
+    QSqlTableModel* lookup = m_errorCodeMap[deviceCategrory];
 
-    if(__lookupTable == nullptr)
+    if(lookup == nullptr)
         return QString("%1")
                 .arg("no description");
 
-    QString __description;
-    for(int i=0;i<__lookupTable->rowCount();i++)
+    QString description;
+
+	//represented by bit occurance (Stupid MIII representation
+    /*for(int i=0;i<lookup->rowCount();i++)
     {
-        QSqlRecord __record = __lookupTable->record(i);
-        MODBUS_U_QUAD __ref = __record.value(QVariant::fromValue(ID).toString()).toULongLong();
-        if((__ref & errorCode)!=0)
-            __description.append(QString("%1\n").arg(__record.value(QVariant::fromValue(locale).toString()).toString()));
-    }
+        QSqlRecord record = lookup->record(i);
+        MODBUS_U_QUAD ref = record.value(QVariant::fromValue(ID).toString()).toULongLong();
+        if((ref & errorCode)!=0)
+            description.append(QString("%1\n").arg(record.value(QVariant::fromValue(locale).toString()).toString()));
+    }*/
+
+	//represented by unique error id
+	description = utilities::getSqlTableSelectedRecord(lookup,
+		QVariant::fromValue(ID),
+		QVariant::fromValue(errorCode))
+		.value(QVariant::fromValue(locale).toString())
+		.toString();
 
     return QString("%1,%2,%3")
             .arg(recordDevice.value(QVariant::fromValue(locale).toString()).toString())
             .arg(recordIndex.value(QVariant::fromValue(NAME).toString()).toString())
             .arg(recordIndex.value(QVariant::fromValue(locale).toString()).toString()) +
             QString("%1")
-            .arg(__description);
+            .arg(description);
 }
