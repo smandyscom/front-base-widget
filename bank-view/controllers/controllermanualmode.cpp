@@ -110,8 +110,9 @@ void ControllerManualMode::onStateReport()
 
 void ControllerManualMode::plcReady()
 {
-	/*setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_0_ENGAGED_HMI).toString().toStdString().c_str(), 
-		true);*/
+	//reset
+	setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_0_ENGAGED_HMI).toString().toStdString().c_str(), false);
+	setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_1_RUN).toString().toStdString().c_str(),false);
 }
 void ControllerManualMode::doneOn()
 {
@@ -125,6 +126,7 @@ void ControllerManualMode::doneOff()
 }
 void ControllerManualMode::runOn()
 {
+	//set
 	setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_0_ENGAGED_HMI).toString().toStdString().c_str(),
 		true); 
 }

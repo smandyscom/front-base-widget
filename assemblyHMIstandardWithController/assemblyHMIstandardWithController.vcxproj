@@ -1195,13 +1195,25 @@
     <None Include="..\..\..\..\..\TwinCAT\AdsApi\TcAdsDll\TcAdsDll.dll">
       <DeploymentContent>true</DeploymentContent>
     </None>
-    <None Include="MainWindow.qss" />
-    <None Include="tabAxis.qss" />
-    <None Include="tabCylinder.qss" />
-    <None Include="tabIO.qss" />
+    <None Include="MainWindow.qss">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="tabAxis.qss">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="tabCylinder.qss">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="tabIO.qss">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
     <None Include="versionauto.bat" />
-    <None Include="widgetMain.qss" />
-    <None Include="tabUnit.qss" />
+    <None Include="widgetMain.qss">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="tabUnit.qss">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="resource.qrc">
