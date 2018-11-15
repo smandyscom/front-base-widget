@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui sql widgets serialbus serialport concurrent
+QT       += core gui sql widgets serialbus  concurrent
 QTPLUGIN += qtvirtualkeyboardplugin
 #greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 #QT       -= gui

@@ -5,6 +5,7 @@
 #include <QSqlTableModel>
 #include <QSqlDatabase>
 #include <QDateTime>
+#include <QSqlError>
 
 #include <definitionauxiliarykeys.h>
 #include <delegatematerialselector.h>

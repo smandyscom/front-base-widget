@@ -325,6 +325,8 @@ void FrontManaualMode::showEvent(QShowEvent *event)
 {
     __controller->MonitorDeviceCategrory(CommitBlock::SELECTION_AXIS);
     __controller->onMonitorDeviceIndexChanged(__selectedAxisId);
+    //! Table re-load
+    __commandBlockTable->select();
     //!
     QWidget::showEvent(event);
 }
