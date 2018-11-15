@@ -439,12 +439,18 @@
     <None Include="..\..\..\..\..\TwinCAT\AdsApi\TcAdsDll\TcAdsDll.dll">
       <Filter>Distribution Files</Filter>
     </None>
+    <None Include="versionauto.bat">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="..\bank-view\definitions\definitionslotblock.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="version.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
