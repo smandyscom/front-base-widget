@@ -182,6 +182,9 @@
     <ClCompile Include="..\bank-view\helpers\loadinghelperinterface.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\bank-view\controllers\controllermaterialtransfer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="..\bank-view\base\abstractsqltableadpater.h">
@@ -350,6 +353,12 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="..\bank-view\helpers\loadinghelperinterface.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\controllers\controllermaterialtransfer.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\definitions\definitionmaterialblock.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

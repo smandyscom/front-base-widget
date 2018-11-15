@@ -16,7 +16,7 @@ private Q_SLOTS:
 };
 
 UnitTesterTest::UnitTesterTest() :
-    AdsClient(AmsAddr(),true,0x4020,nullptr)
+    AdsClient(AmsAddr(),true,0x4020,0,nullptr)
 {
 
 }

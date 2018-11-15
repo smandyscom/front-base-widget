@@ -2,30 +2,21 @@
 #define CONTROLLERMATERIALTRANSFER_H
 
 #include <QObject>
-#include <QStateMachine>
-
-#include <QSqlRelationalTableModel>
+#include <QSqlTableModel>
 #include <QFileInfo>
 #include <QElapsedTimer>
 
-#include <modbuschannel.h>
+#include <controllerbase.h>
 #include <definitionslotblock.h>
-#include <abstractsqltableadpater.h>
 
-class MaterialHeaderBlock
-{
-public:
-    MaterialHeaderBlock() {}
-protected:
-    MODBUS_U_WORD reserved[96];
-};
-Q_DECLARE_METATYPE(MaterialHeaderBlock)
+#include <abstractsqltableadpater.h>
 
 //!
 //! \brief The ControllerMaterialTransfer class
-//! Proceding material/slot handshaking
+//! Mission , Proceding material/slot handshaking , put into databse
+//! And generate property to front
 class ControllerMaterialTransfer :
-        public QStateMachine
+        public ControllerBase
 {
     Q_OBJECT
 public:
@@ -35,54 +26,28 @@ public:
         BYPASS=3,
         NG=0,
     };
-    enum NameConstants
-    {
-        //! Data base name
-        //!
-        MAT_DATA_SLOT,
-        MAT_HEADER_SLOT
-    };
-    enum SlotContext
-    {
-        //! PLC->DB
-        //PLC_ENGAGED=0x4008000,
-        ACT=0x4018000,
-        IS_VALID=0x4028000,
-        WORD_OUT=0x4008000,
-        SYNC_ACTION=0x4008001,
-        //! PLC<-DB
-        DB_ENGAGED=0x4008008,
-        WORD_IN=0x4008008,
-        DONE=0x4018008,
-        //! Mutual
-        MATERIAL_ID=0x4008010, //move to first 8 words
-        BLOCK_DATA=0x4008014,
-
-        //!
-        MATERIAL_OVERRIDE=0x4050003, //material override
-    };
-    enum SyncRequests
+    enum SyncRole
     {
         ACTION_UPDATE_HEADER = 0x01,
-        ACTION_UPDATE_BLOCK = 0x02,
-        ACTION_CREATE = 0x04,
-        ACTION_QUERY = 0x08,
+        ACTION_UPDATE_BLOCK = 0x02, //read from bus write-in db
+        ACTION_CREATE = 0x04, //generate material id
+        ACTION_QUERY = 0x08,  //read from DB write-in bus
     };
-    enum SlotState
-    {
-        WAIT_ACT_ON,
-        WAIT_ACT_OFF,
-    };
-    Q_ENUM(SlotContext)
-    Q_ENUM(SyncRequests)
-    Q_ENUM(SlotState)
-    Q_ENUM(NameConstants)
+	enum Miscs
+	{
+		MAT_DATA_SLOT,
+	};
+    Q_ENUM(SyncRole)
     Q_ENUM(Grade)
+	Q_ENUM(Miscs)
 
-    explicit ControllerMaterialTransfer(int slotOffset,
-                                        int channelIndex,
-                                        QObject *parent = nullptr);
+    explicit ControllerMaterialTransfer(quint8 clientId, quint16 baseOffset, int interval, QObject *parent);
     ~ControllerMaterialTransfer();
+
+	//! Settle handling routine
+	void Role(SyncRole role);
+	//!Which table going to store
+	void SlotIndex(int index);
 
     //! Current material id this slot held
    /* int MaterialId() const
@@ -109,7 +74,7 @@ public:
     //! \brief MaterialOverride
     //! \param value
     //! Able to control material override via slot interface
-    void MaterialOverride(bool value)
+    /*void MaterialOverride(bool value)
     {
         __channel->Access<bool>(toOffseteAddress(MATERIAL_OVERRIDE),value);
     }
@@ -152,62 +117,42 @@ public:
     {
         m_index_grade1 = index1;
         m_index_grade2 = index2;
-    }
+    }*/
+
+	static void OpenDatabase();
 
 signals:
     void dataUpdated();
+	void actionRaised();
 public slots:
     void onAboutToLeave();
-    void onInsert();
+    
+protected slots:
+	virtual void onAcknowledged(InterfaceRequest ack);
+
+	void onInsert();
     void onQuery();
     void onUpdate();
-protected slots:
-    //!
-    //! \brief onMonitorBlockReply
-    //! \param event
-    //! Looping
-    void onReply();
-
 protected:
-    ModbusChannel* __channel;
+	int m_slotIndex;
+    int m_materialId;
+    bool m_isValid;
 
-    int __slotIndex;
-    int __channelIndex;
+    QSqlTableModel* m_table;
 
-    int __materialId;
-    bool __isValid;
-    //SlotType __role;
+    AbstractSqlTableAdpater* m_adpator;
 
-    SyncRequests __request;
-
-    QSqlTableModel* __table;
-
-    ModbusDriverAddress toOffseteAddress(int base);
-
-    AbstractSqlTableAdpater* __adpator;
-
-    QMap<SlotState,QState*> __stateMap;
-    SlotState __currentState;
-
-    static QSqlDatabase __database;
-    static QString __databaseName;
-
-    bool __connectionEngaged;
-
-    int __pollCyclic;
-
-    AbstractDataBlock __adb;
-
-    QElapsedTimer __procedureTimer;
+    static QSqlDatabase m_database;
+    static QString m_databaseName;
 
     //! Counters
-    int m_totalCounter;
+    /*int m_totalCounter;
     int m_okCounter;
     int m_ngCounter;
-    Grade m_currentGrade;
+    Grade m_currentGrade;*/
     //! To indicate which value to count as OK/NG according to individual slot...bad smell
-    int m_index_grade1;
-    int m_index_grade2;
+    /*int m_index_grade1;
+    int m_index_grade2;*/
 };
 
 

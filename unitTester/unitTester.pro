@@ -28,12 +28,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         tst_unittestertest.cpp \ 
-    ../bank-view/adsclient.cpp \
-    ../bank-view/interfaceclient.cpp \
-    ../bank-view/utilities.cpp \
     tst_unittestinterfacechannel.cpp \
-    ../bank-view/interfacechannel.cpp \
-    ../bank-view/definitionsbaselayer.cpp
+    tst_unittestertest3.cpp \
+    ../bank-view/interface/adsclient.cpp \
+    ../bank-view/interface/interfacechannel.cpp \
+    ../bank-view/interface/interfaceclient.cpp \
+    ../bank-view/base/utilities.cpp \
+    ../bank-view/definitions/definitionbasicblocks.cpp \
+    ../bank-view/definitions/definitionsbaselayer.cpp
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
@@ -43,7 +45,15 @@ HEADERS += \
     ../bank-view/interfacerequest.h \
     ../bank-view/utilities.h \
     ../bank-view/interfacechannel.h \
-    ../bank-view/definitionsbaselayer.h
+    ../bank-view/definitionsbaselayer.h \
+    ../bank-view/definitions/definitionslotblock.h \
+    ../bank-view/interface/adsclient.h \
+    ../bank-view/base/utilities.h \
+    ../bank-view/interface/interfacechannel.h \
+    ../bank-view/interface/interfaceclient.h \
+    ../bank-view/interface/interfacerequest.h \
+    ../bank-view/definitions/definitionbasicblocks.h \
+    ../bank-view/definitions/definitionsbaselayer.h
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../../TwinCAT/AdsApi/TcAdsDll/Lib/ -lTcAdsDll
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../../TwinCAT/AdsApi/TcAdsDll/Lib/ -lTcAdsDll
@@ -51,4 +61,6 @@ else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../../TwinCAT/
 INCLUDEPATH += $$PWD/../../../../../TwinCAT/AdsApi/TcAdsDll/Include
 DEPENDPATH += $$PWD/../../../../../TwinCAT/AdsApi/TcAdsDll/Include
 
-INCLUDEPATH += ../bank-view/
+INCLUDEPATH += ../bank-view/definitions/ \
+                ../bank-view/interface/ \
+                   ../bank-view/base/
