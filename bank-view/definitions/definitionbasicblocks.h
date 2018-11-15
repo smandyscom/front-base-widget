@@ -31,6 +31,8 @@ protected:
 };
 Q_DECLARE_METATYPE(CellDataBlock)
 
+
+
 //!
 //! \brief The AbstractDataBlock class
 //! Resolve raw memory block in IEC
@@ -45,8 +47,6 @@ public:
     AbstractDataBlock(QObject* parent=nullptr) :
         QObject (parent)
     {
-//        memset(reserved,0,sizeof(MODBUS_U_WORD) * DATA_BLOCK_SIZE_IN_WORD_64);
-
         m_anchor = reinterpret_cast<MODBUS_U_WORD*>(new CellDataBlock());
         m_allocated = true;
 

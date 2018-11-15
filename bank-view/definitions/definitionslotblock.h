@@ -5,10 +5,11 @@
 
 //!
 //! \brief The SlotDataBlock class
-//! 64Words
+//! 128Words
 class SlotDataBlock :
         public AbstractDataBlock
 {
+    Q_OBJECT
 public:
 	enum Offset
 	{
@@ -18,7 +19,7 @@ public:
 		WORD_IN = 0x0008,
 		//! Mutual
 		MATERIAL_ID = 0x0010, //move to first 8 words
-		BLOCK_DATA = 0x0014,
+		BLOCK_DATA = 0x0014, //64words occupied
 	};
 	Q_ENUM(Offset)
 	enum Bits
@@ -31,15 +32,10 @@ public:
 	};
 	Q_ENUM(Bits)
 
-    SlotDataBlock(QObject* parent=nullptr) :
-        AbstractDataBlock(parent)
-    {
-
-    }
     SlotDataBlock(MODBUS_U_WORD* anchor,QObject* parent=nullptr) :
         AbstractDataBlock(anchor,parent)
     {
-
+		//anchor should be the base-address of 128Words consequtial memory
     }
 
 	//!
@@ -49,6 +45,13 @@ public:
 		{
 		case MATERIAL_ID:
 			return getData<MODBUS_U_LONG>(key);
+			break;
+		case BLOCK_DATA:
+        {
+            CellDataBlock* temp = reinterpret_cast<CellDataBlock*>(&m_anchor[key]);
+			return QVariant::fromValue(*temp);
+			break;
+        }
 		default:
 			return Bit(key);
 			break;
@@ -58,12 +61,14 @@ public:
 	{
 		switch (key)
 		{
-		case BIT0_DB_ENGAGED:
-		case BIT1_DONE:
-		case BIT2_VALID:
-			Bit(key, value.toBool());
+		case MATERIAL_ID:
+			setData(key, value.value<MODBUS_U_LONG>());
+			break;
+		case BLOCK_DATA:
+			setData(key, value.value<CellDataBlock>());
+			break;
 		default:
-			//do nothing
+			Bit(key, value.toBool());
 			break;
 		}
 	}
