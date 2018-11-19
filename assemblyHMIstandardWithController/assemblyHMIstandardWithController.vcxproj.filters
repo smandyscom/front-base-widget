@@ -358,7 +358,7 @@
     <QtMoc Include="..\bank-view\controllers\controllermaterialtransfer.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="..\bank-view\definitions\definitionmaterialblock.h">
+    <QtMoc Include="..\bank-view\definitions\definitionslotblock.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -455,9 +455,6 @@
   <ItemGroup>
     <ClInclude Include="resource.h">
       <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\bank-view\definitions\definitionslotblock.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="version.h">
       <Filter>Header Files</Filter>

@@ -1,10 +1,14 @@
 #include "controllermaterialtransfer.h"
 #include <QDebug>
+
+
+
+
 ControllerMaterialTransfer::ControllerMaterialTransfer(quint8 clientId, quint16 baseOffset, int interval, QObject *parent) :
 	ControllerBase(clientId, baseOffset, interval, parent)
 {
 	//! Monitor all 128Words
-	m_monitor = new SlotDataBlock(registerWatchList(SlotDataBlock::WORD_OUT, QVariant::fromValue(CellDataBlock())));
+	m_monitor = new SlotDataBlock(registerWatchList(SlotDataBlock::WORD_OUT, QVariant::fromValue(DataBlock128())));
     //!
 	QVariant var = QVariant::fromValue(SlotDataBlock::BIT1_ACT);
 	m_monitor_propertyKeys << var;
@@ -22,15 +26,15 @@ void ControllerMaterialTransfer::Role(SyncRole role)
 {
 	switch (role)
 	{
-	case ControllerMaterialTransfer::ACTION_UPDATE_HEADER:
+	case ControllerMaterialTransfer::ROLE_UPDATE_HEADER:
 		break;
-	case ControllerMaterialTransfer::ACTION_UPDATE_BLOCK:
+	case ControllerMaterialTransfer::ROLE_UPDATE_BLOCK:
 		connect(this, &ControllerMaterialTransfer::actionRaised, this, &ControllerMaterialTransfer::onUpdate);
 		break;
-	case ControllerMaterialTransfer::ACTION_CREATE:
+	case ControllerMaterialTransfer::ROLE_CREATE:
 		connect(this, &ControllerMaterialTransfer::actionRaised, this, &ControllerMaterialTransfer::onInsert);
 		break;
-	case ControllerMaterialTransfer::ACTION_QUERY:
+	case ControllerMaterialTransfer::ROLE_QUERY:
 		connect(this, &ControllerMaterialTransfer::actionRaised, this, &ControllerMaterialTransfer::onQuery);
 		break;
 	default:
@@ -40,7 +44,7 @@ void ControllerMaterialTransfer::Role(SyncRole role)
 //!
 void ControllerMaterialTransfer::SlotIndex(int index)
 {
-	m_table = new QSqlTableModel(this, m_database);
+	QSqlTableModel* m_table = new QSqlTableModel(this, m_database);
 	QString m_tableName = QString("%1%2").arg(QVariant::fromValue(MAT_DATA_SLOT).toString()).arg(index);
 	m_table->setTable(QString("%1%2").arg(QVariant::fromValue(MAT_DATA_SLOT).toString()).arg(index));
 	m_adpator = new GenericSqlTableAdapter<SlotDataBlock, SlotBlock::DataBaseHeaders>(m_table);
@@ -84,6 +88,7 @@ void ControllerMaterialTransfer::onInsert()
     stopWatch.start();
 
     //!insert record on table
+	QSqlTableModel* m_table = m_adpator->Model();
     QSqlRecord record = m_table->record();
 
     for(int i=0;i<record.count();i++)
@@ -105,8 +110,6 @@ void ControllerMaterialTransfer::onInsert()
                        .arg(m_table->tableName())
                        .arg(QVariant::fromValue(SlotBlock::ID).toString()));
     m_table->select();//re-select
-
-    int rowCount = m_table->rowCount();
 
     record = m_table->record(0); //access last row
     m_materialId = record.value(QVariant::fromValue(SlotBlock::ID).toString()).toInt();

@@ -138,7 +138,7 @@ protected:
     //! \brief reserved
     //! anchor of memory block
     MODBUS_U_WORD* m_anchor;
-private:
+protected:
     //!
     //! \brief m_allocated
     //! Whether anchor allocated

@@ -4,6 +4,22 @@
 #include <definitionbasicblocks.h>
 
 //!
+//! \brief The CellDataBlock class
+//! Pure storage
+//template<int size>
+class DataBlock128
+{
+public:
+	DataBlock128()
+	{
+		memset(reserved, 0, sizeof(MODBUS_U_WORD) * DATA_BLOCK_SIZE_IN_WORD_128);
+	}
+protected:
+	MODBUS_U_WORD reserved[DATA_BLOCK_SIZE_IN_WORD_128]; //static 
+};
+Q_DECLARE_METATYPE(DataBlock128)
+
+//!
 //! \brief The SlotDataBlock class
 //! 128Words
 class SlotDataBlock :
@@ -32,7 +48,13 @@ public:
 	};
 	Q_ENUM(Bits)
 
-    SlotDataBlock(MODBUS_U_WORD* anchor,QObject* parent=nullptr) :
+	SlotDataBlock(QObject* parent = nullptr) 
+	{
+		//mandotory for AbstractSqlTableAdpater
+		m_anchor = reinterpret_cast<MODBUS_U_WORD*>(new DataBlock128());
+		m_allocated = true;
+	}
+	SlotDataBlock(MODBUS_U_WORD* anchor,QObject* parent=nullptr) :
         AbstractDataBlock(anchor,parent)
     {
 		//anchor should be the base-address of 128Words consequtial memory

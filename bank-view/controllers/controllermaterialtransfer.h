@@ -20,6 +20,7 @@ class ControllerMaterialTransfer :
 {
     Q_OBJECT
 public:
+	//! First field of MAT_DATA as grade
     enum Grade
     {
         OK=1,
@@ -28,10 +29,10 @@ public:
     };
     enum SyncRole
     {
-        ACTION_UPDATE_HEADER = 0x01,
-        ACTION_UPDATE_BLOCK = 0x02, //read from bus write-in db
-        ACTION_CREATE = 0x04, //generate material id
-        ACTION_QUERY = 0x08,  //read from DB write-in bus
+        ROLE_UPDATE_HEADER = 0x01,
+        ROLE_UPDATE_BLOCK = 0x02, //read from bus write-in db
+        ROLE_CREATE = 0x04, //generate material id
+        ROLE_QUERY = 0x08,  //read from DB write-in bus
     };
 	enum Miscs
 	{
@@ -122,11 +123,7 @@ public:
 	static void OpenDatabase();
 
 signals:
-    void dataUpdated();
 	void actionRaised();
-public slots:
-    void onAboutToLeave();
-    
 protected slots:
 	virtual void onAcknowledged(InterfaceRequest ack);
 
@@ -138,7 +135,7 @@ protected:
     int m_materialId;
     bool m_isValid;
 
-    QSqlTableModel* m_table;
+    //QSqlTableModel* m_table;
 
     AbstractSqlTableAdpater* m_adpator;
 
