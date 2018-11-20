@@ -24,6 +24,7 @@ public:
     
     enum SyncRole
     {
+		ROLE_NONE = 0,
         ROLE_UPDATE_HEADER = 0x01,
         ROLE_UPDATE_BLOCK = 0x02, //read from bus write-in db
         ROLE_CREATE = 0x04, //generate material id
@@ -32,6 +33,11 @@ public:
 	enum Miscs
 	{
 		MAT_DATA_SLOT,
+		//! Database header
+		CLIENT_ID,
+		BASE_OFFSET,
+		INTERVAL,
+		ROLE,
 	};
     Q_ENUM(SyncRole)
 	Q_ENUM(Miscs)
@@ -43,76 +49,6 @@ public:
 	void Role(SyncRole role);
 	//!Which table going to store
 	void SlotIndex(int index);
-
-    //! Current material id this slot held
-   /* int MaterialId() const
-    {
-        return __materialId;
-    }
-    int Index() const
-    {
-        return __slotIndex;
-    }
-    bool IsValid() const
-    {
-        return __isValid;
-    }
-    bool ConnectionEngaged() const
-    {
-        return __connectionEngaged;
-    }*/
-//    SlotType Role() const
-//    {
-//        return __role;
-//    }
-    //!
-    //! \brief MaterialOverride
-    //! \param value
-    //! Able to control material override via slot interface
-    /*void MaterialOverride(bool value)
-    {
-        __channel->Access<bool>(toOffseteAddress(MATERIAL_OVERRIDE),value);
-    }
-
-    QSqlTableModel* Table() const
-    {
-        return __table;
-    }
-
-    static QSqlDatabase DataBase()
-    {
-        return __database;
-    }
-
-
-    void CounterClear()
-    {
-        m_totalCounter = 0;
-        m_okCounter = 0;
-        m_ngCounter = 0;
-        emit dataUpdated();
-    }
-    int TotalCount() const {return m_totalCounter;}
-    int OKCount() const {return m_okCounter;}
-    int NGCount() const {return m_ngCounter;}
-    qreal OKRate() const
-    {
-        if(m_totalCounter==0)
-            return 0;
-        return ((qreal)m_okCounter/(qreal)m_totalCounter) * 100;
-    }
-    qreal NGRate() const
-    {
-        if(m_totalCounter==0)
-            return 0;
-        return ((qreal)m_ngCounter/(qreal)m_totalCounter) * 100;
-    }
-    Grade CurrentGrade() const {return m_currentGrade;}
-    void IndexGrades(int index1,int index2)
-    {
-        m_index_grade1 = index1;
-        m_index_grade2 = index2;
-    }*/
 
 	static void OpenDatabase();
 

@@ -56,6 +56,34 @@ void LoadingHelperControllers::LoadCylinderMonitor()
                                        map);
 }
 
+void LoadingHelperControllers::LoadMaterialTransfer()
+{
+	QSqlTableModel* model = 
+		m_database->TableMap[JunctionBankDatabase::DEF_REGION];
+
+	//! filter out Role is not zeros
+	model->setFilter(QString("%1<>%2")
+		.arg(QVariant::fromValue(ControllerMaterialTransfer::ROLE).toString())
+		.arg(QVariant::fromValue(ControllerMaterialTransfer::ROLE_NONE).toInt()));
+	model->select();
+	model->sort(0,Qt::AscendingOrder);
+
+	for (size_t i = 0; i < model->rowCount; i++)
+	{
+		int clientId = model->record(i).value(QVariant::fromValue(ControllerMaterialTransfer::CLIENT_ID).toString()).toInt();
+		int baseOffset = model->record(i).value(QVariant::fromValue(ControllerMaterialTransfer::BASE_OFFSET).toString()).toInt();
+		int interval = model->record(i).value(QVariant::fromValue(ControllerMaterialTransfer::INTERVAL).toString()).toInt();
+		ControllerMaterialTransfer::SyncRole role = model->record(i).value(QVariant::fromValue(ControllerMaterialTransfer::ROLE).toString()).value<ControllerMaterialTransfer::SyncRole>();
+
+		ControllerMaterialTransfer* ref =
+			new ControllerMaterialTransfer(clientId, baseOffset, interval,qApp);
+		ref->Role(role);//set role
+		ref->SlotIndex(i);
+		m_controllersMaterial.append(ref);
+	}
+}
+
+
 void LoadingHelperControllers::ControllersLoadingRoutineV1()
 {
     //!
@@ -73,6 +101,8 @@ void LoadingHelperControllers::ControllersLoadingRoutineV1()
     LoadInputsMonitor();
     LoadOutputsMonitor();
     LoadCylinderMonitor();
+	//!Load slot material controller
+	LoadMaterialTransfer();
 }
 
 void LoadingHelperControllers::CrossLink(ControllerBase *controller, FrontCommon *front)

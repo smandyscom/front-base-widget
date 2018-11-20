@@ -22,11 +22,8 @@ FrontSlot::FrontSlot(QWidget *parent) :
         ui->labelName->setText(__reference->record(0).value("zh_Tw").toString());
         __reference->deleteLater();*/
         //!
-	/*	for each (QPushButton* var in findChildren<QPushButton*>())
-		{
-			connect(var, QPushButton::click, this, &FrontSlot::onButtonClicked);
-			m_widgetsPolish.append(var);
-		}*/
+	m_widgetsPolish.append(ui->labelIsValid);
+	m_widgetsPolish.append(ui->labelOKNG);
 }
 
 FrontSlot::~FrontSlot()
@@ -59,6 +56,7 @@ void FrontSlot::Setup(QSqlTableModel* slot,
 	layout->addWidget(m_view);
 	//! Fetch headers
 	HEADER_STRUCTURE::HeaderRender::renderViewHeader(header, m_view);
+	//! TODO , load title
 }
 
 void FrontSlot::dynamicPropertyChanged(int key, QVariant value)

@@ -42,6 +42,12 @@ MainWindow::MainWindow(QWidget *parent) :
     LoadingHelperControllers::CrossLink(LoadingHelperControllers::m_controllerMain,ui->widgetMain);
     //!
     ui->tabWidget->Setup(LoadingHelperControllers::m_controllerMain);
+	//! Slots cross link
+	for (size_t i = 0; i < LoadingHelperControllers::m_controllersMaterial.count(); i++)
+	{
+		LoadingHelperControllers::CrossLink(LoadingHelperControllers::m_controllersMaterial[i],
+			findChild<FrontSlot*>(QString("widgetSlot%1").arg(i+1)));
+	}
 	//!
 	showFullScreen();
 }

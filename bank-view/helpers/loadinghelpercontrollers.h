@@ -15,6 +15,7 @@
 #include <controllerbanktransfer.h>
 #include <controllermainpanel.h>
 #include <controlleriomonitor.h>
+#include <controllermaterialtransfer.h>
 
 #include <junctionbankdatabase.h>
 
@@ -28,18 +29,19 @@ public:
     static void LoadInputsMonitor();
     static void LoadOutputsMonitor();
     static void LoadCylinderMonitor();
+	static void LoadMaterialTransfer();
 
     static void ControllersLoadingRoutineV1();
 
     static JunctionBankDatabase* m_database;
     static ControllerBankTransfer* m_controllerTransfer;
     static ControllerMainPanel* m_controllerMain;
+	static QList<ControllerMaterialTransfer*> m_controllersMaterial;
 
     static ControllerIOMonitor* m_controllerInputMonitor;
     static ControllerIOMonitor* m_controllerOutputMonitor;
     static ControllerIOMonitor* m_controllerCylinderMonitor;
-
-
+	
     static void CrossLink(ControllerBase* controller,FrontCommon* front);
 
 	
