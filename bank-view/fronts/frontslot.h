@@ -17,6 +17,11 @@ namespace Ui {
 class FrontSlot;
 }
 
+
+//!
+// Update trigger source:
+// By MaterialID/Valid property changed
+// By Coresponding Model data changed
 class FrontSlot : public FrontCommon
 {
     Q_OBJECT
@@ -50,6 +55,10 @@ private:
 	void update();
 
 	void dynamicPropertyChanged(int key, QVariant value) Q_DECL_OVERRIDE;
+
+
+
+	
 };
 
 #endif // FRONTSLOT_H
