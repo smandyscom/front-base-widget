@@ -156,31 +156,35 @@ void MainWindow::closeEvent(QCloseEvent *event)
 {
     qDebug() << "closeEvent";
 
-    //!Raise confirm
-    QMessageBox msg;
 
-    msg.setText("是否確定離開");
-    msg.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
-    msg.setDefaultButton(QMessageBox::Cancel);
-    msg.setIcon(QMessageBox::Question);
-    int ret = msg.exec();
-    switch (ret) {
-    case QMessageBox::Cancel :
-        event->ignore();
-        return; //!dont go further
-        break;
-    default:
-        break;
-    }
 
     if(!__isClosing)
     {
+        //!Raise confirm
+        QMessageBox msg;
+
+        msg.setText("是否確定離開");
+        msg.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+        msg.setDefaultButton(QMessageBox::Cancel);
+        msg.setIcon(QMessageBox::Question);
+        int ret = msg.exec();
+        switch (ret) {
+        case QMessageBox::Cancel :
+            event->ignore();
+            return; //!dont go further
+            break;
+        default:
+            break;
+        }
+
         //! inform material transfer to send DB_ENGAGED
         foreach (ControllerMaterialTransfer* var, __materialSlots) {
             var->onAboutToLeave();
         }
         __isClosing = true;
+        setEnabled(false);
         event->ignore();
+        qApp->postEvent(qApp,new QCloseEvent());
     }
     else
     {
@@ -204,7 +208,10 @@ void MainWindow::closeEvent(QCloseEvent *event)
         if(__isAllDisengaged || __isAllDisconnected)
             event->accept();
         else
+        {
             event->ignore();
+            qApp->postEvent(qApp,new QCloseEvent());
+        }
     }
 }
 
