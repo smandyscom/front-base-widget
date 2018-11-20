@@ -37,7 +37,6 @@ FrontSlot::~FrontSlot()
 void FrontSlot::Setup(QSqlTableModel* slot,
 	QSqlTableModel* header)
 {
-	connect(slot, &QSqlTableModel::dataChanged, this, &FrontSlot::onDataChanged);
 	//Initialize detail view
 	m_dialog = new QDialog(this);
 	m_dialog->setGeometry(m_dialog->geometry().x(),
@@ -67,31 +66,55 @@ void FrontSlot::dynamicPropertyChanged(int key, QVariant value)
 	switch (key)
 	{
 	case SlotDataBlock::BIT1_ACT:
-	case SlotDataBlock::BIT1_DONE:
+		break;
+	case SlotDataBlock::BIT2_VALID:
+		//! use QSS to control
+		break;
+	case SlotDataBlock::MATERIAL_ID:
+		ui->labelID->setText(QString::number(value.toUInt()));
+		//! Simple static
+		if (m_lastId != value.toUInt())
+		{
+			m_totalCounter += 1;
+
+			//query database to get whether OK/NG
+			QSqlRecord record = utilities::getSqlTableSelectedRecord(m_model,
+				QVariant::fromValue(HEADER_STRUCTURE::ID),
+				value);
+			SlotBlock::Grade grade = 
+				record.value(QVariant::fromValue(SlotBlock::DATA_0).toString().toStdString().c_str())
+				.value<SlotBlock::Grade>();
+
+			switch (grade)
+			{
+			case SlotBlock::OK:
+			case SlotBlock::BYPASS:
+				m_okCounter += 1;
+				break;
+			case SlotBlock::NG:
+				m_ngCounter += 1;
+				break;
+			default:
+				break;
+			}
+
+			//rate
+			if (m_totalCounter != 0) {
+				ui->lcdNumberOKRate->display(m_okCounter / m_totalCounter);
+				ui->lcdNumberNGRate->display(m_ngCounter / m_totalCounter);
+			}
+			else
+			{
+				ui->lcdNumberOKRate->display(0);
+				ui->lcdNumberNGRate->display(0);
+			}
+		}
+		m_lastId = value.toUInt();
 		break;
 	default:
 		break;
 	}
 	ui->pushButtonMaterialOverrideOff->setEnabled(property(QVariant::fromValue(SlotDataBlock::BIT2_VALID)).toBool());
-}
-
-//! Show last record
-void FrontSlot::onDataChanged(const QModelIndex &topLeft,
-	const QModelIndex &bottomRight,
-	const QVector<int> &roles)
-{
-	auto model = qobject_cast<QSqlTableModel*>(sender());
-
-	QSqlRecord record = utilities::getSqlTableSelectedRecord(model,
-		QVariant::fromValue(HEADER_STRUCTURE::ID),
-		topLeft.data());
-
-	m_currentId = record.value(QVariant::fromValue(HEADER_STRUCTURE::ID).toString()).toUInt();
-	//!
-	if (m_currentId != m_lastId)
-		m_totalCounter += 1;
-	//!
-	update();
 }
 
 void FrontSlot::onButtonClicked()
@@ -114,23 +137,4 @@ void FrontSlot::onButtonClicked()
 
 		update();
 	}
-}
-
-void FrontSlot::update()
-{
-	//!
-	/*ui->lcdNumberID->display(m_currentId);
-	ui->lcdNumberTotalCounter->display(m_totalCounter);
-	ui->lcdNumberOKCounter->display(m_okCounter);
-	ui->lcdNumberNGCounter->display(m_ngCounter);
-	if (m_totalCounter != 0) {
-		ui->lcdNumberOKRate->display(m_okCounter / m_totalCounter);
-		ui->lcdNumberNGRate->display(m_ngCounter / m_totalCounter);
-	}
-	else
-	{
-		ui->lcdNumberOKRate->display(0);
-		ui->lcdNumberNGRate->display(0);
-	}*/
-	//ui->labelOKNG->setText(QVariant::fromValue(__controller->CurrentGrade()).toString());
 }

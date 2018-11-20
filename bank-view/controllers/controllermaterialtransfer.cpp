@@ -10,12 +10,14 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(quint8 clientId, quint16 
 	//! Monitor all 128Words
 	m_monitor = new SlotDataBlock(registerWatchList(SlotDataBlock::WORD_OUT, QVariant::fromValue(DataBlock128())));
     //!
-	QVariant var = QVariant::fromValue(SlotDataBlock::BIT1_ACT);
-	m_monitor_propertyKeys << var;
+	QVariant act = QVariant::fromValue(SlotDataBlock::BIT1_ACT);
+	QVariant valid = QVariant::fromValue(SlotDataBlock::BIT2_VALID);
+	m_monitor_propertyKeys << act;
+	m_monitor_propertyKeys << valid;
 	m_monitor_propertyKeys << QVariant::fromValue(SlotDataBlock::MATERIAL_ID);
-	m_monitor_propertyKeys << QVariant::fromValue(SlotDataBlock::BIT2_VALID);
 	//!
-	m_operator_propertyKeys[var.toString()] = var;
+	m_operator_propertyKeys[act.toString()] = act;
+	m_operator_propertyKeys[valid.toString()] = valid;
 }
 
 ControllerMaterialTransfer::~ControllerMaterialTransfer()
@@ -71,17 +73,18 @@ void ControllerMaterialTransfer::OpenDatabase()
 
 void ControllerMaterialTransfer::onAcknowledged(InterfaceRequest ack)
 {
-	ControllerBase::onAcknowledged(ack);
-
 	//!Once Act
 	if (m_monitor->Value(SlotDataBlock::BIT1_ACT).toBool())
 	{
 		m_materialId = m_monitor->Value(SlotDataBlock::MATERIAL_ID).value<MODBUS_U_LONG>();
 		m_isValid = m_monitor->Value(SlotDataBlock::BIT2_VALID).toBool();
 
-		emit actionRaised();
+		emit actionRaised(); //re-direct to specific function
 		setProperty(QVariant::fromValue(SlotDataBlock::BIT1_ACT).toString().toStdString().c_str(), false);//reset
 	}
+
+	//! After database updated
+	ControllerBase::onAcknowledged(ack); //inform front to update
 }
 
 void ControllerMaterialTransfer::onInsert()

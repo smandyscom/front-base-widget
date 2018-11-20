@@ -21,12 +21,7 @@ class ControllerMaterialTransfer :
     Q_OBJECT
 public:
 	//! First field of MAT_DATA as grade
-    enum Grade
-    {
-        OK=1,
-        BYPASS=3,
-        NG=0,
-    };
+    
     enum SyncRole
     {
         ROLE_UPDATE_HEADER = 0x01,
@@ -39,7 +34,6 @@ public:
 		MAT_DATA_SLOT,
 	};
     Q_ENUM(SyncRole)
-    Q_ENUM(Grade)
 	Q_ENUM(Miscs)
 
     explicit ControllerMaterialTransfer(quint8 clientId, quint16 baseOffset, int interval, QObject *parent);

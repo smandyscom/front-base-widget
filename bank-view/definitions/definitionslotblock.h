@@ -101,6 +101,14 @@ public:
 namespace SlotBlock {
     Q_NAMESPACE
 
+	enum Grade
+	{
+		OK = 1,
+		BYPASS = 3,
+		NG = 0,
+	};
+	Q_ENUM_NS(Grade)
+
     enum DataBaseHeaders
     {
     ID=INVALID_INDEX-1,

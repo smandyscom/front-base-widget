@@ -33,31 +33,23 @@ public:
 	void Setup(QSqlTableModel* slot,
 		QSqlTableModel* header);
 
-protected:
+protected slots:
 	void onButtonClicked();
-	void onDataChanged(const QModelIndex &topLeft,
-		const QModelIndex &bottomRight,
-		const QVector<int> &roles = QVector<int>());
 private:
     Ui::FrontSlot *ui;
 
-    //ControllerMaterialTransfer* __controller;
     QDialog* m_dialog;
     QTableView* m_view;
+	QSqlTableModel* m_model;
 
 	//! Counters
 	int m_totalCounter;
 	int m_okCounter;
 	int m_ngCounter;
+	//! Used to check
 	uint m_lastId;
-	uint m_currentId;
-
-	void update();
 
 	void dynamicPropertyChanged(int key, QVariant value) Q_DECL_OVERRIDE;
-
-
-
 	
 };
 
