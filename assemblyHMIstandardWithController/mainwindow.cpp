@@ -43,10 +43,14 @@ MainWindow::MainWindow(QWidget *parent) :
     //!
     ui->tabWidget->Setup(LoadingHelperControllers::m_controllerMain);
 	//! Slots cross link
+	QList<FrontSlot*> list = findChildren<FrontSlot*>();
 	for (size_t i = 0; i < LoadingHelperControllers::m_controllersMaterial.count(); i++)
 	{
-		LoadingHelperControllers::CrossLink(LoadingHelperControllers::m_controllersMaterial[i],
-			findChild<FrontSlot*>(QString("widgetSlot%1").arg(i+1)));
+		ControllerMaterialTransfer* ref = LoadingHelperControllers::m_controllersMaterial[i];
+		LoadingHelperControllers::CrossLink(ref,list[i]);
+		list[i]->Setup(
+			JunctionMaterialDatabase::Instance()->TableMap(ref->Index(),JunctionMaterialDatabase::MAT_DATA_SLOT),
+			JunctionMaterialDatabase::Instance()->TableMap(ref->Index(), JunctionMaterialDatabase::MAT_HEADER_SLOT));
 	}
 	//!
 	showFullScreen();

@@ -13,17 +13,15 @@
 #include <QSqlTableModel>
 #include <extendsqltablemodel.h>
 #include <debugsqltablemodel.h>
+#include <junctioncommondatabase.h>
 
 #include<QDebug>
-//!
-//! \brief TableEntity
-//!
-typedef QPair<bool,QSqlTableModel*> TableEntity;
 
 //!
 //! \brief The JunctionBankDatabase class
 //! Should be singleton
-class JunctionBankDatabase : public QObject
+class JunctionBankDatabase : 
+	public JunctionCommonDatabase
 {
     Q_OBJECT
 public:
@@ -75,28 +73,20 @@ public:
 
 
     static JunctionBankDatabase* Instance();
-    static void DatabaseName(QString value){ __databaseName = value;}
-    static QString DatabaseName(){return __databaseName;}
+    static void DatabaseName(QString value){ m_databaseName = value;}
+    static QString DatabaseName(){return m_databaseName;}
 
-    QSqlTableModel* TableMap(TableNames value);
-signals:
-    void databaseOpened();
-public slots:
-    void onInitialize();
-    void onReleaseHeaders();
+protected slots:
+    bool onOpenTables() Q_DECL_OVERRIDE;
 protected:
-    static JunctionBankDatabase* __instance;
-    static QString __databaseName;
+    static JunctionBankDatabase* m_instance;
+    static QString m_databaseName;
 
-    explicit JunctionBankDatabase(QString databaseName,QObject *parent = nullptr);
+    explicit JunctionBankDatabase(QObject *parent = nullptr);
     ~JunctionBankDatabase();
 
-    virtual void decorateTable(){}
-
-    QSqlDatabase m_database;
-
-    QMap<TableNames,TableEntity> m_tableMap;
-
+	//! implemented by derived class
+	QList<QVariant> onGenerateTableNames() Q_DECL_OVERRIDE;
 };
 
 #endif // JUNCTIONBANKDATABASE_H

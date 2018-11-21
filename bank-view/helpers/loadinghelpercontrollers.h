@@ -18,6 +18,7 @@
 #include <controllermaterialtransfer.h>
 
 #include <junctionbankdatabase.h>
+#include <junctionmaterialdatabase.h>
 
 class LoadingHelperControllers : public QObject
 {

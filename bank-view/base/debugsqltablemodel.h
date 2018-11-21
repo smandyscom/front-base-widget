@@ -16,7 +16,6 @@ public:
 	bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
 
 	void setTable(const QString &tableName) Q_DECL_OVERRIDE;
-
 protected:
 
 	void printLastError();

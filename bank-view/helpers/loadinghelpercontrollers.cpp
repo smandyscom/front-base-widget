@@ -59,7 +59,7 @@ void LoadingHelperControllers::LoadCylinderMonitor()
 void LoadingHelperControllers::LoadMaterialTransfer()
 {
 	QSqlTableModel* model = 
-		m_database->TableMap[JunctionBankDatabase::DEF_REGION];
+		m_database->TableMap(JunctionBankDatabase::DEF_REGION);
 
 	//! filter out Role is not zeros
 	model->setFilter(QString("%1<>%2")
@@ -68,17 +68,21 @@ void LoadingHelperControllers::LoadMaterialTransfer()
 	model->select();
 	model->sort(0,Qt::AscendingOrder);
 
-	for (size_t i = 0; i < model->rowCount; i++)
+	for (size_t i = 0; i < model->rowCount(); i++)
 	{
 		int clientId = model->record(i).value(QVariant::fromValue(ControllerMaterialTransfer::CLIENT_ID).toString()).toInt();
 		int baseOffset = model->record(i).value(QVariant::fromValue(ControllerMaterialTransfer::BASE_OFFSET).toString()).toInt();
 		int interval = model->record(i).value(QVariant::fromValue(ControllerMaterialTransfer::INTERVAL).toString()).toInt();
+		int slotId = model->record(i).value(QVariant::fromValue(HEADER_STRUCTURE::ID).toString()).toInt();
 		ControllerMaterialTransfer::SyncRole role = model->record(i).value(QVariant::fromValue(ControllerMaterialTransfer::ROLE).toString()).value<ControllerMaterialTransfer::SyncRole>();
 
 		ControllerMaterialTransfer* ref =
 			new ControllerMaterialTransfer(clientId, baseOffset, interval,qApp);
-		ref->Role(role);//set role
-		ref->SlotIndex(i);
+
+		AbstractSqlTableAdpater* adaptor =
+			new GenericSqlTableAdapter<AbstractDataBlock, SlotBlock::DataBaseHeaders>(JunctionMaterialDatabase::Instance()->TableMap(slotId,JunctionMaterialDatabase::MAT_DATA_SLOT));
+
+		ref->Setup(role, slotId, adaptor);
 		m_controllersMaterial.append(ref);
 	}
 }
@@ -117,3 +121,4 @@ ControllerMainPanel* LoadingHelperControllers::m_controllerMain = nullptr;
 ControllerIOMonitor* LoadingHelperControllers::m_controllerInputMonitor = nullptr;
 ControllerIOMonitor* LoadingHelperControllers::m_controllerOutputMonitor = nullptr;
 ControllerIOMonitor* LoadingHelperControllers::m_controllerCylinderMonitor = nullptr;
+QList<ControllerMaterialTransfer*> LoadingHelperControllers::m_controllersMaterial;

@@ -45,12 +45,9 @@ public:
     explicit ControllerMaterialTransfer(quint8 clientId, quint16 baseOffset, int interval, QObject *parent);
     ~ControllerMaterialTransfer();
 
-	//! Settle handling routine
-	void Role(SyncRole role);
-	//!Which table going to store
-	void SlotIndex(int index);
+	void Setup(SyncRole role, int index, AbstractSqlTableAdpater* adaptor);
 
-	static void OpenDatabase();
+	int Index() const;
 
 signals:
 	void actionRaised();
@@ -68,9 +65,6 @@ protected:
     //QSqlTableModel* m_table;
 
     AbstractSqlTableAdpater* m_adpator;
-
-    static QSqlDatabase m_database;
-    static QString m_databaseName;
 
     //! Counters
     /*int m_totalCounter;

@@ -7,7 +7,6 @@ LoadingHelper::LoadingHelper(QObject *parent) : QObject(parent)
 
 void LoadingHelper::LoadBaseDatabase()
 {
-	JunctionBankDatabase::Instance()->onInitialize();
 }
 
 void LoadingHelper::LoadFrontAxis(FrontAxisParameter* widget)
@@ -88,7 +87,6 @@ void LoadingHelper::CombineModelViewV1(FrontAxisParameter* widget1,
     LoadFrontIO(widget6);
 	LoadSafeIO(widget7);
 
-    m_instance->onReleaseHeaders();
 }
 
 

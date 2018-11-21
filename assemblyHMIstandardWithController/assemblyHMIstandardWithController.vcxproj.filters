@@ -185,6 +185,12 @@
     <ClCompile Include="..\bank-view\controllers\controllermaterialtransfer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\bank-view\base\junctioncommondatabase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\base\junctionmaterialdatabase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="..\bank-view\base\abstractsqltableadpater.h">
@@ -359,6 +365,12 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="..\bank-view\definitions\definitionslotblock.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\base\junctioncommondatabase.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\base\junctionmaterialdatabase.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

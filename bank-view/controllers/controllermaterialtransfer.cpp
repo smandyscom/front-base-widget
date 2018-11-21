@@ -26,8 +26,9 @@ ControllerMaterialTransfer::~ControllerMaterialTransfer()
 }
 
 //!Select different handling routine
-void ControllerMaterialTransfer::Role(SyncRole role)
+void ControllerMaterialTransfer::Setup(SyncRole role, int index, AbstractSqlTableAdpater* adaptor)
 {
+	//! Role
 	switch (role)
 	{
 	case ControllerMaterialTransfer::ROLE_UPDATE_HEADER:
@@ -44,31 +45,15 @@ void ControllerMaterialTransfer::Role(SyncRole role)
 	default:
 		break;
 	}
-}
-//!
-void ControllerMaterialTransfer::SlotIndex(int index)
-{
-	QSqlTableModel* m_table = new QSqlTableModel(this, m_database);
-	QString m_tableName = QString("%1%2").arg(QVariant::fromValue(MAT_DATA_SLOT).toString()).arg(index);
-	m_table->setTable(QString("%1%2").arg(QVariant::fromValue(MAT_DATA_SLOT).toString()).arg(index));
-	m_adpator = new GenericSqlTableAdapter<SlotDataBlock, SlotBlock::DataBaseHeaders>(m_table);
-	//! Findslot name push property
+
+	m_adpator = adaptor;
 	m_slotIndex = index;
+	//! report slot index to receiver?
 }
 
-void ControllerMaterialTransfer::OpenDatabase()
+int ControllerMaterialTransfer::Index() const
 {
-	//! Open table
-	if (!m_database.isOpen())
-	{
-		m_database = QSqlDatabase::addDatabase("QSQLITE", "material");
-		m_database.setDatabaseName(m_databaseName);
-		QFileInfo qf(m_databaseName);
-		if (!qf.exists())
-			qDebug() << QString("%1 not existed").arg(qf.absoluteFilePath());
-		bool result = m_database.open();
-		qDebug() << result;
-	}
+	return m_slotIndex;
 }
 
 void ControllerMaterialTransfer::onAcknowledged(InterfaceRequest ack)
@@ -157,6 +142,3 @@ void ControllerMaterialTransfer::onUpdate()
 
     qDebug() << QString("%1,onUpdate elapsed,%2,%3").arg(m_slotIndex).arg(stopWatch.elapsed()).arg(m_materialId);
 }
-
-QSqlDatabase ControllerMaterialTransfer::m_database;
-QString ControllerMaterialTransfer::m_databaseName = "material.db";
