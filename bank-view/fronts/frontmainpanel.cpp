@@ -43,7 +43,9 @@ void FrontMainPanel::Setup(QSqlTableModel* axisTable,
                            QSqlTableModel* axisErrorTable,
                            QSqlTableModel* cylinderErrorTable,
                            QSqlTableModel* unitErrorTable,
-                           QSqlTableModel* typeTable)
+                           QSqlTableModel* typeTable,
+						QSqlTableModel* monitor,
+						QSqlTableModel* monitorHeader)
 {
     //!
       m_errorDeviceMap[ManualModeDataBlock::SELECTION_AXIS] = axisTable;
@@ -53,6 +55,11 @@ void FrontMainPanel::Setup(QSqlTableModel* axisTable,
       m_errorCodeMap[ManualModeDataBlock::SELECTION_AXIS] = axisErrorTable;
       m_errorCodeMap[ManualModeDataBlock::SELECTION_CYLINDER] = cylinderErrorTable;
       m_errorCodeMap[ManualModeDataBlock::SELECTION_UNIT] = unitErrorTable;
+	  //!
+	  ui->tableViewMonitor->setModel(monitor);
+	  HEADER_STRUCTURE::HeaderRender::renderViewHeader(monitorHeader,
+		  ui->tableViewMonitor);
+	  m_monitorTable = monitor;
 
       m_deviceTable = typeTable;
 }
@@ -81,6 +88,27 @@ void FrontMainPanel::dynamicPropertyChanged(int key, QVariant value)
         setProperty(QVariant::fromValue(MAINSTATE).toString().toStdString().c_str(),
                     QVariant::fromValue(m_state));
         break;
+	case MainOperationBlock::MON_DATA_0:
+	case MainOperationBlock::MON_DATA_1:
+	case MainOperationBlock::MON_DATA_2:
+	case MainOperationBlock::MON_DATA_3:
+	case MainOperationBlock::MON_DATA_4:
+	case MainOperationBlock::MON_DATA_5:
+	case MainOperationBlock::MON_DATA_6:
+	case MainOperationBlock::MON_DATA_7:
+	{
+		m_monitorTable->select(); //reload
+
+		int index = (key - MainOperationBlock::MON_DATA_0)/2;
+		QSqlRecord record = m_monitorTable->record(index);
+		qreal p_value = record.value(QVariant::fromValue(MainBlock::FACTOR).toString()).toReal() * value.toReal();
+		record.setValue(QVariant::fromValue(MainBlock::VALUE).toString(), p_value);
+		p_value = record.value(QVariant::fromValue(MainBlock::VALUE).toString()).toReal();
+
+		bool result = m_monitorTable->setRecord(index, record);
+		
+		break;
+	}
     default:
         break;
     }

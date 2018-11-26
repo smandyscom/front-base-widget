@@ -46,7 +46,9 @@ public:
                QSqlTableModel* axisErrorTable,
                QSqlTableModel* cylinderErrorTable,
                QSqlTableModel* unitErrorTable,
-               QSqlTableModel* typeTable);
+               QSqlTableModel* typeTable,
+		QSqlTableModel* monitor,
+		QSqlTableModel* monitorHeader);
 protected slots:
     void onButtonClicked();
 protected:
@@ -76,6 +78,7 @@ protected:
 
     void dynamicPropertyChanged(int key,QVariant value) Q_DECL_OVERRIDE;
 
+	QSqlTableModel* m_monitorTable;
 };
 
 #endif // FRONTMAINPANEL_H

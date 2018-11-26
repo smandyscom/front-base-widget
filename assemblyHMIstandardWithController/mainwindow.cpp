@@ -60,6 +60,7 @@ MainWindow::MainWindow(QWidget *parent) :
 			JunctionMaterialDatabase::Instance()->TableMap(ref->Index(), JunctionMaterialDatabase::MAT_HEADER_SLOT),
 			record.value(QVariant::fromValue(HEADER_STRUCTURE::zh_TW).toString()).toString());
 	}
+	
 	//!
 	showFullScreen();
 }

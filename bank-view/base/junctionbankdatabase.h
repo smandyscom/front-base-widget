@@ -33,6 +33,7 @@ public:
         //!
         DEF_OBJECT_TYPE,
 		CLIENTS_CONFIG,
+		CONTROLLER_MONITOR, //structured
         //! Data tables
         WHOLE_AXIS,
         WHOLE_CYLINDERS,
@@ -68,6 +69,7 @@ public:
         HEADER_COMMAND_BLOCKS,
         HEADER_UNIT,
         HEADER_IO,
+		HEADER_MONITOR,
     };
     Q_ENUM(TableNames)
 

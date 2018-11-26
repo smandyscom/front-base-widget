@@ -107,4 +107,18 @@ public:
 };
 //Q_DECLARE_METATYPE(MainOperationBlock)
 
+namespace MainBlock {
+	Q_NAMESPACE
+		enum DataBaseHeaders
+	{
+		ID = INVALID_INDEX - 1,
+		FACTOR = INVALID_INDEX - 2,
+		VALUE = INVALID_INDEX - 3,
+		//!
+	};
+	Q_ENUM_NS(DataBaseHeaders)
+
+
+}//namespace
+
 #endif // DEFINITIONMAINCONTROLBLOCK_H
