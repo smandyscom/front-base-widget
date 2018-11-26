@@ -37,10 +37,16 @@ void ControllerBase::onAcknowledged(InterfaceRequest ack)
 
     //! Raising property updating (string copy , performance issue?
     foreach (QVariant var, m_monitor_propertyKeys) {
+
+		//to receivers
         foreach (QObject* receiver, m_receivers) {
             receiver->setProperty(var.toString().toStdString().c_str(),m_monitor_propertyValues(var));
             receiver->setProperty(QString::number(var.toInt()).toStdString().c_str(),m_monitor_propertyValues(var));
         }
+
+		////to myself
+		//setProperty(var.toString().toStdString().c_str(), m_monitor_propertyValues(var));
+		//setProperty(QString::number(var.toInt()).toStdString().c_str(), m_monitor_propertyValues(var));
     }
 }
 

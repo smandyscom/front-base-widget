@@ -31,7 +31,8 @@ public:
     ~FrontSlot();
 
 	void Setup(QSqlTableModel* slot,
-		QSqlTableModel* header);
+		QSqlTableModel* header,
+		QString title);
 
 protected slots:
 	void onButtonClicked();

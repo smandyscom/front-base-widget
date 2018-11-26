@@ -5,23 +5,19 @@
 
 FrontSlot::FrontSlot(QWidget *parent) :
     FrontCommon(parent),
-    ui(new Ui::FrontSlot)
+    ui(new Ui::FrontSlot),
+	m_lastId(0),
+	m_totalCounter(0),
+	m_okCounter(0),
+	m_ngCounter(0)
 {
     ui->setupUi(this);
-    //!
-//    ui->lcdNumberSlot->display(__controller->Index());
-    //ui->frameInspection->setVisible(isShowCounters);
-    //! Prepare dialog
-
-       
-        //! Set title
-       /* __reference = JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::DEF_REGION);
-        __reference->setTable("DEF_REGION");
-        __reference->setFilter(QString("ID=%1").arg(__controller->Index()));
-        __reference->select();
-        ui->labelName->setText(__reference->record(0).value("zh_Tw").toString());
-        __reference->deleteLater();*/
-        //!
+	for each (QPushButton* var in findChildren<QPushButton*>())
+	{
+		connect(var, &QPushButton::clicked, this, &FrontSlot::onButtonClicked);
+	}
+	connect(ui->toolButtonDialog, &QToolButton::clicked, this, &FrontSlot::onButtonClicked);
+	//!
 	m_widgetsPolish.append(ui->labelIsValid);
 	m_widgetsPolish.append(ui->labelOKNG);
 }
@@ -32,7 +28,8 @@ FrontSlot::~FrontSlot()
 }
 
 void FrontSlot::Setup(QSqlTableModel* slot,
-	QSqlTableModel* header)
+	QSqlTableModel* header,
+	QString title)
 {
 	//Initialize detail view
 	m_dialog = new QDialog(this);
@@ -56,7 +53,9 @@ void FrontSlot::Setup(QSqlTableModel* slot,
 	layout->addWidget(m_view);
 	//! Fetch headers
 	HEADER_STRUCTURE::HeaderRender::renderViewHeader(header, m_view);
-	//! TODO , load title
+	m_model = slot;
+	//!load title
+	ui->labelName->setText(title);
 }
 
 void FrontSlot::dynamicPropertyChanged(int key, QVariant value)
@@ -69,7 +68,7 @@ void FrontSlot::dynamicPropertyChanged(int key, QVariant value)
 		//! use QSS to control
 		break;
 	case SlotDataBlock::MATERIAL_ID:
-		ui->labelID->setText(QString::number(value.toUInt()));
+		ui->lcdNumberID->display(QString::number(value.toUInt()));
 		//! Simple static
 		if (m_lastId != value.toUInt())
 		{
@@ -133,6 +132,5 @@ void FrontSlot::onButtonClicked()
 		m_okCounter = 0;
 		m_ngCounter = 0;
 
-		update();
 	}
 }

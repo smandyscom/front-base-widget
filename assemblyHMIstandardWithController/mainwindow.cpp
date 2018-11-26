@@ -7,6 +7,8 @@
 
 #include <QDebug>
 
+#include <qsqlrecord.h>
+
 MainWindow::MainWindow(QWidget *parent) :
     MainWindowCommon(parent),
     ui(new Ui::MainWindow)
@@ -48,9 +50,15 @@ MainWindow::MainWindow(QWidget *parent) :
 	{
 		ControllerMaterialTransfer* ref = LoadingHelperControllers::m_controllersMaterial[i];
 		LoadingHelperControllers::CrossLink(ref,list[i]);
+
+		QSqlRecord record = utilities::getSqlTableSelectedRecord(LoadingHelperControllers::m_database->TableMap(QVariant::fromValue(JunctionBankDatabase::DEF_REGION)),
+			QVariant::fromValue(HEADER_STRUCTURE::ID),
+			i);
+
 		list[i]->Setup(
 			JunctionMaterialDatabase::Instance()->TableMap(ref->Index(),JunctionMaterialDatabase::MAT_DATA_SLOT),
-			JunctionMaterialDatabase::Instance()->TableMap(ref->Index(), JunctionMaterialDatabase::MAT_HEADER_SLOT));
+			JunctionMaterialDatabase::Instance()->TableMap(ref->Index(), JunctionMaterialDatabase::MAT_HEADER_SLOT),
+			record.value(QVariant::fromValue(HEADER_STRUCTURE::zh_TW).toString()).toString());
 	}
 	//!
 	showFullScreen();

@@ -65,7 +65,9 @@ void ControllerMaterialTransfer::onAcknowledged(InterfaceRequest ack)
 		m_isValid = m_monitor->Value(SlotDataBlock::BIT2_VALID).toBool();
 
 		emit actionRaised(); //re-direct to specific function
-		setProperty(QVariant::fromValue(SlotDataBlock::BIT1_ACT).toString().toStdString().c_str(), false);//reset
+		//setProperty(QVariant::fromValue(SlotDataBlock::BIT1_ACT).toString().toStdString().c_str(), false);//reset
+
+		m_channel->Access(toAddressMode(SlotDataBlock::BIT1_ACT), false);
 	}
 
 	//! After database updated
