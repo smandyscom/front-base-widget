@@ -34,4 +34,6 @@ protected:
 	static JunctionMaterialDatabase* m_instance;
 	static QString m_databaseName;
 
+	//! implemented by derived class
+	QList<QVariant> onGenerateTableNames() Q_DECL_OVERRIDE;
 };

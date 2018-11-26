@@ -30,6 +30,6 @@ protected:
 
 	bool m_initialized;
 	//! implemented by derived class
-	virtual QList<QVariant> onGenerateTableNames();
+	virtual QList<QVariant> onGenerateTableNames() = 0;
 
 };

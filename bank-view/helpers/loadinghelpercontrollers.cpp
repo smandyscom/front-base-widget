@@ -65,8 +65,10 @@ void LoadingHelperControllers::LoadMaterialTransfer()
 	model->setFilter(QString("%1<>%2")
 		.arg(QVariant::fromValue(ControllerMaterialTransfer::ROLE).toString())
 		.arg(QVariant::fromValue(ControllerMaterialTransfer::ROLE_NONE).toInt()));
-	model->select();
+	//model->select();
 	model->sort(0,Qt::AscendingOrder);
+
+	size_t count = model->rowCount();
 
 	for (size_t i = 0; i < model->rowCount(); i++)
 	{

@@ -14,7 +14,7 @@ JunctionCommonDatabase::JunctionCommonDatabase(QString databaseName, QObject *pa
 
 	//initializing and loading interested tables
 	onInitialize();
-	onOpenTables();
+	//onOpenTables();
 }
 
 JunctionCommonDatabase::~JunctionCommonDatabase()
@@ -56,21 +56,22 @@ bool JunctionCommonDatabase::onOpenTables()
 			.arg(m_tableMap[var].first);
 	}
 
-	QList<TableEntity>::Iterator it = std::find_if(m_tableMap.values().begin(),
-		m_tableMap.values().end(),
-		[=](TableEntity i) {
-		return !i.first;
-	});
-	
-	//! when nothing searched return last
-	return it == m_tableMap.values().end();
+	bool result = true;
+	for each (TableEntity var in m_tableMap.values())
+	{
+		result &= var.first;
+	}
+
+
+	//!make sure all result are true
+	return result;
 }
 
-QList<QVariant> JunctionCommonDatabase::onGenerateTableNames()
-{
-	//! implemented by derived class
-	return QList<QVariant>();
-}
+//QList<QVariant> JunctionCommonDatabase::onGenerateTableNames()
+//{
+//	//! implemented by derived class
+//	return QList<QVariant>();
+//}
 
 QSqlTableModel* JunctionCommonDatabase::TableMap(QVariant value)
 {

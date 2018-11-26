@@ -5,6 +5,7 @@
 JunctionBankDatabase::JunctionBankDatabase(QObject *parent) :
 	JunctionCommonDatabase(m_databaseName,parent)
 {
+	m_initialized = onOpenTables();
 }
 JunctionBankDatabase::~JunctionBankDatabase()
 {

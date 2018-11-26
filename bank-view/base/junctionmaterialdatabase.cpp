@@ -24,7 +24,7 @@ JunctionMaterialDatabase* JunctionMaterialDatabase::Instance()
 QSqlTableModel* JunctionMaterialDatabase::TableMap(int index, TableNames key)
 {
 	QVariant p_key = QString("%1%2")
-		.arg(QVariant::fromValue(p_key).toString())
+		.arg(QVariant::fromValue(key).toString())
 		.arg(index);
 
 	//!Query if existed
@@ -36,11 +36,20 @@ QSqlTableModel* JunctionMaterialDatabase::TableMap(int index, TableNames key)
 		QSqlTableModel* ref = new QSqlTableModel(this, m_database);
 		ref->setTable(p_key.toString());
 		if (ref->select())
+		{
 			m_tableMap[p_key] = TableEntity(true, ref);
+			return ref;
+		}
 		else
 			return nullptr; //not existed
 	}
 }
 
+QList<QVariant> JunctionMaterialDatabase::onGenerateTableNames()
+{
+	//! implemented by derived class
+	return QList<QVariant>();
+}
+
 JunctionMaterialDatabase* JunctionMaterialDatabase::m_instance = nullptr;
-QString JunctionMaterialDatabase::m_databaseName = "base.db";
+QString JunctionMaterialDatabase::m_databaseName = "material.db";
