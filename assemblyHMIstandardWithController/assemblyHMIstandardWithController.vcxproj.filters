@@ -191,6 +191,18 @@
     <ClCompile Include="..\bank-view\base\junctionmaterialdatabase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\bank-view\fronts\widgetcurrentmode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\fronts\widgetinitializingstate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\fronts\widgetcurrenttime.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\fronts\widgetstatusbarbundle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="..\bank-view\base\abstractsqltableadpater.h">
@@ -373,6 +385,18 @@
     <QtMoc Include="..\bank-view\base\junctionmaterialdatabase.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="..\bank-view\fronts\widgetcurrentmode.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\fronts\widgetinitializingstate.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\fronts\widgetcurrenttime.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\fronts\widgetstatusbarbundle.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="debug\moc_predefs.h.cbt">
@@ -447,6 +471,18 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="..\bank-view\fronts\frontslot.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="..\bank-view\fronts\widgetcurrentmode.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="..\bank-view\fronts\widgetinitializingstate.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="..\bank-view\fronts\widgetcurrenttime.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="..\bank-view\fronts\widgetstatusbarbundle.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

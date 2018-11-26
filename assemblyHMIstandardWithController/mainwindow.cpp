@@ -9,6 +9,8 @@
 
 #include <qsqlrecord.h>
 
+#include <widgetstatusbarbundle.h>
+
 MainWindow::MainWindow(QWidget *parent) :
     MainWindowCommon(parent),
     ui(new Ui::MainWindow)
@@ -60,7 +62,23 @@ MainWindow::MainWindow(QWidget *parent) :
 			JunctionMaterialDatabase::Instance()->TableMap(ref->Index(), JunctionMaterialDatabase::MAT_HEADER_SLOT),
 			record.value(QVariant::fromValue(HEADER_STRUCTURE::zh_TW).toString()).toString());
 	}
-	
+	//!
+	/*QTextBrowser* browser = new QTextBrowser();
+	browser->setText("Browser");
+	QLabel* initializingState = new QLabel();
+	initializingState->setText("Label1");
+	QLabel* currentMode = new QLabel();
+	currentMode->setText("Label2");
+	QList<QWidget*> list2{
+		browser,
+		initializingState,
+		currentMode };
+	for each (QWidget* var in list2)
+	{
+		ui->statusBar->addPermanentWidget(var);
+	}*/
+	WidgetStatusBarBundle* widget = new WidgetStatusBarBundle();
+	ui->statusBar->addPermanentWidget(widget);
 	//!
 	showFullScreen();
 }

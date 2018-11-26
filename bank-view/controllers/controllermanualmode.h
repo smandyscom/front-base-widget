@@ -30,7 +30,7 @@ public:
 
     explicit ControllerManualMode(quint8 clientId, quint16 baseOffset, int interval=100, QObject *parent=nullptr);
 
-    ManualModeDataBlock::ManualState CurrentState() const { return m_currentState;}
+    //ManualModeDataBlock::ManualState CurrentState() const { return m_currentState;}
 
 signals:
 protected slots:
