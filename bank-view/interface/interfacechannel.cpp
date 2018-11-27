@@ -139,4 +139,14 @@ void InterfaceChannel::RegisterStateMachine(QStateMachine *machine)
     m_stateMachines.append(machine);
 }
 
+bool InterfaceChannel::IsAllConnected() const
+{
+	bool result = true;
+	for each (InterfaceClient* var in m_clients)
+	{
+		result &= var->IsConnected();
+	}
+	return result;
+}
+
 InterfaceChannel* InterfaceChannel::m_instance = nullptr;

@@ -21,6 +21,8 @@ public:
 
     quint16* Cache(){return m_cache;}
 
+	virtual bool IsConnected() const;
+
 signals:
     void requestAcknowledged(InterfaceRequest acknowledge);
 public slots:

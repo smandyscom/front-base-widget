@@ -3,7 +3,7 @@
 #include <qdatetime.h>
 
 WidgetStatusBarBundle::WidgetStatusBarBundle(QWidget *parent)
-	: QWidget(parent)
+	: FrontCommon(parent)
 {
 	ui.setupUi(this);
 
@@ -19,5 +19,23 @@ WidgetStatusBarBundle::~WidgetStatusBarBundle()
 void WidgetStatusBarBundle::onTimerScan()
 {
 	//QDateTime::currentDateTime().toString("yyyyMMddhhmmss");
-	ui.labelCurrentTime->setText(QDateTime::currentDateTime().toString("yyyyMMddhhmmss"));
+	ui.labelCurrentTime->setText(QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss"));
+
+	setProperty("IsAllConnected", InterfaceChannel::Instance()->IsAllConnected());
+	if (InterfaceChannel::Instance()->IsAllConnected())
+		ui.labelLinkStatus->setText("Linked");
+	else
+		ui.labelLinkStatus->setText("Link Error");
+}
+
+void WidgetStatusBarBundle::dynamicPropertyChanged(int key, QVariant value)
+{
+	switch (key)
+	{
+	case ManualModeDataBlock::PROP_MANUAL_STATE:
+		ui.labelCurrentMode->setText(value.toString());
+		break;
+	default:
+		break;
+	}
 }

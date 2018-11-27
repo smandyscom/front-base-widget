@@ -91,10 +91,17 @@ void AdsClient::executeRequest()
         //once it is read request , return read value back along with signal (had been processed by ADS API)
         operationDone();
 		m_workingTimer->setInterval(0);
+		m_isConnected = true;
 		break;
 	default:
         qDebug() << QString("ADS Error:%1").arg(lastResult);
 		m_workingTimer->setInterval(1000);
+		m_isConnected = false;
 		break;
 	}
+}
+
+bool AdsClient::IsConnected() const
+{
+	return m_isConnected;
 }

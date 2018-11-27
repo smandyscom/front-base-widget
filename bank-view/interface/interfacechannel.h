@@ -55,14 +55,6 @@ public:
         return &(m_clients[ADDRESS_CLIENT_ID(address)]->Cache()[ADDRESS_REGISTER(address)]);
     }
 
-    //! Read from internal buffer
-//    template<typename T>
-//    T Update(const ADDRESS_MODE address)
-//    {
-//        QVariant result = QVariant::fromValue(T());
-//        m_update(address,result);
-//        return result.value<T>();
-//    }
     //!
     //! \brief BeginRead
     //! \param address
@@ -82,6 +74,8 @@ public:
     {
         m_commit(address,value);
     }
+
+	bool IsAllConnected() const;
 
 signals:
     void ackownledged(InterfaceRequest ack);

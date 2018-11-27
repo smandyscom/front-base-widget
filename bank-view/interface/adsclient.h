@@ -40,6 +40,8 @@ public:
 
 	static AdsClient* genClient(QSqlRecord record);
 
+	bool IsConnected() const Q_DECL_OVERRIDE;
+
 protected slots:
     void onPopRequest() Q_DECL_OVERRIDE ;
 protected:
@@ -54,6 +56,7 @@ protected:
 	void executeRequest();
     long lastResult;
 
+	bool m_isConnected;
 };
 
 #endif // ADSCLIENT_H

@@ -5,7 +5,14 @@
 
 #include "ui_widgetstatusbarbundle.h"
 
-class WidgetStatusBarBundle : public QWidget
+#include <frontcommon.h>
+
+#include <definitionmanualblock.h>
+#include <definitionmaincontrolblock.h>
+#include <interfacechannel.h>
+
+class WidgetStatusBarBundle : 
+	public FrontCommon
 {
 	Q_OBJECT
 
@@ -20,4 +27,6 @@ private:
 
 protected:
 	QTimer* m_timer;
+
+	void dynamicPropertyChanged(int key, QVariant value) Q_DECL_OVERRIDE;
 };

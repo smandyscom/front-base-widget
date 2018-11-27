@@ -39,3 +39,7 @@ void InterfaceClient::onPopRequest()
 //    onPopRequest();
 }
 
+bool InterfaceClient::IsConnected() const
+{
+	return false;
+}
