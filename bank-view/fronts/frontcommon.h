@@ -14,7 +14,7 @@ class FrontCommon : public QWidget
 public:
 	enum CommandProperty
 	{
-		PROP_BLINK,
+		PROP_BLINK = 0xeeff10,
 	};
 	Q_ENUM(CommandProperty)
     //!

@@ -481,4 +481,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="WidgetStatusBarBundle.qss" />
+  </ItemGroup>
 </Project>

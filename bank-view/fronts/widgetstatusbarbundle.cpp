@@ -35,6 +35,11 @@ void WidgetStatusBarBundle::dynamicPropertyChanged(int key, QVariant value)
 	case ManualModeDataBlock::PROP_MANUAL_STATE:
 		ui.labelCurrentMode->setText(value.toString());
 		break;
+	case MainMonitorBlock::OFFSET_MONITOR_STATE:
+		ui.labelInitializingStatus->setText(QVariant::fromValue(MainMonitorBlock::InitializingStatus(value.toInt())).toString());
+		break;
+	case MainMonitorBlock::OFFSET_UOB_STATE_PAUSE:
+		break;
 	default:
 		break;
 	}

@@ -74,24 +74,38 @@ void FrontConfigurationTransfer::onObjectTypeSelected(int rowIndex)
 
 void FrontConfigurationTransfer::onPushButtonClicked()
 {
+	QVariant key;
+	QVariant value;
+
     if(sender() == ui->pushButtonDownloadAll)
     {
-        m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::BATCH_ALL_WRITE_MODE).toString().toStdString().c_str(),
-                                  QVariant::fromValue(ManualModeDataBlock::SELECTION_ALL));
+		key = QVariant::fromValue(ManualModeDataBlock::BATCH_ALL_WRITE_MODE);
+		value = QVariant::fromValue(ManualModeDataBlock::SELECTION_ALL);
+        /*m_controllers->setProperty(QVariant::fromValue(ManualModeDataBlock::BATCH_ALL_WRITE_MODE).toString().toStdString().c_str(),
+                                  QVariant::fromValue(ManualModeDataBlock::SELECTION_ALL));*/
     }
     else if(sender() == ui->pushButtonUploadAll)
     {
-        m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::BATCH_ALL_READ_MODE).toString().toStdString().c_str(),
-                                  QVariant::fromValue(ManualModeDataBlock::SELECTION_ALL));
+		key = QVariant::fromValue(ManualModeDataBlock::BATCH_ALL_READ_MODE);
+		value = QVariant::fromValue(ManualModeDataBlock::SELECTION_ALL);
+       /* m_controllers->setProperty(QVariant::fromValue(ManualModeDataBlock::BATCH_ALL_READ_MODE).toString().toStdString().c_str(),
+                                  QVariant::fromValue(ManualModeDataBlock::SELECTION_ALL));*/
     }
     else if(sender() == ui->pushButtonDownload)
     {
-        m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::BATCH_ALL_WRITE_MODE).toString().toStdString().c_str(),
-                                  QVariant::fromValue(m_currentObject));
+		key = QVariant::fromValue(ManualModeDataBlock::BATCH_ALL_WRITE_MODE);
+		value = QVariant::fromValue(m_currentObject);
+        /*m_controllers->setProperty(QVariant::fromValue(ManualModeDataBlock::BATCH_ALL_WRITE_MODE).toString().toStdString().c_str(),
+                                  QVariant::fromValue(m_currentObject));*/
     }
     else if(sender() == ui->pushButtonUpload)
     {
-        m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::BATCH_ALL_READ_MODE).toString().toStdString().c_str(),
-                                  QVariant::fromValue(m_currentObject));
+		key = QVariant::fromValue(ManualModeDataBlock::BATCH_ALL_READ_MODE);
+		value = QVariant::fromValue(m_currentObject);
+        /*m_controllers->setProperty(QVariant::fromValue(ManualModeDataBlock::BATCH_ALL_READ_MODE).toString().toStdString().c_str(),
+                                  QVariant::fromValue(m_currentObject));*/
     }
+
+	m_controller->setProperty(key.toString().toStdString().c_str(),
+		value);
 }

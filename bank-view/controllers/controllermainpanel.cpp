@@ -18,6 +18,7 @@ ControllerMainPanel::ControllerMainPanel(quint8 clientId, quint16 baseOffset, in
     {
         m_monitor_propertyKeys.append(var);
     }
+	m_monitor_propertyKeys << QVariant::fromValue(MainMonitorBlock::OFFSET_MONITOR_STATE);
     //!
     foreach (QVariant var, utilities::listupEnumVariant<MainOperationBlock::OperationBits>()) {
         m_operator_propertyKeys[var.toString()] = var;

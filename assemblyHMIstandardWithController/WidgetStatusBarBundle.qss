@@ -1,0 +1,45 @@
+*
+{
+    border : 5px solid black;
+    min-height : 50px;
+    min-width : 50px;
+    font-size : 36px;
+    margin-top : 0px;
+    margin-bottom : 15px;
+    padding : 0px;
+    /*background-color : green;*/
+}
+
+
+*[PROP_MANUAL_STATE="STATE_IN_AUTO"]  #labelCurrentMode
+{
+    background-color : green;
+}
+
+*[PROP_MANUAL_STATE="STATE_PLC_READY"] #labelCurrentMode
+{
+    background-color : orange;
+}
+
+*[IsAllConnected="true"] #labelLinkStatus{
+    background-color : green;
+}
+*[IsAllConnected="false"] #labelLinkStatus{
+    background-color : red;
+}
+
+/*Initializing Status*/
+*[OFFSET_MONITOR_STATE="2048"] #labelInitializingStatus
+{
+    background-color : red;
+}
+
+*[OFFSET_MONITOR_STATE="2049"] #labelInitializingStatus
+{
+    background-color : orange;
+}
+
+*[OFFSET_MONITOR_STATE="2050"] #labelInitializingStatus
+{
+    /*background-color : orange;*/
+}

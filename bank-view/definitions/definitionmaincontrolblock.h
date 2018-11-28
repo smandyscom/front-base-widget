@@ -37,6 +37,14 @@ public:
     };
     Q_ENUM(OffsetMainMonitor)
 
+	enum InitializingStatus
+	{
+		MAIN_WAIT_INITIALIZING = 0x800,
+		MAIN_INITIALIZING = 0x801,
+		MAIN_INITIALIZED = 0x802,
+	};
+	Q_ENUM(InitializingStatus)
+
     //!
     //! \brief Value
     //! \param key

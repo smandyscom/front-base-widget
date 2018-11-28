@@ -78,10 +78,11 @@ MainWindow::MainWindow(QWidget *parent) :
 		ui->statusBar->addPermanentWidget(var);
 	}*/
 	WidgetStatusBarBundle* widget = new WidgetStatusBarBundle();
+	QString name = widget->objectName();
 	ui->statusBar->addPermanentWidget(widget);
-	LoadingHelperControllers::CrossLink(LoadingHelperControllers::m_controllerMain, widget);
+	
 	LoadingHelperControllers::CrossLink(LoadingHelperControllers::m_controllerTransfer, widget);
-
+LoadingHelperControllers::CrossLink(LoadingHelperControllers::m_controllerMain, widget);
 	//!
 	showFullScreen();
 }

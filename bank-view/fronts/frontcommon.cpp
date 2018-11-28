@@ -2,7 +2,7 @@
 
 FrontCommon::FrontCommon(QWidget *parent) :
     QWidget(parent),
-    m_controller(new QObject()),
+    m_controller(nullptr),
     m_isQSSInitialized(false)
 {
     //!css loading?
@@ -84,7 +84,6 @@ bool FrontCommon::event(QEvent* event)
 
 void FrontCommon::LinkController(QObject* controller)
 {
-    delete m_controller;
     m_controller = controller;
 }
 
