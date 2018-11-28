@@ -371,6 +371,7 @@
     <ClCompile Include="..\bank-view\controllers\controllermaterialtransfer.cpp" />
     <ClCompile Include="..\bank-view\fronts\frontmessageshow.cpp" />
     <ClCompile Include="..\bank-view\fronts\frontsafetypanel.cpp" />
+    <ClCompile Include="..\bank-view\fronts\frontsignal.cpp" />
     <ClCompile Include="..\bank-view\fronts\frontslot.cpp" />
     <ClCompile Include="..\bank-view\fronts\mainwindowcommon.cpp" />
     <ClCompile Include="..\bank-view\fronts\tableviewfeatureoverride.cpp" />
@@ -444,6 +445,16 @@
       <Define Condition="'$(Configuration)|$(Platform)'=='Release|x64'">_WINDOWS;QT_DEPRECATED_WARNINGS;QT_NO_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_SQL_LIB;QT_CORE_LIB;NDEBUG;QT_SVG_LIB;UNICODE;WIN32;WIN64</Define>
     </QtMoc>
     <QtMoc Include="..\bank-view\fronts\widgetstatusbarbundle.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\$(ConfigurationName)\.;.\GeneratedFiles;.;.\..\bank-view\fronts;.\..\bank-view\definitions;.\..\bank-view\helpers;.\..\bank-view\base;.\..\bank-view\controllers;.\..\bank-view\interface;.\..\bank-view\delegates;.\..\bank-view;C:\TwinCAT\AdsApi\TcAdsDll\Include;$(QTDIR)\include;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtSql;$(QTDIR)\include\QtCore;.\debug;$(QTDIR)\mkspecs\win32-msvc;$(QTDIR)\include\QtSvg</IncludePath>
+      <Define Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_WINDOWS;UNICODE;WIN32;QT_DEPRECATED_WARNINGS;QT_WIDGETS_LIB;QT_GUI_LIB;QT_SQL_LIB;QT_CORE_LIB;QT_SVG_LIB</Define>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\$(ConfigurationName)\.;.\GeneratedFiles;.;.\..\bank-view\fronts;.\..\bank-view\definitions;.\..\bank-view\helpers;.\..\bank-view\base;.\..\bank-view\controllers;.\..\bank-view\interface;.\..\bank-view\delegates;.\..\bank-view;C:\TwinCAT\AdsApi\TcAdsDll\Include;$(QTDIR)\include;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtSql;$(QTDIR)\include\QtCore;.\debug;$(QTDIR)\mkspecs\win32-msvc;$(QTDIR)\include\QtSvg</IncludePath>
+      <Define Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">_WINDOWS;QT_DEPRECATED_WARNINGS;QT_WIDGETS_LIB;QT_GUI_LIB;QT_SQL_LIB;QT_CORE_LIB;QT_SVG_LIB;UNICODE;WIN32;WIN64</Define>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ConfigurationName)\.;.\GeneratedFiles;.;.\..\bank-view\fronts;.\..\bank-view\definitions;.\..\bank-view\helpers;.\..\bank-view\base;.\..\bank-view\controllers;.\..\bank-view\interface;.\..\bank-view\delegates;.\..\bank-view;C:\TwinCAT\AdsApi\TcAdsDll\Include;$(QTDIR)\include;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtSql;$(QTDIR)\include\QtCore;.\release;$(QTDIR)\mkspecs\win32-msvc;$(QTDIR)\include\QtSvg</IncludePath>
+      <Define Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">_WINDOWS;UNICODE;WIN32;QT_DEPRECATED_WARNINGS;QT_NO_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_SQL_LIB;QT_CORE_LIB;NDEBUG;QT_SVG_LIB</Define>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\$(ConfigurationName)\.;.\GeneratedFiles;.;.\..\bank-view\fronts;.\..\bank-view\definitions;.\..\bank-view\helpers;.\..\bank-view\base;.\..\bank-view\controllers;.\..\bank-view\interface;.\..\bank-view\delegates;.\..\bank-view;C:\TwinCAT\AdsApi\TcAdsDll\Include;$(QTDIR)\include;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtSql;$(QTDIR)\include\QtCore;.\release;$(QTDIR)\mkspecs\win32-msvc;$(QTDIR)\include\QtSvg</IncludePath>
+      <Define Condition="'$(Configuration)|$(Platform)'=='Release|x64'">_WINDOWS;QT_DEPRECATED_WARNINGS;QT_NO_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_SQL_LIB;QT_CORE_LIB;NDEBUG;QT_SVG_LIB;UNICODE;WIN32;WIN64</Define>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\fronts\frontsignal.h">
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\$(ConfigurationName)\.;.\GeneratedFiles;.;.\..\bank-view\fronts;.\..\bank-view\definitions;.\..\bank-view\helpers;.\..\bank-view\base;.\..\bank-view\controllers;.\..\bank-view\interface;.\..\bank-view\delegates;.\..\bank-view;C:\TwinCAT\AdsApi\TcAdsDll\Include;$(QTDIR)\include;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtSql;$(QTDIR)\include\QtCore;.\debug;$(QTDIR)\mkspecs\win32-msvc;$(QTDIR)\include\QtSvg</IncludePath>
       <Define Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_WINDOWS;UNICODE;WIN32;QT_DEPRECATED_WARNINGS;QT_WIDGETS_LIB;QT_GUI_LIB;QT_SQL_LIB;QT_CORE_LIB;QT_SVG_LIB</Define>
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\$(ConfigurationName)\.;.\GeneratedFiles;.;.\..\bank-view\fronts;.\..\bank-view\definitions;.\..\bank-view\helpers;.\..\bank-view\base;.\..\bank-view\controllers;.\..\bank-view\interface;.\..\bank-view\delegates;.\..\bank-view;C:\TwinCAT\AdsApi\TcAdsDll\Include;$(QTDIR)\include;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtSql;$(QTDIR)\include\QtCore;.\debug;$(QTDIR)\mkspecs\win32-msvc;$(QTDIR)\include\QtSvg</IncludePath>
@@ -1229,6 +1240,7 @@
     </QtUic>
     <QtUic Include="..\bank-view\fronts\frontmessageshow.ui" />
     <QtUic Include="..\bank-view\fronts\frontsafetypanel.ui" />
+    <QtUic Include="..\bank-view\fronts\frontsignal.ui" />
     <QtUic Include="..\bank-view\fronts\frontsinglefilter.ui">
     </QtUic>
     <QtUic Include="..\bank-view\fronts\frontslot.ui" />
@@ -1270,6 +1282,7 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <Text Include="tabSignal.qss" />
     <Text Include="WidgetStatusBarBundle.qss" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

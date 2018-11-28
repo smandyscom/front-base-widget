@@ -194,6 +194,9 @@
     <ClCompile Include="..\bank-view\fronts\widgetstatusbarbundle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\bank-view\fronts\frontsignal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="..\bank-view\base\abstractsqltableadpater.h">
@@ -379,6 +382,9 @@
     <QtMoc Include="..\bank-view\fronts\widgetstatusbarbundle.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="..\bank-view\fronts\frontsignal.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="debug\moc_predefs.h.cbt">
@@ -458,6 +464,9 @@
     <QtUic Include="..\bank-view\fronts\widgetstatusbarbundle.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtUic Include="..\bank-view\fronts\frontsignal.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
   <ItemGroup>
     <None Include="tabAxis.qss" />
@@ -483,5 +492,6 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="WidgetStatusBarBundle.qss" />
+    <Text Include="tabSignal.qss" />
   </ItemGroup>
 </Project>

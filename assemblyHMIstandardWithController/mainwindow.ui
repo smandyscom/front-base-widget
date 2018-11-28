@@ -18,7 +18,7 @@
     <item>
      <widget class="TabWidgetOperationMode" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>7</number>
       </property>
       <property name="documentMode">
        <bool>false</bool>
@@ -90,6 +90,11 @@
       <widget class="FrontIoOverride" name="tabIO">
        <attribute name="title">
         <string>I/O監視</string>
+       </attribute>
+      </widget>
+      <widget class="FrontSignal" name="tabSignal">
+       <attribute name="title">
+        <string>信號參數</string>
        </attribute>
       </widget>
       <widget class="FrontConfigurationTransfer" name="tabConfiguration">
@@ -204,6 +209,12 @@
    <class>FrontSlot</class>
    <extends>QWidget</extends>
    <header>frontslot.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>FrontSignal</class>
+   <extends>QWidget</extends>
+   <header>frontsignal.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

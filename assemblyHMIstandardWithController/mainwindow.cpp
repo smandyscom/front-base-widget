@@ -32,14 +32,16 @@ MainWindow::MainWindow(QWidget *parent) :
                                       ui->tabConfiguration,
                                       ui->widgetMain,
                                       ui->tabIO,
-		ui->tabSafety);
+		ui->tabSafety,
+		ui->tabSignal);
     //! Load controllers
     LoadingHelperControllers::ControllersLoadingRoutineV1();
     //! Link controller and fronts
     QList<FrontCommon*> frontList{ui->tabAxis,
                 ui->tabCylinder,
                 ui->tabUnit,
-                ui->tabConfiguration};
+                ui->tabConfiguration,
+				ui->tabSignal};
     foreach (FrontCommon* var, frontList) {
         LoadingHelperControllers::CrossLink(LoadingHelperControllers::m_controllerTransfer,var);
     }

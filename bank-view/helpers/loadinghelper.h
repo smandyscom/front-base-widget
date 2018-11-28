@@ -10,6 +10,7 @@
 #include <frontmainpanel.h>
 #include <frontiooverride.h>
 #include <frontsafetypanel.h>
+#include <frontsignal.h>
 
 #include <junctionbankdatabase.h>
 
@@ -34,6 +35,7 @@ public:
     static void LoadFrontUnit(FrontUnitPanel* widget);
     static void LoadFrontConfiguration(FrontConfigurationTransfer* widget);
     static void LoadFrontMain(FrontMainPanel* widget);
+	
 
     static void LoadFrontIO(FrontIoOverride* widget);
 	static void LoadSafeIO(FrontSafetyPanel* widget);
@@ -44,7 +46,8 @@ public:
                                    FrontConfigurationTransfer* widget4,
                                    FrontMainPanel* widget5,
                                    FrontIoOverride* widget6,
-		FrontSafetyPanel* widget7);
+		FrontSafetyPanel* widget7,
+		FrontSignal* widget8);
 
 
 signals:

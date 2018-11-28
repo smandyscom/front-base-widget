@@ -1,0 +1,11 @@
+*[BIT_0_DEBOUNCED_ON="true"] #labelDebounceOn {
+    background-color : green;
+}
+
+*[BIT_1_DEBOUNCED_OFF="true"] #labelDebounceOff {
+    background-color : green;
+}
+
+*[BIT_2_RAW="true"] #labelRawOn {
+    background-color : green;
+}

@@ -74,9 +74,10 @@ void LoadingHelper::CombineModelViewV1(FrontAxisParameter* widget1,
                                        FrontCylinderPanel* widget2,
                                        FrontUnitPanel* widget3,
                                        FrontConfigurationTransfer* widget4,
-                                       FrontMainPanel* widget5, 
+                                       FrontMainPanel* widget5,
 	FrontIoOverride *widget6,
-	FrontSafetyPanel* widget7)
+	FrontSafetyPanel* widget7,
+	FrontSignal* widget8)
 {
 
     m_instance = JunctionBankDatabase::Instance();
@@ -89,6 +90,8 @@ void LoadingHelper::CombineModelViewV1(FrontAxisParameter* widget1,
     LoadFrontIO(widget6);
 	LoadSafeIO(widget7);
 
+	widget8->Setup(m_instance->TableMap(JunctionBankDatabase::WHOLE_SIGNALS),
+		m_instance->TableMap(JunctionBankDatabase::HEADER_SIGNALS));
 }
 
 
