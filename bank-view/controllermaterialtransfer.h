@@ -18,7 +18,7 @@ class MaterialHeaderBlock
 public:
     MaterialHeaderBlock() {}
 protected:
-    MODBUS_U_WORD reserved[96];
+    MODBUS_U_WORD reserved[90];
 };
 Q_DECLARE_METATYPE(MaterialHeaderBlock)
 

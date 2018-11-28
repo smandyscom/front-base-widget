@@ -116,7 +116,7 @@ void ControllerManualMode::onReply()
     }
     case STATUS_WORD:
     {
-        QTimer::singleShot(5,this,[this](){
+        QTimer::singleShot(100,this,[this](){
             //Schedual the next polling
             __channel->beginAccess<MODBUS_U_WORD>(ModbusDriverAddress(STATUS_WORD));
         });

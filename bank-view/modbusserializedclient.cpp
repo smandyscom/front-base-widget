@@ -38,6 +38,7 @@ void ModbusSerializedClient::Driver(QModbusClient* value)
 ModbusSerializedClient::~ModbusSerializedClient()
 {
     //! Message loop stuck here , so that requests cannot be comsumed
+    __driver->disconnectDevice();
     qDebug()<<"";
 }
 //!
@@ -94,7 +95,7 @@ void ModbusSerializedClient::onDriverStateChanged(QModbusDevice::State state)
         break;
     case QModbusDevice::UnconnectedState:
         //! Reconnect
-        QTimer::singleShot(1000,[=](){
+        QTimer::singleShot(10000,[=](){
             __driver->connectDevice();
         });
     default:
