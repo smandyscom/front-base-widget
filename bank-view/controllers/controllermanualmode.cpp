@@ -1,5 +1,7 @@
 #include "controllermanualmode.h"
 #include <QDebug>
+
+
 ControllerManualMode::ControllerManualMode(quint8 clientId,
                                            quint16 baseOffset,
                                            int interval,
@@ -77,6 +79,8 @@ ControllerManualMode::ControllerManualMode(quint8 clientId,
             m_monitor_propertyKeys.append(var);
         }
     }
+	//m_monitor_propertyKeys << QVariant::fromValue(ManualModeDataBlock::PROP_MANUAL_STATE);
+	//m_monitor_propertyKeys << QVariant::fromValue(ManualModeDataBlock::PROP_ELAPSED_TIME);
     //!Operators
     QList<QVariant> m_operator_list = {
         QVariant::fromValue(ManualModeDataBlock::BIT_1_RUN),
@@ -105,6 +109,8 @@ void ControllerManualMode::onStateReport()
 		var->setProperty(QVariant::fromValue(ManualModeDataBlock::PROP_MANUAL_STATE).toString().toStdString().c_str(),
 			QVariant::fromValue(m_currentState));
 	}
+	/*setProperty(QVariant::fromValue(ManualModeDataBlock::PROP_MANUAL_STATE).toString().toStdString().c_str(),
+		QVariant::fromValue(m_currentState));*/
     qDebug() << QVariant::fromValue(m_currentState).toString();
 }
 
@@ -116,9 +122,18 @@ void ControllerManualMode::plcReady()
 }
 void ControllerManualMode::doneOn()
 {
+	//ms
+	quint64 e = timer.elapsed();
+	for each (QObject* var in m_receivers)
+	{
+		var->setProperty(QVariant::fromValue(ManualModeDataBlock::PROP_ELAPSED_TIME).toString().toStdString().c_str(),e);
+		var->setProperty(QString::number(ManualModeDataBlock::PROP_ELAPSED_TIME).toStdString().c_str(), e);
+	}
     //set RUN off
 	setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_1_RUN).toString().toStdString().c_str(),
 		false);
+
+	
 }
 void ControllerManualMode::doneOff()
 {
@@ -129,4 +144,6 @@ void ControllerManualMode::runOn()
 	//set
 	setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_0_ENGAGED_HMI).toString().toStdString().c_str(),
 		true); 
+
+	timer.start();
 }

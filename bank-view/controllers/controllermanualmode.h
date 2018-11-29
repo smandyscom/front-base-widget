@@ -8,6 +8,7 @@
 #include <QTimer>
 
 #include <definitionmanualblock.h>
+#include <qelapsedtimer.h>
 
 using namespace BaseLayer;
 
@@ -57,6 +58,8 @@ protected:
     //! \brief s3Exited
     //! Done off
     virtual void doneOff();
+
+	QElapsedTimer timer;
 };
 
 #endif // CONTROLLERMANUALMODE_H

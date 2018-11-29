@@ -64,6 +64,7 @@ MainWindow::MainWindow(QWidget *parent) :
 			JunctionMaterialDatabase::Instance()->TableMap(ref->Index(), JunctionMaterialDatabase::MAT_HEADER_SLOT),
 			record.value(QVariant::fromValue(HEADER_STRUCTURE::zh_TW).toString()).toString());
 	}
+
 	//!
 	/*QTextBrowser* browser = new QTextBrowser();
 	browser->setText("Browser");
@@ -84,7 +85,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->statusBar->addPermanentWidget(widget);
 	
 	LoadingHelperControllers::CrossLink(LoadingHelperControllers::m_controllerTransfer, widget);
-LoadingHelperControllers::CrossLink(LoadingHelperControllers::m_controllerMain, widget);
+	LoadingHelperControllers::CrossLink(LoadingHelperControllers::m_controllerMain, widget);
 	//!
 	showFullScreen();
 }

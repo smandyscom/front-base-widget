@@ -100,6 +100,7 @@ public:
 	enum PropertyKeys
 	{
 		PROP_MANUAL_STATE = 0xeeff00,
+		PROP_ELAPSED_TIME = 0xeeff20,
 	};
 	Q_ENUM(PropertyKeys)
 

@@ -14,33 +14,36 @@
    <string>WidgetStatusBarBundle</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
-    <widget class="QLabel" name="labelLinkStatus">
-     <property name="text">
-      <string>Link</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <widget class="QLabel" name="labelInitializingStatus">
-     <property name="text">
-      <string>Initializing</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="2">
+   <item row="0" column="3">
     <widget class="QLabel" name="labelCurrentMode">
      <property name="text">
       <string>Mode</string>
      </property>
     </widget>
    </item>
-   <item row="0" column="3">
+   <item row="0" column="4">
     <widget class="QLabel" name="labelCurrentTime">
      <property name="text">
       <string>Time</string>
      </property>
     </widget>
+   </item>
+   <item row="0" column="2">
+    <widget class="QLabel" name="labelInitializingStatus">
+     <property name="text">
+      <string>Initializing</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QLabel" name="labelLinkStatus">
+     <property name="text">
+      <string>Link</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QLCDNumber" name="lcdNumberElaspedTime"/>
    </item>
   </layout>
  </widget>
