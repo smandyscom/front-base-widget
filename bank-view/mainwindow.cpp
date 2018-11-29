@@ -95,6 +95,13 @@ MainWindow::MainWindow(QWidget *parent) :
     __materialSlots[1]->IndexGrades(0,11); //bottom view
     __materialSlots[3]->IndexGrades(0,23); //top view
     __materialSlots[4]->IndexGrades(0,28); //front view
+    //!
+    __materialSlots[0]->Role(ControllerMaterialTransfer::ACTION_CREATE);
+    __materialSlots[1]->Role(ControllerMaterialTransfer::ACTION_UPDATE_BLOCK);
+    __materialSlots[2]->Role(ControllerMaterialTransfer::ACTION_UPDATE_BLOCK);
+    __materialSlots[3]->Role(ControllerMaterialTransfer::ACTION_UPDATE_BLOCK);
+    __materialSlots[4]->Role(ControllerMaterialTransfer::ACTION_QUERY);
+
     //! Initialize FrontManaul panel
     FrontControlPanel* fcp2 = new FrontControlPanel(__materialSlots,ui->tabMain);
     FrontManaualMode* fmm = new FrontManaualMode(ui->tabManual);

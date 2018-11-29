@@ -32,26 +32,20 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index, int channelInd
         __table = new QSqlTableModel(this,__database);
         QString __tableName = QString("%1%2").arg(QVariant::fromValue(MAT_DATA_SLOT).toString()).arg(__slotIndex);
         __table->setTable(QString("%1%2").arg(QVariant::fromValue(MAT_DATA_SLOT).toString()).arg(__slotIndex));
-//        __table->setEditStrategy(QSqlTableModel::OnManualSubmit); //control submit
-        //bool result = __table->select();
         __adpator = new GenericSqlTableAdapter<SlotDataBlock,SlotBlock::DataBaseHeaders>(__table);
-//        if(!result)
-//            qDebug() << result;
     }
-
-//    if((__role & TYPE_DATA_NODE)>0)
-//    {
-
 
         //! Very first shot
         __channel->beginAccess<MaterialHeaderBlock>(toOffseteAddress(WORD_OUT));
-    //}
 
     //!
     QState* s0 = new QState(this);
     QState* s1 = new QState(this);
+    QState* s15 = new QState(this);
     __stateMap[WAIT_ACT_ON] = s0;
     __stateMap[WAIT_ACT_OFF] = s1;
+    __stateMap[TRANS] = s15;
+
     //!log abnormals
     connect(this,&ControllerMaterialTransfer::finished,[=](){qDebug() << QString("%1,finished").arg(__slotIndex);});
     connect(this,&ControllerMaterialTransfer::stopped,[=](){qDebug() << QString("%1,stopped").arg(__slotIndex);});
@@ -65,7 +59,7 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index, int channelInd
     //!
     //! s0
     ValueTransition* actOn = new ValueTransition(toOffseteAddress(ACT),ValueTransition::BIT_STATE_ON);
-    actOn->setTargetState(s1);
+    actOn->setTargetState(s15);
     s0->addTransition(actOn);
 
     connect(s0,&QState::entered,[=]()
@@ -77,7 +71,6 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index, int channelInd
     {
         __procedureTimer.start();
 
-        m_materialId = __channel->Access<MODBUS_U_WORD>(toOffseteAddress(MATERIAL_ID));
         __isValid = __channel->Access<bool>(toOffseteAddress(IS_VALID));
         __request = SyncRequests(__channel->Access<MODBUS_U_WORD>(toOffseteAddress(SYNC_ACTION)));
 
@@ -86,17 +79,13 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index, int channelInd
             m_totalCounter +=1;
 
         //! According sync request perform DB manipulation
-        switch (__request) {
+        switch (m_role) {
         case ACTION_UPDATE_HEADER:
             //! slot held ID/IS_VALID updated only
             break;
         case ACTION_UPDATE_BLOCK:
             //! write into data-base
-            //__channel->beginAccess<CellDataBlock>(toOffseteAddress(BLOCK_DATA));
-            *static_cast<CellDataBlock*>(&__adb) =
-                    __channel->Access<CellDataBlock>(toOffseteAddress(BLOCK_DATA));
-            //! Acknoledge
-            onUpdate();
+            __channel->beginAccess<MaterialDataBlock>(toOffseteAddress(MATERIAL_ID)); //wait data back
             break;
         case ACTION_CREATE:
             onInsert();
@@ -105,18 +94,35 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index, int channelInd
         case ACTION_QUERY:
             //!Write data
             //! find record by material id
-            onQuery();
-            __channel->Access<CellDataBlock>(toOffseteAddress(BLOCK_DATA),static_cast<CellDataBlock>(__adb));
-
+            __channel->beginAccess<MODBUS_U_LONG>(toOffseteAddress(MATERIAL_ID)); //wait data back
             break;
         default:
             break;
         }
 
+    });
+
+    //!
+    s15->addTransition(this,SIGNAL(idUpdated()),s1);
+    connect(s15,&QState::entered,[=](){
+        switch (m_role) {
+            case ACTION_UPDATE_HEADER:
+            case ACTION_CREATE:
+                emit idUpdated(); // auto transit
+                break;
+            case ACTION_UPDATE_BLOCK:
+                m_materialId = __channel->Access<MODBUS_U_WORD>(toOffseteAddress(MATERIAL_ID));
+                onUpdate();
+                break;
+            case ACTION_QUERY:
+                m_materialId = __channel->Access<MODBUS_U_WORD>(toOffseteAddress(MATERIAL_ID));
+                onQuery();
+                __channel->Access<CellDataBlock>(toOffseteAddress(BLOCK_DATA),static_cast<CellDataBlock>(__adb));
+                break;
+        }
+
+
         __channel->Access<bool>(toOffseteAddress(DONE),true);
-        //! Acknoledge
-        //__channel->Access<bool>(toOffseteAddress(DONE),true);
-        //__pollCyclic=0;//speed up
     });
 
     //!
@@ -181,6 +187,13 @@ void ControllerMaterialTransfer::onReply()
         qDebug() << QString("Material:%1 , connectionEngaged:On").arg(__slotIndex);
 
     __connectionEngaged = __channel->Access<bool>(toOffseteAddress(DB_ENGAGED));
+
+    if(__channel->CachedReplyAddress().getAddress() ==
+            toOffseteAddress(MATERIAL_ID))
+    {
+        emit idUpdated(); // inform statemachine transit
+        return;
+    }
 
     if(__channel->CachedReplyAddress().getAddress() !=
             toOffseteAddress(WORD_OUT))

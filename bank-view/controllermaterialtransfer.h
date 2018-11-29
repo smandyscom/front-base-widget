@@ -18,9 +18,19 @@ class MaterialHeaderBlock
 public:
     MaterialHeaderBlock() {}
 protected:
-    MODBUS_U_WORD reserved[90];
+    MODBUS_U_WORD reserved[20];
 };
 Q_DECLARE_METATYPE(MaterialHeaderBlock)
+
+class MaterialDataBlock
+{
+public:
+    MaterialDataBlock() {}
+protected:
+    MODBUS_U_WORD reserved[64];
+};
+Q_DECLARE_METATYPE(MaterialDataBlock)
+
 
 //!
 //! \brief The ControllerMaterialTransfer class
@@ -73,6 +83,7 @@ public:
     {
         WAIT_ACT_ON,
         WAIT_ACT_OFF,
+        TRANS,
     };
     Q_ENUM(SlotContext)
     Q_ENUM(SyncRequests)
@@ -84,6 +95,8 @@ public:
                                         int channelIndex,
                                         QObject *parent = nullptr);
     ~ControllerMaterialTransfer();
+
+    void Role(SyncRequests role){ m_role = role;}
 
     //! Current material id this slot held
     int MaterialId() const
@@ -157,6 +170,7 @@ public:
 
 signals:
     void dataUpdated();
+    void idUpdated();
 public slots:
     void onAboutToLeave();
     void onInsert();
@@ -210,6 +224,8 @@ protected:
     //! To indicate which value to count as OK/NG according to individual slot...bad smell
     int m_index_grade1;
     int m_index_grade2;
+
+    SyncRequests m_role;
 };
 
 
