@@ -143,19 +143,34 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index, int channelInd
     s1->addTransition(actOff);
     connect(s1,&QState::exited,[=](){
 
+        //! Repeative substract
+        if(m_lastMaterialId==m_materialId)
+        {
+            switch (m_currentGrade) {
+            case OK:
+            case BYPASS:
+                m_okCounter -=1;
+                break;
+            case NG:
+                m_ngCounter -=1;
+                break;
+            default:
+                break;
+            }
+        }
+
+
         //!OK/NG Counting
         m_currentGrade = static_cast<Grade>(__adb.Value(m_index_grade1).toInt() && __adb.Value(m_index_grade2).toInt());
         switch (m_currentGrade) {
         case OK:
         case BYPASS:
-            if(m_lastMaterialId!=m_materialId)
-                m_okCounter+=1;
+            m_okCounter+=1;
             //! Main grade
             m_currentGrade = static_cast<Grade>(__adb.Value(m_index_grade1).toInt());
             break;
         case NG:
-            if(m_lastMaterialId!=m_materialId)
-                m_ngCounter+=1;
+            m_ngCounter+=1;
             m_currentGrade = Grade::NG;
             break;
         default:
