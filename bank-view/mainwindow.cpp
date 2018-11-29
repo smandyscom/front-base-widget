@@ -100,7 +100,8 @@ MainWindow::MainWindow(QWidget *parent) :
     __materialSlots[1]->Role(ControllerMaterialTransfer::ACTION_UPDATE_BLOCK);
     __materialSlots[2]->Role(ControllerMaterialTransfer::ACTION_UPDATE_BLOCK);
     __materialSlots[3]->Role(ControllerMaterialTransfer::ACTION_UPDATE_BLOCK);
-    __materialSlots[4]->Role(ControllerMaterialTransfer::ACTION_QUERY);
+    __materialSlots[4]->Role(ControllerMaterialTransfer::ACTION_UPDATE_BLOCK);
+    __materialSlots[5]->Role(ControllerMaterialTransfer::ACTION_QUERY);
 
     //! Initialize FrontManaul panel
     FrontControlPanel* fcp2 = new FrontControlPanel(__materialSlots,ui->tabMain);

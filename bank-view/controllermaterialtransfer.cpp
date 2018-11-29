@@ -36,7 +36,7 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index, int channelInd
     }
 
         //! Very first shot
-        __channel->beginAccess<MaterialHeaderBlock>(toOffseteAddress(WORD_OUT));
+        __channel->beginAccess<MODBUS_U_WORD>(toOffseteAddress(WORD_OUT));
 
     //!
     QState* s0 = new QState(this);
@@ -72,11 +72,9 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index, int channelInd
         __procedureTimer.start();
 
         __isValid = __channel->Access<bool>(toOffseteAddress(IS_VALID));
-        __request = SyncRequests(__channel->Access<MODBUS_U_WORD>(toOffseteAddress(SYNC_ACTION)));
+//        __request = SyncRequests(__channel->Access<MODBUS_U_WORD>(toOffseteAddress(SYNC_ACTION)));
 
-        //! Count up
-        if(m_lastMaterialId!=m_materialId)
-            m_totalCounter +=1;
+
 
         //! According sync request perform DB manipulation
         switch (m_role) {
@@ -84,22 +82,16 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index, int channelInd
             //! slot held ID/IS_VALID updated only
             break;
         case ACTION_UPDATE_BLOCK:
-            //! write into data-base
-            __channel->beginAccess<MaterialDataBlock>(toOffseteAddress(MATERIAL_ID)); //wait data back
             break;
         case ACTION_CREATE:
             onInsert();
             __channel->Access<MODBUS_U_LONG>(toOffseteAddress(MATERIAL_ID),m_materialId);
             break;
         case ACTION_QUERY:
-            //!Write data
-            //! find record by material id
-            __channel->beginAccess<MODBUS_U_LONG>(toOffseteAddress(MATERIAL_ID)); //wait data back
             break;
         default:
             break;
         }
-
     });
 
     //!
@@ -111,20 +103,39 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(int index, int channelInd
                 emit idUpdated(); // auto transit
                 break;
             case ACTION_UPDATE_BLOCK:
-                m_materialId = __channel->Access<MODBUS_U_WORD>(toOffseteAddress(MATERIAL_ID));
-                onUpdate();
+                //! write into data-base
+                __channel->beginAccess<CellDataBlock>(toOffseteAddress(MATERIAL_ID)); //wait data back
                 break;
             case ACTION_QUERY:
-                m_materialId = __channel->Access<MODBUS_U_WORD>(toOffseteAddress(MATERIAL_ID));
-                onQuery();
-                __channel->Access<CellDataBlock>(toOffseteAddress(BLOCK_DATA),static_cast<CellDataBlock>(__adb));
+                //! find record by material id
+                __channel->beginAccess<MODBUS_U_LONG>(toOffseteAddress(MATERIAL_ID)); //wait data back
                 break;
+        }        
+    });
+    connect(s15,&QState::exited,[=](){
+        switch (m_role) {
+        case ACTION_UPDATE_BLOCK:
+            m_materialId = __channel->Access<MODBUS_U_WORD>(toOffseteAddress(MATERIAL_ID));
+            *static_cast<CellDataBlock*>(&__adb) =
+                    __channel->Access<CellDataBlock>(toOffseteAddress(BLOCK_DATA));
+            onUpdate();
+            break;
+        case ACTION_QUERY:
+            m_materialId = __channel->Access<MODBUS_U_WORD>(toOffseteAddress(MATERIAL_ID));
+            onQuery();
+            __channel->Access<CellDataBlock>(toOffseteAddress(BLOCK_DATA),static_cast<CellDataBlock>(__adb));
+            break;
+        default:
+            break;
         }
 
+        //! Count up
+        if(m_lastMaterialId!=m_materialId)
+            m_totalCounter +=1;
 
+        //!
         __channel->Access<bool>(toOffseteAddress(DONE),true);
     });
-
     //!
     //! s1
     ValueTransition* actOff = new ValueTransition(toOffseteAddress(ACT),ValueTransition::BIT_STATE_OFF);
@@ -199,7 +210,7 @@ void ControllerMaterialTransfer::onReply()
             toOffseteAddress(WORD_OUT))
         return;
     QTimer::singleShot(__pollCyclic,[this](){
-        __channel->beginAccess<MaterialHeaderBlock>(toOffseteAddress(WORD_OUT));
+        __channel->beginAccess<MODBUS_U_WORD>(toOffseteAddress(WORD_OUT));
     });
 }
 

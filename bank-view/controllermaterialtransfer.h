@@ -13,25 +13,6 @@
 #include <definitionslotblock.h>
 #include <abstractsqltableadpater.h>
 
-class MaterialHeaderBlock
-{
-public:
-    MaterialHeaderBlock() {}
-protected:
-    MODBUS_U_WORD reserved[20];
-};
-Q_DECLARE_METATYPE(MaterialHeaderBlock)
-
-class MaterialDataBlock
-{
-public:
-    MaterialDataBlock() {}
-protected:
-    MODBUS_U_WORD reserved[64];
-};
-Q_DECLARE_METATYPE(MaterialDataBlock)
-
-
 //!
 //! \brief The ControllerMaterialTransfer class
 //! Proceding material/slot handshaking
@@ -194,7 +175,7 @@ protected:
     bool __isValid;
     //SlotType __role;
 
-    SyncRequests __request;
+//    SyncRequests __request;
 
     QSqlTableModel* __table;
 
