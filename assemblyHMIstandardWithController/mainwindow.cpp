@@ -86,13 +86,11 @@ MainWindow::MainWindow(QWidget *parent) :
 	
 	LoadingHelperControllers::CrossLink(LoadingHelperControllers::m_controllerTransfer, widget);
 	LoadingHelperControllers::CrossLink(LoadingHelperControllers::m_controllerMain, widget);
-	/*widget->setProperty(QVariant::fromValue(WidgetStatusBarBundle::MODEL).toString().toStdString().c_str(),
+	widget->setProperty(QVariant::fromValue(WidgetStatusBarBundle::MODEL).toString().toStdString().c_str(),
 		utilities::getSqlTableSelectedRecord(LoadingHelperControllers::m_database->TableMap(JunctionBankDatabase::PROPERTIES),
 			QVariant::fromValue(HEADER_STRUCTURE::NAME),
 			QVariant::fromValue(WidgetStatusBarBundle::MODEL)).value("VALUE"));
 	
-	QVariant var = QVariant::fromValue(DEF_REGION::NAME);
-	QVariant var2 = QVariant::fromValue(SlotBlock::OK);*/
 	//!
 	showFullScreen();
 }
