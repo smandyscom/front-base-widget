@@ -10,6 +10,11 @@ WidgetStatusBarBundle::WidgetStatusBarBundle(QWidget *parent)
 	m_timer = new QTimer(this);
 	connect(m_timer, &QTimer::timeout, this, &WidgetStatusBarBundle::onTimerScan);
 	m_timer->start(1000);
+	//
+	for each (QWidget* var in findChildren<QLabel*>())
+	{
+		m_widgetsPolish << var;
+	}
 }
 
 WidgetStatusBarBundle::~WidgetStatusBarBundle()
@@ -36,14 +41,17 @@ void WidgetStatusBarBundle::dynamicPropertyChanged(int key, QVariant value)
 		ui.labelCurrentMode->setText(value.toString());
 		break;
 	case ManualModeDataBlock::PROP_ELAPSED_TIME:
-		ui.lcdNumberElaspedTime->display((value.toReal() / 1000));
+		//ui.lcdNumberElaspedTime->display((value.toReal() / 1000));
 		break;
 	case MainMonitorBlock::OFFSET_MONITOR_STATE:
 		ui.labelInitializingStatus->setText(QVariant::fromValue(MainMonitorBlock::InitializingStatus(value.toInt())).toString());
 		break;
 	case MainMonitorBlock::OFFSET_UOB_STATE_PAUSE:
 		break;
-	
+	case MODEL:
+		ui.labelModel->setText(value.toString());
+		
+		break;
 	default:
 		break;
 	}

@@ -17,6 +17,12 @@ class WidgetStatusBarBundle :
 	Q_OBJECT
 
 public:
+	enum Properties
+	{
+		MODEL,
+	};
+	Q_ENUM(Properties)
+
 	WidgetStatusBarBundle(QWidget *parent = Q_NULLPTR);
 	~WidgetStatusBarBundle();
 

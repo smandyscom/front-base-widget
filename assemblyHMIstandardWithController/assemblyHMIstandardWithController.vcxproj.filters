@@ -68,9 +68,6 @@
     <ClCompile Include="..\bank-view\controllers\controllermanualmode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\bank-view\definitions\definitionauxiliarykeys.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\bank-view\definitions\definitionbasicblocks.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -197,6 +194,9 @@
     <ClCompile Include="..\bank-view\fronts\frontsignal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\bank-view\definitions\definitionauxiliarykeys.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="..\bank-view\base\abstractsqltableadpater.h">
@@ -221,9 +221,6 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="..\bank-view\controllers\controllermanualmode.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="..\bank-view\definitions\definitionauxiliarykeys.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="..\bank-view\definitions\definitionaxisblocks.h">
@@ -487,6 +484,9 @@
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="version.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\bank-view\definitions\definitionauxiliarykeys.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

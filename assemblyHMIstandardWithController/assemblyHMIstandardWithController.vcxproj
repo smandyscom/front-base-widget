@@ -100,7 +100,6 @@
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(Configuration)\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">assemblyHMIstandard</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">assemblyHMIstandard</TargetName>
-    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</IgnoreImportLibrary>
     <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</IgnoreImportLibrary>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -369,6 +368,7 @@
     <ClCompile Include="..\bank-view\base\messagereceiver.cpp" />
     <ClCompile Include="..\bank-view\base\messagerecorder.cpp" />
     <ClCompile Include="..\bank-view\controllers\controllermaterialtransfer.cpp" />
+    <ClCompile Include="..\bank-view\definitions\definitionauxiliarykeys.cpp" />
     <ClCompile Include="..\bank-view\fronts\frontmessageshow.cpp" />
     <ClCompile Include="..\bank-view\fronts\frontsafetypanel.cpp" />
     <ClCompile Include="..\bank-view\fronts\frontsignal.cpp" />
@@ -384,7 +384,6 @@
     <ClCompile Include="..\bank-view\controllers\controlleriomonitor.cpp" />
     <ClCompile Include="..\bank-view\controllers\controllermainpanel.cpp" />
     <ClCompile Include="..\bank-view\controllers\controllermanualmode.cpp" />
-    <ClCompile Include="..\bank-view\definitions\definitionauxiliarykeys.cpp" />
     <ClCompile Include="..\bank-view\definitions\definitionbasicblocks.cpp" />
     <ClCompile Include="..\bank-view\definitions\definitionsbaselayer.cpp" />
     <ClCompile Include="..\bank-view\delegates\delegatedataselector.cpp" />
@@ -464,6 +463,7 @@
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\$(ConfigurationName)\.;.\GeneratedFiles;.;.\..\bank-view\fronts;.\..\bank-view\definitions;.\..\bank-view\helpers;.\..\bank-view\base;.\..\bank-view\controllers;.\..\bank-view\interface;.\..\bank-view\delegates;.\..\bank-view;C:\TwinCAT\AdsApi\TcAdsDll\Include;$(QTDIR)\include;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtSql;$(QTDIR)\include\QtCore;.\release;$(QTDIR)\mkspecs\win32-msvc;$(QTDIR)\include\QtSvg</IncludePath>
       <Define Condition="'$(Configuration)|$(Platform)'=='Release|x64'">_WINDOWS;QT_DEPRECATED_WARNINGS;QT_NO_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_SQL_LIB;QT_CORE_LIB;NDEBUG;QT_SVG_LIB;UNICODE;WIN32;WIN64</Define>
     </QtMoc>
+    <ClInclude Include="..\bank-view\definitions\definitionauxiliarykeys.h" />
     <ClInclude Include="version.h" />
     <QtMoc Include="..\bank-view\base\abstractsqltableadpater.h">
       <Define Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">UNICODE;$(Platform);QT_DEPRECATED_WARNINGS;QT_NO_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_SQL_LIB;QT_CORE_LIB</Define>
@@ -564,20 +564,6 @@
       <Include Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Configuration)/moc_predefs.h</Include>
     </QtMoc>
     <QtMoc Include="..\bank-view\controllers\controllermanualmode.h">
-      <Define Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">UNICODE;$(Platform);QT_DEPRECATED_WARNINGS;QT_NO_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_SQL_LIB;QT_CORE_LIB</Define>
-      <Define Condition="'$(Configuration)|$(Platform)'=='Release|x64'">UNICODE;$(Platform);QT_DEPRECATED_WARNINGS;QT_NO_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_SQL_LIB;QT_CORE_LIB</Define>
-      <CompilerFlavor Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">msvc</CompilerFlavor>
-      <CompilerFlavor Condition="'$(Configuration)|$(Platform)'=='Release|x64'">msvc</CompilerFlavor>
-      <Include Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)/moc_predefs.h</Include>
-      <Include Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Configuration)/moc_predefs.h</Include>
-      <Define Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">UNICODE;$(Platform);QT_DEPRECATED_WARNINGS;QT_WIDGETS_LIB;QT_GUI_LIB;QT_SQL_LIB;QT_CORE_LIB</Define>
-      <Define Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">UNICODE;$(Platform);QT_DEPRECATED_WARNINGS;QT_WIDGETS_LIB;QT_GUI_LIB;QT_SQL_LIB;QT_CORE_LIB</Define>
-      <CompilerFlavor Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">msvc</CompilerFlavor>
-      <CompilerFlavor Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">msvc</CompilerFlavor>
-      <Include Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)/moc_predefs.h</Include>
-      <Include Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Configuration)/moc_predefs.h</Include>
-    </QtMoc>
-    <QtMoc Include="..\bank-view\definitions\definitionauxiliarykeys.h">
       <Define Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">UNICODE;$(Platform);QT_DEPRECATED_WARNINGS;QT_NO_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_SQL_LIB;QT_CORE_LIB</Define>
       <Define Condition="'$(Configuration)|$(Platform)'=='Release|x64'">UNICODE;$(Platform);QT_DEPRECATED_WARNINGS;QT_NO_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_SQL_LIB;QT_CORE_LIB</Define>
       <CompilerFlavor Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">msvc</CompilerFlavor>

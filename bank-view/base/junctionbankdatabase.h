@@ -70,6 +70,8 @@ public:
         HEADER_UNIT,
         HEADER_IO,
 		HEADER_MONITOR,
+		//
+		PROPERTIES,
     };
     Q_ENUM(TableNames)
 
