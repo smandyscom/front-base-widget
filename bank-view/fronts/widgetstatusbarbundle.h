@@ -19,7 +19,7 @@ class WidgetStatusBarBundle :
 public:
 	enum Properties
 	{
-		MODEL,
+		MODEL = 0x1eff00,
 	};
 	Q_ENUM(Properties)
 

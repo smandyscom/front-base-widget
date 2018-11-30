@@ -41,7 +41,7 @@ void WidgetStatusBarBundle::dynamicPropertyChanged(int key, QVariant value)
 		ui.labelCurrentMode->setText(value.toString());
 		break;
 	case ManualModeDataBlock::PROP_ELAPSED_TIME:
-		//ui.lcdNumberElaspedTime->display((value.toReal() / 1000));
+		ui.lcdNumberElapsedTime->display((value.toReal() / 1000));
 		break;
 	case MainMonitorBlock::OFFSET_MONITOR_STATE:
 		ui.labelInitializingStatus->setText(QVariant::fromValue(MainMonitorBlock::InitializingStatus(value.toInt())).toString());
