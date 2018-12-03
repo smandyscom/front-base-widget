@@ -22,7 +22,10 @@ public:
     explicit FrontUnitPanel(QWidget *parent = 0);
     ~FrontUnitPanel();
 
-    void Setup(QSqlTableModel* unitTable, QSqlTableModel *unitTableHeader);
+    void Setup(QSqlTableModel* unitTable, 
+		QSqlTableModel *unitTableHeader,
+		QSqlTableModel* unitConfig,
+		QSqlTableModel* unitConfigHeader);
 
 protected slots:
     void onCommandClick();

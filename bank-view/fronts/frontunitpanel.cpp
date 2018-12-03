@@ -42,7 +42,9 @@ FrontUnitPanel::~FrontUnitPanel()
 }
 
 void FrontUnitPanel::Setup(QSqlTableModel* unitTable,
-                           QSqlTableModel* unitTableHeader)
+                           QSqlTableModel* unitTableHeader,
+							QSqlTableModel* unitConfig,
+							QSqlTableModel* unitConfigHeader)
 {
     mainDataTable = unitTable;
     //
@@ -51,6 +53,10 @@ void FrontUnitPanel::Setup(QSqlTableModel* unitTable,
     //!
     HEADER_STRUCTURE::HeaderRender::renderViewHeader(unitTableHeader,
                                                      ui->tableViewUnit);
+	//!
+	ui->tableViewConfig->setModel(unitConfig);
+	HEADER_STRUCTURE::HeaderRender::renderViewHeader(unitConfigHeader,
+		ui->tableViewConfig);
 }
 
 //void FrontUnitPanel::onTimerTimeout()
@@ -99,6 +105,12 @@ int FrontUnitPanel::currentIndex()
         auto table = static_cast<QSqlTableModel*>(ui->tableViewUnit->model());
         auto record = table->record(ui->tableViewUnit->selectionModel()->selectedIndexes().first().row());
         m_index = record.value(QVariant::fromValue(HEADER_STRUCTURE::ID).toString()).toInt();
+
+		//! switch configuration
+		QSqlTableModel* m_configTable = qobject_cast<QSqlTableModel*>(ui->tableViewConfig->model());
+		m_configTable->setFilter(utilities::generateFilterString(QVariant::fromValue(HEADER_STRUCTURE::ID), m_index));
+		m_configTable->select();
+
     }
     return m_index;
 }

@@ -27,7 +27,9 @@ void LoadingHelper::LoadFrontCylinder(FrontCylinderPanel* widget)
 void LoadingHelper::LoadFrontUnit(FrontUnitPanel* widget)
 {
     widget->Setup(m_instance->TableMap(JunctionBankDatabase::WHOLE_UNITS),
-                  m_instance->TableMap(JunctionBankDatabase::HEADER_UNIT));
+                  m_instance->TableMap(JunctionBankDatabase::HEADER_UNIT),
+				  m_instance->TableMap(JunctionBankDatabase::WHOLE_UNITS_CONFIG),
+				m_instance->TableMap(JunctionBankDatabase::HEADER_UNIT_CONFIG));
 }
 
 void LoadingHelper::LoadFrontConfiguration(FrontConfigurationTransfer* widget)

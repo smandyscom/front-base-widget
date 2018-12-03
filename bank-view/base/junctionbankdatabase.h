@@ -40,6 +40,7 @@ public:
         WHOLE_SIGNALS,
         WHOLE_COMMAND_BLOCKS,
         WHOLE_UNITS,
+		WHOLE_UNITS_CONFIG,
         //! Material
         WHOLE_MAT_DATA_SLOTN,
         //! Reference tables
@@ -70,6 +71,7 @@ public:
         HEADER_UNIT,
         HEADER_IO,
 		HEADER_MONITOR,
+		HEADER_UNIT_CONFIG,
 		//
 		PROPERTIES,
     };

@@ -382,6 +382,12 @@
     <QtMoc Include="..\bank-view\fronts\frontsignal.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="..\bank-view\definitions\definitionauxiliarykeys.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\definitions\definitionunitconfigblock.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="debug\moc_predefs.h.cbt">
@@ -484,9 +490,6 @@
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="version.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\bank-view\definitions\definitionauxiliarykeys.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

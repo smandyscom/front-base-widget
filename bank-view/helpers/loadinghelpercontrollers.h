@@ -10,6 +10,7 @@
 #include <definitioncylinderblock.h>
 #include <definitionsignalblock.h>
 #include <definitionunitblocks.h>
+#include <definitionunitconfigblock.h>
 #include <definitionioattributes.h>
 
 #include <controllerbanktransfer.h>
