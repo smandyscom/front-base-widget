@@ -211,7 +211,9 @@ void ControllerBankTransfer::transfer()
 
     //! Write anyway
     CellDataBlock* data =
-            reinterpret_cast<CellDataBlock*>(m_adaptors[m_categrory]->Record(m_index).Anchor());
+            reinterpret_cast<CellDataBlock*>(m_adaptors[m_categrory]->Record(m_index,
+				AbstractSqlTableAdpater::KEY_NAMED_KEY,
+				QVariant::fromValue(HEADER_STRUCTURE::ID)).Anchor());
 	//! Write mode
 	auto mode = QVariant::fromValue(property(QVariant::fromValue(ManualModeDataBlock::BATCH_ALL_READ_MODE).toString().toStdString().c_str()).toBool() ?
 		QVariant::fromValue(ManualModeDataBlock::MODE_UPLOAD_DATA_BLOCK) :

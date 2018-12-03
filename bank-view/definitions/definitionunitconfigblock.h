@@ -15,9 +15,9 @@ class UnitConfig :
 public:
 	enum OffsetConfig
 	{
-		OFFSET_CONFIG_UNIT_ID,
-		OFFSET_CONFIG_CONFIG_ID,
-		OFFSET_CONFIG_VALUE,
+		OFFSET_CONFIG_UNIT_ID =0,
+		OFFSET_CONFIG_CONFIG_ID=1,
+		OFFSET_CONFIG_VALUE=2,
 	};
 	Q_ENUM(OffsetConfig)
 
