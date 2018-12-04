@@ -8,15 +8,21 @@ ControllerManualMode::ControllerManualMode(quint8 clientId,
                                            QObject *parent) :
     ControllerBase(clientId,baseOffset,interval,parent)
 {
-    //!
-    m_monitor = new ManualModeDataBlock(registerWatchList(ManualModeDataBlock::STATUS_WORD,QVariant::fromValue(static_cast<MODBUS_U_WORD>(0))),this);
+	//!
+	m_stateMachine = new QStateMachine(this);
+    m_monitor = new ManualModeDataBlock(registerWatchList(ManualModeDataBlock::STATUS_WORD,QVariant::fromValue(static_cast<MODBUS_U_WORD>(0)), m_stateMachine),this);
+	registerWatchList(ManualModeDataBlock::CONTROL_WORD, QVariant::fromValue(static_cast<MODBUS_U_WORD>(0)), m_stateMachine,true);
     registerWatchList(ManualModeDataBlock::MONITOR_BLOCK_HEAD,QVariant::fromValue(CellDataBlock()));
 
      //!
     //! \brief s1
     //!
-    m_stateMachine = new QStateMachine(this);
-    m_channel->RegisterStateMachine(m_stateMachine);
+	
+	
+	//m_stateMachine->moveToThread(m_thread);
+
+
+    //m_channel->RegisterStateMachine(m_stateMachine);
     QState* s0 = new QState(m_stateMachine);
     QState* s1 = new QState(m_stateMachine);
     QState* s2 = new QState(m_stateMachine);
@@ -61,9 +67,7 @@ ControllerManualMode::ControllerManualMode(quint8 clientId,
     doneOff->setTargetState(s0);
     s3->addTransition(doneOff); //when DONE off
     connect(s3,&QState::exited,this,&ControllerManualMode::doneOff);
-    //!
-    m_stateMachine->setInitialState(s0);
-    m_stateMachine->start();
+    
     //!
     //!Monitor and Operator
     QList<QList<QVariant>> m_list=
@@ -96,19 +100,23 @@ ControllerManualMode::ControllerManualMode(quint8 clientId,
     {
         m_operator_propertyKeys[var.toString()] = var;
     }
+
+	//!
+	m_stateMachine->setInitialState(s0);
+	m_stateMachine->start();
 }
 
 void ControllerManualMode::onStateReport()
 {
     //! trigger read action
     m_currentState = m_stateMap.key(qobject_cast<QState*>(sender()));
-	for each (QObject* var in m_receivers)
+	/*for each (QObject* var in m_receivers)
 	{
 		var->setProperty(QString::number(ManualModeDataBlock::PROP_MANUAL_STATE).toStdString().c_str(), 
 			QVariant::fromValue(m_currentState));
 		var->setProperty(QVariant::fromValue(ManualModeDataBlock::PROP_MANUAL_STATE).toString().toStdString().c_str(),
 			QVariant::fromValue(m_currentState));
-	}
+	}*/
 	/*setProperty(QVariant::fromValue(ManualModeDataBlock::PROP_MANUAL_STATE).toString().toStdString().c_str(),
 		QVariant::fromValue(m_currentState));*/
     qDebug() << QVariant::fromValue(m_currentState).toString();
@@ -124,11 +132,11 @@ void ControllerManualMode::doneOn()
 {
 	//ms
 	quint64 e = timer.elapsed();
-	for each (QObject* var in m_receivers)
+	/*for each (QObject* var in m_receivers)
 	{
 		var->setProperty(QVariant::fromValue(ManualModeDataBlock::PROP_ELAPSED_TIME).toString().toStdString().c_str(),e);
 		var->setProperty(QString::number(ManualModeDataBlock::PROP_ELAPSED_TIME).toStdString().c_str(), e);
-	}
+	}*/
     //set RUN off
 	setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_1_RUN).toString().toStdString().c_str(),
 		false);
