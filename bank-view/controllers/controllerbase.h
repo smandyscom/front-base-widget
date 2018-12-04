@@ -45,7 +45,7 @@ protected:
     bool m_isInitialized;
     InterfaceChannel* m_channel;
 
-    MODBUS_U_WORD *registerWatchList(ADDRESS_MODE unoffsetedAddress,QVariant form);
+    MODBUS_U_WORD *registerWatchList(ADDRESS_MODE unoffsetedAddress,QVariant form,QStateMachine* machine=nullptr,bool isMachineWatchOnly=false);
     ADDRESS_MODE toAddressMode(ADDRESS_MODE unoffseted) const;
 
     //! Monitor

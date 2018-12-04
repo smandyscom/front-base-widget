@@ -45,10 +45,10 @@ public:
     //! \param address
     //! \param dataFrom
     //! Register and trigger the routine access
-    void RegisterRoutines(ADDRESS_MODE address,const QVariant dataFrom,int interval = 50);
+    void RegisterRoutines(ADDRESS_MODE address,const QVariant dataFrom,int interval = 50, QStateMachine* machine = nullptr,bool isMachineWatchOnly=false);
     QMap<ADDRESS_MODE,int> Routines() const;
 
-    void RegisterStateMachine(QStateMachine* machine);
+    //void RegisterStateMachine(QStateMachine* machine);
 
     MODBUS_U_WORD* Handle(ADDRESS_MODE address)
     {
@@ -85,8 +85,8 @@ protected:
     explicit InterfaceChannel(QObject *parent = nullptr);
 
     QList<InterfaceClient*> m_clients;
-    QList<QStateMachine*> m_stateMachines;
-    QMap<ADDRESS_MODE,int> m_routines;
+    QMap<ADDRESS_MODE,QStateMachine*> m_stateMachines;
+    QMap<ADDRESS_MODE,int> m_routines; //address , interval
 
     //!
     //! \brief __commit

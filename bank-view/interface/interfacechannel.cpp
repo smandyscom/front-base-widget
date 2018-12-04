@@ -95,26 +95,34 @@ void InterfaceChannel::m_update(ADDRESS_MODE address, QVariant &out)
 //! Acknowledged from source
 void InterfaceChannel::onAcknowledged(InterfaceRequest ack)
 {
-    const QVariant __data = ack.Data();
-
+    const QVariant data = ack.Data();
+	uint ackAddress = ack.Address();
     //! Dispatch update event to statemachines
-    foreach (QStateMachine* var, m_stateMachines) {
-        var->postEvent(new UpdateEvent(ack.Address(),__data));
+    foreach (ADDRESS_MODE var, m_stateMachines.keys()) {
+		if (ADDRESS_CLIENT_ID(ackAddress) == ADDRESS_CLIENT_ID(var) &&
+			ADDRESS_REGISTER(ackAddress) == ADDRESS_REGISTER(var))
+		{
+			//intrested address
+			for each (QStateMachine* machine in m_stateMachines.values())
+			{
+				machine->postEvent(new UpdateEvent(ack.Address(),data));
+			}
+		}
     }
 
     //! recycle polling
     if (m_routines.contains(ack.Address()))
     {
         //! once this address had been registered as routine , query interval
-        QTimer::singleShot(m_routines[ack.Address()],this,[ack,this,__data](){
-            this->m_remoteUpdate(ack.Address(),__data);
+        QTimer::singleShot(m_routines[ack.Address()],this,[ack,this,data](){
+            this->m_remoteUpdate(ack.Address(),data);
         });
     }
     //! Dispatch signal to upper
     emit ackownledged(ack);
 }
 
-void InterfaceChannel::RegisterRoutines(ADDRESS_MODE address, const QVariant dataFrom, int interval)
+void InterfaceChannel::RegisterRoutines(ADDRESS_MODE address, const QVariant dataFrom, int interval,QStateMachine* machine, bool isMachineWatchOnly)
 {
     if(ADDRESS_CLIENT_ID(address) >= m_clients.count())
     {
@@ -123,10 +131,18 @@ void InterfaceChannel::RegisterRoutines(ADDRESS_MODE address, const QVariant dat
     }
 
     //! registration
-    m_routines[address] = interval;
+	if(!isMachineWatchOnly)
+	{
+		m_routines[address] = interval;
+		//! first shot
+		m_remoteUpdate(address,dataFrom);
+	}
+		
+	if (machine != nullptr)
+	{
+		m_stateMachines[address] = machine;
+	}
 
-    //! first shot
-    m_remoteUpdate(address,dataFrom);
 }
 
 QMap<ADDRESS_MODE,int> InterfaceChannel::Routines() const
@@ -134,10 +150,10 @@ QMap<ADDRESS_MODE,int> InterfaceChannel::Routines() const
     return m_routines;
 }
 
-void InterfaceChannel::RegisterStateMachine(QStateMachine *machine)
-{
-    m_stateMachines.append(machine);
-}
+//void InterfaceChannel::RegisterStateMachine(QStateMachine *machine)
+//{
+//    m_stateMachines.append(machine);
+//}
 
 bool InterfaceChannel::IsAllConnected() const
 {

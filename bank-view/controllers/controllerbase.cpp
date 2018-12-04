@@ -52,12 +52,13 @@ void ControllerBase::onAcknowledged(InterfaceRequest ack)
 
 
 
-MODBUS_U_WORD* ControllerBase::registerWatchList(ADDRESS_MODE unoffsetedAddress,QVariant form)
+MODBUS_U_WORD* ControllerBase::registerWatchList(ADDRESS_MODE unoffsetedAddress,QVariant form, QStateMachine* machine,bool isMachineWatchOnly)
 {
-    //! Clean input address
-    ADDRESS_MODE offsettedAddress = toAddressMode(ADDRESS_REGISTER(unoffsetedAddress));
-    m_channel->RegisterRoutines(offsettedAddress,form,m_interval);
 
+	//! Clean input address
+	ADDRESS_MODE offsettedAddress = toAddressMode(ADDRESS_REGISTER(unoffsetedAddress));
+	m_channel->RegisterRoutines(offsettedAddress,form,m_interval,machine,isMachineWatchOnly);
+   
     return m_channel->Handle(offsettedAddress);
 }
 /// Write in
