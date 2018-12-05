@@ -39,7 +39,7 @@ bool JunctionBankDatabase::onOpenTables()
 JunctionBankDatabase* JunctionBankDatabase::Instance()
 {
     if(m_instance == nullptr)
-        m_instance = new JunctionBankDatabase(qApp);
+        m_instance = new JunctionBankDatabase();
     return m_instance;
 }
 

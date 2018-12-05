@@ -17,12 +17,6 @@ ControllerManualMode::ControllerManualMode(quint8 clientId,
      //!
     //! \brief s1
     //!
-	
-	
-	//m_stateMachine->moveToThread(m_thread);
-
-
-    //m_channel->RegisterStateMachine(m_stateMachine);
     QState* s0 = new QState(m_stateMachine);
     QState* s1 = new QState(m_stateMachine);
     QState* s2 = new QState(m_stateMachine);
@@ -31,7 +25,6 @@ ControllerManualMode::ControllerManualMode(quint8 clientId,
     m_stateMap[ManualModeDataBlock::STATE_PLC_READY] = s1;
     m_stateMap[ManualModeDataBlock::STATE_RUN_ON] = s2;
     m_stateMap[ManualModeDataBlock::STATE_DONE_ON] = s3;
-
     //!
     //! Common
     foreach (QState* s, m_stateMap.values())
@@ -110,13 +103,13 @@ void ControllerManualMode::onStateReport()
 {
     //! trigger read action
     m_currentState = m_stateMap.key(qobject_cast<QState*>(sender()));
-	/*for each (QObject* var in m_receivers)
+	for each (QObject* var in m_receivers)
 	{
 		var->setProperty(QString::number(ManualModeDataBlock::PROP_MANUAL_STATE).toStdString().c_str(), 
 			QVariant::fromValue(m_currentState));
 		var->setProperty(QVariant::fromValue(ManualModeDataBlock::PROP_MANUAL_STATE).toString().toStdString().c_str(),
 			QVariant::fromValue(m_currentState));
-	}*/
+	}
 	/*setProperty(QVariant::fromValue(ManualModeDataBlock::PROP_MANUAL_STATE).toString().toStdString().c_str(),
 		QVariant::fromValue(m_currentState));*/
     qDebug() << QVariant::fromValue(m_currentState).toString();

@@ -49,12 +49,14 @@ void FrontCommonManual::showEvent(QShowEvent* event)
 //! Raise transfer
 void FrontCommonManual::hideEvent(QHideEvent *event)
 {
-	QString str = QVariant::fromValue(ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE).toString();
-	if (!m_controller->property(str.toStdString().c_str()).toBool())
-		//! Trigger
-		m_controller->setProperty(str.toStdString().c_str(), true);
-	else
-		qDebug() << "ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE, false";
+	//QString str = QVariant::fromValue(ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE).toString();
+	//if (!m_controller->property(str.toStdString().c_str()).toBool())
+	//	//! Trigger
+	//	m_controller->setProperty(str.toStdString().c_str(), true);
+	//else
+	//	qDebug() << "ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE, false";
+	emit qobject_cast<PropertyPortCommon*>(m_controller)->propertyChange(QVariant::fromValue(ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE),
+		true);
    
    //! Base method
    FrontCommon::hideEvent(event);

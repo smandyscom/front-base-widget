@@ -197,6 +197,9 @@
     <ClCompile Include="..\bank-view\definitions\definitionauxiliarykeys.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\bank-view\base\propertyportcommon.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="..\bank-view\base\abstractsqltableadpater.h">
@@ -386,6 +389,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="..\bank-view\definitions\definitionunitconfigblock.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\base\propertyportcommon.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

@@ -13,6 +13,8 @@
 
 #include <definitionbasicblocks.h>
 
+
+#include <propertyportcommon.h>
 //!
 //! \brief The ControllerBase class
 //! Offering base infrastructure
@@ -25,7 +27,9 @@ class ControllerBase : public QObject
 public:
     explicit ControllerBase(quint8 clientId,quint16 baseOffset,int interval,QObject *parent = nullptr);
 
-    virtual void AttachReceiver(QObject* receiver);
+    
+
+	QObject* port() const;
 
     bool event(QEvent *event) Q_DECL_OVERRIDE;
 protected slots:
@@ -38,7 +42,11 @@ protected slots:
     //! \brief onInitializing
     //! First time received ack
     virtual void onInitializing(InterfaceRequest ack){ m_isInitialized = true; }
+
+	virtual void onUpdate();
 protected:
+	virtual void AttachReceiver(QObject* receiver);
+
     quint8 m_clientId;
     quint16 m_baseOffset;
     int m_interval;
@@ -57,6 +65,10 @@ protected:
     virtual void m_operator_propertyChanged(QVariant key,QVariant value);
     //!
     QList<QObject*> m_receivers;
+
+
+	//
+	QTimer* m_updateTimer;
 };
 
 #endif // CONTROLLERBASE_H

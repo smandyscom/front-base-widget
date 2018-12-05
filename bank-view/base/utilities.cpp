@@ -112,7 +112,7 @@ QString utilities::sqlRecord2DelimitedString(QSqlRecord record, QString delimite
 
 QSqlTableModel * utilities::duplicate(QSqlTableModel * source)
 {
-	QSqlTableModel* result = new QSqlTableModel(source->parent(), source->database());
+	QSqlTableModel* result = new QSqlTableModel(nullptr, source->database());
 	result->setTable(source->tableName());
 	return result;
 }

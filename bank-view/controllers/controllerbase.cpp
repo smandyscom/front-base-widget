@@ -11,6 +11,13 @@ ControllerBase::ControllerBase(quint8 clientId, quint16 baseOffset, int interval
     m_channel = InterfaceChannel::Instance();
 
     connect(m_channel,&InterfaceChannel::ackownledged,this,&ControllerBase::onAcknowledged);
+
+	AttachReceiver(new PropertyPortCommon(this));
+
+	//!
+	m_updateTimer = new QTimer(this);
+	connect(m_updateTimer, &QTimer::timeout, this, &ControllerBase::onUpdate);
+	m_updateTimer->start(100);
 }
 
 ADDRESS_MODE ControllerBase::toAddressMode(ADDRESS_MODE unoffseted) const
@@ -20,6 +27,11 @@ ADDRESS_MODE ControllerBase::toAddressMode(ADDRESS_MODE unoffseted) const
             m_baseOffset;
 }
 
+QObject* ControllerBase::port() const
+{
+	return m_receivers.first();
+}
+
 //!
 //! \brief ControllerBase::onAcknowledged
 //! \param ack
@@ -27,6 +39,11 @@ ADDRESS_MODE ControllerBase::toAddressMode(ADDRESS_MODE unoffseted) const
 void ControllerBase::onAcknowledged(InterfaceRequest ack)
 {
     //! TODO , return when not cared client
+	ADDRESS_MODE addr = ack.Address();
+	quint8 cid = ADDRESS_CLIENT_ID(addr);
+
+	if (cid != m_clientId)
+		return;
 
     //! could be overriden by derived
     if (!m_isInitialized)
@@ -36,21 +53,41 @@ void ControllerBase::onAcknowledged(InterfaceRequest ack)
     }
 
     //! Raising property updating (string copy , performance issue?
-    foreach (QVariant var, m_monitor_propertyKeys) {
+  //  foreach (QVariant var, m_monitor_propertyKeys) {
+
+		////to receivers
+  //      foreach (QObject* receiver, m_receivers) {
+  //          //receiver->setProperty(var.toString().toStdString().c_str(),m_monitor_propertyValues(var));
+  //          //receiver->setProperty(QString::number(var.toInt()).toStdString().c_str(),m_monitor_propertyValues(var));
+		//	PropertyPortCommon* ppc = qobject_cast<PropertyPortCommon*>(receiver);
+		//	emit ppc->propertyChange(var, m_monitor_propertyValues(var));
+		//	emit ppc->propertyChange(QString::number(var.toInt()), m_monitor_propertyValues(var));
+  //      }
+
+		//////to myself
+		////setProperty(var.toString().toStdString().c_str(), m_monitor_propertyValues(var));
+		////setProperty(QString::number(var.toInt()).toStdString().c_str(), m_monitor_propertyValues(var));
+  //  }
+}
+
+void ControllerBase::onUpdate()
+{
+	foreach(QVariant var, m_monitor_propertyKeys) {
 
 		//to receivers
-        foreach (QObject* receiver, m_receivers) {
-            receiver->setProperty(var.toString().toStdString().c_str(),m_monitor_propertyValues(var));
-            receiver->setProperty(QString::number(var.toInt()).toStdString().c_str(),m_monitor_propertyValues(var));
-        }
+		foreach(QObject* receiver, m_receivers) {
+			//receiver->setProperty(var.toString().toStdString().c_str(),m_monitor_propertyValues(var));
+			//receiver->setProperty(QString::number(var.toInt()).toStdString().c_str(),m_monitor_propertyValues(var));
+			PropertyPortCommon* ppc = qobject_cast<PropertyPortCommon*>(receiver);
+			emit ppc->propertyChange(var, m_monitor_propertyValues(var));
+			emit ppc->propertyChange(QString::number(var.toInt()), m_monitor_propertyValues(var));
+		}
 
 		////to myself
 		//setProperty(var.toString().toStdString().c_str(), m_monitor_propertyValues(var));
 		//setProperty(QString::number(var.toInt()).toStdString().c_str(), m_monitor_propertyValues(var));
-    }
+	}
 }
-
-
 
 MODBUS_U_WORD* ControllerBase::registerWatchList(ADDRESS_MODE unoffsetedAddress,QVariant form, QStateMachine* machine,bool isMachineWatchOnly)
 {

@@ -10,7 +10,7 @@ class PropertyPortCommon : public QObject
 	Q_OBJECT
 
 public:
-	PropertyPortCommon(QObject *parent);
+	PropertyPortCommon(QObject *parent=nullptr);
 	~PropertyPortCommon();
 
 	bool event(QEvent* event) Q_DECL_OVERRIDE;

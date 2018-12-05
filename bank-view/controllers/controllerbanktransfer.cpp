@@ -4,10 +4,6 @@
 ControllerBankTransfer::ControllerBankTransfer(quint8 clientId, quint16 baseOffset, int interval=100, QObject *parent) :
     ControllerManualMode(clientId,baseOffset,interval,parent)
 {
-//    connect(this,&ControllerBankTransfer::dataTransfered,[=](){
-//       //! cut link after done
-//       disconnect(__controller,SIGNAL(operationReady()),this,SLOT(onControllerOperationReady()));
-//    });
     //!Operators
     QList<QVariant> m_operator_list = {
         QVariant::fromValue(ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE),

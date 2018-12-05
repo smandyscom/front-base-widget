@@ -4,6 +4,13 @@
 #include <QMainWindow>
 #include <mainwindowcommon.h>
 #include <version.h>
+#include <qthread.h>
+
+#include<propertyportcommon.h>
+
+#include <loadinghelper.h>
+#include <loadinghelpercontrollers.h>
+#include <loadinghelperinterface.h>
 
 
 namespace Ui {
@@ -20,8 +27,12 @@ public:
 
 protected slots:
 	void onClosing();
+	void onControllerLoaded();
 private:
     Ui::MainWindow *ui;
+
+	QThread* m_thread;
+	LoadingHelperControllers* m_controllers;
 };
 
 #endif // MAINWINDOW_H
