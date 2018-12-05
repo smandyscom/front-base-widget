@@ -9,10 +9,8 @@ TabWidgetOperationMode::TabWidgetOperationMode(QWidget *parent) :
             &TabWidgetOperationMode::currentChanged,
             this,
             &TabWidgetOperationMode::onCurrentWidgetChanged);
-}
-void TabWidgetOperationMode::Setup(QObject *controller)
-{
-    m_controller = controller;
+
+	m_controller = new PropertyPortCommon(this);
 }
 
 //!

@@ -21,34 +21,40 @@
 #include <junctionbankdatabase.h>
 #include <junctionmaterialdatabase.h>
 
+#include <propertyportcommon.h>
+
 class LoadingHelperControllers : public QObject
 {
     Q_OBJECT
 public:
     explicit LoadingHelperControllers(QObject *parent = nullptr);
 
-    static void LoadTransfer(quint8 clientId, quint16 baseOffset, int interval);
-    static void LoadInputsMonitor();
-    static void LoadOutputsMonitor();
-    static void LoadCylinderMonitor();
-	static void LoadMaterialTransfer();
+    void LoadTransfer(quint8 clientId, quint16 baseOffset, int interval);
+    void LoadInputsMonitor();
+    void LoadOutputsMonitor();
+    void LoadCylinderMonitor();
+	void LoadMaterialTransfer();
 
-    static void ControllersLoadingRoutineV1();
+	void LoadAdaptors();
 
-    static JunctionBankDatabase* m_database;
-    static ControllerBankTransfer* m_controllerTransfer;
-    static ControllerMainPanel* m_controllerMain;
-	static QList<ControllerMaterialTransfer*> m_controllersMaterial;
+    void ControllersLoadingRoutineV1();
 
-    static ControllerIOMonitor* m_controllerInputMonitor;
-    static ControllerIOMonitor* m_controllerOutputMonitor;
-    static ControllerIOMonitor* m_controllerCylinderMonitor;
+    JunctionBankDatabase* m_database;
+    ControllerBankTransfer* m_controllerTransfer;
+    ControllerMainPanel* m_controllerMain;
+	QList<ControllerMaterialTransfer*> m_controllersMaterial;
+
+    ControllerIOMonitor* m_controllerInputMonitor;
+    ControllerIOMonitor* m_controllerOutputMonitor;
+    ControllerIOMonitor* m_controllerCylinderMonitor;
 	
-    static void CrossLink(ControllerBase* controller,FrontCommon* front);
+	QList<AbstractSqlTableAdpater*> m_adaptorList;
 
+    //void CrossLink(ControllerBase* controller,FrontCommon* front);
+	void CrossLink(QObject* port1, QObject* port2);
 	
 signals:
-
+	void controllerLoaded();
 public slots:
 
 protected:

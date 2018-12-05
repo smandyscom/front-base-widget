@@ -227,8 +227,10 @@ void FrontAxisParameter::onDirectExecution(bool value)
     //! Fire
     m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::DATA_BLOCK_HEAD).toString().toStdString().c_str(),
                               QVariant::fromValue(data));
-    m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_1_RUN).toString().toStdString().c_str(),
-                              true);
+    /*m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_1_RUN).toString().toStdString().c_str(),
+                              true);*/
+	emit qobject_cast<PropertyPortCommon*>(m_controller)->propertyChange(QVariant::fromValue(ManualModeDataBlock::BIT_1_RUN),
+		true);
 }
 
 void FrontAxisParameter::onAxisSet()

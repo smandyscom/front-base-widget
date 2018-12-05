@@ -54,7 +54,7 @@ void FrontCommonManual::hideEvent(QHideEvent *event)
 		//! Trigger
 		m_controller->setProperty(str.toStdString().c_str(), true);
 	else
-		qDebug() << "ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE, true";
+		qDebug() << "ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE, false";
    
    //! Base method
    FrontCommon::hideEvent(event);

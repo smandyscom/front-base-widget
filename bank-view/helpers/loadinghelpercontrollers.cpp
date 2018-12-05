@@ -5,21 +5,35 @@ LoadingHelperControllers::LoadingHelperControllers(QObject *parent) : QObject(pa
 
 }
 
+void LoadingHelperControllers::LoadAdaptors()
+{
+	m_database = JunctionBankDatabase::Instance();
+
+	m_adaptorList 
+		<< new GenericSqlTableAdapter<AxisContextBlock, AxisBlock::DataBaseHeaders>(m_database->TableMap(JunctionBankDatabase::WHOLE_AXIS))
+		<< new GenericSqlTableAdapter<CylinderContext, CylinderBlock::DataBaseHeaders>(m_database->TableMap(JunctionBankDatabase::WHOLE_CYLINDERS))
+		<< new GenericSqlTableAdapter<SignalContext, SignalBlock::DataBaseHeaders>(m_database->TableMap(JunctionBankDatabase::WHOLE_SIGNALS))
+		<< new GenericSqlTableAdapter<ExtendedCommandBlock, CommandBlock::DataBaseHeaders>(m_database->TableMap(JunctionBankDatabase::WHOLE_COMMAND_BLOCKS))
+		<< new GenericSqlTableAdapter<UnitConfig, UnitConfigBlock::DataBaseHeaders>(m_database->TableMap(JunctionBankDatabase::WHOLE_UNITS_CONFIG));
+}
+
 void LoadingHelperControllers::LoadTransfer(quint8 clientId, quint16 baseOffset, int interval)
 {
-    m_controllerTransfer = new ControllerBankTransfer(clientId,baseOffset,interval,qApp);
+    m_controllerTransfer = new ControllerBankTransfer(clientId,baseOffset,interval);
     //! Link
-    m_controllerTransfer->Adaptor(ManualModeDataBlock::SELECTION_AXIS,new GenericSqlTableAdapter<AxisContextBlock,AxisBlock::DataBaseHeaders>(m_database->TableMap(JunctionBankDatabase::WHOLE_AXIS)));
-    m_controllerTransfer->Adaptor(ManualModeDataBlock::SELECTION_CYLINDER,new GenericSqlTableAdapter<CylinderContext,CylinderBlock::DataBaseHeaders>(m_database->TableMap(JunctionBankDatabase::WHOLE_CYLINDERS)));
-    m_controllerTransfer->Adaptor(ManualModeDataBlock::SELECTION_SIGNAL,new GenericSqlTableAdapter<SignalContext,SignalBlock::DataBaseHeaders>(m_database->TableMap(JunctionBankDatabase::WHOLE_SIGNALS)));
-    m_controllerTransfer->Adaptor(ManualModeDataBlock::SELECTION_COMMAND_BLOCK,new GenericSqlTableAdapter<ExtendedCommandBlock,CommandBlock::DataBaseHeaders>(m_database->TableMap(JunctionBankDatabase::WHOLE_COMMAND_BLOCKS)));
+	
+    m_controllerTransfer->Adaptor(ManualModeDataBlock::SELECTION_AXIS,m_adaptorList[0]);
+    m_controllerTransfer->Adaptor(ManualModeDataBlock::SELECTION_CYLINDER, m_adaptorList[1]);
+    m_controllerTransfer->Adaptor(ManualModeDataBlock::SELECTION_SIGNAL, m_adaptorList[2]);
+    m_controllerTransfer->Adaptor(ManualModeDataBlock::SELECTION_COMMAND_BLOCK, m_adaptorList[3]);
 
-    m_controllerTransfer->Adaptor(ManualModeDataBlock::SELECTION_UNIT,new GenericSqlTableAdapter<UnitConfig,UnitConfigBlock::DataBaseHeaders>(m_database->TableMap(JunctionBankDatabase::WHOLE_UNITS_CONFIG)));
+    m_controllerTransfer->Adaptor(ManualModeDataBlock::SELECTION_UNIT, m_adaptorList[4]);
 }
 
 void LoadingHelperControllers::LoadInputsMonitor()
 {
     m_controllerInputMonitor = new ControllerIOMonitor(1);
+
     QMap<QVariant,QVariant> map;
     map[utilities::trimNamespace(QVariant::fromValue(IoAttributes::HAL_ADDRESS))] =
             utilities::trimNamespace(QVariant::fromValue(IoAttributes::NAME));
@@ -80,7 +94,7 @@ void LoadingHelperControllers::LoadMaterialTransfer()
 		ControllerMaterialTransfer::SyncRole role = model->record(i).value(QVariant::fromValue(ControllerMaterialTransfer::ROLE).toString()).value<ControllerMaterialTransfer::SyncRole>();
 
 		ControllerMaterialTransfer* ref =
-			new ControllerMaterialTransfer(clientId, baseOffset, interval,qApp);
+			new ControllerMaterialTransfer(clientId, baseOffset, interval);
 
 		AbstractSqlTableAdpater* adaptor =
 			new GenericSqlTableAdapter<AbstractDataBlock, SlotBlock::DataBaseHeaders>(JunctionMaterialDatabase::Instance()->TableMap(slotId,JunctionMaterialDatabase::MAT_DATA_SLOT));
@@ -102,26 +116,31 @@ void LoadingHelperControllers::ControllersLoadingRoutineV1()
     //!TODO Follow Database to initiate interface channel
     m_database = JunctionBankDatabase::Instance();
     //!TODO Follow Database to decide offset/client
-    LoadTransfer(0,512,100);  
-    m_controllerMain = new ControllerMainPanel(0,128,100,qApp);
+    LoadTransfer(0,512,1);  
+    m_controllerMain = new ControllerMainPanel(0,128,200);
     //!
     LoadInputsMonitor();
     LoadOutputsMonitor();
     LoadCylinderMonitor();
 	//!Load slot material controller
-	LoadMaterialTransfer();
+	//LoadMaterialTransfer();
+
+	emit controllerLoaded();
 }
 
-void LoadingHelperControllers::CrossLink(ControllerBase *controller, FrontCommon *front)
+//void LoadingHelperControllers::CrossLink(ControllerBase *controller, FrontCommon *front)
+//{
+//    controller->AttachReceiver(front);
+//    front->LinkController(controller);
+//}
+
+void LoadingHelperControllers::CrossLink(QObject* port1, QObject* port2)
 {
-    controller->AttachReceiver(front);
-    front->LinkController(controller);
+	PropertyPortCommon* m_port1 = qobject_cast<PropertyPortCommon*>(port1);
+	PropertyPortCommon* m_port2 = qobject_cast<PropertyPortCommon*>(port2);
+
+	connect(m_port1, &PropertyPortCommon::propertyChange, m_port2, &PropertyPortCommon::onPropertyChanged,Qt::QueuedConnection);
+	connect(m_port2, &PropertyPortCommon::propertyChange, m_port1, &PropertyPortCommon::onPropertyChanged, Qt::QueuedConnection);
+
 }
 
-JunctionBankDatabase* LoadingHelperControllers::m_database = nullptr;
-ControllerBankTransfer* LoadingHelperControllers::m_controllerTransfer = nullptr;
-ControllerMainPanel* LoadingHelperControllers::m_controllerMain = nullptr;
-ControllerIOMonitor* LoadingHelperControllers::m_controllerInputMonitor = nullptr;
-ControllerIOMonitor* LoadingHelperControllers::m_controllerOutputMonitor = nullptr;
-ControllerIOMonitor* LoadingHelperControllers::m_controllerCylinderMonitor = nullptr;
-QList<ControllerMaterialTransfer*> LoadingHelperControllers::m_controllersMaterial;

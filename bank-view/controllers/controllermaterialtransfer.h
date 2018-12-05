@@ -42,7 +42,7 @@ public:
     Q_ENUM(SyncRole)
 	Q_ENUM(Miscs)
 
-    explicit ControllerMaterialTransfer(quint8 clientId, quint16 baseOffset, int interval, QObject *parent);
+    explicit ControllerMaterialTransfer(quint8 clientId, quint16 baseOffset, int interval, QObject *parent=nullptr);
     ~ControllerMaterialTransfer();
 
 	void Setup(SyncRole role, int index, AbstractSqlTableAdpater* adaptor);

@@ -16,8 +16,8 @@ class LoadingHelperInterface : public QObject
 	Q_OBJECT
 
 public:
-	LoadingHelperInterface(QObject *parent);
+	LoadingHelperInterface(QObject *parent=nullptr);
 	~LoadingHelperInterface();
 
-	static void LoadingInterfaceV1();
+	void LoadingInterfaceV1();
 };

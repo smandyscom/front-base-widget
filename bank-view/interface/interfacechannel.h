@@ -25,7 +25,7 @@ public:
     static InterfaceChannel* Instance()
     {
         if(m_instance == nullptr)
-            m_instance = new InterfaceChannel(qApp);
+            m_instance = new InterfaceChannel();
         return m_instance;
     }
 

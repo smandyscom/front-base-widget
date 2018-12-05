@@ -8,6 +8,8 @@
 #include <commonhelper.h>
 //#include <controllerbase.h>
 
+#include <propertyportcommon.h>
+
 class FrontCommon : public QWidget
 {
     Q_OBJECT
@@ -30,7 +32,7 @@ public:
     //! Handling DynamicProperty
     bool event(QEvent* event) Q_DECL_OVERRIDE;
 
-    void LinkController(QObject* controller);
+	QObject* port() const;
 
 signals:
 
@@ -40,6 +42,8 @@ protected slots:
     void onReloadQss();
 	void onLinkQSSFile();
 protected:
+	void LinkController(QObject* controller);
+
     QList<QWidget*> m_widgetsPolish;
     //!
     //! \brief m_controller
