@@ -35,7 +35,6 @@ protected:
     QMap<QPushButton*,UnitOperationBlock::ControlBits> m_controlMap;//Widget,Address
 
     UnitMonitorBlock m_monitorBlock;
-    QList<QVariant> m_status;
     QList<QVariant> m_condition;
 
     void dynamicPropertyChanged(int key, QVariant value) Q_DECL_OVERRIDE;

@@ -4,10 +4,7 @@
 #include <QWidget>
 
 #include <frontcommonmanual.h>
-//#include <frontbanktransfer.h>
-//#include <frontsinglefilter.h>
 
-//#include <junctionbankdatabase.h>
 #include <definitioncommandblock.h>
 #include <definitioncylinderblock.h>
 #include <definitionaxisblocks.h>
@@ -15,10 +12,6 @@
 #include <definitionunitblocks.h>
 
 #include <definitionauxiliarykeys.h>
-
-//#include <controllerbanktransfer.h>
-
-//#include <abstractauthreceiver.h>
 
 namespace Ui {
 class FrontConfigurationTransfer;

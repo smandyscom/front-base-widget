@@ -83,16 +83,16 @@ void FrontCylinderPanel::onCylinderCommandClicked()
     block.Value(CylinderOperationBlock::OFFSET_OPERATION_COMMAND_CACHED,command);
 
     //! Set mode
-    m_port->setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_MODE).toString().toStdString().c_str(),
-                              QVariant::fromValue(ManualModeDataBlock::MODE_EXE_CYLINDER));
-    m_port->setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_CATEGRORY).toString().toStdString().c_str(),
-                              QVariant::fromValue(ManualModeDataBlock::SELECTION_CYLINDER));
-    m_port->setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_DEVICE_INDEX).toString().toStdString().c_str(),
-                              currentIndex());
-    m_port->setProperty(QVariant::fromValue(ManualModeDataBlock::DATA_BLOCK_HEAD).toString().toStdString().c_str(),
-                              QVariant::fromValue(*reinterpret_cast<CellDataBlock*>(block.Anchor())));
-    m_port->setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_1_RUN).toString().toStdString().c_str(),
-                              true);
+	emit m_port->externalPropertyChange(QVariant::fromValue(ManualModeDataBlock::COMMIT_MODE),
+		QVariant::fromValue(ManualModeDataBlock::MODE_EXE_CYLINDER));
+	emit m_port->externalPropertyChange(QVariant::fromValue(ManualModeDataBlock::COMMIT_CATEGRORY),
+		QVariant::fromValue(ManualModeDataBlock::SELECTION_CYLINDER));
+	emit m_port->externalPropertyChange(QVariant::fromValue(ManualModeDataBlock::COMMIT_DEVICE_INDEX),
+		currentIndex());
+	emit m_port->externalPropertyChange(QVariant::fromValue(ManualModeDataBlock::DATA_BLOCK_HEAD),
+		QVariant::fromValue(*reinterpret_cast<CellDataBlock*>(block.Anchor())));
+	emit m_port->externalPropertyChange(QVariant::fromValue(ManualModeDataBlock::BIT_1_RUN),
+		true);
 }
 
 void FrontCylinderPanel::dynamicPropertyChanged(int key, QVariant value)
@@ -105,8 +105,7 @@ void FrontCylinderPanel::dynamicPropertyChanged(int key, QVariant value)
 
         //! Self-raise Bit properties
         foreach (QVariant var, m_status) {
-            setProperty(var.toString().toStdString().c_str(),
-                        m_monitorBlock.Value(var.toUInt()).toBool());
+			onPropertyChanged(var, m_monitorBlock.Value(var.toInt()));
         }
         //!Last command
         setProperty(QVariant::fromValue(CylinderMonitorBlock::OFFSET_MONITOR_LAST_COMMAND).toString().toStdString().c_str(),
