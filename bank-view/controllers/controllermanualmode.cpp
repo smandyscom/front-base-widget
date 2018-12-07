@@ -137,6 +137,8 @@ void ControllerManualMode::doneOn()
     //set RUN off
 	/*setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_1_RUN).toString().toStdString().c_str(),
 		false);*/
+	emit m_port->externalPropertyChange(QVariant::fromValue(ManualModeDataBlock::PROP_ELAPSED_TIME), e);
+
 	onPropertyChanged(QVariant::fromValue(ManualModeDataBlock::BIT_1_RUN), false);
 	
 }
