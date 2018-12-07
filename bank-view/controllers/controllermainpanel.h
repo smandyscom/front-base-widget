@@ -27,7 +27,7 @@ class ControllerMainPanel :
 public:
     explicit ControllerMainPanel(quint8 clientId,quint16 baseOffset,int interval,QObject *parent = nullptr);
 protected:
-    void m_operator_propertyChanged(QVariant key,QVariant value) Q_DECL_OVERRIDE;
+    //void m_operator_propertyChanged(QVariant key,QVariant value) Q_DECL_OVERRIDE;
 };
 
 #endif // CONTROLLERMAINPANEL_H

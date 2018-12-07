@@ -83,15 +83,15 @@ void FrontCylinderPanel::onCylinderCommandClicked()
     block.Value(CylinderOperationBlock::OFFSET_OPERATION_COMMAND_CACHED,command);
 
     //! Set mode
-    m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_MODE).toString().toStdString().c_str(),
+    m_port->setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_MODE).toString().toStdString().c_str(),
                               QVariant::fromValue(ManualModeDataBlock::MODE_EXE_CYLINDER));
-    m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_CATEGRORY).toString().toStdString().c_str(),
+    m_port->setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_CATEGRORY).toString().toStdString().c_str(),
                               QVariant::fromValue(ManualModeDataBlock::SELECTION_CYLINDER));
-    m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_DEVICE_INDEX).toString().toStdString().c_str(),
+    m_port->setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_DEVICE_INDEX).toString().toStdString().c_str(),
                               currentIndex());
-    m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::DATA_BLOCK_HEAD).toString().toStdString().c_str(),
+    m_port->setProperty(QVariant::fromValue(ManualModeDataBlock::DATA_BLOCK_HEAD).toString().toStdString().c_str(),
                               QVariant::fromValue(*reinterpret_cast<CellDataBlock*>(block.Anchor())));
-    m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_1_RUN).toString().toStdString().c_str(),
+    m_port->setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_1_RUN).toString().toStdString().c_str(),
                               true);
 }
 

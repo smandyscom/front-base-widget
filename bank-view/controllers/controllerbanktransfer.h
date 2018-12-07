@@ -29,6 +29,8 @@ public slots:
                        const QModelIndex &bottomRight,
                        const QVector<int> &roles = QVector<int>());
 protected slots:
+	//!
+    void onPropertyChanged(QVariant key,QVariant value) Q_DECL_OVERRIDE;
 protected:
     ManualModeDataBlock::Mode m_mode();
     //! By task queue to write-in
@@ -50,8 +52,7 @@ protected:
     void doneOn() Q_DECL_OVERRIDE;
     void doneOff() Q_DECL_OVERRIDE;
 
-    //!
-    void m_operator_propertyChanged(QVariant key,QVariant value) Q_DECL_OVERRIDE;
+    
 };
 
 #endif // CONTROLLERBANKMANAGER_H

@@ -31,26 +31,23 @@ public:
 
 	QObject* port() const;
 
-    bool event(QEvent *event) Q_DECL_OVERRIDE;
+    //bool event(QEvent *event) Q_DECL_OVERRIDE;
 protected slots:
     //!
     //! \brief onAcknowledged
     //! \param ack
     //! Routine
     virtual void onAcknowledged(InterfaceRequest ack);
-    //!
-    //! \brief onInitializing
-    //! First time received ack
-    virtual void onInitializing(InterfaceRequest ack){ m_isInitialized = true; }
+    virtual void onPropertyChanged(QVariant key,QVariant value);
 
 	virtual void onUpdate();
 protected:
-	virtual void AttachReceiver(QObject* receiver);
+	virtual void attach(QObject* receiver);
 
     quint8 m_clientId;
     quint16 m_baseOffset;
     int m_interval;
-    bool m_isInitialized;
+
     InterfaceChannel* m_channel;
 
     MODBUS_U_WORD *registerWatchList(ADDRESS_MODE unoffsetedAddress,QVariant form,QStateMachine* machine=nullptr,bool isMachineWatchOnly=false);
@@ -60,11 +57,8 @@ protected:
     AbstractDataBlock* m_monitor;
     QList<QVariant> m_monitor_propertyKeys;
     virtual QVariant m_monitor_propertyValues(QVariant key);
-    //! Operator
-    QMap<QString,QVariant> m_operator_propertyKeys;
-    virtual void m_operator_propertyChanged(QVariant key,QVariant value);
     //!
-    QList<QObject*> m_receivers;
+    PropertyPortCommon* m_port;
 
 
 	//

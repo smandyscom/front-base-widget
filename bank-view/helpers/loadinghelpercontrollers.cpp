@@ -139,8 +139,8 @@ void LoadingHelperControllers::CrossLink(QObject* port1, QObject* port2)
 	PropertyPortCommon* m_port1 = qobject_cast<PropertyPortCommon*>(port1);
 	PropertyPortCommon* m_port2 = qobject_cast<PropertyPortCommon*>(port2);
 
-	connect(m_port1, &PropertyPortCommon::propertyChange, m_port2, &PropertyPortCommon::onPropertyChanged,Qt::QueuedConnection);
-	connect(m_port2, &PropertyPortCommon::propertyChange, m_port1, &PropertyPortCommon::onPropertyChanged, Qt::QueuedConnection);
+	connect(m_port1, &PropertyPortCommon::externalPropertyChange, m_port2, &PropertyPortCommon::onPropertyChanged,Qt::QueuedConnection);
+	connect(m_port2, &PropertyPortCommon::externalPropertyChange, m_port1, &PropertyPortCommon::onPropertyChanged, Qt::QueuedConnection);
 
 }
 

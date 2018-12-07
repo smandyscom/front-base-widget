@@ -106,6 +106,6 @@ void FrontConfigurationTransfer::onPushButtonClicked()
                                   QVariant::fromValue(m_currentObject));*/
     }
 
-	m_controller->setProperty(key.toString().toStdString().c_str(),
+	m_port->setProperty(key.toString().toStdString().c_str(),
 		value);
 }

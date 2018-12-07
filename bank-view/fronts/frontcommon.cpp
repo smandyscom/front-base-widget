@@ -2,7 +2,7 @@
 
 FrontCommon::FrontCommon(QWidget *parent) :
     QWidget(parent),
-    m_controller(nullptr),
+    m_port(nullptr),
     m_isQSSInitialized(false)
 {
     //!css loading?
@@ -24,7 +24,8 @@ FrontCommon::FrontCommon(QWidget *parent) :
 	//});
 	//m_blinkTimer->start(1000);// every 1 second blink once
 
-	m_controller = new PropertyPortCommon(this);
+	m_port = new PropertyPortCommon(this);
+	connect(m_port, &PropertyPortCommon::internalPropertyChange, this, &FrontCommon::onPropertyChanged);
 }
 
 void FrontCommon::onCustomContextMenuShowed(const QPoint position)
@@ -86,7 +87,7 @@ bool FrontCommon::event(QEvent* event)
 
 void FrontCommon::LinkController(QObject* controller)
 {
-    m_controller = controller;
+    m_port = qobject_cast<PropertyPortCommon*>(controller);
 }
 
 QVariant FrontCommon::property(QVariant key) const
@@ -96,5 +97,12 @@ QVariant FrontCommon::property(QVariant key) const
 
 QObject* FrontCommon::port() const
 {
-	return m_controller;
+	return m_port;
+}
+
+//!Turns key,value into dynamic property
+void FrontCommon::onPropertyChanged(QVariant key, QVariant value)
+{
+	setProperty(key.toString().toStdString().c_str(), value);
+	setProperty(QString::number(key.toULongLong()).toStdString().c_str(), value);
 }

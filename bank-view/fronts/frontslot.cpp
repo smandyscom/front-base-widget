@@ -118,7 +118,7 @@ void FrontSlot::onButtonClicked()
 {
 	if (sender() == ui->pushButtonMaterialOverrideOff)
 	{
-		m_controller->setProperty(QVariant::fromValue(SlotDataBlock::BIT2_VALID).toString().toStdString().c_str(),
+		m_port->setProperty(QVariant::fromValue(SlotDataBlock::BIT2_VALID).toString().toStdString().c_str(),
 			false);
 	}
 	else if (sender() == ui->toolButtonDialog)

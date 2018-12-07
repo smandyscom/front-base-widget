@@ -41,14 +41,18 @@ protected slots:
     void onCustomContextMenuShowed(const QPoint position);
     void onReloadQss();
 	void onLinkQSSFile();
+
+	void onPropertyChanged(QVariant key, QVariant value);
+
 protected:
 	void LinkController(QObject* controller);
+	
 
     QList<QWidget*> m_widgetsPolish;
     //!
     //! \brief m_controller
     //! Auto find-out linked controller
-    QObject* m_controller;
+    PropertyPortCommon* m_port;
     //!
     //! \brief property
     //! \param key

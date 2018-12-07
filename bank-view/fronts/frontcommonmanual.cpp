@@ -21,17 +21,22 @@ QString FrontCommonManual::currentFilter() const
 
 void FrontCommonManual::onMonitorIndexChanged()
 {
-    m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::MON_DEVICE_INDEX).toString().toStdString().c_str(),
-                              QVariant::fromValue(static_cast<MODBUS_U_WORD>(currentIndex())));
+    /*m_port->setProperty(QVariant::fromValue(ManualModeDataBlock::MON_DEVICE_INDEX).toString().toStdString().c_str(),
+                              QVariant::fromValue(static_cast<MODBUS_U_WORD>(currentIndex())));*/
+	m_port->externalPropertyChange(QVariant::fromValue(ManualModeDataBlock::MON_DEVICE_INDEX),
+		QVariant::fromValue(static_cast<MODBUS_U_WORD>(currentIndex())));
 }
 
 void FrontCommonManual::showEvent(QShowEvent* event)
 {
     //! Monitor selection
-    if(m_controller!=nullptr)
+    if(m_port!=nullptr)
     {
-        m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::MON_CATEGRORY).toString().toStdString().c_str(),
-                                  m_categrory);
+        /*m_port->setProperty(QVariant::fromValue(ManualModeDataBlock::MON_CATEGRORY).toString().toStdString().c_str(),
+                                  m_categrory);*/
+		m_port->externalPropertyChange(QVariant::fromValue(ManualModeDataBlock::MON_CATEGRORY),
+			m_categrory);
+
         onMonitorIndexChanged();
     }
     if(mainDataTable!=nullptr)
@@ -55,7 +60,7 @@ void FrontCommonManual::hideEvent(QHideEvent *event)
 	//	m_controller->setProperty(str.toStdString().c_str(), true);
 	//else
 	//	qDebug() << "ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE, false";
-	emit qobject_cast<PropertyPortCommon*>(m_controller)->propertyChange(QVariant::fromValue(ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE),
+	emit qobject_cast<PropertyPortCommon*>(m_port)->externalPropertyChange(QVariant::fromValue(ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE),
 		true);
    
    //! Base method

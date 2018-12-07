@@ -34,7 +34,7 @@ void FrontMainPanel::onButtonClicked()
     /*m_controller->setProperty(sender()->property(QVariant::fromValue(RELATED_BIT).toString().toStdString().c_str())
                               .toString().toStdString().c_str(),
                               true);*/
-	emit qobject_cast<PropertyPortCommon*>(m_controller)->propertyChange(
+	emit qobject_cast<PropertyPortCommon*>(m_port)->externalPropertyChange(
 		sender()->property(QVariant::fromValue(RELATED_BIT).toString().toStdString().c_str()),
 		true);
 }

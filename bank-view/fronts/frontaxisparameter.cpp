@@ -7,12 +7,15 @@ FrontAxisParameter::FrontAxisParameter(QWidget *parent) :
 {
     ui->setupUi(this);
     //! Manual mode required
-    setProperty(QVariant::fromValue(HEADER_STRUCTURE::STATE_MANUAL).toString().toStdString().c_str(),
-                true);
+    /*setProperty(QVariant::fromValue(HEADER_STRUCTURE::STATE_MANUAL).toString().toStdString().c_str(),
+                true);*/
+	onPropertyChanged(QVariant::fromValue(HEADER_STRUCTURE::STATE_MANUAL),true);
     //!
     m_categrory = ManualModeDataBlock::SELECTION_AXIS;
     m_monitorOperation = utilities::listupEnumVariant<AxisMonitorBlock::MONITOR_OPERATION>();
-    m_runStatus = utilities::listupEnumVariant<AxisMonitorBlock::RUN_STATUS>();
+	m_monitorOperation << utilities::listupEnumVariant<AxisMonitorBlock::RUN_STATUS>();
+    //m_runStatus = utilities::listupEnumVariant<AxisMonitorBlock::RUN_STATUS>();
+	
     //! QPushButton link
 	m_bankButtons = findChildren<QPushButton*>(QRegExp("\\w+Bank\\w+"));
     foreach (QPushButton* var, m_bankButtons) {
@@ -150,8 +153,11 @@ void FrontAxisParameter::onDirectExecution(bool value)
     //! Prepare Commit Mode/Index , DataBlock , by different push button
 
     //! Axis index
-    m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_DEVICE_INDEX).toString().toStdString().c_str(),
-                              currentIndex());
+    /*m_port->setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_DEVICE_INDEX).toString().toStdString().c_str(),
+                              currentIndex());*/
+	emit m_port->externalPropertyChange(QVariant::fromValue(ManualModeDataBlock::COMMIT_DEVICE_INDEX),
+		currentIndex());
+
     //! Data block
     if(sender()==ui->pushButtonDirectAlarmClear )
     {
@@ -219,17 +225,27 @@ void FrontAxisParameter::onDirectExecution(bool value)
     }
 
     //! Set mode
-    m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_MODE).toString().toStdString().c_str(),
-                              QVariant::fromValue(mode));
+    /*m_port->setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_MODE).toString().toStdString().c_str(),
+                              QVariant::fromValue(mode));*/
+	emit m_port->externalPropertyChange(QVariant::fromValue(ManualModeDataBlock::COMMIT_MODE),
+		QVariant::fromValue(mode));
+
     //! Set categrory
-    m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_CATEGRORY).toString().toStdString().c_str(),
-                              QVariant::fromValue(categrory));
+    /*m_port->setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_CATEGRORY).toString().toStdString().c_str(),
+                              QVariant::fromValue(categrory));*/
+	emit m_port->externalPropertyChange(QVariant::fromValue(ManualModeDataBlock::COMMIT_CATEGRORY),
+		QVariant::fromValue(categrory));
+
     //! Fire
-    m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::DATA_BLOCK_HEAD).toString().toStdString().c_str(),
-                              QVariant::fromValue(data));
+    /*m_port->setProperty(QVariant::fromValue(ManualModeDataBlock::DATA_BLOCK_HEAD).toString().toStdString().c_str(),
+                              QVariant::fromValue(data));*/
+	emit m_port->externalPropertyChange(QVariant::fromValue(ManualModeDataBlock::DATA_BLOCK_HEAD),
+		QVariant::fromValue(data));
+
+
     /*m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_1_RUN).toString().toStdString().c_str(),
                               true);*/
-	emit qobject_cast<PropertyPortCommon*>(m_controller)->propertyChange(QVariant::fromValue(ManualModeDataBlock::BIT_1_RUN),
+	emit qobject_cast<PropertyPortCommon*>(m_port)->externalPropertyChange(QVariant::fromValue(ManualModeDataBlock::BIT_1_RUN),
 		true);
 }
 
@@ -253,8 +269,11 @@ void FrontAxisParameter::onInterrupted(bool value)
     if(value)
         return; //execute when unchecked
 
-    m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_0_ENGAGED_HMI).toString().toStdString().c_str(),
-                              false);
+    /*m_port->setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_0_ENGAGED_HMI).toString().toStdString().c_str(),
+                              false);*/
+	emit m_port->externalPropertyChange(QVariant::fromValue(ManualModeDataBlock::BIT_0_ENGAGED_HMI),
+		false);
+
 }
 
 
@@ -304,11 +323,13 @@ void FrontAxisParameter::dynamicPropertyChanged(int key,QVariant value)
 
         //! Self-raise Bit properties
         foreach (QVariant var, m_monitorOperation) {
-            setProperty(var.toString().toStdString().c_str(),m_monitorBlock.Value(var.toUInt()).toBool());
+            //setProperty(var.toString().toStdString().c_str(),m_monitorBlock.Value(var.toUInt()).toBool());
+			onPropertyChanged(var, m_monitorBlock.Value(var.toUInt()).toBool());
         }
-        foreach (QVariant var, m_runStatus) {
-            setProperty(var.toString().toStdString().c_str(),m_monitorBlock.Value(var.toUInt()).toBool());
-        }
+   //     foreach (QVariant var, m_runStatus) {
+   //         //setProperty(var.toString().toStdString().c_str(),m_monitorBlock.Value(var.toUInt()).toBool());
+			//onPropertyChanged(var, m_monitorBlock.Value(var.toUInt()).toBool());
+   //     }
         break;
     }
     default:
@@ -344,8 +365,10 @@ void FrontAxisParameter::onTabCurrentChanged()
     if(ui->tabWidgetCommandPanel->currentWidget() !=
             ui->tabAxisSetting){
 		//!trigger axis parameter transfer
-        m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE).toString().toStdString().c_str(),
-                                  true);
+        /*m_port->setProperty(QVariant::fromValue(ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE).toString().toStdString().c_str(),
+                                  true);*/
+		emit m_port->externalPropertyChange(QVariant::fromValue(ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE),
+			true);
     }
     else
     {

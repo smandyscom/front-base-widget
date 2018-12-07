@@ -16,8 +16,8 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(quint8 clientId, quint16 
 	m_monitor_propertyKeys << valid;
 	m_monitor_propertyKeys << QVariant::fromValue(SlotDataBlock::MATERIAL_ID);
 	//!
-	m_operator_propertyKeys[act.toString()] = act;
-	m_operator_propertyKeys[valid.toString()] = valid;
+	//m_operator_propertyKeys[act.toString()] = act;
+	//m_operator_propertyKeys[valid.toString()] = valid;
 }
 
 ControllerMaterialTransfer::~ControllerMaterialTransfer()

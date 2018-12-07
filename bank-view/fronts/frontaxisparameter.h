@@ -62,7 +62,7 @@ private:
     //!
     AxisMonitorBlock m_monitorBlock;
     QList<QVariant> m_monitorOperation;
-    QList<QVariant> m_runStatus;
+    //QList<QVariant> m_runStatus;
 
     void setCommonParameters(PosCommandBlock& block);
     int selectedCommandBlockIndex() const;

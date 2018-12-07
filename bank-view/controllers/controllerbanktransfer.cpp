@@ -5,7 +5,7 @@ ControllerBankTransfer::ControllerBankTransfer(quint8 clientId, quint16 baseOffs
     ControllerManualMode(clientId,baseOffset,interval,parent)
 {
     //!Operators
-    QList<QVariant> m_operator_list = {
+   /* QList<QVariant> m_operator_list = {
         QVariant::fromValue(ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE),
         QVariant::fromValue(ManualModeDataBlock::BATCH_ALL_WRITE_MODE),
         QVariant::fromValue(ManualModeDataBlock::BATCH_ALL_READ_MODE)
@@ -13,7 +13,7 @@ ControllerBankTransfer::ControllerBankTransfer(quint8 clientId, quint16 baseOffs
     foreach (QVariant var, m_operator_list)
     {
         m_operator_propertyKeys[var.toString()] = var;
-    }
+    }*/
 }
 
 void ControllerBankTransfer::Adaptor(ManualModeDataBlock::Categrories key,AbstractSqlTableAdpater* value)
@@ -38,12 +38,12 @@ void ControllerBankTransfer::plcReady()
 	else
 	{
 		//! Reset all 
-		for each (QVariant var in QList<QVariant>{QVariant::fromValue(ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE),
+		/*for each (QVariant var in QList<QVariant>{QVariant::fromValue(ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE),
 			QVariant::fromValue(ManualModeDataBlock::BATCH_ALL_WRITE_MODE),
 			QVariant::fromValue(ManualModeDataBlock::BATCH_ALL_READ_MODE)})
 		{
 			setProperty(var.toString().toStdString().c_str(), false);
-		}
+		}*/
 	}
 
     //!Base method
@@ -134,7 +134,7 @@ void ControllerBankTransfer::onDataChanged(const QModelIndex &topLeft,
 //! \param key
 //! \param value
 //! Trigger transfer task
-void ControllerBankTransfer::m_operator_propertyChanged(QVariant key, QVariant value)
+void ControllerBankTransfer::onPropertyChanged(QVariant key, QVariant value)
 {  
     //! Prepare
     switch (key.toUInt()) {
@@ -167,10 +167,10 @@ void ControllerBankTransfer::m_operator_propertyChanged(QVariant key, QVariant v
             //!No action
             break;
         }
-		//!as triiger
-		setProperty(key.toString().toStdString().c_str(), true);
-		return;
+		
         break;
+
+
     default:
         //!No action
         break;
@@ -189,13 +189,13 @@ void ControllerBankTransfer::m_operator_propertyChanged(QVariant key, QVariant v
 		{
 			transfer();
 		}
-		else if(m_tasksQueue.isEmpty())
-			//! nothing to do
-			setProperty(key.toString().toStdString().c_str(), false);
+		//else if(m_tasksQueue.isEmpty())
+		//	//! nothing to do
+		//	setProperty(key.toString().toStdString().c_str(), false);
 
         break;
     default:
-        ControllerManualMode::m_operator_propertyChanged(key,value);
+        ControllerManualMode::onPropertyChanged(key,value);
         break;
     }
 }
@@ -215,7 +215,7 @@ void ControllerBankTransfer::transfer()
 		QVariant::fromValue(ManualModeDataBlock::MODE_UPLOAD_DATA_BLOCK) :
 		QVariant::fromValue(ManualModeDataBlock::MODE_DOWNLOAD_DATA_BLOCK));
 
-	setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_MODE).toString().toStdString().c_str(),
+	/*setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_MODE).toString().toStdString().c_str(),
 		mode);
 
 	setProperty(QVariant::fromValue(ManualModeDataBlock::DATA_BLOCK_HEAD).toString().toStdString().c_str(),
@@ -224,7 +224,13 @@ void ControllerBankTransfer::transfer()
 		QVariant::fromValue(m_categrory));
 	setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_DEVICE_INDEX).toString().toStdString().c_str(),
 		QVariant::fromValue(m_index));
-	setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_1_RUN).toString().toStdString().c_str(),true);
+	setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_1_RUN).toString().toStdString().c_str(),true);*/
+
+	onPropertyChanged(QVariant::fromValue(ManualModeDataBlock::COMMIT_MODE), mode);
+	onPropertyChanged(QVariant::fromValue(ManualModeDataBlock::DATA_BLOCK_HEAD), QVariant::fromValue(*data));
+	onPropertyChanged(QVariant::fromValue(ManualModeDataBlock::COMMIT_CATEGRORY), QVariant::fromValue(m_categrory));
+	onPropertyChanged(QVariant::fromValue(ManualModeDataBlock::COMMIT_DEVICE_INDEX), QVariant::fromValue(m_index));
+	onPropertyChanged(QVariant::fromValue(ManualModeDataBlock::BIT_1_RUN), true);
 }
 
 ManualModeDataBlock::Mode ControllerBankTransfer::m_mode()

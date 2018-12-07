@@ -13,10 +13,12 @@ public:
 	PropertyPortCommon(QObject *parent=nullptr);
 	~PropertyPortCommon();
 
-	bool event(QEvent* event) Q_DECL_OVERRIDE;
+	//bool event(QEvent* event) Q_DECL_OVERRIDE;
 
 signals:
-	void propertyChange(QVariant key,QVariant value);
+	void externalPropertyChange(QVariant key,QVariant value);
+
+	void internalPropertyChange(QVariant key, QVariant value);
 public slots:
 	void onPropertyChanged(QVariant key, QVariant value);
 };
