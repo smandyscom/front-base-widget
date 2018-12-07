@@ -20,6 +20,8 @@ public:
 protected slots:
     virtual void onMonitorIndexChanged();
 	virtual void onTimerScan();
+
+	void onPropertyChanged(QVariant key, QVariant value) Q_DECL_OVERRIDE;
 protected:
 	QList<QWidget*> m_widgetLockList;
     //! Commons

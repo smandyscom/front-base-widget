@@ -20,11 +20,12 @@ FrontSignal::~FrontSignal()
 {
 }
 
-void FrontSignal::Setup(QSqlTableModel* slot,
+void FrontSignal::Setup(QSqlTableModel* signalTable,
 	QSqlTableModel* header)
 {
+	mainDataTable = signalTable;
 	//
-	ui.tableView->setModel(slot);
+	ui.tableView->setModel(signalTable);
 	HEADER_STRUCTURE::HeaderRender::renderViewHeader(header,
 		ui.tableView);
 }

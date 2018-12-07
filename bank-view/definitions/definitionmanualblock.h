@@ -101,6 +101,7 @@ public:
 	{
 		PROP_MANUAL_STATE = 0xeeff00,
 		PROP_ELAPSED_TIME = 0xeeff20,
+		PROP_MODEL_UPDATED = 0xeeff21,
 	};
 	Q_ENUM(PropertyKeys)
 

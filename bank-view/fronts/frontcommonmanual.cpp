@@ -78,3 +78,20 @@ void FrontCommonManual::onTimerScan()
 			ManualModeDataBlock::STATE_PLC_READY);
 	}
 }
+
+void FrontCommonManual::onPropertyChanged(QVariant key, QVariant value)
+{
+	FrontCommon::onPropertyChanged(key, value); //base method
+	switch (key.toInt())
+	{
+	case ManualModeDataBlock::PROP_MODEL_UPDATED:
+		if (mainDataTable != nullptr)
+		{
+			//! updated
+			mainDataTable->select();
+		}
+		break;
+	default:
+		break;
+	}
+}

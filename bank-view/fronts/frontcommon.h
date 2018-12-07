@@ -42,7 +42,7 @@ protected slots:
     void onReloadQss();
 	void onLinkQSSFile();
 
-	void onPropertyChanged(QVariant key, QVariant value);
+	virtual void onPropertyChanged(QVariant key, QVariant value);
 
 protected:
 	void LinkController(QObject* controller);

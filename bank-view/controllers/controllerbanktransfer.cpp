@@ -37,6 +37,15 @@ void ControllerBankTransfer::plcReady()
 	}
 	else
 	{
+		switch (m_mode())
+		{
+			case ManualModeDataBlock::MODE_UPLOAD_DATA_BLOCK:
+				emit m_port->externalPropertyChange(QVariant::fromValue(ManualModeDataBlock::PROP_MODEL_UPDATED),
+					true);
+		default:
+			break;
+		}
+
 		//! Reset all 
 		/*for each (QVariant var in QList<QVariant>{QVariant::fromValue(ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE),
 			QVariant::fromValue(ManualModeDataBlock::BATCH_ALL_WRITE_MODE),
