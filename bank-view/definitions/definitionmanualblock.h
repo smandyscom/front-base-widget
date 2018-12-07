@@ -139,6 +139,7 @@ public:
             return QVariant::fromValue(getData<MODBUS_U_WORD>(key));
             break;
         case MONITOR_BLOCK_HEAD:
+		case DATA_BLOCK_HEAD:
             return QVariant::fromValue(getData<CellDataBlock>(key));
             break;
         default:
