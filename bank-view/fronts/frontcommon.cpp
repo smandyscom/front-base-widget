@@ -11,18 +11,20 @@ FrontCommon::FrontCommon(QWidget *parent) :
     setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this,&FrontCommon::customContextMenuRequested,this,&FrontCommon::onCustomContextMenuShowed);
 
-	//m_watcher = new QFileSystemWatcher(this);
-	//connect(m_watcher,&QFileSystemWatcher::fileChanged, this, &FrontCommon::onReloadQss);
 
-	//onLinkQSSFile();
-	//connect(this, &FrontCommon::objectNameChanged, this, &FrontCommon::onLinkQSSFile);
-	//! BLINK
-	//m_blinkTimer = new QTimer(this);
-	//connect(m_blinkTimer, &QTimer::timeout, [=]() {
-	//	setProperty(QVariant::fromValue(PROP_BLINK).toString().toStdString().c_str(),
-	//		!property(QVariant::fromValue(PROP_BLINK).toString().toStdString().c_str()).toBool());
-	//});
-	//m_blinkTimer->start(1000);// every 1 second blink once
+
+#ifndef QT_NO_DEBUG
+	m_watcher = new QFileSystemWatcher(this);
+	connect(m_watcher,&QFileSystemWatcher::fileChanged, this, &FrontCommon::onReloadQss);
+
+	onLinkQSSFile();
+	connect(this, &FrontCommon::objectNameChanged, this, &FrontCommon::onLinkQSSFile);
+
+#endif // DEBUG
+
+
+	
+	
 
 	m_port = new PropertyPortCommon(this);
 	connect(m_port, &PropertyPortCommon::internalPropertyChange, this, &FrontCommon::onPropertyChanged);
@@ -30,6 +32,17 @@ FrontCommon::FrontCommon(QWidget *parent) :
 	m_updateTimer = new QTimer(this);
 	connect(m_updateTimer, &QTimer::timeout, this, &FrontCommon::onUpdate);
 	m_updateTimer->start(100);
+}
+
+void FrontCommon::activateBlink()
+{
+	//! BLINK
+	m_blinkTimer = new QTimer(this);
+	connect(m_blinkTimer, &QTimer::timeout, [=]() {
+		setProperty(QVariant::fromValue(PROP_BLINK).toString().toStdString().c_str(),
+			!property(QVariant::fromValue(PROP_BLINK).toString().toStdString().c_str()).toBool());
+	});
+	m_blinkTimer->start(1000);// every 1 second blink once
 }
 
 void FrontCommon::onCustomContextMenuShowed(const QPoint position)

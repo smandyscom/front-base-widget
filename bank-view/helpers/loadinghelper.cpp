@@ -17,6 +17,7 @@ void LoadingHelper::LoadFrontAxis(FrontAxisParameter* widget)
                   m_instance->TableMap(JunctionBankDatabase::ERROR_CODE_AXIS),
                   m_instance->TableMap(JunctionBankDatabase::HEADER_COMMAND_BLOCKS),
                   m_instance->TableMap(JunctionBankDatabase::HEADER_AXIS));
+	widget->activateBlink();
 }
 void LoadingHelper::LoadFrontCylinder(FrontCylinderPanel* widget)
 {

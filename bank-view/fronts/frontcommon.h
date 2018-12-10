@@ -34,6 +34,9 @@ public:
 
 	QObject* port() const;
 
+
+	void activateBlink();
+
 signals:
 
 public slots:
