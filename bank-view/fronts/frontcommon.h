@@ -43,7 +43,7 @@ protected slots:
 	void onLinkQSSFile();
 
 	virtual void onPropertyChanged(QVariant key, QVariant value);
-
+	virtual void onUpdate();
 protected:
 	void LinkController(QObject* controller);
 	
@@ -66,6 +66,8 @@ private:
     bool m_isQSSInitialized;
 	QFileSystemWatcher* m_watcher;
 	QTimer* m_blinkTimer;
+
+	QTimer* m_updateTimer;
 };
 
 #endif // FRONTCOMMON_H

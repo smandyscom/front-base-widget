@@ -26,6 +26,10 @@ FrontCommon::FrontCommon(QWidget *parent) :
 
 	m_port = new PropertyPortCommon(this);
 	connect(m_port, &PropertyPortCommon::internalPropertyChange, this, &FrontCommon::onPropertyChanged);
+
+	m_updateTimer = new QTimer(this);
+	connect(m_updateTimer, &QTimer::timeout, this, &FrontCommon::onUpdate);
+	m_updateTimer->start(100);
 }
 
 void FrontCommon::onCustomContextMenuShowed(const QPoint position)
@@ -61,9 +65,9 @@ bool FrontCommon::event(QEvent* event)
         int id = key.toInt(&result);
         if(result)
             dynamicPropertyChanged(id,value);
-        foreach (QWidget* var, m_widgetsPolish) {
+        /*foreach (QWidget* var, m_widgetsPolish) {
             var->style()->polish(var);
-        }
+        }*/
 //        style()->polish(this);
         break;
     }
@@ -105,4 +109,11 @@ void FrontCommon::onPropertyChanged(QVariant key, QVariant value)
 {
 	setProperty(key.toString().toStdString().c_str(), value);
 	setProperty(QString::number(key.toULongLong()).toStdString().c_str(), value);
+}
+
+void FrontCommon::onUpdate()
+{
+	foreach(QWidget* var, m_widgetsPolish) {
+		var->style()->polish(var);
+	}
 }
