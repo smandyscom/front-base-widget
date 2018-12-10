@@ -54,19 +54,20 @@ void ControllerIOMonitor::onDataChanged(const QModelIndex &topLeft,
     if (roles.first() != HEADER_STRUCTURE::UserRole_OverrideOnOff)
         return;
     //! Take address by name and set
-    ADDRESS_MODE address = m_addressNameTable.key(topLeft);
+    ADDRESS_MODE address = m_addressIndexTable.key(topLeft);
     //! Write-in
     m_channel->Access(address,topLeft.data(HEADER_STRUCTURE::UserRole_OverrideOnOff).toBool());
 }
 
 void ControllerIOMonitor::findAndUpdate(ADDRESS_MODE address)
 {
-    if(!m_addressNameTable.contains(address))
+    if(!m_addressIndexTable.contains(address))
         return;
     //! Direct access
     bool state = (*m_channel->Handle(address) & ADDRESS_BIT_ACCESSOR(address)) != 0;
-    QModelIndex index = m_addressNameTable[address].toModelIndex();
-//    QModelIndex index = m_model->index(0,1);
+
+    QModelIndex index = m_addressIndexTable[address].toModelIndex();
+
     //! Model user role
     bool result = m_model->setData(index,
                                    state,
@@ -110,7 +111,7 @@ void ControllerIOMonitor::setModel(QSqlTableModel* model,
             if(!m_addressList.contains(address) && !isNull)
             {
                 m_addressList.append(address);
-                m_addressNameTable[address] = m_model->index(rowIndex,m_columnIndexName);
+                m_addressIndexTable[address] = m_model->index(rowIndex,m_columnIndexName); //link address and QIndex
             }
             i++;
         }//!while

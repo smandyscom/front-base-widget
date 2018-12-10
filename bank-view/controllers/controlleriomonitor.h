@@ -49,7 +49,7 @@ protected:
     void scanModel(QObject* target);
     //! Store address and modelIndex relation(Name
     QList<ADDRESS_MODE> m_addressList;
-    QMap<ADDRESS_MODE,QVariant> m_addressNameTable;
+    QMap<ADDRESS_MODE,QVariant> m_addressIndexTable;
     void findAndUpdate(ADDRESS_MODE address);
 
     //!

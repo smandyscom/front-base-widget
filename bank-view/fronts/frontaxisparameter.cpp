@@ -323,13 +323,8 @@ void FrontAxisParameter::dynamicPropertyChanged(int key,QVariant value)
 
         //! Self-raise Bit properties
         foreach (QVariant var, m_monitorOperation) {
-            //setProperty(var.toString().toStdString().c_str(),m_monitorBlock.Value(var.toUInt()).toBool());
 			onPropertyChanged(var, m_monitorBlock.Value(var.toUInt()).toBool());
         }
-   //     foreach (QVariant var, m_runStatus) {
-   //         //setProperty(var.toString().toStdString().c_str(),m_monitorBlock.Value(var.toUInt()).toBool());
-			//onPropertyChanged(var, m_monitorBlock.Value(var.toUInt()).toBool());
-   //     }
         break;
     }
     default:
