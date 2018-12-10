@@ -33,6 +33,7 @@ public:
     {
         RELATED_BIT,
         MAINSTATE,
+		ERROR_STATE,
     };
     Q_ENUM(PresetProperty)
     Q_PROPERTY(MainStates MAINSTATE MEMBER m_state)

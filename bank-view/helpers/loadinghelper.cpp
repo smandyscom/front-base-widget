@@ -71,6 +71,7 @@ void LoadingHelper::LoadFrontMain(FrontMainPanel* widget)
                   m_instance->TableMap(JunctionBankDatabase::DEF_OBJECT_TYPE),
 				  m_instance->TableMap(JunctionBankDatabase::CONTROLLER_MONITOR),
 				  m_instance->TableMap(JunctionBankDatabase::HEADER_MONITOR));
+	widget->activateBlink();
 }
 
 void LoadingHelper::CombineModelViewV1(FrontAxisParameter* widget1,

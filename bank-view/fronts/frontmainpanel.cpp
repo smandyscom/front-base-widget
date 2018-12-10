@@ -22,6 +22,7 @@ FrontMainPanel::FrontMainPanel(QWidget *parent) :
         connect(var,&QPushButton::clicked,this,&FrontMainPanel::onButtonClicked);
         m_widgetsPolish.append(var);
     }
+	m_widgetsPolish.append(ui->textBrowserErrorDescription);
 }
 
 FrontMainPanel::~FrontMainPanel()
@@ -75,11 +76,19 @@ void FrontMainPanel::dynamicPropertyChanged(int key, QVariant value)
 {
     switch (key) {
     case MainMonitorBlock::ERROR_CODE:
-        ui->textBrowserErrorDescription->setText(errorDescription(
+		if (value.toInt() == 0)
+		{
+			setProperty(QVariant::fromValue(ERROR_STATE).toString().toStdString().c_str(),false);
+		}
+		else
+		{
+			ui->textBrowserErrorDescription->setText(errorDescription(
                                                      property(QVariant::fromValue(MainMonitorBlock::ERROR_CATEGRORY).toString().toStdString().c_str()).toInt(),
                                                      property(QVariant::fromValue(MainMonitorBlock::ERROR_DEVICE_INDEX).toString().toStdString().c_str()).toInt(),
                                                      property(QVariant::fromValue(MainMonitorBlock::ERROR_CODE).toString().toStdString().c_str()).toInt()
                                                      ));
+			setProperty(QVariant::fromValue(ERROR_STATE).toString().toStdString().c_str(), true);
+		}//else     
         break;
     case MainOperationBlock::OFFSET_UOB_STATE_PAUSE:
     case MainOperationBlock::BIT_1_TOGGLE_PAUSE:
@@ -112,6 +121,21 @@ void FrontMainPanel::dynamicPropertyChanged(int key, QVariant value)
 		
 		break;
 	}
+	case ManualModeDataBlock::PROP_MANUAL_STATE:
+		switch (value.value<ManualModeDataBlock::ManualState>())
+		{
+		case ManualModeDataBlock::STATE_PLC_READY:
+			setEnabled(true);
+			break;
+		case ManualModeDataBlock::STATE_IN_AUTO:
+		case ManualModeDataBlock::STATE_RUN_ON:
+		case ManualModeDataBlock::STATE_DONE_ON:
+			setEnabled(false);
+			break;
+		default:
+			break;
+		}
+		break;
     default:
         break;
     }

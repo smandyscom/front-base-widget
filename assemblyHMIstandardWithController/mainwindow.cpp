@@ -91,7 +91,9 @@ void MainWindow::onControllerLoaded()
     foreach (FrontCommon* var, frontList) {
 		m_controllers->CrossLink(m_controllers->m_controllerTransfer->port(),var->port());
     }
+	//!
 	m_controllers->CrossLink(m_controllers->m_controllerMain->port(),ui->widgetMain->port());
+	m_controllers->CrossLink(m_controllers->m_controllerTransfer->port(), ui->widgetMain->port());
     //!
 	PropertyPortCommon* port = new PropertyPortCommon();
     //ui->tabWidget->Setup(m_controllers->m_controllerMain);

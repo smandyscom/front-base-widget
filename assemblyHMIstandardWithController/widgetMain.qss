@@ -31,3 +31,8 @@ QWidget[MAINSTATE="STATE_SEMI_AUTO"] QPushButton#pushButtonPause:enabled
     background-color : RED;
 }
 
+/*error blink*/
+QWidget[ERROR_STATE="true"][PROP_BLINK="true"] QTextBrowser#textBrowserErrorDescription
+{
+    background-color : Red;
+}
