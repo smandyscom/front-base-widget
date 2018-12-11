@@ -97,11 +97,6 @@
         <string>信號參數</string>
        </attribute>
       </widget>
-      <widget class="FrontConfigurationTransfer" name="tabConfiguration">
-       <attribute name="title">
-        <string>組態傳輸</string>
-       </attribute>
-      </widget>
      </widget>
     </item>
    </layout>
@@ -126,8 +121,39 @@
      <string>版本</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>傳輸</string>
+    </property>
+    <widget class="QMenu" name="menuUpload">
+     <property name="title">
+      <string>Upload</string>
+     </property>
+     <addaction name="actionReadCylinder"/>
+     <addaction name="actionReadAxis"/>
+     <addaction name="actionReadCommandBlock"/>
+     <addaction name="actionReadSignal"/>
+     <addaction name="actionReadUnit"/>
+     <addaction name="actionReadAll"/>
+    </widget>
+    <widget class="QMenu" name="menuDownload">
+     <property name="title">
+      <string>Download</string>
+     </property>
+     <addaction name="actionWriteCylinder"/>
+     <addaction name="actionWriteAxis"/>
+     <addaction name="actionWriteCommandBlock"/>
+     <addaction name="actionWriteSignal"/>
+     <addaction name="actionWriteUnit"/>
+     <addaction name="actionWriteAll"/>
+    </widget>
+    <addaction name="menuUpload"/>
+    <addaction name="separator"/>
+    <addaction name="menuDownload"/>
+   </widget>
    <addaction name="menuAuth"/>
    <addaction name="menuVersion"/>
+   <addaction name="menu"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -146,6 +172,76 @@
   <action name="actionOperator">
    <property name="text">
     <string>Operator</string>
+   </property>
+  </action>
+  <action name="actionUpload_all">
+   <property name="text">
+    <string>Upload all</string>
+   </property>
+  </action>
+  <action name="actionDownload_all">
+   <property name="text">
+    <string>Download all</string>
+   </property>
+  </action>
+  <action name="actionReadCylinder">
+   <property name="text">
+    <string>Cylinder</string>
+   </property>
+  </action>
+  <action name="actionReadAxis">
+   <property name="text">
+    <string>Axis</string>
+   </property>
+  </action>
+  <action name="actionReadCommandBlock">
+   <property name="text">
+    <string>Command block</string>
+   </property>
+  </action>
+  <action name="actionReadSignal">
+   <property name="text">
+    <string>Signal</string>
+   </property>
+  </action>
+  <action name="actionReadUnit">
+   <property name="text">
+    <string>Unit configuration</string>
+   </property>
+  </action>
+  <action name="actionReadAll">
+   <property name="text">
+    <string>All</string>
+   </property>
+  </action>
+  <action name="actionWriteCylinder">
+   <property name="text">
+    <string>Cylinder</string>
+   </property>
+  </action>
+  <action name="actionWriteAxis">
+   <property name="text">
+    <string>Axis</string>
+   </property>
+  </action>
+  <action name="actionWriteCommandBlock">
+   <property name="text">
+    <string>Command block</string>
+   </property>
+  </action>
+  <action name="actionWriteSignal">
+   <property name="text">
+    <string>Signal</string>
+   </property>
+  </action>
+  <action name="actionWriteUnit">
+   <property name="text">
+    <string>Unit configuration</string>
+   </property>
+  </action>
+  <action name="actionWriteAll">
+   <property name="text">
+    <string>All</string>
    </property>
   </action>
  </widget>
@@ -167,12 +263,6 @@
    <class>FrontUnitPanel</class>
    <extends>QWidget</extends>
    <header>frontunitpanel.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>FrontConfigurationTransfer</class>
-   <extends>QWidget</extends>
-   <header>frontconfigurationtransfer.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

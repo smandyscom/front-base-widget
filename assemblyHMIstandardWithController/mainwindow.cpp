@@ -3,6 +3,8 @@
 
 
 #include <QDebug>
+#include <qregularexpression.h>
+
 
 #include <qsqlrecord.h>
 
@@ -17,12 +19,19 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 	ui->menuVersion->setTitle(QString("build %1").arg(APP_VER));
+	//search all action
+	QList<QAction*> actions = findChildren<QAction*>();
+	for each (QAction* var in actions)
+	{
+		connect(var, &QAction::triggered, this, &MainWindow::onDownloadUploadActionTrigger);
+	}	
 	//
 	QAction* exitAction = ui->menuBar->addAction(tr("Exit"));
 	connect(exitAction, &QAction::triggered, this, &MainWindow::onClosing);
 	//
 	m_thread = new QThread();
 	m_thread->setObjectName("workerThread");
+	
 	
 
 	LoadingHelperInterface* m_interface = new LoadingHelperInterface();
@@ -45,7 +54,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	LoadingHelper::CombineModelViewV1(ui->tabAxis,
 		ui->tabCylinder,
 		ui->tabUnit,
-		ui->tabConfiguration,
+		nullptr,
 		ui->widgetMain,
 		ui->tabIO,
 		ui->tabSafety,
@@ -86,7 +95,6 @@ void MainWindow::onControllerLoaded()
     QList<FrontCommon*> frontList{ui->tabAxis,
                 ui->tabCylinder,
                 ui->tabUnit,
-                ui->tabConfiguration,
 				ui->tabSignal};
     foreach (FrontCommon* var, frontList) {
 		m_controllers->CrossLink(m_controllers->m_controllerTransfer->port(),var->port());
@@ -129,4 +137,32 @@ void MainWindow::onControllerLoaded()
 	
 	//!
 	showFullScreen();
+}
+
+void MainWindow::onDownloadUploadActionTrigger()
+{
+	//!Resolve action name
+	auto name = sender()->objectName();
+
+	QRegularExpression re("action([Read|Write]*)(\\w+)");
+	QRegularExpressionMatch match = re.match(name);
+	if (match.hasMatch())
+	{
+		QString mode = match.captured(1);
+		QString value = match.captured(2);
+
+		mode = (QString("BATCH_ALL_%1_MODE").arg(mode)).toUpper();
+		value = (QString("SELECTION_%1").arg(value)).toUpper();
+
+		ManualModeDataBlock::TransferCommand cmd =
+			QVariant::fromValue(mode).value<ManualModeDataBlock::TransferCommand>();
+
+		ManualModeDataBlock::Categrories cat = 
+			QVariant::fromValue(value).value<ManualModeDataBlock::Categrories>();
+	
+		//!
+		emit qobject_cast<PropertyPortCommon*>(m_controllers->m_controllerTransfer->port())
+			->internalPropertyChange(QVariant::fromValue(cmd),
+				QVariant::fromValue(cat));
+	}	
 }

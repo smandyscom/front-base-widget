@@ -89,7 +89,7 @@ void LoadingHelper::CombineModelViewV1(FrontAxisParameter* widget1,
     LoadFrontAxis(widget1);
     LoadFrontCylinder(widget2);
     LoadFrontUnit(widget3);
-    LoadFrontConfiguration(widget4);
+    //LoadFrontConfiguration(widget4);
     LoadFrontMain(widget5);
     LoadFrontIO(widget6);
 	LoadSafeIO(widget7);

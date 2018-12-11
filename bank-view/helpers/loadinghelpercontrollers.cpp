@@ -123,7 +123,7 @@ void LoadingHelperControllers::ControllersLoadingRoutineV1()
     LoadOutputsMonitor();
     LoadCylinderMonitor();
 	//!Load slot material controller
-	//LoadMaterialTransfer();
+	LoadMaterialTransfer();
 
 	emit controllerLoaded();
 }

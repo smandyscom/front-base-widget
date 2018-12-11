@@ -28,6 +28,8 @@ public:
 protected slots:
 	void onClosing();
 	void onControllerLoaded();
+
+	void onDownloadUploadActionTrigger();
 private:
     Ui::MainWindow *ui;
 
