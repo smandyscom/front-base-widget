@@ -102,6 +102,9 @@ public:
 		PROP_MANUAL_STATE = 0xeeff00,
 		PROP_ELAPSED_TIME = 0xeeff20,
 		PROP_MODEL_UPDATED = 0xeeff21,
+		//!
+		PROP_QUEUE_COUNT = 0xeeff22,
+		PROP_QUEUE_REMAIN = 0xeeff23,
 	};
 	Q_ENUM(PropertyKeys)
 

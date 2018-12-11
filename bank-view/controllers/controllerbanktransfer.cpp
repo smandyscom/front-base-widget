@@ -101,6 +101,8 @@ void ControllerBankTransfer::doneOff()
     default:
         break;
     }
+	emit m_port->externalPropertyChange(QVariant::fromValue(ManualModeDataBlock::PROP_QUEUE_REMAIN),
+		m_tasksQueue.count());
 
     ControllerManualMode::doneOff();
 }
@@ -199,23 +201,21 @@ void ControllerBankTransfer::onPropertyChanged(QVariant key, QVariant value)
 	case ManualModeDataBlock::BATCH_ALL_WRITE_MODE:
 	case ManualModeDataBlock::BATCH_ALL_READ_MODE:
 	{
-
-	
+		//!
 		auto mode = QVariant::fromValue(key.toUInt()== ManualModeDataBlock::BATCH_ALL_READ_MODE ?
 			QVariant::fromValue(ManualModeDataBlock::MODE_UPLOAD_DATA_BLOCK) :
 			QVariant::fromValue(ManualModeDataBlock::MODE_DOWNLOAD_DATA_BLOCK));
 		onPropertyChanged(QVariant::fromValue(ManualModeDataBlock::COMMIT_MODE), mode);
 
-
         //! trigger operation , raise first shot
 		if (m_currentState == ManualModeDataBlock::STATE_PLC_READY &&
 			!m_tasksQueue.isEmpty())
 		{
+			emit m_port->externalPropertyChange(QVariant::fromValue(ManualModeDataBlock::PROP_QUEUE_COUNT),
+				m_tasksQueue.count());
+
 			transfer();
 		}
-		//else if(m_tasksQueue.isEmpty())
-		//	//! nothing to do
-		//	setProperty(key.toString().toStdString().c_str(), false);
 
         break;
 	}
@@ -235,27 +235,13 @@ void ControllerBankTransfer::transfer()
             reinterpret_cast<CellDataBlock*>(m_adaptors[m_categrory]->Record(m_index,
 				AbstractSqlTableAdpater::KEY_NAMED_KEY,
 				QVariant::fromValue(HEADER_STRUCTURE::ID)).Anchor());
-	//! Write mode
-	auto mode = QVariant::fromValue(property(QVariant::fromValue(ManualModeDataBlock::BATCH_ALL_READ_MODE).toString().toStdString().c_str()).toBool() ?
-		QVariant::fromValue(ManualModeDataBlock::MODE_UPLOAD_DATA_BLOCK) :
-		QVariant::fromValue(ManualModeDataBlock::MODE_DOWNLOAD_DATA_BLOCK));
-
-	/*setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_MODE).toString().toStdString().c_str(),
-		mode);
-
-	setProperty(QVariant::fromValue(ManualModeDataBlock::DATA_BLOCK_HEAD).toString().toStdString().c_str(),
-		QVariant::fromValue(*data));
-	setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_CATEGRORY).toString().toStdString().c_str(),
-		QVariant::fromValue(m_categrory));
-	setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_DEVICE_INDEX).toString().toStdString().c_str(),
-		QVariant::fromValue(m_index));
-	setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_1_RUN).toString().toStdString().c_str(),true);*/
-
-	//onPropertyChanged(QVariant::fromValue(ManualModeDataBlock::COMMIT_MODE), mode);
+	
 	onPropertyChanged(QVariant::fromValue(ManualModeDataBlock::DATA_BLOCK_HEAD), QVariant::fromValue(*data));
 	onPropertyChanged(QVariant::fromValue(ManualModeDataBlock::COMMIT_CATEGRORY), QVariant::fromValue(m_categrory));
 	onPropertyChanged(QVariant::fromValue(ManualModeDataBlock::COMMIT_DEVICE_INDEX), QVariant::fromValue(m_index));
 	onPropertyChanged(QVariant::fromValue(ManualModeDataBlock::BIT_1_RUN), true);
+
+	
 }
 
 ManualModeDataBlock::Mode ControllerBankTransfer::m_mode()

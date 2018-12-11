@@ -35,4 +35,5 @@ protected:
 	QTimer* m_timer;
 
 	void dynamicPropertyChanged(int key, QVariant value) Q_DECL_OVERRIDE;
+
 };

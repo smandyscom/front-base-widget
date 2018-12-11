@@ -106,9 +106,12 @@ void ControllerMaterialTransfer::onInsert()
     record = m_table->record(0); //access last row
     m_materialId = record.value(QVariant::fromValue(SlotBlock::ID).toString()).toInt();
 
+	
+	
 	//!Write-into bus
-	setProperty(QVariant::fromValue(SlotDataBlock::MATERIAL_ID).toString().toStdString().c_str(), 
-		(MODBUS_U_LONG)m_materialId);
+	onPropertyChanged(QVariant::fromValue(SlotDataBlock::MATERIAL_ID), m_materialId);
+	/*setProperty(QVariant::fromValue(SlotDataBlock::MATERIAL_ID).toString().toStdString().c_str(), 
+		(MODBUS_U_LONG)m_materialId);*/
 
     qDebug() << QString("%1,onInsert elapsed,%2,%3").arg(m_slotIndex).arg(stopWatch.elapsed()).arg(m_materialId);
 
@@ -123,8 +126,8 @@ void ControllerMaterialTransfer::onQuery()
 		QVariant::fromValue(SlotBlock::ID)).Anchor());
 
 	//! Write-into Bus
-	setProperty(QVariant::fromValue(SlotDataBlock::BLOCK_DATA).toString().toStdString().c_str(),
-		QVariant::fromValue(*reinterpret_cast<CellDataBlock*>(m_adb.Anchor())));
+	/*setProperty(QVariant::fromValue(SlotDataBlock::BLOCK_DATA).toString().toStdString().c_str(),
+		QVariant::fromValue(*reinterpret_cast<CellDataBlock*>(m_adb.Anchor())));*/
 
     qDebug() << QString("%1,onQuery elapsed,%2,%3").arg(m_slotIndex).arg(stopWatch.elapsed()).arg(m_materialId);
 }

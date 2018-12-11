@@ -1,6 +1,7 @@
 #include "widgetstatusbarbundle.h"
 
 #include <qdatetime.h>
+#include <qdebug.h>
 
 WidgetStatusBarBundle::WidgetStatusBarBundle(QWidget *parent)
 	: FrontCommon(parent)
@@ -23,7 +24,6 @@ WidgetStatusBarBundle::~WidgetStatusBarBundle()
 
 void WidgetStatusBarBundle::onTimerScan()
 {
-	//QDateTime::currentDateTime().toString("yyyyMMddhhmmss");
 	ui.labelCurrentTime->setText(QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss"));
 
 	setProperty("IsAllConnected", InterfaceChannel::Instance()->IsAllConnected());
@@ -31,6 +31,7 @@ void WidgetStatusBarBundle::onTimerScan()
 		ui.labelLinkStatus->setText("Linked");
 	else
 		ui.labelLinkStatus->setText("Link Error");
+
 }
 
 void WidgetStatusBarBundle::dynamicPropertyChanged(int key, QVariant value)
@@ -49,8 +50,15 @@ void WidgetStatusBarBundle::dynamicPropertyChanged(int key, QVariant value)
 	case MainMonitorBlock::OFFSET_UOB_STATE_PAUSE:
 		break;
 	case MODEL:
-		ui.labelModel->setText(value.toString());
-		
+		ui.labelModel->setText(value.toString());		
+		break;
+	case ManualModeDataBlock::PROP_QUEUE_COUNT:
+		ui.progressBarTaskQueue->reset();
+		ui.progressBarTaskQueue->setRange(0,value.toInt());
+		break;
+	case ManualModeDataBlock::PROP_QUEUE_REMAIN:
+		ui.progressBarTaskQueue->setValue(ui.progressBarTaskQueue->maximum()-
+		value.toInt());
 		break;
 	default:
 		break;
