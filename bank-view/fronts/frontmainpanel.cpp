@@ -32,11 +32,9 @@ FrontMainPanel::~FrontMainPanel()
 
 void FrontMainPanel::onButtonClicked()
 {
-    /*m_controller->setProperty(sender()->property(QVariant::fromValue(RELATED_BIT).toString().toStdString().c_str())
-                              .toString().toStdString().c_str(),
-                              true);*/
-	emit qobject_cast<PropertyPortCommon*>(m_port)->externalPropertyChange(
-		sender()->property(QVariant::fromValue(RELATED_BIT).toString().toStdString().c_str()),
+	QVariant value = sender()->property(QVariant::fromValue(RELATED_BIT).toString().toStdString().c_str());
+
+	emit qobject_cast<PropertyPortCommon*>(m_port)->externalPropertyChange(value,
 		true);
 }
 
@@ -124,10 +122,10 @@ void FrontMainPanel::dynamicPropertyChanged(int key, QVariant value)
 	case ManualModeDataBlock::PROP_MANUAL_STATE:
 		switch (value.value<ManualModeDataBlock::ManualState>())
 		{
-		case ManualModeDataBlock::STATE_PLC_READY:
+		case ManualModeDataBlock::STATE_PLC_READY:	
+		case ManualModeDataBlock::STATE_IN_AUTO:
 			setEnabled(true);
 			break;
-		case ManualModeDataBlock::STATE_IN_AUTO:
 		case ManualModeDataBlock::STATE_RUN_ON:
 		case ManualModeDataBlock::STATE_DONE_ON:
 			setEnabled(false);

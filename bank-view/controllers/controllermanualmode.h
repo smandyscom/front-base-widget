@@ -36,6 +36,7 @@ public:
 signals:
 protected slots:
     void onStateReport();
+	void onPropertyChanged(QVariant key, QVariant value) Q_DECL_OVERRIDE;
 protected:
 
     QMap<ManualModeDataBlock::ManualState,QState*> m_stateMap;

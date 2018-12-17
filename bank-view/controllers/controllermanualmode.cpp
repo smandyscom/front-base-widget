@@ -76,24 +76,6 @@ ControllerManualMode::ControllerManualMode(quint8 clientId,
             m_monitor_propertyKeys.append(var);
         }
     }
-	//m_monitor_propertyKeys << QVariant::fromValue(ManualModeDataBlock::PROP_MANUAL_STATE);
-	//m_monitor_propertyKeys << QVariant::fromValue(ManualModeDataBlock::PROP_ELAPSED_TIME);
-    //!Operators
-   /* QList<QVariant> m_operator_list = {
-        QVariant::fromValue(ManualModeDataBlock::BIT_1_RUN),
-        QVariant::fromValue(ManualModeDataBlock::BIT_0_ENGAGED_HMI),
-        QVariant::fromValue(ManualModeDataBlock::MON_CATEGRORY),
-        QVariant::fromValue(ManualModeDataBlock::MON_DEVICE_INDEX),
-        QVariant::fromValue(ManualModeDataBlock::COMMIT_CATEGRORY),
-        QVariant::fromValue(ManualModeDataBlock::COMMIT_DEVICE_INDEX),
-        QVariant::fromValue(ManualModeDataBlock::COMMIT_MODE),
-        QVariant::fromValue(ManualModeDataBlock::DATA_BLOCK_HEAD),
-    };
-    foreach (QVariant var, m_operator_list)
-    {
-        m_operator_propertyKeys[var.toString()] = var;
-    }*/
-
 	//!
 	m_stateMachine->setInitialState(s0);
 	m_stateMachine->start();
@@ -103,25 +85,15 @@ void ControllerManualMode::onStateReport()
 {
     //! trigger read action
     m_currentState = m_stateMap.key(qobject_cast<QState*>(sender()));
-	/*for each (QObject* var in m_receivers)
-	{
-		var->setProperty(QString::number(ManualModeDataBlock::PROP_MANUAL_STATE).toStdString().c_str(), 
-			QVariant::fromValue(m_currentState));
-		var->setProperty(QVariant::fromValue(ManualModeDataBlock::PROP_MANUAL_STATE).toString().toStdString().c_str(),
-			QVariant::fromValue(m_currentState));
-	}*/
+	
 	emit m_port->externalPropertyChange(QVariant::fromValue(ManualModeDataBlock::PROP_MANUAL_STATE), QVariant::fromValue(m_currentState));
 
-	/*setProperty(QVariant::fromValue(ManualModeDataBlock::PROP_MANUAL_STATE).toString().toStdString().c_str(),
-		QVariant::fromValue(m_currentState));*/
     qDebug() << QVariant::fromValue(m_currentState).toString();
 }
 
 void ControllerManualMode::plcReady()
 {
 	//reset
-	/*setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_0_ENGAGED_HMI).toString().toStdString().c_str(), false);
-	setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_1_RUN).toString().toStdString().c_str(),false);*/
 	onPropertyChanged(QVariant::fromValue(ManualModeDataBlock::BIT_0_ENGAGED_HMI), false);
 	onPropertyChanged(QVariant::fromValue(ManualModeDataBlock::BIT_1_RUN), false);
 }
@@ -129,14 +101,6 @@ void ControllerManualMode::doneOn()
 {
 	//ms
 	quint64 e = timer.elapsed();
-	/*for each (QObject* var in m_receivers)
-	{
-		var->setProperty(QVariant::fromValue(ManualModeDataBlock::PROP_ELAPSED_TIME).toString().toStdString().c_str(),e);
-		var->setProperty(QString::number(ManualModeDataBlock::PROP_ELAPSED_TIME).toStdString().c_str(), e);
-	}*/
-    //set RUN off
-	/*setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_1_RUN).toString().toStdString().c_str(),
-		false);*/
 	emit m_port->externalPropertyChange(QVariant::fromValue(ManualModeDataBlock::PROP_ELAPSED_TIME), e);
 
 	onPropertyChanged(QVariant::fromValue(ManualModeDataBlock::BIT_1_RUN), false);
@@ -149,9 +113,22 @@ void ControllerManualMode::doneOff()
 void ControllerManualMode::runOn()
 {
 	//set
-	/*setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_0_ENGAGED_HMI).toString().toStdString().c_str(),
-		true); */
 	onPropertyChanged(QVariant::fromValue(ManualModeDataBlock::BIT_0_ENGAGED_HMI), true);
 
 	timer.start();
+}
+
+void ControllerManualMode::onPropertyChanged(QVariant key, QVariant value)
+{
+	QVariant sb = QVariant::fromValue(ManualModeDataBlock::BIT_1_RUN);
+	ADDRESS_MODE address = key.toUInt();
+	address = ADDRESS_REGISTER(address);
+	
+	if (address == ManualModeDataBlock::CONTROL_WORD &&
+		!(key.userType()==sb.userType()))
+	{
+		return; // do not perform further more
+	}
+	//!
+	ControllerBase::onPropertyChanged(key, value);
 }
