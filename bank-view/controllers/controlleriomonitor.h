@@ -44,9 +44,11 @@ protected slots:
     //! \param roles
     //! Output override
     void onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles);
+
+	void onModelReset();
+
 protected:
     Mode m_mode;
-    void scanModel(QObject* target);
     //! Store address and modelIndex relation(Name
     QList<ADDRESS_MODE> m_addressList;
     QMap<ADDRESS_MODE,QVariant> m_addressIndexTable;
@@ -56,10 +58,8 @@ protected:
     //! \brief m_model
     //! First receiver
     QSqlTableModel* m_model;
-    //!
-    //! \brief m_addressNameTable
-    //! pair of Address,Name
-//    QMap<QVariant,QVariant> m_addressNameTable;
+    
+	QMap<QVariant, QVariant> m_addressNameMap;
 };
 
 #endif // CONTROLLERIOMONITOR_H

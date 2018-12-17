@@ -88,34 +88,42 @@ void ControllerIOMonitor::findAndUpdate(ADDRESS_MODE address)
 void ControllerIOMonitor::setModel(QSqlTableModel* model,
                                    QMap<QVariant,QVariant> addressNameMap)
 {
-    m_model= model;
-    m_model->setFilter(nullptr);
-    m_model->select();
+	m_model= model;
+	m_addressNameMap = addressNameMap;
     //! Link override operation
     connect(m_model,&QSqlTableModel::dataChanged,this,&ControllerIOMonitor::onDataChanged);
-
-    for(int rowIndex=0;
-        rowIndex < m_model->rowCount() ;
-        rowIndex++)
-    {
-        QMap<QVariant,QVariant>::ConstIterator i =
-            addressNameMap.begin();
-        while (i != addressNameMap.end()) {
-            //! Select those record with Non-null name
-            //! Use modelIndex
-            int m_columnIndexName = m_model->fieldIndex(i.value().toString());
-
-            bool isNull = m_model->record(rowIndex).value(i.value().toString()).isNull();
-            ADDRESS_MODE address = m_model->record(rowIndex).value(i.key().toString()).value<ADDRESS_MODE>();
-
-            if(!m_addressList.contains(address) && !isNull)
-            {
-                m_addressList.append(address);
-                m_addressIndexTable[address] = m_model->index(rowIndex,m_columnIndexName); //link address and QIndex
-            }
-            i++;
-        }//!while
-    }//!for-row
+	connect(m_model, &QSqlTableModel::modelReset, this, &ControllerIOMonitor::onModelReset);
+	//!renew 
+    m_model->setFilter(nullptr);
+	m_model->select();
     //!first shot
     m_channel->BeginRead(m_addressList.first(),false);
+}
+
+void ControllerIOMonitor::onModelReset()
+{
+	for (int rowIndex = 0;
+		rowIndex < m_model->rowCount();
+		rowIndex++)
+	{
+		QMap<QVariant, QVariant>::ConstIterator i =
+			m_addressNameMap.begin();
+		while (i != m_addressNameMap.end()) {
+			//! Select those record with Non-null name
+			//! Use modelIndex
+			bool isNull = m_model->record(rowIndex).value(i.value().toString()).isNull();
+			int m_columnIndexName = m_model->fieldIndex(i.value().toString());
+
+			ADDRESS_MODE address = m_model->record(rowIndex).value(i.key().toString()).value<ADDRESS_MODE>();
+
+			if (!m_addressList.contains(address) && !isNull)
+			{
+				m_addressList.append(address);
+				m_addressIndexTable[address] = m_model->index(rowIndex, m_columnIndexName); //link address and QModelIndex
+			}
+			//!Map
+
+			i++;
+		}//!while
+	}//!for-row
 }
