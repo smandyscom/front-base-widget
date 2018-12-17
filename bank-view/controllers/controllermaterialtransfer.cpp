@@ -34,13 +34,13 @@ void ControllerMaterialTransfer::Setup(SyncRole role, int index, AbstractSqlTabl
 	case ControllerMaterialTransfer::ROLE_UPDATE_HEADER:
 		break;
 	case ControllerMaterialTransfer::ROLE_UPDATE_BLOCK:
-		connect(this, &ControllerMaterialTransfer::actionRaised, this, &ControllerMaterialTransfer::onUpdate);
+		connect(this, &ControllerMaterialTransfer::actionRaised, this, &ControllerMaterialTransfer::onTableUpdate);
 		break;
 	case ControllerMaterialTransfer::ROLE_CREATE:
-		connect(this, &ControllerMaterialTransfer::actionRaised, this, &ControllerMaterialTransfer::onInsert);
+		connect(this, &ControllerMaterialTransfer::actionRaised, this, &ControllerMaterialTransfer::onTableInsert);
 		break;
 	case ControllerMaterialTransfer::ROLE_QUERY:
-		connect(this, &ControllerMaterialTransfer::actionRaised, this, &ControllerMaterialTransfer::onQuery);
+		connect(this, &ControllerMaterialTransfer::actionRaised, this, &ControllerMaterialTransfer::onTableQuery);
 		break;
 	default:
 		break;
@@ -74,7 +74,7 @@ void ControllerMaterialTransfer::onAcknowledged(InterfaceRequest ack)
 	ControllerBase::onAcknowledged(ack); //inform front to update
 }
 
-void ControllerMaterialTransfer::onInsert()
+void ControllerMaterialTransfer::onTableInsert()
 {
     QElapsedTimer stopWatch;
     stopWatch.start();
@@ -116,7 +116,7 @@ void ControllerMaterialTransfer::onInsert()
     qDebug() << QString("%1,onInsert elapsed,%2,%3").arg(m_slotIndex).arg(stopWatch.elapsed()).arg(m_materialId);
 
 }
-void ControllerMaterialTransfer::onQuery()
+void ControllerMaterialTransfer::onTableQuery()
 {
     QElapsedTimer stopWatch;
     stopWatch.start();
@@ -131,7 +131,7 @@ void ControllerMaterialTransfer::onQuery()
 
     qDebug() << QString("%1,onQuery elapsed,%2,%3").arg(m_slotIndex).arg(stopWatch.elapsed()).arg(m_materialId);
 }
-void ControllerMaterialTransfer::onUpdate()
+void ControllerMaterialTransfer::onTableUpdate()
 {
     QElapsedTimer stopWatch;
     stopWatch.start();

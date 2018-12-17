@@ -54,9 +54,9 @@ signals:
 protected slots:
 	virtual void onAcknowledged(InterfaceRequest ack);
 
-	void onInsert();
-    void onQuery();
-    void onUpdate();
+	void onTableInsert();
+    void onTableQuery();
+    void onTableUpdate();
 protected:
 	int m_slotIndex;
     int m_materialId;
