@@ -17,7 +17,7 @@ JunctionMaterialDatabase::~JunctionMaterialDatabase()
 JunctionMaterialDatabase* JunctionMaterialDatabase::Instance()
 {
 	if (m_instance == nullptr)
-		m_instance = new JunctionMaterialDatabase(qApp);
+		m_instance = new JunctionMaterialDatabase();
 	return m_instance;
 }
 
@@ -33,7 +33,7 @@ QSqlTableModel* JunctionMaterialDatabase::TableMap(int index, TableNames key)
 	else
 	{
 		//not existed , open table
-		QSqlTableModel* ref = new QSqlTableModel(this, m_database);
+		QSqlTableModel* ref = new QSqlTableModel(nullptr, m_database);
 		ref->setTable(p_key.toString());
 		if (ref->select())
 		{

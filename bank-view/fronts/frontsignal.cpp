@@ -63,6 +63,4 @@ void FrontSignal::dynamicPropertyChanged(int key, QVariant value)
 	default:
 		break;
 	}
-	//!Base method
-	FrontCommonManual::dynamicPropertyChanged(key, value);
 }

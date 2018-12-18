@@ -19,7 +19,7 @@ public:
 	};
 	Q_ENUM(TableNames)
 
-	JunctionMaterialDatabase(QObject *parent);
+	JunctionMaterialDatabase(QObject *parent=nullptr);
 	~JunctionMaterialDatabase();
 
 	static JunctionMaterialDatabase* Instance();
