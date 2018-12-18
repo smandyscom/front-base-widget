@@ -25,10 +25,8 @@ void TabWidgetOperationMode::onCurrentWidgetChanged()
         return;
     }
 
-	QVariant value = currentWidget()->property(QVariant::fromValue(HEADER_STRUCTURE::STATE_MANUAL).toString().toStdString().c_str());
+	QVariant value = currentWidget()->property(QVariant::fromValue(HEADER_STRUCTURE::STATE_MANUAL).toString().toStdString().c_str()).toBool();
 	QVariant key = QVariant::fromValue(MainOperationBlock::BIT_3_TOGGLE_MANUAL);
 
-    /*m_controller->setProperty(key.toString().toStdString().c_str(),
-		value.toBool());*/
 	emit qobject_cast<PropertyPortCommon*>(m_controller)->externalPropertyChange(key, value);
 }

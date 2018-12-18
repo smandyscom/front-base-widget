@@ -8,8 +8,19 @@
 #include <controllermanualmode.h>
 #include <abstractsqltableadpater.h>
 
+//typedef QPair<ManualModeDataBlock::Categrories,int> TransferTask;
+
 //！ Categrory and record index
-typedef QPair<ManualModeDataBlock::Categrories,int> TransferTask;
+typedef struct 
+{
+	ManualModeDataBlock::TransferCommand command;
+	ManualModeDataBlock::Categrories categrory;
+	int deviceIndex;
+} TransferTask;
+
+
+
+
 //!
 //! \brief The ControllerBankManager class
 //! Charge the operation about transfer from/to PLC

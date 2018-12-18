@@ -27,14 +27,11 @@ class ControllerManualMode :
 {
     Q_OBJECT
 public:
-    
-
     explicit ControllerManualMode(quint8 clientId, quint16 baseOffset, int interval=100, QObject *parent=nullptr);
-
-    //ManualModeDataBlock::ManualState CurrentState() const { return m_currentState;}
-
 signals:
-protected slots:
+public slots:
+	void onStateMachineStart();
+protected slots :
     void onStateReport();
 	void onPropertyChanged(QVariant key, QVariant value) Q_DECL_OVERRIDE;
 protected:

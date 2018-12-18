@@ -70,6 +70,7 @@ MainWindow::MainWindow(QWidget *parent) :
 #else
 	m_controllers->ControllersLoadingRoutineV1();
 	onControllerLoaded();
+	m_controllers->m_controllerTransfer->onStateMachineStart();
 #endif // THREADED
 
 		
@@ -135,6 +136,8 @@ void MainWindow::onControllerLoaded()
 	
 	//!
 	showFullScreen();
+	//!
+	m_controllers->m_controllerTransfer->onStateMachineStart();
 }
 
 void MainWindow::onDownloadUploadActionTrigger()

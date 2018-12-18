@@ -76,6 +76,7 @@ void FrontMainPanel::dynamicPropertyChanged(int key, QVariant value)
     case MainMonitorBlock::ERROR_CODE:
 		if (value.toInt() == 0)
 		{
+			ui->textBrowserErrorDescription->clear();
 			setProperty(QVariant::fromValue(ERROR_STATE).toString().toStdString().c_str(),false);
 		}
 		else

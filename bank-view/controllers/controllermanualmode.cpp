@@ -78,6 +78,10 @@ ControllerManualMode::ControllerManualMode(quint8 clientId,
     }
 	//!
 	m_stateMachine->setInitialState(s0);
+}
+
+void ControllerManualMode::onStateMachineStart()
+{
 	m_stateMachine->start();
 }
 

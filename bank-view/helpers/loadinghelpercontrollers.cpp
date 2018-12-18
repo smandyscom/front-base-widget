@@ -17,7 +17,7 @@ void LoadingHelperControllers::LoadAdaptors()
 		<< new GenericSqlTableAdapter<UnitConfig, UnitConfigBlock::DataBaseHeaders>(m_database->TableMap(JunctionBankDatabase::WHOLE_UNITS_CONFIG));
 }
 
-void LoadingHelperControllers::LoadTransfer(quint8 clientId, quint16 baseOffset, int interval)
+void LoadingHelperControllers::LoadManualChannel(quint8 clientId, quint16 baseOffset, int interval)
 {
     m_controllerTransfer = new ControllerBankTransfer(clientId,baseOffset,interval);
     //! Link
@@ -114,7 +114,7 @@ void LoadingHelperControllers::ControllersLoadingRoutineV1()
     //!TODO Follow Database to initiate interface channel
     m_database = JunctionBankDatabase::Instance();
     //!TODO Follow Database to decide offset/client
-    LoadTransfer(0,512,1);  
+    LoadManualChannel(0,512,1);  
     m_controllerMain = new ControllerMainPanel(0,128,200);
     //!
     LoadInputsMonitor();
@@ -125,12 +125,6 @@ void LoadingHelperControllers::ControllersLoadingRoutineV1()
 
 	emit controllerLoaded();
 }
-
-//void LoadingHelperControllers::CrossLink(ControllerBase *controller, FrontCommon *front)
-//{
-//    controller->AttachReceiver(front);
-//    front->LinkController(controller);
-//}
 
 void LoadingHelperControllers::CrossLink(QObject* port1, QObject* port2)
 {

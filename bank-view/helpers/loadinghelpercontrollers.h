@@ -29,7 +29,7 @@ class LoadingHelperControllers : public QObject
 public:
     explicit LoadingHelperControllers(QObject *parent = nullptr);
 
-    void LoadTransfer(quint8 clientId, quint16 baseOffset, int interval);
+    void LoadManualChannel(quint8 clientId, quint16 baseOffset, int interval);
     void LoadInputsMonitor();
     void LoadOutputsMonitor();
     void LoadCylinderMonitor();

@@ -1,19 +1,17 @@
 
 #include "controllerbanktransfer.h"
 
+bool operator==(const TransferTask& lhp, const TransferTask&rhp)
+{
+	return lhp.command == rhp.command &&
+		lhp.categrory == rhp.categrory &&
+		lhp.deviceIndex == rhp.deviceIndex;
+}
+
+
 ControllerBankTransfer::ControllerBankTransfer(quint8 clientId, quint16 baseOffset, int interval=100, QObject *parent) :
     ControllerManualMode(clientId,baseOffset,interval,parent)
 {
-    //!Operators
-   /* QList<QVariant> m_operator_list = {
-        QVariant::fromValue(ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE),
-        QVariant::fromValue(ManualModeDataBlock::BATCH_ALL_WRITE_MODE),
-        QVariant::fromValue(ManualModeDataBlock::BATCH_ALL_READ_MODE)
-    };
-    foreach (QVariant var, m_operator_list)
-    {
-        m_operator_propertyKeys[var.toString()] = var;
-    }*/
 }
 
 void ControllerBankTransfer::Adaptor(ManualModeDataBlock::Categrories key,AbstractSqlTableAdpater* value)
@@ -45,14 +43,6 @@ void ControllerBankTransfer::plcReady()
 		default:
 			break;
 		}
-
-		//! Reset all 
-		/*for each (QVariant var in QList<QVariant>{QVariant::fromValue(ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE),
-			QVariant::fromValue(ManualModeDataBlock::BATCH_ALL_WRITE_MODE),
-			QVariant::fromValue(ManualModeDataBlock::BATCH_ALL_READ_MODE)})
-		{
-			setProperty(var.toString().toStdString().c_str(), false);
-		}*/
 	}
 
     //!Base method
@@ -129,12 +119,10 @@ void ControllerBankTransfer::onDataChanged(const QModelIndex &topLeft,
         }
     }
     //!
-    TransferTask task;
-    task.first = m_adaptors.key(adaptor) ;
-    //! Turns into absolute row index
-    task.second = model->record( topLeft.row())
-             .value(QVariant::fromValue(HEADER_STRUCTURE::ID).toString())
-             .toInt();
+	//! Turns into absolute ID
+	TransferTask task{ ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE,
+		m_adaptors.key(adaptor) ,
+		model->record(topLeft.row()).value(QVariant::fromValue(HEADER_STRUCTURE::ID).toString()).toInt()};
 
     if(!m_tasksQueue.contains(task))
         m_tasksQueue.enqueue(task);
@@ -164,8 +152,12 @@ void ControllerBankTransfer::onPropertyChanged(QVariant key, QVariant value)
 
 				int rowCount = var->Model()->rowCount();
 
-                for(int i=0;i<rowCount;i++)
-                    m_tasksQueue.enqueue(TransferTask(m_adaptors.key(var),i));
+				for (int i = 0; i < rowCount; i++) {
+					TransferTask task{ key.value<ManualModeDataBlock::TransferCommand>(),
+						m_adaptors.key(var),
+						i };
+					m_tasksQueue.enqueue(task);
+				}
             }
             break;
         case ManualModeDataBlock::SELECTION_COMMAND_BLOCK:
@@ -175,9 +167,12 @@ void ControllerBankTransfer::onPropertyChanged(QVariant key, QVariant value)
         case ManualModeDataBlock::SELECTION_SIGNAL:
         {
             ManualModeDataBlock::Categrories var = value.value<ManualModeDataBlock::Categrories>();
-            AbstractSqlTableAdpater* adaptor = m_adaptors[var];
-            for(int i=0;i<m_adaptors[var]->Model()->rowCount();i++)
-                m_tasksQueue.enqueue(TransferTask(var,i));
+			for (int i = 0; i < m_adaptors[var]->Model()->rowCount(); i++) {
+				TransferTask task{ key.value<ManualModeDataBlock::TransferCommand>(),
+					var,
+					i};
+				m_tasksQueue.enqueue(task);
+			}
             break;
         }
 
@@ -201,12 +196,6 @@ void ControllerBankTransfer::onPropertyChanged(QVariant key, QVariant value)
 	case ManualModeDataBlock::BATCH_ALL_WRITE_MODE:
 	case ManualModeDataBlock::BATCH_ALL_READ_MODE:
 	{
-		//!
-		auto mode = QVariant::fromValue(key.toUInt()== ManualModeDataBlock::BATCH_ALL_READ_MODE ?
-			QVariant::fromValue(ManualModeDataBlock::MODE_UPLOAD_DATA_BLOCK) :
-			QVariant::fromValue(ManualModeDataBlock::MODE_DOWNLOAD_DATA_BLOCK));
-		onPropertyChanged(QVariant::fromValue(ManualModeDataBlock::COMMIT_MODE), mode);
-
         //! trigger operation , raise first shot
 		if (m_currentState == ManualModeDataBlock::STATE_PLC_READY &&
 			!m_tasksQueue.isEmpty())
@@ -227,8 +216,8 @@ void ControllerBankTransfer::onPropertyChanged(QVariant key, QVariant value)
 
 void ControllerBankTransfer::transfer()
 {
-    m_categrory = m_tasksQueue.head().first;
-    m_index = m_tasksQueue.head().second;
+    m_categrory = m_tasksQueue.head().categrory;
+    m_index = m_tasksQueue.head().deviceIndex;
 
     //! Write anyway
     CellDataBlock* data =
@@ -236,6 +225,15 @@ void ControllerBankTransfer::transfer()
 				AbstractSqlTableAdpater::KEY_NAMED_KEY,
 				QVariant::fromValue(HEADER_STRUCTURE::ID)).Anchor());
 	
+	//!
+	ManualModeDataBlock::TransferCommand command = m_tasksQueue.head().command;
+
+	ManualModeDataBlock::Mode mode = (command == ManualModeDataBlock::BATCH_ALL_READ_MODE ?
+		ManualModeDataBlock::MODE_UPLOAD_DATA_BLOCK :
+		ManualModeDataBlock::MODE_DOWNLOAD_DATA_BLOCK);
+
+	onPropertyChanged(QVariant::fromValue(ManualModeDataBlock::COMMIT_MODE), QVariant::fromValue(mode));
+
 	onPropertyChanged(QVariant::fromValue(ManualModeDataBlock::DATA_BLOCK_HEAD), QVariant::fromValue(*data));
 	onPropertyChanged(QVariant::fromValue(ManualModeDataBlock::COMMIT_CATEGRORY), QVariant::fromValue(m_categrory));
 	onPropertyChanged(QVariant::fromValue(ManualModeDataBlock::COMMIT_DEVICE_INDEX), QVariant::fromValue(m_index));
