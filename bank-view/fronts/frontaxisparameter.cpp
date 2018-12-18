@@ -143,9 +143,6 @@ void FrontAxisParameter::onDirectExecution(bool value)
     AxisOperationBlock m_operationBlock(reinterpret_cast<MODBUS_U_WORD*>(&data));
     PosCommandBlock m_postionBlock(reinterpret_cast<MODBUS_U_WORD*>(&data));
 
-    CellDataBlock* anchor1 = &data;
-    CellDataBlock* anchor2 = reinterpret_cast<CellDataBlock*>(m_operationBlock.Anchor());
-
     //! Categrory
     ManualModeDataBlock::Categrories categrory = ManualModeDataBlock::SELECTION_AXIS;
     //! Mode
@@ -153,8 +150,6 @@ void FrontAxisParameter::onDirectExecution(bool value)
     //! Prepare Commit Mode/Index , DataBlock , by different push button
 
     //! Axis index
-    /*m_port->setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_DEVICE_INDEX).toString().toStdString().c_str(),
-                              currentIndex());*/
 	emit m_port->externalPropertyChange(QVariant::fromValue(ManualModeDataBlock::COMMIT_DEVICE_INDEX),
 		currentIndex());
 
@@ -294,7 +289,7 @@ QVariant FrontAxisParameter::selectedAxisValue(int axisId,QVariant key) const
 {
     return utilities::getSqlTableSelectedRecord(m_axisTable,
                                                 QVariant::fromValue(AxisBlock::ID),
-                                                ui->widgetFilter->SelectedKey1())
+                                                axisId)
             .value(utilities::trimNamespace(key));
 }
 

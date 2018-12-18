@@ -64,7 +64,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	m_controllers->moveToThread(m_thread);
 	connect(m_thread, &QThread::started, m_controllers, &LoadingHelperControllers::ControllersLoadingRoutineV1);
 	connect(m_controllers, &LoadingHelperControllers::controllerLoaded, this, &MainWindow::onControllerLoaded);
-	int id = qRegisterMetaType<QVector<int>>();
+	qRegisterMetaType<QVector<int>>();
 
 	m_thread->start();
 #else
@@ -103,12 +103,10 @@ void MainWindow::onControllerLoaded()
 	m_controllers->CrossLink(m_controllers->m_controllerMain->port(),ui->widgetMain->port());
 	m_controllers->CrossLink(m_controllers->m_controllerTransfer->port(), ui->widgetMain->port());
     //!
-	PropertyPortCommon* port = new PropertyPortCommon();
-    //ui->tabWidget->Setup(m_controllers->m_controllerMain);
 	m_controllers->CrossLink(ui->tabWidget->m_controller, m_controllers->m_controllerMain->port());
 	//! Slots cross link
 	QList<FrontSlot*> list = findChildren<FrontSlot*>();
-	for (size_t i = 0; i < m_controllers->m_controllersMaterial.count(); i++)
+	for (int i = 0; i < m_controllers->m_controllersMaterial.count(); i++)
 	{
 		ControllerMaterialTransfer* ref = m_controllers->m_controllersMaterial[i];
 		m_controllers->CrossLink(ref->port(),list[i]->port());

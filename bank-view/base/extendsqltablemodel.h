@@ -22,7 +22,7 @@ public:
     QVariant data(const QModelIndex &idx, int role) const Q_DECL_OVERRIDE;
 
 signals:
-
+	
 public slots:
 protected:
     bool m_initialized;

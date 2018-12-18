@@ -63,50 +63,53 @@ void FrontSlot::dynamicPropertyChanged(int key, QVariant value)
 	switch (key)
 	{
 	case SlotDataBlock::BIT1_ACT:
+		if (!value.toBool())
+		{
+			ui->lcdNumberID->display(QString::number(value.toUInt()));
+			//! Simple static
+			if (m_lastId != value.toUInt())
+			{
+				m_totalCounter += 1;
+
+				//query database to get whether OK/NG
+				QSqlRecord record = utilities::getSqlTableSelectedRecord(m_model,
+					QVariant::fromValue(HEADER_STRUCTURE::ID),
+					value);
+				SlotBlock::Grade grade =
+					record.value(QVariant::fromValue(SlotBlock::GRADE).toString().toStdString().c_str())
+					.value<SlotBlock::Grade>();
+
+				switch (grade)
+				{
+				case SlotBlock::OK:
+				case SlotBlock::BYPASS:
+					m_okCounter += 1;
+					break;
+				case SlotBlock::NG:
+					m_ngCounter += 1;
+					break;
+				default:
+					break;
+				}
+
+				//rate
+				if (m_totalCounter != 0) {
+					ui->lcdNumberOKRate->display(m_okCounter / m_totalCounter);
+					ui->lcdNumberNGRate->display(m_ngCounter / m_totalCounter);
+				}
+				else
+				{
+					ui->lcdNumberOKRate->display(0);
+					ui->lcdNumberNGRate->display(0);
+				}
+			}
+			m_lastId = value.toUInt();
+		}//if()
 		break;
 	case SlotDataBlock::BIT2_VALID:
 		//! use QSS to control
 		break;
 	case SlotDataBlock::MATERIAL_ID:
-		ui->lcdNumberID->display(QString::number(value.toUInt()));
-		//! Simple static
-		if (m_lastId != value.toUInt())
-		{
-			m_totalCounter += 1;
-
-			//query database to get whether OK/NG
-			QSqlRecord record = utilities::getSqlTableSelectedRecord(m_model,
-				QVariant::fromValue(HEADER_STRUCTURE::ID),
-				value);
-			SlotBlock::Grade grade = 
-				record.value(QVariant::fromValue(SlotBlock::DATA_0).toString().toStdString().c_str())
-				.value<SlotBlock::Grade>();
-
-			switch (grade)
-			{
-			case SlotBlock::OK:
-			case SlotBlock::BYPASS:
-				m_okCounter += 1;
-				break;
-			case SlotBlock::NG:
-				m_ngCounter += 1;
-				break;
-			default:
-				break;
-			}
-
-			//rate
-			if (m_totalCounter != 0) {
-				ui->lcdNumberOKRate->display(m_okCounter / m_totalCounter);
-				ui->lcdNumberNGRate->display(m_ngCounter / m_totalCounter);
-			}
-			else
-			{
-				ui->lcdNumberOKRate->display(0);
-				ui->lcdNumberNGRate->display(0);
-			}
-		}
-		m_lastId = value.toUInt();
 		break;
 	default:
 		break;

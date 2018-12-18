@@ -4,7 +4,7 @@
 #include <QWidget>
 #include <QTimer>
 
-#include <definitionioattributes.h>>
+#include <definitionioattributes.h>
 #include <definitionauxiliarykeys.h>
 
 #include <utilities.h>

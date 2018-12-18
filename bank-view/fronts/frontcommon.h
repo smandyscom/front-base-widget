@@ -63,8 +63,8 @@ protected:
     //! wrapper function
     QVariant property(QVariant key) const;
 
-    virtual void dynamicPropertyChanged(QString key,QVariant value){}
-    virtual void dynamicPropertyChanged(int key,QVariant value){}
+    //virtual void dynamicPropertyChanged(QString key,QVariant value){}
+	virtual void dynamicPropertyChanged(int key, QVariant value);
 private:
     bool m_isQSSInitialized;
 	QFileSystemWatcher* m_watcher;

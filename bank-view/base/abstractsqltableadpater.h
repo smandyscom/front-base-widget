@@ -100,7 +100,7 @@ public:
         QSqlRecord m_record = m_model->record(referenceRowIndex); //get default records as reference
         *m_concreteBlock = *reinterpret_cast<CellDataBlock*>(data.Anchor()); //value copy
 
-        //! Set by name
+        //! Set by column name
         foreach (QVariant var, m_headerList) {
             if(var.toInt() > INVALID_INDEX)
                 m_record.setValue(utilities::trimNamespace(var),

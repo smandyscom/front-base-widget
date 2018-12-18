@@ -48,8 +48,10 @@ public:
 	};
 	Q_ENUM(Bits)
 
-	SlotDataBlock(QObject* parent = nullptr) 
+	SlotDataBlock(QObject* parent = nullptr) : 
+		AbstractDataBlock(parent)
 	{
+		delete m_anchor;
 		//mandotory for AbstractSqlTableAdpater
 		m_anchor = reinterpret_cast<MODBUS_U_WORD*>(new DataBlock128());
 		m_allocated = true;
@@ -112,6 +114,7 @@ namespace SlotBlock {
     enum DataBaseHeaders
     {
     ID=INVALID_INDEX-1,
+	GRADE= INVALID_INDEX-2, //OK/NG/BYPASS
     //!
         DATA_0=0,
         DATA_1=1,

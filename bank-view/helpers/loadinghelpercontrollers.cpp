@@ -83,9 +83,7 @@ void LoadingHelperControllers::LoadMaterialTransfer()
 	//model->select();
 	model->sort(0,Qt::AscendingOrder);
 
-	size_t count = model->rowCount();
-
-	for (size_t i = 0; i < model->rowCount(); i++)
+	for (int i = 0; i < model->rowCount(); i++)
 	{
 		int clientId = model->record(i).value(QVariant::fromValue(ControllerMaterialTransfer::CLIENT_ID).toString()).toInt();
 		int baseOffset = model->record(i).value(QVariant::fromValue(ControllerMaterialTransfer::BASE_OFFSET).toString()).toInt();

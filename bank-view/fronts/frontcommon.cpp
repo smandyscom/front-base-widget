@@ -73,7 +73,7 @@ bool FrontCommon::event(QEvent* event)
         //!Polish 
         QString key = QString(static_cast<QDynamicPropertyChangeEvent*>(event)->propertyName());
         QVariant value = property(static_cast<QDynamicPropertyChangeEvent*>(event)->propertyName());
-        dynamicPropertyChanged(key,value);
+        //dynamicPropertyChanged(key,value);
         bool result = false;
         int id = key.toInt(&result);
         if(result)
@@ -129,4 +129,9 @@ void FrontCommon::onUpdate()
 	foreach(QWidget* var, m_widgetsPolish) {
 		var->style()->polish(var);
 	}
+}
+
+void FrontCommon::dynamicPropertyChanged(int key, QVariant value)
+{
+	qDebug() << QString("%1,%2").arg(key).arg(value.toString());
 }
