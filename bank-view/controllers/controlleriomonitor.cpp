@@ -28,7 +28,8 @@ void ControllerIOMonitor::onAcknowledged(InterfaceRequest ack)
         if(index >= m_addressList.count())
             index =0;
         //!request feedback , boolean format query
-        m_channel->BeginRead(m_addressList[index],true);
+		if(!m_addressList.isEmpty())
+			m_channel->BeginRead(m_addressList[index],true);
         break;
     }
     default:
@@ -102,6 +103,10 @@ void ControllerIOMonitor::setModel(QSqlTableModel* model,
 
 void ControllerIOMonitor::onModelReset()
 {
+	//!Reconstrut manifset
+	m_addressList.clear();
+	m_addressIndexTable.clear();
+
 	for (int rowIndex = 0;
 		rowIndex < m_model->rowCount();
 		rowIndex++)
@@ -111,16 +116,19 @@ void ControllerIOMonitor::onModelReset()
 		while (i != m_addressNameMap.end()) {
 			//! Select those record with Non-null name
 			//! Use modelIndex
-			bool isNull = m_model->record(rowIndex).value(i.value().toString()).isNull();
-			int m_columnIndexName = m_model->fieldIndex(i.value().toString());
 
+			//!Key :  Address
+			//!Value : Name
 			ADDRESS_MODE address = m_model->record(rowIndex).value(i.key().toString()).value<ADDRESS_MODE>();
 
-			if (!m_addressList.contains(address) && !isNull)
+			//bool isNull = m_model->record(rowIndex).value(i.value().toString()).isNull();
+			int m_columnIndexName = m_model->fieldIndex(i.value().toString());
+
+			if (!m_addressList.contains(address) /*&& !isNull*/)
 			{
 				m_addressList.append(address);
-				m_addressIndexTable[address] = m_model->index(rowIndex, m_columnIndexName); //link address and QModelIndex
 			}
+			m_addressIndexTable[address] = m_model->index(rowIndex, m_columnIndexName); //link address and QModelIndex, or update
 			//!Map
 
 			i++;
