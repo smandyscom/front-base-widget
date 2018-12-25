@@ -80,7 +80,10 @@ void ControllerBankTransfer::doneOff()
         //! synced with BeginRead since Run off came after run
         CellDataBlock data =
                 qobject_cast<ManualModeDataBlock*>(m_monitor)->Value(ManualModeDataBlock::DATA_BLOCK_HEAD).value<CellDataBlock>();
-        m_adaptors[m_categrory]->Record(m_index,AbstractDataBlock(reinterpret_cast<MODBUS_U_WORD*>(&data)));
+        m_adaptors[m_categrory]->Record(m_index,
+			AbstractDataBlock(reinterpret_cast<MODBUS_U_WORD*>(&data)),
+			AbstractSqlTableAdpater::KEY_NAMED_KEY,
+			QVariant::fromValue(HEADER_STRUCTURE::ID));
     }
     case ManualModeDataBlock::MODE_DOWNLOAD_DATA_BLOCK:
 		if (m_tasksQueue.isEmpty())
@@ -155,7 +158,7 @@ void ControllerBankTransfer::onPropertyChanged(QVariant key, QVariant value)
 				for (int i = 0; i < rowCount; i++) {
 					TransferTask task{ key.value<ManualModeDataBlock::TransferCommand>(),
 						m_adaptors.key(var),
-						i };
+						var->Model()->record(i).value(QVariant::fromValue(HEADER_STRUCTURE::ID).toString()).toInt()};
 					m_tasksQueue.enqueue(task);
 				}
             }
@@ -167,15 +170,18 @@ void ControllerBankTransfer::onPropertyChanged(QVariant key, QVariant value)
         case ManualModeDataBlock::SELECTION_SIGNAL:
         {
             ManualModeDataBlock::Categrories var = value.value<ManualModeDataBlock::Categrories>();
+			m_adaptors[var]->Model()->setFilter(nullptr);
+			m_adaptors[var]->Model()->select();
+			int count = m_adaptors[var]->Model()->rowCount();
 			for (int i = 0; i < m_adaptors[var]->Model()->rowCount(); i++) {
 				TransferTask task{ key.value<ManualModeDataBlock::TransferCommand>(),
 					var,
-					i};
+					m_adaptors[var]->Model()->record(i).value(QVariant::fromValue(HEADER_STRUCTURE::ID).toString()).toInt()};
 				m_tasksQueue.enqueue(task);
 			}
-            break;
+            
         }
-
+		break;
 		
         default:
             //!No action
