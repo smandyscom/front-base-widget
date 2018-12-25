@@ -30,7 +30,7 @@ public:
 		ADDRESS,
 		PORT,
 		IS_LOCAL,
-		GROUP,
+		M_GROUP,
 		BASE_OFFSET
 	};
 	Q_ENUM(DefinitionRecord)
