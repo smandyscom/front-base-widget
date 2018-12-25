@@ -13,6 +13,7 @@
 
 #define THREADED true
 
+
 MainWindow::MainWindow(QWidget *parent) :
     MainWindowCommon(parent),
     ui(new Ui::MainWindow)

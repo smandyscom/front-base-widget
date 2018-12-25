@@ -4,6 +4,7 @@
 #include <frontcommonmanual.h>
 #include <definitionmanualblock.h>
 #include <definitionunitblocks.h>
+#include <definitionunitconfigblock.h>
 #include <utilities.h>
 
 //#include <abstractauthreceiver.h>

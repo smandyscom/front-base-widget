@@ -105,7 +105,8 @@ void InterfaceChannel::onAcknowledged(InterfaceRequest ack)
 			//intrested address
 			for each (QStateMachine* machine in m_stateMachines.values())
 			{
-				machine->postEvent(new UpdateEvent(ack.Address(),data));
+				if(machine->isRunning())
+					machine->postEvent(new UpdateEvent(ack.Address(),data));
 			}
 		}
     }

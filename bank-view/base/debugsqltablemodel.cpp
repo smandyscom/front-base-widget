@@ -11,7 +11,8 @@ DebugSqlTableModel::~DebugSqlTableModel()
 }
 void DebugSqlTableModel::printLastError()
 {
-	qDebug() << QString("%1,%2")
+	qDebug() << QString("%1,%2,%3")
+		.arg(tableName())
 		.arg(objectName())
 		.arg(lastError().text());
 }

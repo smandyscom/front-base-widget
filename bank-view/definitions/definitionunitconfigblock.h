@@ -64,9 +64,9 @@ namespace UnitConfigBlock {
 		ID = INVALID_INDEX - 1,
 		UNIT_NAME = INVALID_INDEX - 3,
 		NAME = INVALID_INDEX - 4,
+		UNIT_ID = INVALID_INDEX - 5,
+		CONFIG_ID = INVALID_INDEX - 6,
 		//!
-		UNIT_ID = UnitConfig::OFFSET_CONFIG_UNIT_ID,
-		CONFIG_ID = UnitConfig::OFFSET_CONFIG_CONFIG_ID,
 		VALUE = UnitConfig::OFFSET_CONFIG_VALUE,
 	};
 	Q_ENUM_NS(DataBaseHeaders)

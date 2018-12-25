@@ -6,6 +6,8 @@
 
 #include <abstractsqltableadpater.h>
 
+#define TC3 true
+
 using namespace DEF_BASIC_DIMENSION;
 
 class CylinderMonitorBlock :
@@ -213,6 +215,21 @@ enum DataBaseHeaders
     TIMER_SET=CylinderContext::OFFSET_CONTEXT_TMR_SET_VALUE,
     A_SENSOR_USED_COUNT=CylinderContext::OFFSET_CONTEXT_A_SENSOR_USED_COUNT,
     B_SENSOR_USED_COUNT=CylinderContext::OFFSET_CONTEXT_B_SENSOR_USED_COUNT,
+#ifdef TC3
+	ACT_A_1 = -26,
+	ACT_A_2 = -27,
+	ACT_B_1 = -28,
+	ACT_B_2 = -29,
+	SEN_A_1 = -30,
+	SEN_A_2 = -31,
+	SEN_A_3 = -32,
+	SEN_A_4 = -33,
+	SEN_B_1 = -34,
+	SEN_B_2 = -35,
+	SEN_B_3 = -36,
+	SEN_B_4 = -37,
+#endif
+#ifdef MIII
     ACT_A_1=CylinderContext::OFFSET_CONTEXT_ACT_A_1,
     ACT_A_2=CylinderContext::OFFSET_CONTEXT_ACT_A_2,
     ACT_B_1=CylinderContext::OFFSET_CONTEXT_ACT_B_1,
@@ -225,6 +242,7 @@ enum DataBaseHeaders
     SEN_B_2=CylinderContext::OFFSET_CONTEXT_SENSOR_B_2,
     SEN_B_3=CylinderContext::OFFSET_CONTEXT_SENSOR_B_3,
     SEN_B_4=CylinderContext::OFFSET_CONTEXT_SENSOR_B_4,
+#endif
 };
 Q_ENUM_NS(DataBaseHeaders)
 
