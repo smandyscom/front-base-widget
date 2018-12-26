@@ -15,9 +15,6 @@ ControllerMaterialTransfer::ControllerMaterialTransfer(quint8 clientId, quint16 
 	m_monitor_propertyKeys << act;
 	m_monitor_propertyKeys << valid;
 	m_monitor_propertyKeys << QVariant::fromValue(SlotDataBlock::MATERIAL_ID);
-	//!
-	//m_operator_propertyKeys[act.toString()] = act;
-	//m_operator_propertyKeys[valid.toString()] = valid;
 }
 
 ControllerMaterialTransfer::~ControllerMaterialTransfer()
@@ -26,20 +23,20 @@ ControllerMaterialTransfer::~ControllerMaterialTransfer()
 }
 
 //!Select different handling routine
-void ControllerMaterialTransfer::Setup(SyncRole role, int index, AbstractSqlTableAdpater* adaptor)
+void ControllerMaterialTransfer::Setup(SlotDataBlock::SyncRole role, int index, AbstractSqlTableAdpater* adaptor)
 {
 	//! Role
 	switch (role)
 	{
-	case ControllerMaterialTransfer::ROLE_UPDATE_HEADER:
+	case SlotDataBlock::ROLE_UPDATE_HEADER:
 		break;
-	case ControllerMaterialTransfer::ROLE_UPDATE_BLOCK:
+	case SlotDataBlock::ROLE_UPDATE_BLOCK:
 		connect(this, &ControllerMaterialTransfer::actionRaised, this, &ControllerMaterialTransfer::onTableUpdate);
 		break;
-	case ControllerMaterialTransfer::ROLE_CREATE:
+	case SlotDataBlock::ROLE_CREATE:
 		connect(this, &ControllerMaterialTransfer::actionRaised, this, &ControllerMaterialTransfer::onTableInsert);
 		break;
-	case ControllerMaterialTransfer::ROLE_QUERY:
+	case SlotDataBlock::ROLE_QUERY:
 		connect(this, &ControllerMaterialTransfer::actionRaised, this, &ControllerMaterialTransfer::onTableQuery);
 		break;
 	default:
@@ -48,6 +45,7 @@ void ControllerMaterialTransfer::Setup(SyncRole role, int index, AbstractSqlTabl
 
 	m_adpator = adaptor;
 	m_slotIndex = index;
+	m_role = role;
 	//! report slot index to receiver?
 }
 
@@ -66,7 +64,9 @@ void ControllerMaterialTransfer::onAcknowledged(InterfaceRequest ack)
 
 		emit actionRaised(); //re-direct to specific function
 		
-		m_channel->Access(toAddressMode(SlotDataBlock::BIT1_ACT), false);
+		onPropertyChanged(QVariant::fromValue(SlotDataBlock::BIT1_ACT), false);
+
+		emit m_port->externalPropertyChange(QVariant::fromValue(m_role), m_materialId);
 	}
 
 	//! After database updated
@@ -109,8 +109,6 @@ void ControllerMaterialTransfer::onTableInsert()
 	
 	//!Write-into bus
 	onPropertyChanged(QVariant::fromValue(SlotDataBlock::MATERIAL_ID), m_materialId);
-	/*setProperty(QVariant::fromValue(SlotDataBlock::MATERIAL_ID).toString().toStdString().c_str(), 
-		(MODBUS_U_LONG)m_materialId);*/
 
     qDebug() << QString("%1,onInsert elapsed,%2,%3").arg(m_slotIndex).arg(stopWatch.elapsed()).arg(m_materialId);
 

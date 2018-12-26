@@ -62,54 +62,58 @@ void FrontSlot::dynamicPropertyChanged(int key, QVariant value)
 {
 	switch (key)
 	{
-	case SlotDataBlock::BIT1_ACT:
-		if (!value.toBool())
-		{
-			ui->lcdNumberID->display(QString::number(value.toUInt()));
-			//! Simple static
-			if (m_lastId != value.toUInt())
-			{
-				m_totalCounter += 1;
-
-				//query database to get whether OK/NG
-				QSqlRecord record = utilities::getSqlTableSelectedRecord(m_model,
-					QVariant::fromValue(HEADER_STRUCTURE::ID),
-					value);
-				SlotBlock::Grade grade =
-					record.value(QVariant::fromValue(SlotBlock::GRADE).toString().toStdString().c_str())
-					.value<SlotBlock::Grade>();
-
-				switch (grade)
-				{
-				case SlotBlock::OK:
-				case SlotBlock::BYPASS:
-					m_okCounter += 1;
-					break;
-				case SlotBlock::NG:
-					m_ngCounter += 1;
-					break;
-				default:
-					break;
-				}
-
-				//rate
-				if (m_totalCounter != 0) {
-					ui->lcdNumberOKRate->display(m_okCounter / m_totalCounter);
-					ui->lcdNumberNGRate->display(m_ngCounter / m_totalCounter);
-				}
-				else
-				{
-					ui->lcdNumberOKRate->display(0);
-					ui->lcdNumberNGRate->display(0);
-				}
-			}
-			m_lastId = value.toUInt();
-		}//if()
-		break;
 	case SlotDataBlock::BIT2_VALID:
 		//! use QSS to control
 		break;
-	case SlotDataBlock::MATERIAL_ID:
+	case SlotDataBlock::ROLE_QUERY:
+	case SlotDataBlock::ROLE_UPDATE_BLOCK:
+		
+		//! Simple static
+		if (m_lastId != value.toUInt())
+		{
+			m_totalCounter += 1;
+
+			//query database to get whether OK/NG
+			QSqlRecord record = utilities::getSqlTableSelectedRecord(m_model,
+				QVariant::fromValue(HEADER_STRUCTURE::ID),
+				value);
+			SlotBlock::Grade grade =
+				record.value(QVariant::fromValue(SlotBlock::GRADE).toString().toStdString().c_str())
+				.value<SlotBlock::Grade>();
+
+			switch (grade)
+			{
+			case SlotBlock::OK:
+			case SlotBlock::BYPASS:
+				m_okCounter += 1;
+				break;
+			case SlotBlock::NG:
+				m_ngCounter += 1;
+				break;
+			default:
+				break;
+			}
+			ui->labelOKNG->setText(QVariant::fromValue(grade).toString());
+			setProperty(QVariant::fromValue(SlotBlock::GRADE).toString().toStdString().c_str(),QVariant::fromValue(grade));
+
+			//!
+			ui->lcdNumberTotalCounter->display(m_totalCounter);
+			ui->lcdNumberNGCounter->display(m_ngCounter);
+			ui->lcdNumberOKCounter->display(m_okCounter);
+			//rate
+			if (m_totalCounter != 0) {
+				ui->lcdNumberOKRate->display(((double)m_okCounter / (double)m_totalCounter) * 100);
+				ui->lcdNumberNGRate->display(((double)m_ngCounter / (double)m_totalCounter) * 100);
+			}
+			else
+			{
+				ui->lcdNumberOKRate->display(0);
+				ui->lcdNumberNGRate->display(0);
+			}
+		}
+		m_lastId = value.toUInt();
+	case SlotDataBlock::ROLE_CREATE:
+		ui->lcdNumberID->display(QString::number(value.toUInt()));
 		break;
 	default:
 		break;

@@ -37,3 +37,9 @@ QWidget[OFFSET_UOB_TRIG_STEP="true"] #pushButtonStep
 * {
     font-size : 36px;
 }
+
+/*size control*/
+#groupBoxMonitor
+{
+    max-width : 800px;
+}

@@ -1250,23 +1250,10 @@ QDateEdit::down-arrow:focus {
     image: url(:/qss_icons/rc/down_arrow.png);
 }
 
-
-/*my customes*/
-/**
-{
-    font-size : 24px;
-}*/
-
 #tabWidget
 {
     font-size : 48px;
-    /*left: 5px;*/
 }
-
-/*QTableView#tableViewMonitor_2 {
-    max-width : 600px;
-    
-}*/
 
  #tabHistory #plainTextEdit 
  {
@@ -1278,6 +1265,16 @@ QDateEdit::down-arrow:focus {
 }
 
 
+
+
+QMenuBar {
+    font-size : 24px;
+    background-color : darkslategrey;
+}
+
+
+/*FrontSlot(Material) relating*/
+
 FrontSlot QLabel {
     font-size : 24px;
     max-height : 35px;
@@ -1287,15 +1284,19 @@ FrontSlot QLabel {
 FrontSlot QPushButton {
     font-size : 24px;
 }
-
-QMenuBar {
-    font-size : 24px;
-    background-color : darkslategrey;
+FrontSlot[BIT2_VALID="true"] #labelIsValid
+{
+    background-color : lawngreen;
 }
-
-
-/*QMenuBar QMenu#menuVersion {
-    border : 1px solid red;
-    font-size : 96px;
-    
-}*/
+FrontSlot[GRADE="OK"] #labelOKNG
+{
+    background-color : lightgreen;
+}
+FrontSlot[GRADE="NG"] #labelOKNG
+{
+    background-color : palevioletred;
+}
+FrontSlot[GRADE="BYPASS"] #labelOKNG
+{
+    background-color : blueviolet;
+}

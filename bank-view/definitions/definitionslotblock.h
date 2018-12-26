@@ -47,6 +47,25 @@ public:
 		BIT1_DONE = 0x10000+WORD_IN,
 	};
 	Q_ENUM(Bits)
+	enum SyncRole
+    {
+		ROLE_NONE = 0,
+        ROLE_UPDATE_HEADER = 0x01,
+        ROLE_UPDATE_BLOCK = 0x02, //read from bus write-in db
+        ROLE_CREATE = 0x04, //generate material id
+        ROLE_QUERY = 0x08,  //read from DB write-in bus
+    };
+	enum Miscs
+	{
+		MAT_DATA_SLOT,
+		//! Database header
+		CLIENT_ID,
+		BASE_OFFSET,
+		INTERVAL,
+		ROLE,
+	};
+    Q_ENUM(SyncRole)
+	Q_ENUM(Miscs)
 
 	SlotDataBlock(QObject* parent = nullptr) : 
 		AbstractDataBlock(parent)

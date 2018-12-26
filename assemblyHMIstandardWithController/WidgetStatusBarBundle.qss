@@ -43,3 +43,29 @@
 {
     /*background-color : orange;*/
 }
+
+#progressBarTaskQueue
+{
+    min-width : 100px;
+    max-width : 100px;
+}
+#lcdNumberElapsedTime
+{
+    min-width : 50px;
+    max-width : 50px;
+}
+#labelCurrentMode
+{
+    min-width : 350px;
+    max-width : 350px;
+}
+#labelInitializingStatus
+{
+    min-width : 350px;
+    max-width : 350px;
+}
+#labelLinkStatus
+{
+    min-width : 120px;
+    max-width : 120px;
+}

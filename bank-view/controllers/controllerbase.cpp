@@ -43,48 +43,13 @@ void ControllerBase::onAcknowledged(InterfaceRequest ack)
 
 	if (cid != m_clientId)
 		return;
-
-    //! could be overriden by derived
-    //if (!m_isInitialized)
-    //{
-    //    onInitializing(ack);
-    //    return; // first time received ack
-    //}
-
-    //! Raising property updating (string copy , performance issue?
-  //  foreach (QVariant var, m_monitor_propertyKeys) {
-
-		////to receivers
-  //      foreach (QObject* receiver, m_receivers) {
-  //          //receiver->setProperty(var.toString().toStdString().c_str(),m_monitor_propertyValues(var));
-  //          //receiver->setProperty(QString::number(var.toInt()).toStdString().c_str(),m_monitor_propertyValues(var));
-		//	PropertyPortCommon* ppc = qobject_cast<PropertyPortCommon*>(receiver);
-		//	emit ppc->propertyChange(var, m_monitor_propertyValues(var));
-		//	emit ppc->propertyChange(QString::number(var.toInt()), m_monitor_propertyValues(var));
-  //      }
-
-		//////to myself
-		////setProperty(var.toString().toStdString().c_str(), m_monitor_propertyValues(var));
-		////setProperty(QString::number(var.toInt()).toStdString().c_str(), m_monitor_propertyValues(var));
-  //  }
-	
 }
 
 void ControllerBase::onUpdate()
 {
 	foreach(QVariant var, m_monitor_propertyKeys) {
-
-		//to receivers
-		/*foreach(QObject* receiver, m_port) {*/
-			//receiver->setProperty(var.toString().toStdString().c_str(),m_monitor_propertyValues(var));
-			//receiver->setProperty(QString::number(var.toInt()).toStdString().c_str(),m_monitor_propertyValues(var));
 			emit m_port->externalPropertyChange(var, m_monitor_propertyValues(var));
 			emit m_port->externalPropertyChange(QString::number(var.toInt()), m_monitor_propertyValues(var));
-		//}
-
-		////to myself
-		//setProperty(var.toString().toStdString().c_str(), m_monitor_propertyValues(var));
-		//setProperty(QString::number(var.toInt()).toStdString().c_str(), m_monitor_propertyValues(var));
 	}
 }
 

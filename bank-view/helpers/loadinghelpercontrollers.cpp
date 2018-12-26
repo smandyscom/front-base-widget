@@ -78,18 +78,19 @@ void LoadingHelperControllers::LoadMaterialTransfer()
 
 	//! filter out Role is not zeros
 	model->setFilter(QString("%1<>%2")
-		.arg(QVariant::fromValue(ControllerMaterialTransfer::ROLE).toString())
-		.arg(QVariant::fromValue(ControllerMaterialTransfer::ROLE_NONE).toInt()));
-	//model->select();
+		.arg(QVariant::fromValue(SlotDataBlock::ROLE).toString())
+		.arg(QVariant::fromValue(SlotDataBlock::ROLE_NONE).toInt()));
+	model->select();
 	model->sort(0,Qt::AscendingOrder);
 
-	for (int i = 0; i < model->rowCount(); i++)
+	int count = model->rowCount();
+	for (int i = 0; i < count; i++)
 	{
-		int clientId = model->record(i).value(QVariant::fromValue(ControllerMaterialTransfer::CLIENT_ID).toString()).toInt();
-		int baseOffset = model->record(i).value(QVariant::fromValue(ControllerMaterialTransfer::BASE_OFFSET).toString()).toInt();
-		int interval = model->record(i).value(QVariant::fromValue(ControllerMaterialTransfer::INTERVAL).toString()).toInt();
+		int clientId = model->record(i).value(QVariant::fromValue(SlotDataBlock::CLIENT_ID).toString()).toInt();
+		int baseOffset = model->record(i).value(QVariant::fromValue(SlotDataBlock::BASE_OFFSET).toString()).toInt();
+		int interval = model->record(i).value(QVariant::fromValue(SlotDataBlock::INTERVAL).toString()).toInt();
 		int slotId = model->record(i).value(QVariant::fromValue(HEADER_STRUCTURE::ID).toString()).toInt();
-		ControllerMaterialTransfer::SyncRole role = model->record(i).value(QVariant::fromValue(ControllerMaterialTransfer::ROLE).toString()).value<ControllerMaterialTransfer::SyncRole>();
+		SlotDataBlock::SyncRole role = model->record(i).value(QVariant::fromValue(SlotDataBlock::ROLE).toString()).value<SlotDataBlock::SyncRole>();
 
 		ControllerMaterialTransfer* ref =
 			new ControllerMaterialTransfer(clientId, baseOffset, interval);

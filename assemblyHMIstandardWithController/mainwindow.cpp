@@ -65,7 +65,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	m_controllers->moveToThread(m_thread);
 	connect(m_thread, &QThread::started, m_controllers, &LoadingHelperControllers::ControllersLoadingRoutineV1);
 	connect(m_controllers, &LoadingHelperControllers::controllerLoaded, this, &MainWindow::onControllerLoaded);
+	
 	qRegisterMetaType<QVector<int>>();
+	qRegisterMetaType<Qt::Orientation>();
 
 	m_thread->start();
 #else
@@ -115,7 +117,7 @@ void MainWindow::onControllerLoaded()
 
 		QSqlRecord record = utilities::getSqlTableSelectedRecord(m_controllers->m_database->TableMap(QVariant::fromValue(JunctionBankDatabase::DEF_REGION)),
 			QVariant::fromValue(HEADER_STRUCTURE::ID),
-			i);
+			ref->Index());
 
 		list[i]->Setup(
 			JunctionMaterialDatabase::Instance()->TableMap(ref->Index(),JunctionMaterialDatabase::MAT_DATA_SLOT),
