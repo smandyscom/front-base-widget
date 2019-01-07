@@ -4,6 +4,7 @@
 #include <qdir>
 #include <debugsqltablemodel.h>
 #include <qdebug.h>
+#include <algorithm>
 
 JunctionCommonDatabase::JunctionCommonDatabase(QString databaseName, QObject *parent)
 	: QObject(parent) ,
@@ -14,7 +15,6 @@ JunctionCommonDatabase::JunctionCommonDatabase(QString databaseName, QObject *pa
 
 	//initializing and loading interested tables
 	onInitialize();
-	//onOpenTables();
 }
 
 JunctionCommonDatabase::~JunctionCommonDatabase()
@@ -26,14 +26,29 @@ bool JunctionCommonDatabase::onInitialize()
 {
 	QFileInfo qf(m_database.databaseName());
 	qDebug() << QDir::currentPath();
+	
+	/*QDir d(QDir::currentPath());
+	QStringList l = d.entryList();
+	std::for_each(l.begin(),
+		l.end(),
+		[](QString s) {
+		qDebug() << s;
+	});*/
+
 
 	if (!qf.exists())
-		return false;
+	{
+		qf.setFile(QString("%1.lnk").arg(qf.fileName()));
+		//!try if link existed
+		if (!qf.exists())
+			return false;
+		m_database.setDatabaseName(qf.symLinkTarget()); //link to target
+	}
 
 	if (!m_database.open())
 		return false;
 
-	qDebug() << qf.absoluteFilePath();
+	qDebug() << QString("%1 opened with %2 tables").arg(m_database.databaseName()).arg(m_database.tables().count());
 
 	return true;
 }
@@ -66,12 +81,6 @@ bool JunctionCommonDatabase::onOpenTables()
 	//!make sure all result are true
 	return result;
 }
-
-//QList<QVariant> JunctionCommonDatabase::onGenerateTableNames()
-//{
-//	//! implemented by derived class
-//	return QList<QVariant>();
-//}
 
 QSqlTableModel* JunctionCommonDatabase::TableMap(QVariant value)
 {

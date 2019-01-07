@@ -78,10 +78,7 @@ bool FrontCommon::event(QEvent* event)
         int id = key.toInt(&result);
         if(result)
             dynamicPropertyChanged(id,value);
-        /*foreach (QWidget* var, m_widgetsPolish) {
-            var->style()->polish(var);
-        }*/
-//        style()->polish(this);
+       
         break;
     }
     case QEvent::Show:
@@ -94,10 +91,6 @@ bool FrontCommon::event(QEvent* event)
     default:
         break;
     }
-
-//    if(m_controller == nullptr)
-//        m_controller = findChild<ControllerBase*>();
-
 
     return QWidget::event(event);
 }
