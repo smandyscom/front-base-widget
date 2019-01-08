@@ -131,7 +131,7 @@
      </property>
      <addaction name="actionReadCylinder"/>
      <addaction name="actionReadAxis"/>
-     <addaction name="actionReadCommandBlock"/>
+     <addaction name="actionReadCommand_Block"/>
      <addaction name="actionReadSignal"/>
      <addaction name="actionReadUnit"/>
      <addaction name="actionReadAll"/>
@@ -142,7 +142,7 @@
      </property>
      <addaction name="actionWriteCylinder"/>
      <addaction name="actionWriteAxis"/>
-     <addaction name="actionWriteCommandBlock"/>
+     <addaction name="actionWriteCommand_Block"/>
      <addaction name="actionWriteSignal"/>
      <addaction name="actionWriteUnit"/>
      <addaction name="actionWriteAll"/>
@@ -194,7 +194,7 @@
     <string>Axis</string>
    </property>
   </action>
-  <action name="actionReadCommandBlock">
+  <action name="actionReadCommand_Block">
    <property name="text">
     <string>Command block</string>
    </property>
@@ -224,7 +224,7 @@
     <string>Axis</string>
    </property>
   </action>
-  <action name="actionWriteCommandBlock">
+  <action name="actionWriteCommand_Block">
    <property name="text">
     <string>Command block</string>
    </property>
