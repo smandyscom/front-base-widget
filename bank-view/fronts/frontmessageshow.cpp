@@ -22,12 +22,6 @@ FrontMessageShow::~FrontMessageShow()
     delete ui;
 }
 
-void FrontMessageShow::lineCheck()
-{
-    //ui->textBrowser->
-}
-
-
 void FrontMessageShow::onMessageReceived(QString arg)
 {
     ui->plainTextEdit->appendPlainText(arg);

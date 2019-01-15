@@ -27,7 +27,6 @@ protected slots:
 private:
     Ui::FrontMessageShow *ui;
 protected:
-    void lineCheck();
     MessageReceiver* m_receiver;
 };
 

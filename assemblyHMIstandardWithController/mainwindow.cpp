@@ -7,7 +7,7 @@
 
 
 #include <qsqlrecord.h>
-
+#include <messagerecorder.h>
 #include <widgetstatusbarbundle.h>
 
 
@@ -20,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 	
-	
+	MessageRecorder::Instance();//initiating log
 	//search all action
 	QList<QAction*> actions = findChildren<QAction*>();
 	for each (QAction* var in actions)

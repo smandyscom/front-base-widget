@@ -11,15 +11,17 @@ MessageHandler::MessageHandler(QObject *parent) : QObject(parent)
 //! Dispatch to all receiver
 void MessageHandler::messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &str)
 {
-#ifndef NDEBUG
+#ifndef QT_NO_DEBUG
 	//IF define RELEASE , do not output to Debugger/Console
 	m_default(type,context,str);
 #endif // !NDEBUG
 
-    QString formatted = QString("%1[%2]%3")
+    QString formatted = QString("%1[%2]%3,%4,%5")
             .arg(QDateTime::currentDateTime().toString(timeformat))
             .arg(QVariant::fromValue(Message::Type(type)).toString())
-            .arg(str);
+            .arg(str)
+			.arg(context.file)
+			.arg(context.function);
 
     //! Dispatch messages
     foreach (MessageReceiver* var, m_list) {
@@ -30,10 +32,6 @@ void MessageHandler::messageHandler(QtMsgType type, const QMessageLogContext &co
 void MessageHandler::registerReceiver(MessageReceiver *arg)
 {
     m_list.append(arg);
-//    connect(arg,SIGNAL(destroyed(QObject*)),[=](){
-//        //remove from list
-//        __list.removeOne(arg);
-//    });
 }
 void MessageHandler::unregisterReceiver(MessageReceiver *arg)
 {
