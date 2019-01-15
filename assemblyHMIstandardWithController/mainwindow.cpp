@@ -19,7 +19,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-	ui->menuVersion->setTitle(QString("build %1").arg(APP_VER));
+	
+	
 	//search all action
 	QList<QAction*> actions = findChildren<QAction*>();
 	for each (QAction* var in actions)
@@ -132,10 +133,16 @@ void MainWindow::onControllerLoaded()
 	
 	m_controllers->CrossLink(m_controllers->m_controllerTransfer->port(), widget->port());
 	m_controllers->CrossLink(m_controllers->m_controllerMain->port(), widget->port());
+
+	QDateTime timeDate = QDateTime::fromString(QString(APP_VER), "ddd MM\/dd\/yyyy, h:mm:ss.z");
+	qDebug() << timeDate.isValid();
+	qDebug() << timeDate.toString("ddMMyyhhmmss");
 	widget->setProperty(QString::number(WidgetStatusBarBundle::MODEL).toStdString().c_str(),
+		QString("%1\n%2").arg(
 		utilities::getSqlTableSelectedRecord(m_controllers->m_database->TableMap(JunctionBankDatabase::PROPERTIES),
 			QVariant::fromValue(HEADER_STRUCTURE::NAME),
-			QVariant::fromValue(WidgetStatusBarBundle::MODEL)).value("VALUE"));
+			QVariant::fromValue(WidgetStatusBarBundle::MODEL)).value("VALUE").toString())
+	.arg(timeDate.toString("ddMMyyhhmmss")));
 	
 	//!
 	showFullScreen();

@@ -50,7 +50,8 @@ void WidgetStatusBarBundle::dynamicPropertyChanged(int key, QVariant value)
 	case MainMonitorBlock::OFFSET_UOB_STATE_PAUSE:
 		break;
 	case MODEL:
-		ui.labelModel->setText(value.toString());		
+		//ui.labelModel->setText(value.toString());
+		ui.textBrowser->setText(value.toString());
 		break;
 	case ManualModeDataBlock::PROP_QUEUE_COUNT:
 		ui.progressBarTaskQueue->reset();

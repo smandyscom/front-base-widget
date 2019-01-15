@@ -14,10 +14,10 @@
    <string>WidgetStatusBarBundle</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="8">
-    <widget class="QLabel" name="labelModel">
+   <item row="0" column="4">
+    <widget class="QLabel" name="labelCurrentMode">
      <property name="text">
-      <string>TextLabel</string>
+      <string>Mode</string>
      </property>
     </widget>
    </item>
@@ -28,19 +28,15 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="4">
-    <widget class="QLabel" name="labelCurrentMode">
-     <property name="text">
-      <string>Mode</string>
-     </property>
-    </widget>
-   </item>
    <item row="0" column="7">
     <widget class="QLabel" name="labelCurrentTime">
      <property name="text">
       <string>Time</string>
      </property>
     </widget>
+   </item>
+   <item row="0" column="5">
+    <widget class="QLCDNumber" name="lcdNumberElapsedTime"/>
    </item>
    <item row="0" column="2">
     <widget class="QLabel" name="labelLinkStatus">
@@ -56,8 +52,29 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="5">
-    <widget class="QLCDNumber" name="lcdNumberElapsedTime"/>
+   <item row="0" column="8">
+    <widget class="QTextBrowser" name="textBrowser">
+     <property name="maximumSize">
+      <size>
+       <width>100</width>
+       <height>100</height>
+      </size>
+     </property>
+     <property name="verticalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+     <property name="horizontalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+     <property name="html">
+      <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;a&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;2&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

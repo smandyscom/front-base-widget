@@ -18,7 +18,7 @@
     <item>
      <widget class="TabWidgetOperationMode" name="tabWidget">
       <property name="currentIndex">
-       <number>7</number>
+       <number>0</number>
       </property>
       <property name="documentMode">
        <bool>false</bool>
@@ -116,11 +116,6 @@
     </property>
     <addaction name="actionOperator"/>
    </widget>
-   <widget class="QMenu" name="menuVersion">
-    <property name="title">
-     <string>版本</string>
-    </property>
-   </widget>
    <widget class="QMenu" name="menu">
     <property name="title">
      <string>傳輸</string>
@@ -152,7 +147,6 @@
     <addaction name="menuDownload"/>
    </widget>
    <addaction name="menuAuth"/>
-   <addaction name="menuVersion"/>
    <addaction name="menu"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
