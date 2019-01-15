@@ -5,7 +5,8 @@
 
 
 ControllerMaterialTransfer::ControllerMaterialTransfer(quint8 clientId, quint16 baseOffset, int interval, QObject *parent) :
-	ControllerBase(clientId, baseOffset, interval, parent)
+	ControllerBase(clientId, baseOffset, interval, parent),
+	m_lastActStatus(false)
 {
 	//! Monitor all 128Words
 	m_monitor = new SlotDataBlock(registerWatchList(SlotDataBlock::WORD_OUT, QVariant::fromValue(DataBlock128())));
@@ -37,6 +38,7 @@ void ControllerMaterialTransfer::Setup(SlotDataBlock::SyncRole role, int index, 
 		connect(this, &ControllerMaterialTransfer::actionRaised, this, &ControllerMaterialTransfer::onTableInsert);
 		break;
 	case SlotDataBlock::ROLE_QUERY:
+	case SlotDataBlock::ROLE_QUERY_PASSIVE:
 		connect(this, &ControllerMaterialTransfer::actionRaised, this, &ControllerMaterialTransfer::onTableQuery);
 		break;
 	default:
@@ -57,17 +59,19 @@ int ControllerMaterialTransfer::Index() const
 void ControllerMaterialTransfer::onAcknowledged(InterfaceRequest ack)
 {
 	//!Once Act
-	if (m_monitor->Value(SlotDataBlock::BIT1_ACT).toBool())
+	if ( (m_monitor->Value(SlotDataBlock::BIT1_ACT).toBool() && m_role != SlotDataBlock::ROLE_QUERY_PASSIVE) 
+		|| (!m_monitor->Value(SlotDataBlock::BIT1_ACT).toBool() && m_lastActStatus && m_role==SlotDataBlock::ROLE_QUERY_PASSIVE))
 	{
 		m_materialId = m_monitor->Value(SlotDataBlock::MATERIAL_ID).value<MODBUS_U_LONG>();
 		m_isValid = m_monitor->Value(SlotDataBlock::BIT2_VALID).toBool();
 
 		emit actionRaised(); //re-direct to specific function
-		
-		onPropertyChanged(QVariant::fromValue(SlotDataBlock::BIT1_ACT), false);
-
 		emit m_port->externalPropertyChange(QVariant::fromValue(m_role), m_materialId);
+
+		if(m_monitor->Value(SlotDataBlock::BIT1_ACT).toBool())
+			onPropertyChanged(QVariant::fromValue(SlotDataBlock::BIT1_ACT), false);
 	}
+	m_lastActStatus = m_monitor->Value(SlotDataBlock::BIT1_ACT).toBool();
 
 	//! After database updated
 	ControllerBase::onAcknowledged(ack); //inform front to update
@@ -123,8 +127,9 @@ void ControllerMaterialTransfer::onTableQuery()
 		QVariant::fromValue(SlotBlock::ID)).Anchor());
 
 	//! Write-into Bus
-	/*setProperty(QVariant::fromValue(SlotDataBlock::BLOCK_DATA).toString().toStdString().c_str(),
-		QVariant::fromValue(*reinterpret_cast<CellDataBlock*>(m_adb.Anchor())));*/
+	if(m_role != SlotDataBlock::ROLE_QUERY_PASSIVE)
+		onPropertyChanged(QVariant::fromValue(SlotDataBlock::BLOCK_DATA),
+			QVariant::fromValue(*reinterpret_cast<CellDataBlock*>(m_adb.Anchor())));
 
     qDebug() << QString("%1,onQuery elapsed,%2,%3").arg(m_slotIndex).arg(stopWatch.elapsed()).arg(m_materialId);
 }

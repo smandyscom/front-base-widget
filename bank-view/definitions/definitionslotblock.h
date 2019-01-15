@@ -35,7 +35,7 @@ public:
 		WORD_IN = 0x0008,
 		//! Mutual
 		MATERIAL_ID = 0x0010, //move to first 8 words
-		BLOCK_DATA = 0x0014, //64words occupied
+		BLOCK_DATA = 0x0014, //64words occupied , 20
 	};
 	Q_ENUM(Offset)
 	enum Bits
@@ -54,6 +54,7 @@ public:
         ROLE_UPDATE_BLOCK = 0x02, //read from bus write-in db
         ROLE_CREATE = 0x04, //generate material id
         ROLE_QUERY = 0x08,  //read from DB write-in bus
+		ROLE_QUERY_PASSIVE = 0x18, //read from DB , no write-into bus , after act off
     };
 	enum Miscs
 	{

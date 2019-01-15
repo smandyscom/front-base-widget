@@ -66,6 +66,7 @@ void FrontSlot::dynamicPropertyChanged(int key, QVariant value)
 		//! use QSS to control
 		break;
 	case SlotDataBlock::ROLE_QUERY:
+	case SlotDataBlock::ROLE_QUERY_PASSIVE:
 	case SlotDataBlock::ROLE_UPDATE_BLOCK:
 		
 		//! Simple static

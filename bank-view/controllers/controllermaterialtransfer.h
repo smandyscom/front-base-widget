@@ -43,6 +43,7 @@ protected:
 	int m_slotIndex;
     int m_materialId;
     bool m_isValid;
+	bool m_lastActStatus;
 
     AbstractSqlTableAdpater* m_adpator;
 	SlotDataBlock::SyncRole m_role;
