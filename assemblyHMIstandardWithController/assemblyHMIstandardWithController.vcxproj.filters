@@ -502,5 +502,6 @@
   <ItemGroup>
     <Text Include="WidgetStatusBarBundle.qss" />
     <Text Include="tabSignal.qss" />
+    <Text Include="deploy.bat" />
   </ItemGroup>
 </Project>

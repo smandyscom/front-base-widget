@@ -168,6 +168,16 @@
     <ProjectReference>
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
+    <PreBuildEvent>
+      <Command>$(MSBuildProjectDirectory)\versionauto.bat</Command>
+      <Message>Fetch build time</Message>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>$(MSBuildProjectDirectory)\deploy.bat</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Deploy necssary files</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -1279,6 +1289,8 @@
     </None>
     <None Include="MainWindow.qss">
       <DeploymentContent>true</DeploymentContent>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <FileType>Document</FileType>
     </None>
     <None Include="tabAxis.qss">
       <DeploymentContent>true</DeploymentContent>
@@ -1303,8 +1315,13 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="tabSignal.qss" />
-    <Text Include="WidgetStatusBarBundle.qss" />
+    <Text Include="deploy.bat" />
+    <Text Include="tabSignal.qss">
+      <DeploymentContent>true</DeploymentContent>
+    </Text>
+    <Text Include="WidgetStatusBarBundle.qss">
+      <DeploymentContent>true</DeploymentContent>
+    </Text>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
