@@ -4,7 +4,7 @@
 #include <QtWidgets>
 #include <QtEvents>
 #include <qfilesystemwatcher.h>
-
+#include <abstractauthreceiver.h>
 #include <commonhelper.h>
 //#include <controllerbase.h>
 
@@ -63,8 +63,9 @@ protected:
     //! wrapper function
     QVariant property(QVariant key) const;
 
-    //virtual void dynamicPropertyChanged(QString key,QVariant value){}
 	virtual void dynamicPropertyChanged(int key, QVariant value);
+
+	AbstractAuthReceiver* m_auth;
 private:
     bool m_isQSSInitialized;
 	QFileSystemWatcher* m_watcher;

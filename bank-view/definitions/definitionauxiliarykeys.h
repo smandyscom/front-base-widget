@@ -83,9 +83,12 @@ namespace AUTH {
 Q_NAMESPACE
 enum AuthRoles
 {
-    ROLE_OPERATOR,
-    ROLE_ENGINEER,
-    ROLE_DEVELOPER,
+	PROP_AUTH=-1,
+	PASSWORD=-2,
+
+    ROLE_OPERATOR=0,
+    ROLE_ENGINEER=1,
+    ROLE_DEVELOPER=2,
 };
 Q_ENUM_NS(AuthRoles)
 }

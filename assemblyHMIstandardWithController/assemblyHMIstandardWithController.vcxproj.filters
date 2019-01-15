@@ -200,6 +200,12 @@
     <ClCompile Include="..\bank-view\base\propertyportcommon.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\bank-view\base\abstractauthreceiver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bank-view\controllers\controllerauth.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="..\bank-view\base\abstractsqltableadpater.h">
@@ -385,13 +391,16 @@
     <QtMoc Include="..\bank-view\fronts\frontsignal.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="..\bank-view\definitions\definitionauxiliarykeys.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="..\bank-view\definitions\definitionunitconfigblock.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="..\bank-view\base\propertyportcommon.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\controllers\controllerauth.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="..\bank-view\base\abstractauthreceiver.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -496,6 +505,9 @@
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="version.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\bank-view\definitions\definitionauxiliarykeys.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -8,6 +8,7 @@
 
 #include <qsqlrecord.h>
 #include <messagerecorder.h>
+
 #include <widgetstatusbarbundle.h>
 
 
@@ -77,9 +78,23 @@ MainWindow::MainWindow(QWidget *parent) :
 	m_controllers->m_controllerTransfer->onStateMachineStart();
 #endif // THREADED
 
-		
-	
-	
+	//!Auth	
+	m_auth = new ControllerAuth(this);
+	ui->actionOperator->setProperty(QVariant::fromValue(AUTH::PROP_AUTH).toString().toStdString().c_str(),QVariant::fromValue(AUTH::ROLE_OPERATOR));
+	ui->actionEngineer->setProperty(QVariant::fromValue(AUTH::PROP_AUTH).toString().toStdString().c_str(), QVariant::fromValue(AUTH::ROLE_ENGINEER));
+	ui->actionDeveloper->setProperty(QVariant::fromValue(AUTH::PROP_AUTH).toString().toStdString().c_str(), QVariant::fromValue(AUTH::ROLE_DEVELOPER));
+	actions.clear();
+	actions << ui->actionOperator
+		<< ui->actionEngineer
+		<< ui->actionDeveloper;
+	for each (QAction* var in actions)
+	{
+		connect(var, &QAction::triggered,this,&MainWindow::onAuthAction);
+	}
+	for each (FrontCommon* var in findChildren<FrontCommon*>())
+	{
+		connect(m_auth, &ControllerAuth::roleChanged, static_cast<PropertyPortCommon*>(var->port()), &PropertyPortCommon::onPropertyChanged);
+	}
 }
 
 MainWindow::~MainWindow()
@@ -176,4 +191,12 @@ void MainWindow::onDownloadUploadActionTrigger()
 			->internalPropertyChange(QVariant::fromValue(cmd),
 				QVariant::fromValue(cat));
 	}	
+}
+
+void MainWindow::onAuthAction()
+{
+	m_auth->onAuthChangingRequired(sender()->property(QVariant::fromValue(AUTH::PROP_AUTH).toString().toStdString().c_str()).value<AUTH::AuthRoles>(),
+		QInputDialog::getInt(this,
+			tr("輸入密碼"),
+			tr("密碼")));
 }

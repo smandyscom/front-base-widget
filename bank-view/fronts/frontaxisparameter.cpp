@@ -6,16 +6,15 @@ FrontAxisParameter::FrontAxisParameter(QWidget *parent) :
     ui(new Ui::FrontAxisParameter)
 {
     ui->setupUi(this);
+
+	m_auth->addDisableWidget(AUTH::ROLE_OPERATOR, this);
+
     //! Manual mode required
-    /*setProperty(QVariant::fromValue(HEADER_STRUCTURE::STATE_MANUAL).toString().toStdString().c_str(),
-                true);*/
 	onPropertyChanged(QVariant::fromValue(HEADER_STRUCTURE::STATE_MANUAL),true);
     //!
     m_categrory = ManualModeDataBlock::SELECTION_AXIS;
     m_monitorOperation = utilities::listupEnumVariant<AxisMonitorBlock::MONITOR_OPERATION>();
 	m_monitorOperation << utilities::listupEnumVariant<AxisMonitorBlock::RUN_STATUS>();
-    //m_runStatus = utilities::listupEnumVariant<AxisMonitorBlock::RUN_STATUS>();
-	
     //! QPushButton link
 	m_bankButtons = findChildren<QPushButton*>(QRegExp("\\w+Bank\\w+"));
     foreach (QPushButton* var, m_bankButtons) {

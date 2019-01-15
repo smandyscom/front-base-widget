@@ -115,6 +115,8 @@
      <string>權限</string>
     </property>
     <addaction name="actionOperator"/>
+    <addaction name="actionEngineer"/>
+    <addaction name="actionDeveloper"/>
    </widget>
    <widget class="QMenu" name="menu">
     <property name="title">
@@ -236,6 +238,16 @@
   <action name="actionWriteAll">
    <property name="text">
     <string>All</string>
+   </property>
+  </action>
+  <action name="actionEngineer">
+   <property name="text">
+    <string>Engineer</string>
+   </property>
+  </action>
+  <action name="actionDeveloper">
+   <property name="text">
+    <string>Developer</string>
    </property>
   </action>
  </widget>

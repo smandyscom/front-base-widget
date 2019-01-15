@@ -11,7 +11,7 @@ FrontCommon::FrontCommon(QWidget *parent) :
     setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this,&FrontCommon::customContextMenuRequested,this,&FrontCommon::onCustomContextMenuShowed);
 
-
+	m_auth = new AbstractAuthReceiver(this);
 
 #ifndef QT_NO_DEBUG
 	m_watcher = new QFileSystemWatcher(this);
@@ -21,10 +21,6 @@ FrontCommon::FrontCommon(QWidget *parent) :
 	connect(this, &FrontCommon::objectNameChanged, this, &FrontCommon::onLinkQSSFile);
 
 #endif // DEBUG
-
-
-	
-	
 
 	m_port = new PropertyPortCommon(this);
 	connect(m_port, &PropertyPortCommon::internalPropertyChange, this, &FrontCommon::onPropertyChanged);
@@ -115,6 +111,12 @@ void FrontCommon::onPropertyChanged(QVariant key, QVariant value)
 {
 	setProperty(key.toString().toStdString().c_str(), value);
 	setProperty(QString::number(key.toULongLong()).toStdString().c_str(), value);
+
+	if (key.userType() == qMetaTypeId<AUTH::AuthRoles>() &&
+		key.toInt() == AUTH::PROP_AUTH)
+	{
+		m_auth->onAuthSuccessChanged(value.value<AUTH::AuthRoles>());
+	}
 }
 
 void FrontCommon::onUpdate()
