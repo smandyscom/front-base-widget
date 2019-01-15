@@ -7,6 +7,8 @@ FrontUnitPanel::FrontUnitPanel(QWidget *parent) :
     m_index(0)
 {
     ui->setupUi(this);
+
+	m_auth->addDisableWidget(AUTH::ROLE_OPERATOR, this);
     //!
     m_categrory = ManualModeDataBlock::SELECTION_UNIT;
     m_condition =  utilities::listupEnumVariant<UnitMonitorBlock::TransitionBits>();
@@ -31,9 +33,6 @@ FrontUnitPanel::FrontUnitPanel(QWidget *parent) :
 //        ui->pushButtonPause,
 //        ui->pushButtonMaterial
 //    };
-
-//    //!
-//    __disableList[AUTH::ROLE_OPERATOR].append(this);
 }
 
 FrontUnitPanel::~FrontUnitPanel()

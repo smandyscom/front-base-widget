@@ -7,6 +7,9 @@ FrontCylinderPanel::FrontCylinderPanel(QWidget *parent) :
     m_index(0)
 {
     ui->setupUi(this);
+
+	m_auth->addDisableWidget(AUTH::ROLE_OPERATOR, this);
+
     //! Manual mode required
     setProperty(QVariant::fromValue(HEADER_STRUCTURE::STATE_MANUAL).toString().toStdString().c_str(),
                 true);
@@ -37,17 +40,6 @@ FrontCylinderPanel::FrontCylinderPanel(QWidget *parent) :
 //        ui->pushButtonGoB,
 //        ui->tableViewCylinder,
 //    };
-    //!
-//    __disableList[AUTH::ROLE_OPERATOR].append(this);
-
-    //! Stop polling when editing
-//    connect(ui->tableViewCylinder,&QTableView::doubleClicked,[=](){
-//       qobject_cast<TableModelCylinderVisual*>(__cylinderTable)->onBeforeEditing();
-//    });
-//    connect(ui->tableViewCylinder,&QTableView::clicked,[=](){
-//        qobject_cast<TableModelCylinderVisual*>(__cylinderTable)->onAfterEditing();
-//    });
-
 }
 
 

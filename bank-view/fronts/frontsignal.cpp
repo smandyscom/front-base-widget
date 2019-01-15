@@ -5,6 +5,8 @@ FrontSignal::FrontSignal(QWidget *parent)
 	m_index(0)
 {
 	ui.setupUi(this);
+
+	m_auth->addDisableWidget(AUTH::ROLE_OPERATOR, this);
 	//!
 	setProperty(QVariant::fromValue(HEADER_STRUCTURE::STATE_MANUAL).toString().toStdString().c_str(),
 		true);
