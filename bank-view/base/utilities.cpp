@@ -46,6 +46,7 @@ QSqlRecord utilities::getSqlTableSelectedRecord(QSqlTableModel *target, QVariant
 
     QSqlTableModel* m_dup = m_cachedTables[target->database().connectionName()];
 
+	//! Access violation raise here (Main thread
     m_dup->setTable(target->tableName());
     m_dup->select();
 

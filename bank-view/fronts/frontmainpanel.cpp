@@ -23,6 +23,11 @@ FrontMainPanel::FrontMainPanel(QWidget *parent) :
         m_widgetsPolish.append(var);
     }
 	m_widgetsPolish.append(ui->textBrowserErrorDescription);
+
+	//!
+	m_delayTimer = new QTimer(this);
+	m_delayTimer->setInterval(500);
+	connect(m_delayTimer, &QTimer::timeout, this, &FrontMainPanel::onDelayTimeout);
 }
 
 FrontMainPanel::~FrontMainPanel()
@@ -123,13 +128,14 @@ void FrontMainPanel::dynamicPropertyChanged(int key, QVariant value)
 	case ManualModeDataBlock::PROP_MANUAL_STATE:
 		switch (value.value<ManualModeDataBlock::ManualState>())
 		{
-		case ManualModeDataBlock::STATE_PLC_READY:	
-		case ManualModeDataBlock::STATE_IN_AUTO:
-			setEnabled(true);
-			break;
+		//case ManualModeDataBlock::STATE_PLC_READY:	
+		//case ManualModeDataBlock::STATE_IN_AUTO:
+		//	//setEnabled(true);
+		//	break;
 		case ManualModeDataBlock::STATE_RUN_ON:
 		case ManualModeDataBlock::STATE_DONE_ON:
 			setEnabled(false);
+			m_delayTimer->start(); //restart
 			break;
 		default:
 			break;
@@ -202,15 +208,21 @@ QString FrontMainPanel::errorDescription(int deviceCategrory,int deviceIndex,int
             description.append(QString("%1\n").arg(record.value(QVariant::fromValue(locale).toString()).toString()));
     }*/
 
-    /*return QString("%1,%2,%3")
-            .arg(recordDevice.value(QVariant::fromValue(locale).toString()).toString())
-            .arg(recordIndex.value(QVariant::fromValue(NAME).toString()).toString())
-            .arg(recordIndex.value(QVariant::fromValue(locale).toString()).toString()) +
-            QString("%1")
-            .arg(description);*/
-
 	return QString("%1,%2,%3")
 		.arg(device)
 		.arg(index)
 		.arg(description);
+}
+
+void FrontMainPanel::onDelayTimeout()
+{
+	switch (property(QVariant::fromValue(ManualModeDataBlock::PROP_MANUAL_STATE).toString().toStdString().c_str()).value<ManualModeDataBlock::ManualState>())
+	{
+	case ManualModeDataBlock::STATE_PLC_READY:
+	case ManualModeDataBlock::STATE_IN_AUTO:
+		setEnabled(true);
+		break;
+	default:
+		break;
+	}
 }

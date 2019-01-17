@@ -52,6 +52,7 @@ public:
 		QSqlTableModel* monitorHeader);
 protected slots:
     void onButtonClicked();
+	void onDelayTimeout();
 protected:
 
 
@@ -80,6 +81,8 @@ protected:
     void dynamicPropertyChanged(int key,QVariant value) Q_DECL_OVERRIDE;
 
 	QSqlTableModel* m_monitorTable;
+
+	QTimer* m_delayTimer;
 };
 
 #endif // FRONTMAINPANEL_H
