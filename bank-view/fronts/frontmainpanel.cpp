@@ -151,25 +151,47 @@ FrontMainPanel::MainStates FrontMainPanel::mainState(bool isPause, bool isManual
 }
 QString FrontMainPanel::errorDescription(int deviceCategrory,int deviceIndex,int errorCode)
 {
-    QSqlRecord recordIndex;
+    
+    if(errorCode==0)
+        return QString(""); //clear screen
 
-    if(m_errorDeviceMap.contains(deviceCategrory))
-        recordIndex = m_errorDeviceMap[deviceCategrory]->record(deviceIndex);
+	if (!m_errorDeviceMap.contains(deviceCategrory))
+		return QString("%4[%1:%2:%3]")
+		.arg(deviceCategrory)
+		.arg(deviceIndex)
+		.arg(errorCode)
+		.arg("no description");
+
+	QSqlRecord recordIndex = utilities::getSqlTableSelectedRecord(m_errorDeviceMap[deviceCategrory],
+			QVariant::fromValue(ID),
+			QVariant::fromValue(deviceIndex));
 
     QSqlRecord recordDevice =
             utilities::getSqlTableSelectedRecord(m_deviceTable,
                                                  QVariant::fromValue(ID),
                                                  QVariant::fromValue(deviceCategrory));
-    if(errorCode==0)
-        return QString(""); //clear screen
 
-    QSqlTableModel* lookup = m_errorCodeMap[deviceCategrory];
 
-    if(lookup == nullptr)
-        return QString("%1")
-                .arg("no description");
+   
+	//represented by unique error id
+	QSqlRecord recordDescription = utilities::getSqlTableSelectedRecord(m_errorDeviceMap[deviceCategrory],
+		QVariant::fromValue(ID),
+		QVariant::fromValue(errorCode));
+		
+	QString device = recordDevice.isEmpty() ?
+		QString(deviceCategrory) :
+		recordDevice.value(QVariant::fromValue(locale).toString()).toString();
 
-    QString description;
+	qDebug() << recordIndex.value(QVariant::fromValue(NAME).toString()).isNull();
+	QString index = recordIndex.value(QVariant::fromValue(NAME).toString()).isNull() ?
+		QString::number(deviceIndex) :
+		recordIndex.value(QVariant::fromValue(NAME).toString()).toString() + 
+		recordIndex.value(QVariant::fromValue(locale).toString()).toString();
+
+	qDebug() << recordDescription.value(QVariant::fromValue(locale).toString()).isNull();
+	QString description = recordDescription.value(QVariant::fromValue(locale).toString()).isNull() ?
+		QString("0x%1").arg(QString::number(errorCode,16)) :
+		recordDescription.value(QVariant::fromValue(locale).toString()).toString();
 
 	//represented by bit occurance (Stupid MIII representation
     /*for(int i=0;i<lookup->rowCount();i++)
@@ -180,17 +202,15 @@ QString FrontMainPanel::errorDescription(int deviceCategrory,int deviceIndex,int
             description.append(QString("%1\n").arg(record.value(QVariant::fromValue(locale).toString()).toString()));
     }*/
 
-	//represented by unique error id
-	description = utilities::getSqlTableSelectedRecord(lookup,
-		QVariant::fromValue(ID),
-		QVariant::fromValue(errorCode))
-		.value(QVariant::fromValue(locale).toString())
-		.toString();
-
-    return QString("%1,%2,%3")
+    /*return QString("%1,%2,%3")
             .arg(recordDevice.value(QVariant::fromValue(locale).toString()).toString())
             .arg(recordIndex.value(QVariant::fromValue(NAME).toString()).toString())
             .arg(recordIndex.value(QVariant::fromValue(locale).toString()).toString()) +
             QString("%1")
-            .arg(description);
+            .arg(description);*/
+
+	return QString("%1,%2,%3")
+		.arg(device)
+		.arg(index)
+		.arg(description);
 }
