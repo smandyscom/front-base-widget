@@ -149,7 +149,9 @@ void MainWindow::onControllerLoaded()
 	m_controllers->CrossLink(m_controllers->m_controllerTransfer->port(), widget->port());
 	m_controllers->CrossLink(m_controllers->m_controllerMain->port(), widget->port());
 
-	QDateTime timeDate = QDateTime::fromString(QString(APP_VER), "ddd MM\/dd\/yyyy, h:mm:ss.z");
+	QDateTime timeDate = QDateTime::fromString(QString(APP_VER), "ddd MM\/dd\/yyyy,h:mm:ss.z");
+	if(!timeDate.isValid())
+		timeDate = QDateTime::fromString(QString(APP_VER), "ddd MM\/dd\/yyyy, h:mm:ss.z"); //space added
 	qDebug() << timeDate.isValid();
 	qDebug() << timeDate.toString("ddMMyyhhmmss");
 	widget->setProperty(QString::number(WidgetStatusBarBundle::MODEL).toStdString().c_str(),
