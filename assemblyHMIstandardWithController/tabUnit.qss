@@ -45,27 +45,36 @@ QWidget[OFFSET_UOB_TRIG_STEP="true"] #pushButtonStep
 }
 
 /*transition bytes*/
-*[BIT_1_TEMP_CONDITION_1="true"] #labelCondition0 {
+QWidget[BIT_9_TEMP_CONDITION_1="true"] #labelCondition0
+{
     background-color : Green;
 }
-*[BIT_2_TEMP_CONDITION_2="true"] #labelCondition1 {
+QWidget[BIT_10_TEMP_CONDITION_2="true"] #labelCondition1
+{
     background-color : Green;
 }
-*[BIT_3_TEMP_CONDITION_3="true"] #labelCondition2 {
+QWidget[BIT_11_TEMP_CONDITION_3="true"] #labelCondition2
+{
     background-color : Green;
 }
-*[BIT_4_TEMP_CONDITION_4="true"] #labelCondition3 {
+QWidget[BIT_12_TEMP_CONDITION_4="true"] #labelCondition3
+{
     background-color : Green;
 }
-*[BIT_5_TEMP_CONDITION_5="true"] #labelCondition4 {
+QWidget[BIT_13_TEMP_CONDITION_5="true"] #labelCondition4
+{
     background-color : Green;
 }
-*[BIT_6_TEMP_CONDITION_6="true"] #labelCondition5 {
+QWidget[BIT_14_TEMP_CONDITION_6="true"] #labelCondition5
+{
     background-color : Green;
 }
-*[BIT_7_TEMP_CONDITION_7="true"] #labelCondition6 {
+QWidget[BIT_15_TEMP_CONDITION_7="true"] #labelCondition6
+{
     background-color : Green;
 }
-*[BIT_8_TEMP_CONDITION_8="true"] #labelCondition7 {
+QWidget[BIT_16_TEMP_CONDITION_8="true"] #labelCondition7
+{
     background-color : Green;
 }
+

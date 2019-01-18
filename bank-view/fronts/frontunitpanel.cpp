@@ -25,6 +25,8 @@ FrontUnitPanel::FrontUnitPanel(QWidget *parent) :
         connect(var,SIGNAL(clicked(bool)),this,SLOT(onCommandClick()));
         m_widgetsPolish.append(var);
     }
+	QRegExp rx("labelCondition[0-7]");
+	m_widgetsPolish.append(findChildren<QWidget*>(rx));
     //! Interlock
 //    __busyInterlock = {
 //        ui->pushButtonEnableStep,
