@@ -1,3 +1,6 @@
+*{
+    font-size : 24px;
+}
 QGroupBox
 {
     /*margin : 0px 0px 0px 0px;*/
