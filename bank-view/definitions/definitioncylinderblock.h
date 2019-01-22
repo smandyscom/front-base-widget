@@ -185,6 +185,7 @@ Q_NAMESPACE
 enum DataBaseHeaders
 {
     ID = -1,
+	REGION = -63,
     //! NAME
     ACT_A_1_N = -2,
     ACT_A_2_N = -3,
