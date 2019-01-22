@@ -39,7 +39,7 @@ void FrontCommonManual::showEvent(QShowEvent* event)
     {
         //! Resume
         mainDataTable->setFilter(currentFilter());
-        mainDataTable->select();
+        //mainDataTable->select();
     }
     //! Base method
     FrontCommon::showEvent(event);

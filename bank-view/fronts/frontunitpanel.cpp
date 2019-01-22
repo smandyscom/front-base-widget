@@ -110,7 +110,7 @@ int FrontUnitPanel::currentIndex()
 		//! switch configuration
 		QSqlTableModel* m_configTable = qobject_cast<QSqlTableModel*>(ui->tableViewConfig->model());
 		m_configTable->setFilter(utilities::generateFilterString(QVariant::fromValue(UnitConfigBlock::UNIT_ID), m_index));
-		m_configTable->select();
+		//m_configTable->select();
 
     }
     return m_index;

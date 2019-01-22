@@ -80,7 +80,7 @@ void LoadingHelperControllers::LoadMaterialTransfer()
 	model->setFilter(QString("%1<>%2")
 		.arg(QVariant::fromValue(SlotDataBlock::ROLE).toString())
 		.arg(QVariant::fromValue(SlotDataBlock::ROLE_NONE).toInt()));
-	model->select();
+	//model->select();
 	model->sort(0,Qt::AscendingOrder);
 
 	int count = model->rowCount();

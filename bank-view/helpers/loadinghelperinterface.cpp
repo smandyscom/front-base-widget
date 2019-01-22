@@ -14,8 +14,8 @@ void LoadingHelperInterface::LoadingInterfaceV1()
   QSqlTableModel* table = 
 	  JunctionBankDatabase::Instance()->TableMap(JunctionBankDatabase::CLIENTS_CONFIG);
 
-  table->setFilter(nullptr);
-  table->select();
+  //table->setFilter(nullptr);
+  //table->select();
 
   QList<InterfaceClient*> list;
   for (size_t i = 0; i < table->rowCount(); i++)
