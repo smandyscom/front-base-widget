@@ -55,7 +55,27 @@ void FrontCylinderPanel::Setup(QSqlTableModel* cylinderTable,
     mainDataTable = cylinderTable;
 
     ui->widgetFilter->DataTable(cylinderTable);
-    ui->widgetFilter->PrimaryTable(regionTable);
+	//!Rendering region
+	QSqlTableModel* dupRegion =  utilities::duplicate(regionTable);
+	QList<int> regionIds;
+	QString filter;
+	for (size_t i = 0; i < cylinderTable->rowCount(); i++)
+	{
+		int regionId = cylinderTable->record(i).value(QVariant::fromValue(CylinderBlock::REGION).toString()).toInt();
+
+		if (!regionIds.contains(regionId))
+		{
+			if (regionIds.count()>0)
+				filter.append(QString(" OR %1='%2'").arg(QVariant::fromValue(HEADER_STRUCTURE::ID).toString()).arg(regionId));
+			else
+				filter.append(QString("%1='%2'").arg(QVariant::fromValue(HEADER_STRUCTURE::ID).toString()).arg(regionId));
+			regionIds.append(regionId);
+		}
+	}
+	dupRegion->setFilter(filter);
+	dupRegion->select();
+
+    ui->widgetFilter->PrimaryTable(dupRegion);
     //!
     ui->tableViewCylinder->setModel(cylinderTable);
     connect(ui->tableViewCylinder,&QTableView::clicked,this,&FrontCylinderPanel::onMonitorIndexChanged);

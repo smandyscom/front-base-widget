@@ -75,15 +75,36 @@ void FrontAxisParameter::Setup(QSqlTableModel *commandBlockTable,
     ui->tableViewCommandBlock->setModel(mainDataTable);
     HEADER_STRUCTURE::HeaderRender::renderViewHeader(commandBlockTableHeader,ui->tableViewCommandBlock);
     //! Would not influce the setting axis table
-    QSqlTableModel* cloneAxisTable = new QSqlTableModel(ui->widgetFilter,
+   /* QSqlTableModel* dupAxis = new QSqlTableModel(ui->widgetFilter,
                                                         axisTable->database());
-    cloneAxisTable->setTable(axisTable->tableName());
+    dupAxis->setTable(axisTable->tableName());*/
+	QSqlTableModel* dupAxis = utilities::duplicate(axisTable);
+	dupAxis->select();
+	//! Rendering availiable region
+	QSqlTableModel* dupRegion =  utilities::duplicate(regionTable);
+	QList<int> regionIds;
+	QString filter;
+	for (size_t i = 0; i < dupAxis->rowCount(); i++)
+	{
+		int regionId = dupAxis->record(i).value(QVariant::fromValue(AxisBlock::REGION).toString()).toInt();
+
+		if (!regionIds.contains(regionId))
+		{
+			if(regionIds.count()>0)
+				filter.append(QString(" OR %1='%2'").arg(QVariant::fromValue(HEADER_STRUCTURE::ID).toString()).arg(regionId));
+			else
+				filter.append(QString("%1='%2'").arg(QVariant::fromValue(HEADER_STRUCTURE::ID).toString()).arg(regionId));
+			regionIds.append(regionId);
+		}
+	}
+	dupRegion->setFilter(filter);
+	dupRegion->select();
 
     ui->widgetFilter->Setup(mainDataTable,
                             QVariant::fromValue(CommandBlock::AXIS_ID),
-                            cloneAxisTable,
+                            dupAxis,
                             QVariant::fromValue(AxisBlock::REGION),
-                            regionTable);
+		dupRegion);
     //!
     connect(ui->widgetFilter,&FrontTwinFilter2::key1Selected,this,&FrontAxisParameter::onMonitorIndexChanged);
     //!
