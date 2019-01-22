@@ -361,7 +361,7 @@ void FrontAxisParameter::onMonitorIndexChanged()
 {
     m_axisTable->setFilter(utilities::generateFilterString(QVariant::fromValue(HEADER_STRUCTURE::ID),
                                                            currentIndex()));
-    m_axisTable->select();
+    //m_axisTable->select();
 
     FrontCommonManual::onMonitorIndexChanged();
 }

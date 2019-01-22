@@ -23,14 +23,14 @@ void FrontSingleFilter::onSelectedIndexChanged(int i)
     m_filter = utilities::generateFilterString(m_dataKey,QVariant::fromValue(id));
 
     m_dataTable->setFilter(m_filter);
-    m_dataTable->select();
+    //m_dataTable->select();
 }
 
 void FrontSingleFilter::onSelectAll()
 {
     m_filter = nullptr;
     m_dataTable->setFilter(m_filter);
-    m_dataTable->select();
+    //m_dataTable->select();
 }
 
 void FrontSingleFilter::PrimaryTable(QSqlTableModel *model, QVariant showKey)
