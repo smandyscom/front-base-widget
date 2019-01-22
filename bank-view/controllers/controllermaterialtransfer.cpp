@@ -104,7 +104,7 @@ void ControllerMaterialTransfer::onTableInsert()
     m_table->setFilter(QString("%2 = (SELECT MAX(%2)  FROM %1)")
                        .arg(m_table->tableName())
                        .arg(QVariant::fromValue(SlotBlock::ID).toString()));
-    m_table->select();//re-select
+    //m_table->select();//re-select
 
     record = m_table->record(0); //access last row
     m_materialId = record.value(QVariant::fromValue(SlotBlock::ID).toString()).toInt();

@@ -204,7 +204,7 @@ void FrontAxisParameter::onDirectExecution(bool value)
 
 			//! Resume current filter
 			m_commblockAdaptor->Model()->setFilter(currentFilter());
-			m_commblockAdaptor->Model()->select();
+			//m_commblockAdaptor->Model()->select();
         }
         else if(sender()==ui->pushButtonDirectAbsolute)
         {
