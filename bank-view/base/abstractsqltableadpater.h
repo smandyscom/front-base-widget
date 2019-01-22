@@ -43,6 +43,7 @@ public:
         m_concreteBlock(concreteBlock)
     {
         //! directly use parent rather create new one?
+		m_model->select(); //population first time
     }
     //!
     //! \brief Record
@@ -112,7 +113,10 @@ public:
 
 
     QSqlTableModel* Model() const {return m_model;}
-	void Model(QSqlTableModel* model) { m_model = model; }
+	void Model(QSqlTableModel* model) { 
+		m_model = model; 
+		m_model->select();//first time population
+	}
 
 protected:
     QSqlTableModel* m_model;
@@ -140,7 +144,7 @@ protected:
             break;
         }
 
-        m_model->select(); //update before operating
+        //m_model->select(); //update before operating
         return m_index;
     }
 };

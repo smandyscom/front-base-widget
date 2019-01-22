@@ -96,7 +96,7 @@ void ControllerIOMonitor::setModel(QSqlTableModel* model,
 	connect(m_model, &QSqlTableModel::modelReset, this, &ControllerIOMonitor::onModelReset);
 	//!renew 
     m_model->setFilter(nullptr);
-	m_model->select();
+	//m_model->select();
     //!first shot
     m_channel->BeginRead(m_addressList.first(),false);
 }

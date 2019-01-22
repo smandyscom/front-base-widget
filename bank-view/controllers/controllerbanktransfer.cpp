@@ -151,7 +151,7 @@ void ControllerBankTransfer::onPropertyChanged(QVariant key, QVariant value)
             foreach (AbstractSqlTableAdpater* var, m_adaptors.values()) {
 
 				var->Model()->setFilter(nullptr);
-				var->Model()->select();
+				//var->Model()->select();
 
 				int rowCount = var->Model()->rowCount();
 
@@ -171,7 +171,7 @@ void ControllerBankTransfer::onPropertyChanged(QVariant key, QVariant value)
         {
             ManualModeDataBlock::Categrories var = value.value<ManualModeDataBlock::Categrories>();
 			m_adaptors[var]->Model()->setFilter(nullptr);
-			m_adaptors[var]->Model()->select();
+			//m_adaptors[var]->Model()->select();
 			int count = m_adaptors[var]->Model()->rowCount();
 			for (int i = 0; i < m_adaptors[var]->Model()->rowCount(); i++) {
 				TransferTask task{ key.value<ManualModeDataBlock::TransferCommand>(),
