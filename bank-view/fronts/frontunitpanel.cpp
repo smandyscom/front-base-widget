@@ -27,14 +27,11 @@ FrontUnitPanel::FrontUnitPanel(QWidget *parent) :
     }
 	QRegExp rx("labelCondition[0-7]");
 	m_widgetsPolish.append(findChildren<QWidget*>(rx));
-    //! Interlock
-//    __busyInterlock = {
-//        ui->pushButtonEnableStep,
-//        ui->pushButtonStep,
-//        ui->pushButtonWorking,
-//        ui->pushButtonPause,
-//        ui->pushButtonMaterial
-//    };
+	//!
+	for each (QPushButton* var in findChildren<QPushButton*>())
+	{
+		m_widgetLockList.append(var);
+	}
 }
 
 FrontUnitPanel::~FrontUnitPanel()
@@ -58,24 +55,16 @@ void FrontUnitPanel::Setup(QSqlTableModel* unitTable,
 	ui->tableViewConfig->setModel(unitConfig);
 	HEADER_STRUCTURE::HeaderRender::renderViewHeader(unitConfigHeader,
 		ui->tableViewConfig);
+	
 }
 
-//void FrontUnitPanel::onTimerTimeout()
-//{
-
-
-//    //! Interlock
-//    bool result1 = __controller->IsControllerInitialized();
-//    bool result2 = __controller->IsSemiAutoActivated();
-//    foreach (QWidget* var, __busyInterlock) {
-//        var->setEnabled(__controller->IsSemiAutoActivated() &&
-//                        __controller->IsControllerInitialized() &&
-//                        ui->tableViewUnit->selectionModel()->hasSelection());
-//    }
-//    //! Once on working , cannot override to off
-//    ui->pushButtonWorking->setEnabled(ui->pushButtonWorking->isEnabled() &&
-//                                      !umb.Value(__statusShowMap[ui->pushButtonWorking].first.getAddress()).toBool());
-//}
+void FrontUnitPanel::onTimerScan()
+{
+    //! Once on working , cannot override to off
+    ui->pushButtonWorking->setEnabled(ui->pushButtonWorking->isEnabled() &&
+                                      !property(QVariant::fromValue(UnitOperationBlock::OFFSET_UOB_WORKING_OVERRIDE).toString().toStdString().c_str()).toBool());
+	FrontCommonManual::onTimerScan();
+}
 
 void FrontUnitPanel::onCommandClick()
 {
@@ -110,7 +99,6 @@ int FrontUnitPanel::currentIndex()
 		//! switch configuration
 		QSqlTableModel* m_configTable = qobject_cast<QSqlTableModel*>(ui->tableViewConfig->model());
 		m_configTable->setFilter(utilities::generateFilterString(QVariant::fromValue(UnitConfigBlock::UNIT_ID), m_index));
-		//m_configTable->select();
 
     }
     return m_index;

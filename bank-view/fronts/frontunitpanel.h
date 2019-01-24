@@ -30,6 +30,7 @@ public:
 
 protected slots:
     void onCommandClick();
+	void onTimerScan() Q_DECL_OVERRIDE;
 protected:
     Ui::FrontUnitPanel *ui;
 

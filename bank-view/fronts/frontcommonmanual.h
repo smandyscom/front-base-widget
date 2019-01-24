@@ -20,6 +20,7 @@ public:
 protected slots:
     virtual void onMonitorIndexChanged();
 	virtual void onTimerScan();
+	virtual void onDelayTimesout();
 
 	void onPropertyChanged(QVariant key, QVariant value) Q_DECL_OVERRIDE;
 protected:
@@ -34,6 +35,7 @@ protected:
 	bool m_isInitialized;
 
 	QTimer* m_timer;
+	QTimer* m_delayTimer;
 };
 
 #endif // FRONTCOMMONMANUAL_H

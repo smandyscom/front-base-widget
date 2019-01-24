@@ -1,4 +1,5 @@
 #include "frontcommonmanual.h"
+#include <algorithm>
 
 FrontCommonManual::FrontCommonManual(QWidget *parent):
     FrontCommon (parent),
@@ -8,6 +9,9 @@ FrontCommonManual::FrontCommonManual(QWidget *parent):
 	m_timer = new QTimer(this);
 	connect(m_timer, &QTimer::timeout, this, &FrontCommonManual::onTimerScan);
 	m_timer->start();
+	//delay timer
+	m_delayTimer = new QTimer(this);
+	connect(m_delayTimer, &QTimer::timeout, this, &FrontCommonManual::onDelayTimesout);
 }
 
 int FrontCommonManual::currentIndex()
@@ -39,7 +43,6 @@ void FrontCommonManual::showEvent(QShowEvent* event)
     {
         //! Resume
         mainDataTable->setFilter(currentFilter());
-        //mainDataTable->select();
     }
     //! Base method
     FrontCommon::showEvent(event);
@@ -79,6 +82,37 @@ void FrontCommonManual::onPropertyChanged(QVariant key, QVariant value)
 		{
 			//! updated
 			mainDataTable->select();
+		}
+		break;
+	case ManualModeDataBlock::PROP_MANUAL_STATE:
+		switch (value.value<ManualModeDataBlock::ManualState>())
+		{
+		case ManualModeDataBlock::STATE_RUN_ON:
+		case ManualModeDataBlock::STATE_DONE_ON:
+			for each (QWidget* var in m_widgetLockList)
+			{
+				setEnabled(false);
+			}
+			m_delayTimer->start(); //start/restart
+			break;
+		default:
+			break;
+		}
+		break;
+	default:
+		break;
+	}
+}
+
+void FrontCommonManual::onDelayTimesout()
+{
+	switch (property(QVariant::fromValue(ManualModeDataBlock::PROP_MANUAL_STATE).toString().toStdString().c_str()).value<ManualModeDataBlock::ManualState>())
+	{
+	case ManualModeDataBlock::STATE_PLC_READY:
+	case ManualModeDataBlock::STATE_IN_AUTO:
+		for each (QWidget* var in m_widgetLockList)
+		{
+			setEnabled(true);
 		}
 		break;
 	default:

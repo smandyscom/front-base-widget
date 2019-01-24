@@ -128,10 +128,6 @@ void FrontMainPanel::dynamicPropertyChanged(int key, QVariant value)
 	case ManualModeDataBlock::PROP_MANUAL_STATE:
 		switch (value.value<ManualModeDataBlock::ManualState>())
 		{
-		//case ManualModeDataBlock::STATE_PLC_READY:	
-		//case ManualModeDataBlock::STATE_IN_AUTO:
-		//	//setEnabled(true);
-		//	break;
 		case ManualModeDataBlock::STATE_RUN_ON:
 		case ManualModeDataBlock::STATE_DONE_ON:
 			setEnabled(false);

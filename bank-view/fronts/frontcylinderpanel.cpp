@@ -35,11 +35,10 @@ FrontCylinderPanel::FrontCylinderPanel(QWidget *parent) :
         m_widgetsPolish.append(var);
     }
     //! Interlock
-//    __busyInterlock = {
-//        ui->pushButtonGoA,
-//        ui->pushButtonGoB,
-//        ui->tableViewCylinder,
-//    };
+	m_widgetLockList 
+		<< ui->pushButtonGoA
+		<< ui->pushButtonGoB
+		<< ui->tableViewCylinder;
 }
 
 

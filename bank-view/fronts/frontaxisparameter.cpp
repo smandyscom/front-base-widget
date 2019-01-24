@@ -75,9 +75,6 @@ void FrontAxisParameter::Setup(QSqlTableModel *commandBlockTable,
     ui->tableViewCommandBlock->setModel(mainDataTable);
     HEADER_STRUCTURE::HeaderRender::renderViewHeader(commandBlockTableHeader,ui->tableViewCommandBlock);
     //! Would not influce the setting axis table
-   /* QSqlTableModel* dupAxis = new QSqlTableModel(ui->widgetFilter,
-                                                        axisTable->database());
-    dupAxis->setTable(axisTable->tableName());*/
 	QSqlTableModel* dupAxis = utilities::duplicate(axisTable);
 	dupAxis->select();
 	//! Rendering availiable region
@@ -240,26 +237,17 @@ void FrontAxisParameter::onDirectExecution(bool value)
     }
 
     //! Set mode
-    /*m_port->setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_MODE).toString().toStdString().c_str(),
-                              QVariant::fromValue(mode));*/
 	emit m_port->externalPropertyChange(QVariant::fromValue(ManualModeDataBlock::COMMIT_MODE),
 		QVariant::fromValue(mode));
 
     //! Set categrory
-    /*m_port->setProperty(QVariant::fromValue(ManualModeDataBlock::COMMIT_CATEGRORY).toString().toStdString().c_str(),
-                              QVariant::fromValue(categrory));*/
 	emit m_port->externalPropertyChange(QVariant::fromValue(ManualModeDataBlock::COMMIT_CATEGRORY),
 		QVariant::fromValue(categrory));
 
     //! Fire
-    /*m_port->setProperty(QVariant::fromValue(ManualModeDataBlock::DATA_BLOCK_HEAD).toString().toStdString().c_str(),
-                              QVariant::fromValue(data));*/
 	emit m_port->externalPropertyChange(QVariant::fromValue(ManualModeDataBlock::DATA_BLOCK_HEAD),
 		QVariant::fromValue(data));
 
-
-    /*m_controller->setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_1_RUN).toString().toStdString().c_str(),
-                              true);*/
 	emit qobject_cast<PropertyPortCommon*>(m_port)->externalPropertyChange(QVariant::fromValue(ManualModeDataBlock::BIT_1_RUN),
 		true);
 }
@@ -284,8 +272,6 @@ void FrontAxisParameter::onInterrupted(bool value)
     if(value)
         return; //execute when unchecked
 
-    /*m_port->setProperty(QVariant::fromValue(ManualModeDataBlock::BIT_0_ENGAGED_HMI).toString().toStdString().c_str(),
-                              false);*/
 	emit m_port->externalPropertyChange(QVariant::fromValue(ManualModeDataBlock::BIT_0_ENGAGED_HMI),
 		false);
 
@@ -373,8 +359,6 @@ void FrontAxisParameter::onTabCurrentChanged()
     if(ui->tabWidgetCommandPanel->currentWidget() !=
             ui->tabAxisSetting){
 		//!trigger axis parameter transfer
-        /*m_port->setProperty(QVariant::fromValue(ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE).toString().toStdString().c_str(),
-                                  true);*/
 		emit m_port->externalPropertyChange(QVariant::fromValue(ManualModeDataBlock::BATCH_PRESCHEDUALED_MODE),
 			true);
     }
