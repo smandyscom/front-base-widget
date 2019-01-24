@@ -71,6 +71,25 @@ void LoadingHelperControllers::LoadCylinderMonitor()
                                        map);
 }
 
+void LoadingHelperControllers::LoadSafetyInputMonitor()
+{
+	m_controllerSafetyInputMonitor = new ControllerIOMonitor(1, ControllerIOMonitor::NO_POLLING);
+	QMap<QVariant, QVariant> map;
+	map[utilities::trimNamespace(QVariant::fromValue(IoAttributes::HAL_ADDRESS))] =
+		utilities::trimNamespace(QVariant::fromValue(IoAttributes::NAME));
+	m_controllerSafetyInputMonitor->setModel(m_database->TableMap(JunctionBankDatabase::WHOLE_SAFETY_INPUTS),
+		map);
+}
+void LoadingHelperControllers::LoadSafetyOutputMonitor()
+{
+	m_controllerSafetyOutputMonitor = new ControllerIOMonitor(2, ControllerIOMonitor::NO_POLLING);
+	QMap<QVariant, QVariant> map;
+	map[utilities::trimNamespace(QVariant::fromValue(IoAttributes::HAL_ADDRESS))] =
+		utilities::trimNamespace(QVariant::fromValue(IoAttributes::NAME));
+	m_controllerSafetyOutputMonitor->setModel(m_database->TableMap(JunctionBankDatabase::WHOLE_SAFETY_OUTPUTS),
+		map);
+}
+
 void LoadingHelperControllers::LoadMaterialTransfer()
 {
 	QSqlTableModel* model = 
@@ -123,6 +142,9 @@ void LoadingHelperControllers::ControllersLoadingRoutineV1()
     LoadCylinderMonitor();
 	//!Load slot material controller
 	LoadMaterialTransfer();
+	//!Safety IO
+	LoadSafetyInputMonitor();
+	LoadSafetyOutputMonitor();
 
 	emit controllerLoaded();
 }

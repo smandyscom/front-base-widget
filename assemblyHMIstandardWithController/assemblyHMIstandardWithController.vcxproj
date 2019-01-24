@@ -1323,6 +1323,7 @@
     <None Include="tabIO.qss">
       <DeploymentContent>true</DeploymentContent>
     </None>
+    <None Include="tabSafety.qss" />
     <None Include="versionauto.bat" />
     <None Include="widgetMain.qss">
       <DeploymentContent>true</DeploymentContent>

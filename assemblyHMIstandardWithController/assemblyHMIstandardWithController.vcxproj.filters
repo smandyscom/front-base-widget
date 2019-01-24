@@ -403,6 +403,9 @@
     <QtMoc Include="..\bank-view\base\abstractauthreceiver.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="..\bank-view\definitions\definitionauxiliarykeys.h">
+      <Filter>Generated Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="debug\moc_predefs.h.cbt">
@@ -499,15 +502,13 @@
     <None Include="versionauto.bat">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="tabSafety.qss" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="version.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\bank-view\definitions\definitionauxiliarykeys.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

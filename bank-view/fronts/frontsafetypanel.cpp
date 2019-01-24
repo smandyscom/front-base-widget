@@ -4,7 +4,7 @@
 
 
 FrontSafetyPanel::FrontSafetyPanel(QWidget *parent) :
-    QWidget(parent),
+    FrontCommon(parent),
     ui(new Ui::FrontSafetyPanel)
 {
     ui->setupUi(this);

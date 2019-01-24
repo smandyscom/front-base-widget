@@ -18,7 +18,9 @@ bool JunctionBankDatabase::onOpenTables()
 	QList<QVariant> extends{ 
 		QVariant::fromValue(WHOLE_CYLINDERS),
 		QVariant::fromValue(WHOLE_INPUTS),
-		QVariant::fromValue(WHOLE_OUTPUTS) 
+		QVariant::fromValue(WHOLE_OUTPUTS),
+		QVariant::fromValue(WHOLE_SAFETY_INPUTS),
+		QVariant::fromValue(WHOLE_SAFETY_OUTPUTS)
 	};
 
 	//! instance replace

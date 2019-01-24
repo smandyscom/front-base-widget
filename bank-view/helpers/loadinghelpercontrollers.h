@@ -37,6 +37,9 @@ public:
 
 	void LoadAdaptors();
 
+	void LoadSafetyInputMonitor();
+	void LoadSafetyOutputMonitor();
+
     void ControllersLoadingRoutineV1();
 
     JunctionBankDatabase* m_database;
@@ -47,6 +50,11 @@ public:
     ControllerIOMonitor* m_controllerInputMonitor;
     ControllerIOMonitor* m_controllerOutputMonitor;
     ControllerIOMonitor* m_controllerCylinderMonitor;
+
+	//safety
+	ControllerIOMonitor* m_controllerSafetyInputMonitor;
+	ControllerIOMonitor* m_controllerSafetyOutputMonitor;
+
 	
 	QList<AbstractSqlTableAdpater*> m_adaptorList;
 

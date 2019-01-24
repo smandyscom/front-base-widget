@@ -6,7 +6,7 @@
 
 #include <definitionioattributes.h>
 #include <definitionauxiliarykeys.h>
-
+#include <frontcommon.h>
 #include <utilities.h>
 
 //#include <abstractauthreceiver.h>
@@ -15,7 +15,7 @@ namespace Ui {
 class FrontSafetyPanel;
 }
 
-class FrontSafetyPanel : public QWidget
+class FrontSafetyPanel : public FrontCommon
 //        public AbstractAuthReceiver
 {
     Q_OBJECT
