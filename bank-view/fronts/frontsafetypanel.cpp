@@ -9,10 +9,7 @@ FrontSafetyPanel::FrontSafetyPanel(QWidget *parent) :
 {
     ui->setupUi(this);
 	
-    //! Auth
-//    __disableList[AUTH::ROLE_OPERATOR].append(ui->checkBoxInterlockBypass);
-//    __disableList[AUTH::ROLE_OPERATOR].append(ui->checkBoxLightgateBypass);
-//    __disableList[AUTH::ROLE_OPERATOR].append(ui->checkBoxAirChoke);
+	m_auth->addDisableWidget(AUTH::ROLE_OPERATOR, this);
 }
 
 FrontSafetyPanel::~FrontSafetyPanel()

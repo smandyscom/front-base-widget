@@ -95,6 +95,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	{
 		connect(m_auth, &ControllerAuth::roleChanged, static_cast<PropertyPortCommon*>(var->port()), &PropertyPortCommon::onPropertyChanged);
 	}
+	emit m_auth->roleChanged(QVariant::fromValue(AUTH::PROP_AUTH), QVariant::fromValue(AUTH::ROLE_OPERATOR));
 }
 
 MainWindow::~MainWindow()
