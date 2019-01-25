@@ -91,6 +91,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	{
 		connect(var, &QAction::triggered,this,&MainWindow::onAuthAction);
 	}
+	connect(m_auth, &ControllerAuth::roleChanged, this, &MainWindow::onAuthChanged);
 	for each (FrontCommon* var in findChildren<FrontCommon*>())
 	{
 		connect(m_auth, &ControllerAuth::roleChanged, static_cast<PropertyPortCommon*>(var->port()), &PropertyPortCommon::onPropertyChanged);
@@ -202,6 +203,10 @@ void MainWindow::onAuthAction()
 {
 	m_auth->onAuthChangingRequired(sender()->property(QVariant::fromValue(AUTH::PROP_AUTH).toString().toStdString().c_str()).value<AUTH::AuthRoles>(),
 		QInputDialog::getInt(this,
-			tr("輸入密碼"),
-			tr("密碼")));
+			tr("Input password"),
+			tr("Password")));
+}
+void MainWindow::onAuthChanged(QVariant key, QVariant value)
+{
+	ui->menuAuth->setTitle(tr("Auth：%1").arg(value.toString()));
 }

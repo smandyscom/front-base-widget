@@ -31,7 +31,9 @@ protected slots:
 	void onControllerLoaded();
 
 	void onDownloadUploadActionTrigger();
+
 	void onAuthAction();
+	void onAuthChanged(QVariant key, QVariant value);
 private:
     Ui::MainWindow *ui;
 
