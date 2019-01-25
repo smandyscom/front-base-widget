@@ -10,7 +10,7 @@
 #include <messagerecorder.h>
 
 #include <widgetstatusbarbundle.h>
-
+#include <algorithm>
 
 #define THREADED true
 
@@ -126,6 +126,7 @@ void MainWindow::onControllerLoaded()
 	m_controllers->CrossLink(ui->tabWidget->m_controller, m_controllers->m_controllerMain->port());
 	//! Slots cross link
 	QList<FrontSlot*> list = findChildren<FrontSlot*>();
+	std::for_each(list.begin(), list.end(), [](FrontSlot* s) {s->setVisible(false); });
 	for (int i = 0; i < m_controllers->m_controllersMaterial.count(); i++)
 	{
 		ControllerMaterialTransfer* ref = m_controllers->m_controllersMaterial[i];
@@ -135,6 +136,7 @@ void MainWindow::onControllerLoaded()
 			QVariant::fromValue(HEADER_STRUCTURE::ID),
 			ref->Index());
 
+		list[i]->setVisible(true);
 		list[i]->Setup(
 			JunctionMaterialDatabase::Instance()->TableMap(ref->Index(),JunctionMaterialDatabase::MAT_DATA_SLOT),
 			JunctionMaterialDatabase::Instance()->TableMap(ref->Index(), JunctionMaterialDatabase::MAT_HEADER_SLOT),
