@@ -1,4 +1,4 @@
-#include "frontaxisparameter.h"
+﻿#include "frontaxisparameter.h"
 #include "ui_frontaxisparameter.h"
 
 FrontAxisParameter::FrontAxisParameter(QWidget *parent) :
@@ -49,11 +49,12 @@ FrontAxisParameter::FrontAxisParameter(QWidget *parent) :
 	{
 		m_widgetLockList.append(var);
 	}
+	bool result = m_widgetLockList.removeOne(ui->pushButtonStop);
 	for each (QDoubleSpinBox* var in findChildren<QDoubleSpinBox*>())
 	{
 		m_widgetLockList.append(var);
 	}
-	m_widgetLockList.removeOne(ui->pushButtonStop);
+	
 }
 //!
 //! \brief FrontAxisParameter::Setup

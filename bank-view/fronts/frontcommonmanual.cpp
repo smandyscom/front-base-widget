@@ -1,4 +1,4 @@
-#include "frontcommonmanual.h"
+﻿#include "frontcommonmanual.h"
 #include <algorithm>
 
 FrontCommonManual::FrontCommonManual(QWidget *parent):
@@ -62,14 +62,14 @@ void FrontCommonManual::hideEvent(QHideEvent *event)
 
 void FrontCommonManual::onTimerScan()
 {
-	QVariant value =
+	/*QVariant value =
 		property(QVariant::fromValue(ManualModeDataBlock::PROP_MANUAL_STATE));
 
 	for each (QWidget* var in m_widgetLockList)
 	{
 		var->setEnabled(value.value<ManualModeDataBlock::ManualState>() ==
 			ManualModeDataBlock::STATE_PLC_READY);
-	}
+	}*/
 }
 
 void FrontCommonManual::onPropertyChanged(QVariant key, QVariant value)
@@ -91,7 +91,7 @@ void FrontCommonManual::onPropertyChanged(QVariant key, QVariant value)
 		case ManualModeDataBlock::STATE_DONE_ON:
 			for each (QWidget* var in m_widgetLockList)
 			{
-				setEnabled(false);
+				var->setEnabled(false);
 			}
 			m_delayTimer->start(); //start/restart
 			break;
@@ -112,7 +112,7 @@ void FrontCommonManual::onDelayTimesout()
 	case ManualModeDataBlock::STATE_IN_AUTO:
 		for each (QWidget* var in m_widgetLockList)
 		{
-			setEnabled(true);
+			var->setEnabled(true);
 		}
 		break;
 	default:
